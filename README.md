@@ -11,4 +11,4 @@ pnpm run dev
 ```
 
 ## License
-This project is license with [MIT License](LICENSE)
+This project is licensed with [MIT License](LICENSE)
