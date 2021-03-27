@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include("includes/header") %>
+    <style>
+        h1 {
+            font-size: xx-large;
+        }
+        h2 {
+            font-size: x-large;
+        }
+    </style>
+</head>
+
+<body class="bg-white dark:bg-gray-700 my-10">
+    <div class="mx-96 text-center my-4">
+        <h1 class="font-semibold text-gray-800 dark:text-gray-300">naoTimes WebUI</h1>
+    </div>
+    <div id="login-form" class="text-center content-center">
+        <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="username">
+                Server ID
+            </label>
+            <input id="username" type="text"
+                class="form-input rounded-full py-2 px-3 shadow appearance-none border w-3/12 text-gray-400"
+                placeholder="Server ID" name="username">
+        </div>
+        <div class="mb-6">
+            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="password">
+                Password
+            </label>
+            <input
+                class="shadow appearance-none border border-red rounded-full w-3/12 py-2 px-3 text-gray-400 mb-3"
+                id="password" type="password" placeholder="**************" name="password">
+                <p class="text-red-400 text-xs italic">Untuk mendatkan password, lakukan `!showui` di server Discord anda</p>
+                <p class="text-red-400 text-xs italic">Atau, jalankan perintah `!showui your_server_id` via PM/DM</p>
+                <% if (locals.error_msg) { %>
+                <p id="err-box" class="text-red-700 mt-3 mx-96 text-sm"><%= error_msg %></p>
+                <% } %>
+        </div>
+        <div class="items-center">
+            <button id="sign-in-btn" class="bg-red-400 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-red-500 transform hover:scale-105" type="button">
+                Sign In
+            </button>
+        </div>
+    </div>
+    <script>
+        async function sendLogin(username, password) {
+            const formToSend = new FormData();
+            formToSend.append("username", username);
+            formToSend.append("password", password);
+            const resp = await fetch("/api/auth/login", {
+                method: "POST",
+                body: new URLSearchParams(formToSend),
+            });
+            return resp.url;
+        }
+        const signInBtn = document.getElementById("sign-in-btn");
+        const userNameSlot = document.getElementById("username");
+        const passwordSlot = document.getElementById("password");
+        const err_box = document.getElementById("err-box");
+        signInBtn.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            const username = userNameSlot.value;
+            const password = passwordSlot.value;
+            if (username && password) {
+                sendLogin(username, password).then((r) => {window.location = r}).catch((err) => {
+                    err_box.textContent = err.tostring();
+                    if (err_box.classList.contains("hidden")) {
+                        err_box.classList.remove("hidden");
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+
+</html>
