@@ -6,14 +6,17 @@ import express_compression from "compression";
 import express_cors from "cors";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express_session from "express-session";
+import express_session_redis from "connect-redis";
 import express_flash from "connect-flash";
 import mongoose from "mongoose";
 import get from "lodash.get";
 import path from "path";
 
 import passport from "./lib/passport";
+import redisCreate from "./lib/redis";
 import { APIRoutes } from "./routes/api";
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
+import { UserProps } from "./models/user";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
@@ -35,6 +38,10 @@ app.use("/robots.txt", (_q, res) => {
     `);
 });
 
+logger.info("Spawning new Redis Connection");
+const RedisStore = express_session_redis(express_session);
+const RedisClient = redisCreate();
+
 // Initial stuff.
 app.use(express_cors());
 app.use(express_compression());
@@ -43,7 +50,18 @@ app.set("views", path.join(__dirname, "..", "public"));
 app.set("view engine", "ejs");
 app.use("/assets", express.static(path.join(__dirname, "..", "public", "assets")));
 
-app.use(express_session({ secret: SECRET_KEYS, name: "ntui", resave: true, saveUninitialized: true }));
+app.use(
+    express_session({
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000,
+        },
+        secret: SECRET_KEYS,
+        name: "ntui",
+        resave: true,
+        saveUninitialized: true,
+        store: new RedisStore({ client: RedisClient }),
+    })
+);
 app.use(express_flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -61,7 +79,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/admin", ensureLoggedIn("/"), (req, res) => {
-    res.send("Placeholder");
+    const user = req.user as UserProps;
+    res.render("admin", {
+        user_id: user.id,
+        is_admin: user.privilege === "owner",
+    });
 });
 
 app.use("/api", APIRoutes);
