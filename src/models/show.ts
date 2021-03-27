@@ -84,5 +84,16 @@ const ShowtimesSchemas = createSchema(
     }
 );
 
+const ShowAdminSchemas = createSchema(
+    {
+        server_admin: Type.array({ required: true }).of(Type.string()),
+    },
+    {
+        versionKey: false,
+    }
+);
+
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
+export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
 export const ShowtimesModel = typedModel("showtimesdatas", ShowtimesSchemas);
+export const ShowAdminModel = typedModel("server_admin", ShowAdminSchemas, "server_admin");
