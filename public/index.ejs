@@ -14,7 +14,7 @@
 </head>
 
 <body class="bg-white dark:bg-gray-700 my-10">
-    <div class="mx-96 text-center my-4">
+    <div class="mx-auto text-center my-4">
         <h1 class="font-semibold text-gray-800 dark:text-gray-300">naoTimes WebUI</h1>
     </div>
     <div id="login-form" class="text-center content-center">
@@ -23,7 +23,7 @@
                 Server ID
             </label>
             <input id="username" type="text"
-                class="form-input rounded-full py-2 px-3 shadow appearance-none border w-3/12 text-gray-400"
+                class="form-input rounded-full py-2 px-3 shadow appearance-none border  text-gray-600"
                 placeholder="Server ID" name="username">
         </div>
         <div class="mb-6">
@@ -31,10 +31,10 @@
                 Password
             </label>
             <input
-                class="shadow appearance-none border border-red rounded-full w-3/12 py-2 px-3 text-gray-400 mb-3"
+                class="shadow appearance-none border border-red rounded-full py-2 px-3 text-gray-600 mb-3"
                 id="password" type="password" placeholder="**************" name="password">
-                <p class="text-red-400 text-xs italic">Untuk mendatkan password, lakukan `!showui` di server Discord anda</p>
-                <p class="text-red-400 text-xs italic">Atau, jalankan perintah `!showui your_server_id` via PM/DM</p>
+                <p class="text-red-400 text-xs italic">Untuk mendatkan password, lakukan <code class="text-black dark:text-white font-bold">!showui</code> di server Discord anda</p>
+                <p class="text-red-400 text-xs italic">Atau, jalankan perintah <code class="text-black dark:text-white font-bold">!showui server_id_anda</code> via PM/DM</p>
                 <% if (locals.error_msg) { %>
                 <p id="err-box" class="text-red-700 mt-3 mx-96 text-sm"><%= error_msg %></p>
                 <% } %>
