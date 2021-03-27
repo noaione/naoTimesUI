@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% if (is_admin) { %>
+        <%- include("_includes/header", {title: "Admin Panel"}) %>
+    <% } else { %>
+        <%- include("_includes/header", {title: "Server Panel"}) %>
+    <% } %>
+    <style>
+        h1 {
+            font-size: xx-large;
+        }
+        h2 {
+            font-size: x-large;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include ("_includes/navigation", {is_admin: is_admin, user_id: user_id}) %>
+    <section>
+
+    </section>
+</body>
