@@ -399,3 +399,7 @@ Temporary Items
 .apdisk
 
 # End of https://www.toptal.com/developers/gitignore/api/node,react,reactnative
+
+# Generated .css
+public/main.css
+public/tailwind.css

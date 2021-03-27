@@ -1,11 +1,11 @@
 module.exports = {
-    purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
-    darkMode: "class", // or 'media' or 'class'
+    // purge: ["./public/**/*.{js,ts,jsx,tsx,ejs}", "./src/**/*.{js,ts,jsx,tsx,ejs}"],
+    darkMode: "media", // or 'media' or 'class'
     theme: {
         extend: {},
     },
     variants: {
         extend: {},
     },
-    plugins: [],
+    plugins: [require("@tailwindcss/forms")],
 };

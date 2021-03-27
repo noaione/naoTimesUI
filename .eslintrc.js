@@ -4,7 +4,6 @@ module.exports = {
     plugins: ["@typescript-eslint"],
     extends: [
         "eslint:recommended",
-        "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier",
         "prettier/@typescript-eslint",
@@ -12,7 +11,6 @@ module.exports = {
     env: {
         node: true,
         es6: true,
-        browser: true,
     },
     settings: {
         react: {
@@ -79,9 +77,6 @@ module.exports = {
                 argsIgnorePattern: "^_",
             },
         ],
-        "react/react-in-jsx-scope": "off",
-        "react/display-name": "off",
-        "react/prop-types": "off",
     },
     overrides: [
         {
