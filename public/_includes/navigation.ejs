@@ -1,0 +1,90 @@
+<nav
+    class="flex fixed w-full items-center justify-between px-6 h-16 bg-white text-gray-700 border-b border-gray-200 z-10 dark:bg-gray-700 dark:text-white dark:border-gray-800 ">
+    <div class="flex items-center">
+        <button class="mr-2" aria-label="Open Menu" onclick="drawer()">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                viewBox="0 0 24 24" class="w-8 h-8">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        <img src="https://userfiles.uptimerobot.com/img/1097837-1606205357.png" alt="Logo" class="h-auto w-10" />
+        <span class="ml-2">naoTimes WebUI</span>
+    </div>
+
+    <div id="main-drawer-transition" class="z-10 fixed inset-0 transition-opacity" style="display: none;">
+        <div tabindex="0" onclick="closeDrawer()" class="absolute inset-0 bg-black opacity-50"></div>
+    </div>
+    <aside id="main-drawer"
+        class="transform top-0 left-0 w-64 bg-white dark:bg-gray-700 fixed h-full overflow-auto ease-in-out transition-all duration-300 z-30 -translate-x-full">
+        <span class="flex flex-col w-full p-4 border-b">
+            <span class="font-light font text-lg">naoTimes WebUI</span>
+            <br />
+            <% if (is_admin) { %>
+                <span>🟠 Admin <%= user_id %></span>
+            <% } else { %>
+                <span>🟢 Server <%= user_id %></span>
+            <% } %>
+        </span>
+        <span onclick="closeDrawer();window.location = '/admin'" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white ">
+            <span class="mr-2">
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    viewBox="0 0 24 24" class="w-6 h-6">
+                    <path
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                    </path>
+                </svg>
+            </span>
+            <span class="cursor-pointer">Home</span>
+        </span>
+        <span onclick="closeDrawer();window.location = '/admin/garapan';" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+            <span class="cursor-pointer">List Garapan</span>
+        </span>
+        <span onclick="closeDrawer();window.location = '/admin/servers';" class="flex items-center p-4 hover:bg-indigo-500 hover:text-white">
+            <span class="cursor-pointer">Administrasi</span>
+        </span>
+        <span onclick="closeDrawer();window.location = '/api/auth/logout'" class="flex place-items-end p-4 hover:bg-indigo-500 hover:text-white">
+            <span class="mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="18px" height="18px">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+                </svg>
+            </span>
+            <span class="cursor-pointer">Keluar</span>
+        </span>
+    </aside>
+</nav>
+
+<script>
+    let isDrawerOpen = false;
+    const mainDrawer = document.getElementById("main-drawer");
+
+    function doWatchDrawer() {
+        if (isDrawerOpen) {
+            document.getElementById("main-drawer-transition").style.display = '';
+            document.getElementsByTagName("body")[0].style.overflow = "hidden";
+            mainDrawer.classList.remove("-translate-x-full");
+            mainDrawer.classList.add("translate-x-0");
+        } else {
+            document.getElementById("main-drawer-transition").style.display = 'none';
+            document.getElementsByTagName("body")[0].style.overflow = "";
+            mainDrawer.classList.add("-translate-x-full");
+            mainDrawer.classList.remove("translate-x-0");
+        }
+    }
+
+    function drawer() {
+        isDrawerOpen = !isDrawerOpen;
+        doWatchDrawer();
+    }
+
+    function closeDrawer() {
+        isDrawerOpen = false;
+        doWatchDrawer();
+    }
+
+    function openDrawer() {
+        isDrawerOpen = true;
+        doWatchDrawer();
+    }
+</script>
