@@ -34,6 +34,7 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
         const newData = {};
+        newData["id"] = anime_data.id;
         newData["title"] = anime_data.title;
         newData["start_time"] = anime_data.start_time;
         newData["assignments"] = anime_data.assignments;
@@ -153,6 +154,7 @@ APIGetRoutes.get("/latestanime", ensureLoggedIn("/"), async (req, res) => {
             const fetchServers = await ShowtimesModel.findOne(
                 { id: { $eq: userData.id } },
                 {
+                    "anime.id": 1,
                     "anime.title": 1,
                     "anime.assignments": 1,
                     "anime.poster_data": 1,
