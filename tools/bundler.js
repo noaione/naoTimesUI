@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Build projects.
-const bundler = browserify({ debug: true });
+const bundler = browserify({ debug: process.env.NODE_ENV !== "production" });
 console.info("=> Bundling projects.js");
 
 bundler.add(path.join(__dirname, "..", "lib", "projects.js"));
