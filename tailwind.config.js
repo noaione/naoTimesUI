@@ -1,5 +1,10 @@
+let purge = [];
+if (process.env.NODE_ENV === "production") {
+    purge = ["./public/**/*.{js,ts,jsx,tsx,ejs}", "./src/**/*.{js,ts,jsx,tsx,ejs}"];
+}
+
 module.exports = {
-    // purge: ["./public/**/*.{js,ts,jsx,tsx,ejs}", "./src/**/*.{js,ts,jsx,tsx,ejs}"],
+    purge: purge,
     darkMode: "media", // or 'media' or 'class'
     theme: {
         extend: {},
