@@ -66,6 +66,10 @@ app.use(express_flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/favicon.*", (_, res) => {
+    res.sendFile("../public/assets/favicon.ico");
+});
+
 app.use(expressLogger);
 
 app.get("/", (req, res) => {
