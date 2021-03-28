@@ -405,4 +405,8 @@ public/main.css
 public/tailwind.css
 public/assets/**/*.css
 
+public/assets/js/*.js
+
 # Allow some css.
+
+# Allow some js.
