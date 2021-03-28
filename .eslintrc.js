@@ -80,9 +80,9 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["**/*.js", "**/*.jsx"],
+            files: ["tools/*.js", "lib/*.js"],
             rules: {
-                "@typescript-eslint/no-var-requires": 0,
+                "@typescript-eslint/no-var-requires": "off",
             },
         },
     ],
