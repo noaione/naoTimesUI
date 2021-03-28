@@ -16,7 +16,7 @@
     "dev:start": "ts-node --transpile-only ./src/index.ts",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
-    "lint": "eslint . --ext ts --ext tsx --ext js",
+    "lint": "eslint --ext ts --ext tsx --ext js src/ lib/",
     "testall": "npm-run-all lint type-check"
   },
   "repository": {
