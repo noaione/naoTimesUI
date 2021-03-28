@@ -84,7 +84,23 @@ app.get("/", (req, res) => {
 
 app.get("/admin", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
-    res.render("admin", {
+    res.render("admin/index", {
+        user_id: user.id,
+        is_admin: user.privilege === "owner",
+    });
+});
+
+app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
+    const user = req.user as UserProps;
+    res.render("admin/projek", {
+        user_id: user.id,
+        is_admin: user.privilege === "owner",
+    });
+});
+
+app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
+    const user = req.user as UserProps;
+    res.render("admin/atur", {
         user_id: user.id,
         is_admin: user.privilege === "owner",
     });
