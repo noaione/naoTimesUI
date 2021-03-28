@@ -1,4 +1,6 @@
+import dotenv from "dotenv";
 import net from "net";
+import path from "path";
 import { promisify } from "util";
 
 import { logger as MainLoggger } from "./logger";
@@ -6,6 +8,8 @@ import { isNone } from "./utils";
 const sleep = promisify(setTimeout);
 
 const logger = MainLoggger.child({ cls: "SocketConn" });
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
+logger.info(`Preparing a saved host:port at ${process.env.BOT_SOCKET_HOST}:${process.env.BOT_SOCKET_PORT}`);
 
 function createNewSocket() {
     const HOST = process.env.BOT_SOCKET_HOST || "127.0.0.1";
