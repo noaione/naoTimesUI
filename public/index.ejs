@@ -40,7 +40,7 @@
                 <% } %>
         </div>
         <div class="items-center">
-            <button id="sign-in-btn" class="bg-red-400 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-red-500 transform hover:scale-105" type="button">
+            <button id="sign-in-btn" class="bg-red-400 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-red-500 transform hover:scale-105 disabled:opacity-50" type="button">
                 Sign In
             </button>
         </div>
@@ -65,14 +65,41 @@
             const username = userNameSlot.value;
             const password = passwordSlot.value;
             if (username && password) {
+                signInBtn.disabled = true;
                 sendLogin(username, password).then((r) => {window.location = r}).catch((err) => {
-                    err_box.textContent = err.tostring();
-                    if (err_box.classList.contains("hidden")) {
-                        err_box.classList.remove("hidden");
+                    signInBtn.disabled = false;
+                    if (err_box) {
+                        err_box.textContent = err.tostring();
+                        if (err_box.classList.contains("hidden")) {
+                            err_box.classList.remove("hidden");
+                        }
                     }
-                })
+                });
+                signInBtn.disabled = false;
             }
         });
+        userNameSlot.addEventListener("keyup", onEnterSend);
+        passwordSlot.addEventListener("keyup", onEnterSend);
+        function onEnterSend(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                const username = userNameSlot.value;
+                const password = passwordSlot.value;
+                if (username && password) {
+                    signInBtn.disabled = true;
+                    sendLogin(username, password).then((r) => {window.location = r}).catch((err) => {
+                        signInBtn.disabled = false;
+                        if (err_box) {
+                            err_box.textContent = err.tostring();
+                            if (err_box.classList.contains("hidden")) {
+                                err_box.classList.remove("hidden");
+                            }
+                        }
+                    });
+                    signInBtn.disabled = false;
+                }
+            }
+        }
     </script>
 </body>
 
