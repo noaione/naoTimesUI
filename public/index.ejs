@@ -7,96 +7,154 @@
         h1 {
             font-size: xx-large;
         }
+
         h2 {
             font-size: x-large;
         }
+
+        .stack-shadow-2,
+        .hover\:stack-shadow-2:hover {
+            box-shadow: 1px 1px var(--tw-ring-offset-color),
+                        2px 2px var(--tw-ring-offset-color);
+        }
+
+        .stack-shadow-3,
+        .hover\:stack-shadow-3:hover {
+            box-shadow: 1px 1px var(--tw-ring-offset-color),
+                        2px 2px var(--tw-ring-offset-color),
+                        3px 3px var(--tw-ring-offset-color);
+        }
+
+        .stack-shadow-4,
+        .hover\:stack-shadow-4:hover {
+            box-shadow: 1px 1px var(--tw-ring-offset-color),
+                        2px 2px var(--tw-ring-offset-color),
+                        3px 3px var(--tw-ring-offset-color),
+                        4px 4px var(--tw-ring-offset-color);
+        }
+
+        .stack-shadow-5,
+        .hover\:stack-shadow-5:hover {
+            box-shadow: 1px 1px var(--tw-ring-offset-color),
+                        2px 2px var(--tw-ring-offset-color),
+                        3px 3px var(--tw-ring-offset-color),
+                        4px 4px var(--tw-ring-offset-color),
+                        5px 5px var(--tw-ring-offset-color);
+        }
+
+        .stack-shadow-6,
+        .hover\:stack-shadow-6:hover {
+            box-shadow: 1px 1px var(--tw-ring-offset-color),
+                        2px 2px var(--tw-ring-offset-color),
+                        3px 3px var(--tw-ring-offset-color),
+                        4px 4px var(--tw-ring-offset-color),
+                        5px 5px var(--tw-ring-offset-color),
+                        6px 6px var(--tw-ring-offset-color);
+        }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.min.css"
+        rel="stylesheet">
 </head>
 
-<body class="bg-white dark:bg-gray-700 my-10">
-    <div class="mx-auto text-center my-4">
-        <h1 class="font-semibold text-gray-800 dark:text-gray-300">naoTimes WebUI</h1>
+<body>
+    <div class="min-w-screen min-h-screen bg-gray-900 flex items-center justify-center px-5 py-5">
+        <div class="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden" style="max-width:1000px">
+            <div class="relative md:flex w-full">
+                <div class="hidden md:block w-1/2 bg-gradient-to-br from-indigo-500 to-pink-300 py-10 px-10">
+                    <img class="icon h-1/3 mb-2 ring-offset-indigo-800 transition-shadow duration-500 ease-in-out stack-shadow-6 hover:stack-shadow-3" src="/assets/img/nt192.png">
+                    <div class="font-extrabold text-white text-3xl mb-3 mt-5">
+                        <span class="bg-gradient-to-br from-indigo-800 to-indigo-600 transition-shadow duration-500 ease-in-out rounded-none px-2 py-1 stack-shadow-3 hover:stack-shadow-5 ring-offset-gray-800">naoTimes</span>
+                    </div>
+                    <div class="font-semibold text-lg text-gray-100 mb-4">
+                        <p>Sebuah Bot Multifungsi dengan fitur utama tracking garapan Fansub</p>
+                    </div>
+                    <a class="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-1"
+                        href="https://naoti.me/invite" target="_blank">Invite!</a>
+                    <a class="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
+                        href="https://discord.gg/7KyYecn" target="_blank">Support Server</a>
+                </div>
+                <div class="w-full md:w-1/2 py-10 px-5 md:px-10">
+                    <div class="text-center mb-10">
+                        <h1 class="font-bold text-3xl text-gray-900">Masuk</h1>
+                        <p>Password didapatkan melalui Bot</p>
+                        <p>Ketik <code class="text-red-500">!showui</code> di server discord anda</p>
+                        <p>Atau DM Bot dengan <code class="text-red-500">!showui server_id</code></p>
+                        <% if (locals.error_msg) { %>
+                        <p class="text-sm text-red-400 mt-2">Error: <%= error_msg %></p>
+                        <% } %>
+                    </div>
+                    <div>
+                        <form method="POST" action="/api/auth/login" id="login-form">
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-5">
+                                    <label for="" class="text-xs font-semibold px-1">Server ID</label>
+                                    <div class="flex">
+                                        <div
+                                            class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                                            <i class="mdi mdi-server text-gray-400 text-lg"></i></div>
+                                        <input id="username" type="text" name="username"
+                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-none focus:border-yellow-600"
+                                            placeholder="xxxxxxxxxxxxxxxxxx">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-12">
+                                    <label for="" class="text-xs font-semibold px-1">Password</label>
+                                    <div class="flex">
+                                        <div
+                                            class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
+                                            <i class="mdi mdi-lock-outline text-gray-400 text-lg"></i></div>
+                                        <input id="password" type="password" name="password"
+                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                            placeholder="**************">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex -mx-3">
+                                <div class="w-full px-3 mb-5">
+                                    <button type="submit" id="sign-in-btn"
+                                        class="block w-full max-w-xs mx-auto transition-colors duraion-400 ease-in-out bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700 text-white rounded-lg px-3 py-3 font-semibold">
+                                        Masuk
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="login-form" class="text-center content-center">
-        <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="username">
-                Server ID
-            </label>
-            <input id="username" type="text"
-                class="form-input rounded-full py-2 px-3 shadow appearance-none border  text-gray-600"
-                placeholder="Server ID" name="username">
-        </div>
-        <div class="mb-6">
-            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="password">
-                Password
-            </label>
-            <input
-                class="shadow appearance-none border border-red rounded-full py-2 px-3 text-gray-600 mb-3"
-                id="password" type="password" placeholder="**************" name="password">
-                <p class="text-red-400 text-xs italic">Untuk mendatkan password, lakukan <code class="text-black dark:text-white font-bold">!showui</code> di server Discord anda</p>
-                <p class="text-red-400 text-xs italic">Atau, jalankan perintah <code class="text-black dark:text-white font-bold">!showui server_id_anda</code> via PM/DM</p>
-                <% if (locals.error_msg) { %>
-                <p id="err-box" class="text-red-700 mt-3 mx-96 text-sm"><%= error_msg %></p>
-                <% } %>
-        </div>
-        <div class="items-center">
-            <button id="sign-in-btn" class="bg-red-400 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-red-500 transform hover:scale-105 disabled:opacity-50" type="button">
-                Sign In
-            </button>
+    <!-- Donasi pl0x -->
+    <div class="flex items-end justify-end fixed bottom-0 right-0 mb-6 mr-6 z-10">
+        <div>
+            <a title="Trakteer Indomie" href="https://trakteer.id/noaione" target="_blank" class="block w-16 h-16 rounded-full transition-all shadow hover:shadow-lg transform hover:scale-110 hover:rotate-12 bg-white">
+                <img title="Trakteer Indomie" class="object-cover object-center w-full h-full rounded-full" src="https://trakteer.id/images/mix/Logo%20Trakteer%20-%20Lite-01.png"/>
+            </a>
         </div>
     </div>
     <script>
-        async function sendLogin(username, password) {
-            const formToSend = new FormData();
-            formToSend.append("username", username);
-            formToSend.append("password", password);
-            const resp = await fetch("/api/auth/login", {
-                method: "POST",
-                body: new URLSearchParams(formToSend),
-            });
-            return resp.url;
+        function submitForm() {
+            document.getElementById("login-form").submit();
         }
-        const signInBtn = document.getElementById("sign-in-btn");
+
+        // const signInBtn = document.getElementById("sign-in-btn");
+        // signInBtn.addEventListener("click", (ev) => {
+        //     submitForm();
+        // });
         const userNameSlot = document.getElementById("username");
         const passwordSlot = document.getElementById("password");
-        const err_box = document.getElementById("err-box");
-        signInBtn.addEventListener("click", function (ev) {
-            ev.preventDefault();
-            const username = userNameSlot.value;
-            const password = passwordSlot.value;
-            if (username && password) {
-                signInBtn.disabled = true;
-                sendLogin(username, password).then((r) => {window.location = r}).catch((err) => {
-                    signInBtn.disabled = false;
-                    if (err_box) {
-                        err_box.textContent = err.tostring();
-                        if (err_box.classList.contains("hidden")) {
-                            err_box.classList.remove("hidden");
-                        }
-                    }
-                });
-                signInBtn.disabled = false;
-            }
-        });
+
         userNameSlot.addEventListener("keyup", onEnterSend);
         passwordSlot.addEventListener("keyup", onEnterSend);
+
         function onEnterSend(event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 const username = userNameSlot.value;
                 const password = passwordSlot.value;
                 if (username && password) {
-                    signInBtn.disabled = true;
-                    sendLogin(username, password).then((r) => {window.location = r}).catch((err) => {
-                        signInBtn.disabled = false;
-                        if (err_box) {
-                            err_box.textContent = err.tostring();
-                            if (err_box.classList.contains("hidden")) {
-                                err_box.classList.remove("hidden");
-                            }
-                        }
-                    });
-                    signInBtn.disabled = false;
+                    submitForm();
                 }
             }
         }
