@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const browserify = require("browserify");
+const exorcist = require("exorcist");
 const fs = require("fs");
 const path = require("path");
 
@@ -25,6 +26,14 @@ if (process.env.NODE_ENV === "production") {
 }
 
 console.info("==> Saving projects.bundle.js");
-bundler
-    .bundle()
-    .pipe(fs.createWriteStream(path.join(__dirname, "..", "public", "assets", "js", "projects.bundle.js")));
+const writeStream = fs.createWriteStream(
+    path.join(__dirname, "..", "public", "assets", "js", "projects.bundle.js")
+);
+if (process.env.NODE_ENV !== "production") {
+    bundler
+        .bundle()
+        .pipe(exorcist(path.join(__dirname, "..", "public", "assets", "js", "projects.bundle.map.js")))
+        .pipe(writeStream);
+} else {
+    bundler.bundle.pipe(writeStream);
+}
