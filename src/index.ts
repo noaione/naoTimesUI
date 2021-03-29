@@ -98,29 +98,46 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
 
 app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
-    res.render("admin/projek/index", {
-        user_id: user.id,
-        is_admin: user.privilege === "owner",
-    });
-});
-
-app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
-    const user = req.user as UserProps;
-    const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
-    const animeData = filterToSpecificAnime(serversData, req.params.ani_id);
-    if (animeData.length < 1) {
-        res.status(404).render("admin/404", {
+    if (user.privilege === "owner") {
+        res.status(403).render("admin/404", {
             user_id: user.id,
             is_admin: user.privilege === "owner",
             path: req.path,
         });
     } else {
-        res.render("admin/projek/laman", {
+        res.render("admin/projek/index", {
+            user_id: user.id,
+            is_admin: false,
+        });
+    }
+});
+
+app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
+    const user = req.user as UserProps;
+    if (user.privilege === "owner") {
+        res.status(403).render("admin/404", {
             user_id: user.id,
             is_admin: user.privilege === "owner",
-            raw_data: JSON.stringify(animeData[0]),
-            anime_title: animeData[0].title,
+            path: req.path,
         });
+    } else {
+        const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
+        const animeData = filterToSpecificAnime(serversData, req.params.ani_id);
+        if (animeData.length < 1) {
+            res.status(404).render("admin/404", {
+                user_id: user.id,
+                is_admin: false,
+                path: req.path,
+            });
+        } else {
+            res.render("admin/projek/laman", {
+                user_id: user.id,
+                is_admin: false,
+                raw_data: JSON.stringify(animeData[0]),
+                anime_title: animeData[0].title,
+                custom_title: animeData[0].title + " - Projek - Server Panel",
+            });
+        }
     }
 });
 
@@ -134,12 +151,22 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
 
 app.use("/api", APIRoutes);
 
+app.use(expressErrorLogger);
+
 app.use((req, res, next) => {
     res.status(404).render("404", { path: req.path });
     next();
 });
 
-app.use(expressErrorLogger);
+app.use(function (err: any, _q: express.Request, res: express.Response, _n: express.NextFunction) {
+    console.error(err.stack);
+    if (!res.headersSent) {
+        res.status(500).render("error_page", {
+            status_code: 500,
+            err_msg: err.toString(),
+        });
+    }
+});
 
 app.listen(5000, () => {
     console.info("App now running at port 5000!");
