@@ -88,9 +88,9 @@ function clean(cb) {
     shelljs.rm("-R", path.join(__dirname, "dist"));
     logger.info("Cleaning generated files...");
     shelljs.rm(
-        path.join(__dirname, "assets", "main.css"),
-        path.join(__dirname, "assets", "js", "projects.bundle.js"),
-        path.join(__dirname, "assets", "js", "projects.bundle.map.js")
+        path.join(__dirname, "public", "assets", "main.css"),
+        path.join(__dirname, "public", "assets", "js", "projects.bundle.js"),
+        path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js")
     );
     cb();
 }
@@ -163,7 +163,10 @@ function bundle(cb) {
             .pipe(exorcist(path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js")))
             .pipe(writeStream);
     }
-    cb();
+    writeStream.on("finish", function () {
+        logger.info("Finished bundling projects files!");
+        return cb();
+    });
 }
 
 exports.default = gulp.series(start, clean, transpile, gulp.parallel(css, bundle));
