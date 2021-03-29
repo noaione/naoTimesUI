@@ -43,6 +43,10 @@
                     <a href="#"
                         class="mt-3 py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row"><span
                             class="material-icons text-sm">mode</span><span class="ml-1 mt-1">Projek</span></a>
+                <% } else if (nav === "projeklaman") { %>
+                    <a href="/admin/projek"
+                        class="mt-3 py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row"><span
+                            class="material-icons text-sm">mode</span><span class="ml-1 mt-1">Projek</span></a>
                 <% } else { %>
                     <a href="/admin/projek"
                         class="mt-3 py-2 pl-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 rounded flex flex-row"><span
@@ -52,6 +56,10 @@
                 <% if (!is_admin) { %>
                     <% if (nav === "projek") { %>
                         <a href="#"
+                            class="mt-3 py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row"><span
+                                class="material-icons text-sm">mode</span><span class="ml-1 mt-1">Projek</span></a>
+                    <% } else if (nav === "projeklaman") { %>
+                        <a href="/admin/projek"
                             class="mt-3 py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row"><span
                                 class="material-icons text-sm">mode</span><span class="ml-1 mt-1">Projek</span></a>
                     <% } else { %>
