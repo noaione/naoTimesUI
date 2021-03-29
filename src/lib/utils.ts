@@ -1,3 +1,5 @@
+import { ShowtimesProps } from "../models/show";
+
 export type Nullable<T> = T | null;
 export type NoneType = null | undefined;
 export type NoneAble<T> = T | NoneType;
@@ -40,4 +42,9 @@ export function seasonNaming(season: 0 | 1 | 2 | 3): string {
             break;
     }
     return seasonName;
+}
+
+export function filterToSpecificAnime(results: ShowtimesProps, anime_id: string) {
+    const animeLists = results.anime.filter((res) => res.id === anime_id);
+    return animeLists;
 }

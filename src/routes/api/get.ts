@@ -1,6 +1,6 @@
 import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
-import { isNone } from "../../lib/utils";
+import { filterToSpecificAnime, isNone } from "../../lib/utils";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 import { get } from "lodash";
@@ -166,11 +166,6 @@ APIGetRoutes.get("/latestanime", ensureLoggedIn("/"), async (req, res) => {
         }
     }
 });
-
-function filterToSpecificAnime(results: ShowtimesProps, anime_id: string) {
-    const animeLists = results.anime.filter((res) => res.id === anime_id);
-    return animeLists;
-}
 
 APIGetRoutes.get("/statuses/:anime_id", ensureLoggedIn("/"), async (req, res) => {
     if (isNone(req.user)) {
