@@ -9,7 +9,6 @@ const localStrategy = new Strategy(
         passwordField: "password",
     },
     (username, password, done) => {
-        logger.info(`Querying ${username} and ${password}`);
         findUser(username)
             .then((user) => {
                 if (user && validatePassword(user, password)) {
