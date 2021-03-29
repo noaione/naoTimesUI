@@ -35,5 +35,5 @@ if (process.env.NODE_ENV !== "production") {
         .pipe(exorcist(path.join(__dirname, "..", "public", "assets", "js", "projects.bundle.map.js")))
         .pipe(writeStream);
 } else {
-    bundler.bundle.pipe(writeStream);
+    bundler.bundle().pipe(writeStream);
 }
