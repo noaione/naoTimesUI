@@ -1,6 +1,7 @@
 import express from "express";
-import passport from "../../lib/passport";
 import bodyparser from "body-parser";
+
+import passport from "../lib/passport";
 
 const AuthAPIRoutes = express.Router();
 

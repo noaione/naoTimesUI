@@ -35,4 +35,17 @@ APIPOSTRoutes.post("/poll", ensureLoggedIn("/"), (req, res) => {
     }
 });
 
+APIPOSTRoutes.post("/anime", ensureLoggedIn("/"), async (req, res) => {
+    if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
+    } else {
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(504).json({ done: false });
+        } else {
+            res.status(504).json({ done: false });
+        }
+    }
+});
+
 export { APIPOSTRoutes };
