@@ -2,11 +2,7 @@
 <html>
 
 <head>
-    <% if (is_admin) { %>
-    <%- include("../../_includes/header", {title: "Projek - Admin Panel"}) %>
-    <% } else { %>
-    <%- include("../../_includes/header", {title: "Projek - Server Panel"}) %>
-    <% } %>
+    <%- include("../../_includes/header", {title: custom_title}) %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         h1 {
@@ -23,7 +19,7 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <div x-data="{ sidebarOpen: false }">
         <div class="flex h-screen bg-gray-100 dark:bg-gray-800 font-roboto">
-            <%- include("../../_includes/sidenav", {is_admin: is_admin, nav: "projek"}) %>
+            <%- include("../../_includes/sidenav", {is_admin: is_admin, nav: "projeklaman"}) %>
 
             <div class="flex-1 flex flex-col overflow-hidden">
                 <header class="flex justify-between items-center p-6 bg-white dark:bg-gray-900">
@@ -77,90 +73,18 @@
                             <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
                                 <div class="flex py-1">
                                     <div class="icon h-5/6 p-1 mr-3">
-                                        <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx105914-VXKB0ZA2aVZF.png"
-                                            class="transition duration-300 ease-out transform hover:-translate-y-1">
+                                        <img src="data:image/svg+xml,%3Csvg width='200' height='299' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='svg_4' x1='0' y1='0' x2='0.99609' y2='1' spreadMethod='pad'%3E%3Cstop stop-color='%23939393' stop-opacity='0.99219' offset='0.00781'/%3E%3Cstop stop-color='%23969696' stop-opacity='0.99219' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect fill='url(%23svg_4)' stroke='%23000' opacity='undefined' x='0' y='0' width='200' height='299' id='svg_1' stroke-width='0'/%3E%3C/g%3E%3C/svg%3E"
+                                            class="transition duration-300 ease-out transform hover:-translate-y-1" aria-class="projek-poster">
                                     </div>
-                                    <div class="flex flex-col py-2">
+                                    <div class="flex flex-col pb-2">
                                         <div id="ostats-anime"
-                                            class="text-2xl font-bold text-gray-900 dark:text-gray-200">Sewayaki Kitsune
-                                            no Senko-san</div>
-                                        <div class="text-sm text-green-400 ">Merupakan Kolaborasi dengan AAAAAAAAA</div>
-                                        <div class="text-sm text-gray-400 ">Aliases: foxwifes, foxtail</div>
+                                            class="text-2xl font-bold text-gray-900 dark:text-gray-200"><%= anime_title %></div>
+                                        <div class="text-sm text-green-400 animate-pulse" aria-class="projek-kolaborasi">Memuat data...</div>
+                                        <div class="text-sm text-gray-400 animate-pulse" aria-class="projek-alias">Aliases: Memuat...</div>
                                         <div class="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1">Staff
                                         </div>
-                                        <div class="flex flex-col gap-2 mt-2">
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="TL">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="TL"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-green-300 rounded-full px-3 pb-1">Pengalih Bahasa</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="TLC">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="TLC"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-yellow-300 rounded-full px-3 pb-1">Pemeriksa Alih
-                                                    Bahasa</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="ENC">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="ENC"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-red-300 rounded-full px-3 pb-1">Peramu Video</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="ED">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="ED"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-blue-300 rounded-full px-3 pb-1">Editor</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="TS">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="TS"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-purple-300 rounded-full px-3 pb-1">Penata Rias</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="TM">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="TM"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-pink-300 rounded-full px-3 pb-1">Penata Waktu</span>
-                                            </div>
-                                            <div class="text-base text-gray-900 items-center flex flex-row"
-                                                aria-role-show="QC">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    fill="currentColor" viewBox="0 0 24 24" aria-role-show="QC"
-                                                    class="text-gray-900 dark:text-gray-200 mr-1 cursor-pointer hover:text-gray-700 dark:hover:text-gray-400">
-                                                    <path
-                                                        d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                                                </svg>
-                                                <span class="bg-indigo-300 rounded-full px-3 pb-1">Pemeriksa
-                                                    Akhir</span>
-                                            </div>
+                                        <div class="flex flex-col gap-2 mt-2" aria-class="projek-roles">
+                                            <div id="role-to-delete" class="dark:text-gray-200 font-bold animate-pulse">Memuat data...</div>
                                         </div>
                                     </div>
                                 </div>
