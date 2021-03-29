@@ -17,6 +17,8 @@ import redisCreate from "./lib/redis";
 import { APIRoutes } from "./routes/api";
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
 import { UserProps } from "./models/user";
+import { ShowtimesModel } from "./models/show";
+import { filterToSpecificAnime } from "./lib/utils";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
@@ -73,12 +75,16 @@ app.use("/favicon.*", (_, res) => {
 app.use(expressLogger);
 
 app.get("/", (req, res) => {
-    const flashed = req.flash();
-    const errors = get(flashed, "error", []);
-    if (errors.length > 0) {
-        res.render("index", { error_msg: errors.join(", ") });
+    if (req.user) {
+        res.redirect("/admin");
     } else {
-        res.render("index");
+        const flashed = req.flash();
+        const errors = get(flashed, "error", []);
+        if (errors.length > 0) {
+            res.render("index", { error_msg: errors.join(", ") });
+        } else {
+            res.render("index", { error_msg: "" });
+        }
     }
 });
 
@@ -92,10 +98,30 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
 
 app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
-    res.render("admin/projek", {
+    res.render("admin/projek/index", {
         user_id: user.id,
         is_admin: user.privilege === "owner",
     });
+});
+
+app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
+    const user = req.user as UserProps;
+    const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
+    const animeData = filterToSpecificAnime(serversData, req.params.ani_id);
+    if (animeData.length < 1) {
+        res.status(404).render("admin/404", {
+            user_id: user.id,
+            is_admin: user.privilege === "owner",
+            path: req.path,
+        });
+    } else {
+        res.render("admin/projek/laman", {
+            user_id: user.id,
+            is_admin: user.privilege === "owner",
+            raw_data: JSON.stringify(animeData[0]),
+            anime_title: animeData[0].title,
+        });
+    }
 });
 
 app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
@@ -107,6 +133,11 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
 });
 
 app.use("/api", APIRoutes);
+
+app.use((req, res, next) => {
+    res.status(404).render("404", { path: req.path });
+    next();
+});
 
 app.use(expressErrorLogger);
 
