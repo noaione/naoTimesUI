@@ -56,6 +56,7 @@ devDependencies:
   cssnano: 4.1.10
   eslint: 7.22.0
   eslint-config-prettier: 7.2.0_eslint@7.22.0
+  exorcist: 2.0.0
   npm-run-all: 4.1.5
   postcss: 8.2.8
   postcss-cli: 8.3.1_postcss@8.2.8
@@ -3063,6 +3064,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==
+  /exorcist/2.0.0:
+    dependencies:
+      is-stream: 2.0.0
+      minimist: 1.2.5
+      mkdirp: 1.0.4
+      mold-source-map: 0.4.0
+    dev: true
+    hasBin: true
+    resolution:
+      integrity: sha512-+c63SvhBq/HjmbV9cu9vkDkjXFiuI4lpqOZU5Y3t5GSV2l4TQCqVli9c7nIASHxkUL4THaOZDUcb6XNBI/eYjw==
   /express-session/1.17.1:
     dependencies:
       cookie: 0.4.0
@@ -3764,7 +3775,6 @@ packages:
     resolution:
       integrity: sha512-qgDYXFSR5WvEfuS5dMj6oTMEbrrSaM0CrFk2Yiq/gXnBvD9pMa2jGXxyhGLfvhZpuMZe18CJpFxAt3CRs42NMg==
   /is-stream/2.0.0:
-    dev: false
     engines:
       node: '>=8'
     resolution:
@@ -4129,6 +4139,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
+  /mkdirp/1.0.4:
+    dev: true
+    engines:
+      node: '>=10'
+    hasBin: true
+    resolution:
+      integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
   /modern-normalize/1.0.0:
     dev: true
     engines:
@@ -4158,6 +4175,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-fg7OZaQBcL4/L+AK5f4iVqf9OMbCclXfy/znXRxTVhJSeW5AIlS9AwheYwDaXM3lVW7OBeaeUEY3gbaC6cLlSA==
+  /mold-source-map/0.4.0:
+    dependencies:
+      convert-source-map: 1.7.0
+      through: 2.2.7
+    dev: true
+    resolution:
+      integrity: sha1-z2fgsxxHq5uttcnCVlGGISe7gxc=
   /mongodb/3.6.5:
     dependencies:
       bl: 2.2.1
@@ -5865,6 +5889,10 @@ packages:
     dev: true
     resolution:
       integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+  /through/2.2.7:
+    dev: true
+    resolution:
+      integrity: sha1-bo4hIAGR1OtqmfbwEN9Gqhxusr0=
   /through/2.3.8:
     dev: true
     resolution:
@@ -6346,6 +6374,7 @@ specifiers:
   ejs: ^3.1.6
   eslint: ^7.19.0
   eslint-config-prettier: ^7.2.0
+  exorcist: ^2.0.0
   express: ^4.17.1
   express-session: ^1.17.1
   express-winston: ^4.1.0
