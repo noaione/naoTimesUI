@@ -2,13 +2,13 @@
 const gulp = require("gulp");
 const autoprefixer = require("autoprefixer");
 const tailwind = require("tailwindcss");
+const tailwindjit = require("@tailwindcss/jit");
 const cssnano = require("cssnano");
 const postcss = require("postcss");
 
 const swc = require("gulp-swc");
 
-const browserify = require("browserify");
-const exorcist = require("exorcist");
+const esbuild = require("esbuild");
 
 const fs = require("fs");
 const path = require("path");
@@ -113,11 +113,13 @@ function transpile(cb) {
 function css(cb) {
     const logger = loggerMain.child({ fn: "css", cls: "GulpTasks" });
     const cssSources = fs.readFileSync("src/styles.css");
-    const plugins = [tailwind, autoprefixer];
+    let plugins = [tailwind, autoprefixer];
     if (isProd) {
-        plugins.push(cssnano);
+        plugins = [tailwindjit, autoprefixer, cssnano];
     }
-    logger.info(`PostCSS with ${plugins.length} plugins`);
+    logger.info(
+        `PostCSS${plugins.length === 3 ? "+TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
+    );
     postcss(plugins)
         .process(cssSources, { from: "src/styles.css", to: "public/assets/main.css" })
         .then((result) => {
@@ -133,40 +135,16 @@ function css(cb) {
 
 function bundle(cb) {
     const logger = loggerMain.child({ fn: "bundle", cls: "GulpTasks" });
-    const bundler = browserify({ debug: !isProd });
-    logger.info("Preparing Browserify...");
-    bundler.add("lib/projects.js");
-    bundler.transform("babelify", {
-        presets: [
-            [
-                "@babel/preset-env",
-                {
-                    targets: { chrome: "60", ie: "11", esmodules: true },
-                },
-            ],
-        ],
+    logger.info("Bundling projects.js!");
+    esbuild.buildSync({
+        entryPoints: ["lib/projects.js"],
+        bundle: true,
+        outfile: "public/assets/js/projects.bundle.js",
+        minify: isProd,
+        sourcemap: !isProd,
+        target: ["chrome58", "firefox57", "safari11"],
     });
-    if (isProd) {
-        bundler.transform("uglifyify", { global: true });
-    }
-
-    const writeStream = fs.createWriteStream(
-        path.join(__dirname, "public", "assets", "js", "projects.bundle.js")
-    );
-    if (isProd) {
-        logger.info("[Prod] Bundling projects.js...");
-        bundler.bundle().pipe(writeStream);
-    } else {
-        logger.info("[Dev] Bundling projects.js and creating sourceMap...");
-        bundler
-            .bundle()
-            .pipe(exorcist(path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js")))
-            .pipe(writeStream);
-    }
-    writeStream.on("finish", function () {
-        logger.info("Finished bundling projects files!");
-        return cb();
-    });
+    cb();
 }
 
 exports.default = gulp.series(start, clean, transpile, gulp.parallel(css, bundle));
