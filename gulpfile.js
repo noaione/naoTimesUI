@@ -137,6 +137,7 @@ function bundle(cb) {
         minify: isProd,
         sourcemap: !isProd,
         target: ["chrome58", "firefox57", "safari11"],
+        pure: ["console.log", "console.info"], // Strip any info log if minified
     });
     cb();
 }
