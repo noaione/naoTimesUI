@@ -14,14 +14,8 @@ const fs = require("fs");
 const path = require("path");
 const shelljs = require("shelljs");
 
-const get = require("lodash.get");
-const has = require("lodash.has");
+const _ = require("lodash");
 const winston = require("winston");
-
-const _ = {
-    has,
-    get,
-};
 
 const loggerMain = winston.createLogger({
     level: "info",
