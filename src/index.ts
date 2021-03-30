@@ -9,7 +9,7 @@ import express_session from "express-session";
 import express_session_redis from "connect-redis";
 import express_flash from "connect-flash";
 import mongoose from "mongoose";
-import get from "lodash.get";
+import { get } from "lodash";
 import path from "path";
 
 import passport from "./lib/passport";

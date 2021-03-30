@@ -17,8 +17,7 @@ dependencies:
   express-winston: 4.1.0_winston@3.3.3
   ioredis: 4.24.5
   jquery: 3.6.0
-  lodash.get: 4.4.2
-  lodash.has: 4.5.2
+  lodash: 4.17.21
   mongoose: 5.12.2
   passport: 0.4.1
   passport-local: 1.0.0
@@ -3682,16 +3681,13 @@ packages:
     resolution:
       integrity: sha1-hRFc8E9z75ZuztUlEdOJPMRmg68=
   /lodash.get/4.4.2:
+    dev: true
     resolution:
       integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
   /lodash.groupby/4.6.0:
     dev: true
     resolution:
       integrity: sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=
-  /lodash.has/4.5.2:
-    dev: false
-    resolution:
-      integrity: sha1-0Z9NwQlQWMzL4rDN9O4P5Ko3yGI=
   /lodash.memoize/4.1.2:
     dev: true
     resolution:
@@ -6510,8 +6506,7 @@ specifiers:
   gulp-swc: ^1.1.1
   ioredis: ^4.24.5
   jquery: ^3.6.0
-  lodash.get: ^4.4.2
-  lodash.has: ^4.5.2
+  lodash: ^4.17.21
   mongoose: ^5.12.2
   npm-run-all: ^4.1.5
   passport: ^0.4.1
