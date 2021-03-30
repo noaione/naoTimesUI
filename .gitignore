@@ -406,6 +406,7 @@ public/tailwind.css
 public/assets/**/*.css
 
 public/assets/js/*.js
+public/assets/js/*.js.map
 
 # Allow some css.
 
