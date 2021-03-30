@@ -135,7 +135,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 is_admin: false,
                 raw_data: JSON.stringify(animeData[0]),
                 anime_title: animeData[0].title,
-                custom_title: animeData[0].title + " - Projek - Server Panel",
+                custom_title: animeData[0].title + " - Projek - Panel Peladen",
             });
         }
     }
