@@ -59,6 +59,35 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
     return animeSets;
 }
 
+function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
+    const animeSets = [];
+    fetchedData.anime.forEach((anime_data) => {
+        const newData = {};
+        newData["id"] = anime_data.id;
+        newData["title"] = anime_data.title;
+        newData["assignments"] = anime_data.assignments;
+        newData["poster"] = anime_data.poster_data.url;
+        let latestEpisode;
+        for (let ep = 0; ep < anime_data.status.length; ep++) {
+            const status_ep = anime_data.status[ep];
+            if (status_ep.is_done) {
+                continue;
+            }
+            if (isNone(latestEpisode)) {
+                latestEpisode = status_ep;
+                break;
+            }
+        }
+        if (isNone(latestEpisode)) {
+            newData["is_finished"] = true;
+        } else {
+            newData["is_finished"] = false;
+        }
+        animeSets.push(newData);
+    });
+    return animeSets;
+}
+
 function countAnimeStats(servers_data: ShowtimesProps[]) {
     let animeCount = 0;
     let rawProjectCount = 0;
@@ -136,6 +165,32 @@ APIGetRoutes.get("/stats", ensureLoggedIn("/"), async (req, res) => {
                 }
             });
             res.json({ data: statsData, code: 200 });
+        }
+    }
+});
+
+APIGetRoutes.get("/projek", ensureLoggedIn("/"), async (req, res) => {
+    if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
+    } else {
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(501).json({
+                message: "Sorry, this API routes only available to non-admin account",
+                code: 501,
+            });
+        } else {
+            const fetchServers = await ShowtimesModel.findOne(
+                { id: { $eq: userData.id } },
+                {
+                    "anime.id": 1,
+                    "anime.title": 1,
+                    "anime.assignments": 1,
+                    "anime.poster_data": 1,
+                    "anime.status": 1,
+                }
+            );
+            res.json({ data: projectOverviewKeyFilter(fetchServers), code: 200 });
         }
     }
 });
