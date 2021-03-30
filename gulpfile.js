@@ -84,7 +84,8 @@ function clean(cb) {
     shelljs.rm(
         path.join(__dirname, "public", "assets", "main.css"),
         path.join(__dirname, "public", "assets", "js", "projects.bundle.js"),
-        path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js")
+        path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js"),
+        path.join(__dirname, "public", "assets", "js", "projects.bundle.js.map")
     );
     cb();
 }
