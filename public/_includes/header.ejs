@@ -30,7 +30,9 @@
     }
     try {
         const themeStorage = localStorage.getItem("theme");
-        userPreferDark = themeStorage === "dark" ? true : false;
+        if (!isNullified(themeStorage)) {
+            userPreferDark = themeStorage === "dark" ? true : false;
+        }
     } catch (e) {};
     if (isNullified(userPreferDark)) {
         if (systemPreferDark) {
