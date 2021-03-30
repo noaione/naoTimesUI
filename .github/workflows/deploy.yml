@@ -1,0 +1,23 @@
+name: Production
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    if: |
+      !contains(github.event.head_commit.message, 'skip ci') &&
+      !contains(github.event.head_commit.message, 'skip deploy')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute deployment script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: 22
+          script: |
+            /var/www/naotimes-webui/deploy.sh
