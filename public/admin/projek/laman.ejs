@@ -39,6 +39,9 @@
                     </div>
 
                     <div class="flex items-center space-x-4">
+                        <button class="flex text-gray-600 dark:text-gray-300 transition-colors duration-300 ease-in-out hover:text-gray-400 focus:outline-none" onclick="toggleTheme();">
+                            <span class="material-icons">mode_night</span>
+                        </button>
                         <div x-data="{ dropdownOpen: false }" class="relative">
                             <button @click="dropdownOpen = ! dropdownOpen"
                                 class="flex items-center space-x-2 relative focus:outline-none">
@@ -80,7 +83,7 @@
                                         <div id="ostats-anime"
                                             class="text-2xl font-bold text-gray-900 dark:text-gray-200"><%= anime_title %></div>
                                         <div class="text-sm text-green-400 animate-pulse" aria-class="projek-kolaborasi">Memuat data...</div>
-                                        <div class="text-sm text-gray-400 animate-pulse" aria-class="projek-alias">Aliases: Memuat...</div>
+                                        <div class="text-sm text-gray-600 dark:text-gray-300 animate-pulse" aria-class="projek-alias">Aliases: Memuat...</div>
                                         <div class="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1">Staff
                                         </div>
                                         <div class="flex flex-col gap-2 mt-2" aria-class="projek-roles">
@@ -104,7 +107,7 @@
                                                 class="show-ep-edit focus:outline-none text-white text-sm py-1 px-3 rounded-md bg-red-500 hover:bg-red-600 hover:shadow-lg">Edit</button>
                                         </div>
                                     </div>
-                                    <span class="font-semibold text-gray-300 ">Rilis: ❌</span>
+                                    <span class="font-semibold text-gray-800 dark:text-gray-300 ">Rilis: ❌</span>
                                     <span class="font-semibold mt-2 dark:text-gray-100">Proses</span>
                                     <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
                                         <div class="text-sm text-black rounded-full px-3 bg-green-300"

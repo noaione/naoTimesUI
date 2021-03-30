@@ -43,6 +43,9 @@
                     </div>
 
                     <div class="flex items-center space-x-4">
+                        <button class="flex text-gray-600 dark:text-gray-300 focus:outline-none" onclick="toggleTheme();">
+                            <span class="material-icons">mode_night</span>
+                        </button>
                         <div x-data="{ dropdownOpen: false }" class="relative">
                             <button @click="dropdownOpen = ! dropdownOpen"
                                 class="flex items-center space-x-2 relative focus:outline-none">
