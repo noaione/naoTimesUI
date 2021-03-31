@@ -85,6 +85,21 @@ export async function emitSocketAndWait(event: string, data: any) {
         parsedData = parsedData.replace("\x04", "");
     }
     const JSONified = JSON.parse(parsedData);
+    if (JSONified.success === -1) {
+        // Need auth, redo the whole thing.
+        if (isNone(process.env.BOT_SOCKET_PASSWORD)) {
+            logger.error("Server requested authentication but there's no password provided");
+            throw new Error("Bot socket need authentication and there's no provided password in ENV file");
+        }
+        try {
+            logger.info("Server requested authentication, authenticating with provided password");
+            await emitSocketAndWait("authenticate", process.env.BOT_SOCKET_PASSWORD);
+            logger.info("Authentication completed, emitting the original event again.");
+            return await emitSocketAndWait(event, data);
+        } catch (e) {
+            throw new Error("Wrong password for authenticating, cannot emit the original event");
+        }
+    }
     if (JSONified.success !== 1) {
         throw new Error(JSONified.message);
     }
