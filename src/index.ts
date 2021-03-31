@@ -16,11 +16,12 @@ import path from "path";
 
 import passport from "./lib/passport";
 import redisCreate from "./lib/redis";
-import { APIRoutes } from "./routes/api";
+import { emitSocketAndWait } from "./lib/socket";
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
+import { filterToSpecificAnime, isNone, romanizeNumber } from "./lib/utils";
 import { UserProps } from "./models/user";
 import { ShowtimesModel } from "./models/show";
-import { filterToSpecificAnime, romanizeNumber } from "./lib/utils";
+import { APIRoutes } from "./routes/api";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
@@ -245,6 +246,19 @@ app.use(function (err: any, _q: express.Request, res: express.Response, _n: expr
     }
 });
 
-app.listen(5000, () => {
-    console.info("App now running at port 5000!");
-});
+if (!isNone(process.env.BOT_SOCKET_PASSWORD)) {
+    logger.info("Authenticating to Bot socket...");
+    emitSocketAndWait("authenticate", process.env.BOT_SOCKET_PASSWORD).then((res) => {
+        if (res === "ok") {
+            app.listen(5000, () => {
+                logger.info("🚀 App now running at port http://127.0.0.1:5000");
+            });
+        } else {
+            logger.error("Failed to authenticate to bot socket, please check");
+        }
+    });
+} else {
+    app.listen(5000, () => {
+        logger.info("🚀 App now running at port http://127.0.0.1:5000");
+    });
+}
