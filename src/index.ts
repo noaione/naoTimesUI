@@ -39,7 +39,9 @@ const gitExec = shelljs.exec(`git log --format="%H" -n 1`, { silent: true });
 let fullCommits = "";
 if (gitExec.code === 0) {
     fullCommits = gitExec.stdout.trimEnd();
-    logger.info(`Running naoTimesUI version ${fullCommits.slice(0, 7)}`);
+    logger.info(`Running naoTimesUI v${packageJson["version"]} (${fullCommits.slice(0, 7)})`);
+} else {
+    logger.info(`Running naoTimesUI v${packageJson["version"]}`);
 }
 
 app.use("/robots.txt", (_q, res) => {
