@@ -24,6 +24,7 @@ import { filterToSpecificAnime } from "./lib/utils";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
+const startTime = new Date().getTime().toString();
 
 logger.info("Connecting to database...");
 mongoose.connect(process.env.MONGODB_URI, {
@@ -92,9 +93,9 @@ app.get("/", (req, res) => {
         const flashed = req.flash();
         const errors = get(flashed, "error", []);
         if (errors.length > 0) {
-            res.render("index", { error_msg: errors.join(", ") });
+            res.render("index", { error_msg: errors.join(", "), build_time: startTime });
         } else {
-            res.render("index", { error_msg: "" });
+            res.render("index", { error_msg: "", build_time: startTime });
         }
     }
 });
@@ -106,6 +107,7 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
         is_admin: user.privilege === "owner",
         commit: fullCommits,
         app_version: packageJson["version"],
+        build_time: startTime,
     });
 });
 
@@ -118,6 +120,7 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             path: req.path,
             commit: fullCommits,
             app_version: packageJson["version"],
+            build_time: startTime,
         });
     } else {
         res.render("admin/projek/index", {
@@ -125,6 +128,7 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             is_admin: false,
             commit: fullCommits,
             app_version: packageJson["version"],
+            build_time: startTime,
         });
     }
 });
@@ -138,6 +142,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             path: req.path,
             commit: fullCommits,
             app_version: packageJson["version"],
+            build_time: startTime,
         });
     } else {
         const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
@@ -149,6 +154,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 path: req.path,
                 commit: fullCommits,
                 app_version: packageJson["version"],
+                build_time: startTime,
             });
         } else {
             res.render("admin/projek/laman", {
@@ -159,6 +165,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 custom_title: animeData[0].title + " - Projek - Panel Peladen",
                 app_version: packageJson["version"],
                 commit: fullCommits,
+                build_time: startTime,
             });
         }
     }
@@ -171,6 +178,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         is_admin: user.privilege === "owner",
         commit: fullCommits,
         app_version: packageJson["version"],
+        build_time: startTime,
     });
 });
 
@@ -179,7 +187,7 @@ app.use("/api", APIRoutes);
 app.use(expressErrorLogger);
 
 app.use((req, res, next) => {
-    res.status(404).render("404", { path: req.path });
+    res.status(404).render("404", { path: req.path, build_time: startTime });
     next();
 });
 
@@ -189,6 +197,7 @@ app.use(function (err: any, _q: express.Request, res: express.Response, _n: expr
         res.status(500).render("error_page", {
             status_code: 500,
             err_msg: err.toString(),
+            build_time: startTime,
         });
     }
 });

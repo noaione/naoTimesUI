@@ -56,4 +56,8 @@
         } catch (e) {};
     };
 </script>
-<link rel="stylesheet" href="/assets/main.css">
+<% if (locals.build_time) { %>
+<link rel="stylesheet" href="/assets/main.css?<%= build_time %>">
+<% } else { %>
+<link rel="stylesheet" href="/assets/main.css?<%= (new Date()).getTime() %>">
+<% } %>

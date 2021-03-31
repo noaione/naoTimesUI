@@ -3,9 +3,9 @@
 
 <head>
     <% if (is_admin) { %>
-    <%- include("../_includes/header", {title: "Pengaturan - Panel Admin"}) %>
+    <%- include("../_includes/header", {title: "Pengaturan - Panel Admin", build_time: build_time}) %>
     <% } else { %>
-    <%- include("../_includes/header", {title: "Pengaturan - Panel Peladen"}) %>
+    <%- include("../_includes/header", {title: "Pengaturan - Panel Peladen", build_time: build_time}) %>
     <% } %>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
