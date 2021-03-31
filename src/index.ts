@@ -10,6 +10,7 @@ import express_session_redis from "connect-redis";
 import express_flash from "connect-flash";
 import mongoose from "mongoose";
 import { get } from "lodash";
+import { readFileSync } from "fs";
 import shelljs from "shelljs";
 import path from "path";
 
@@ -22,6 +23,7 @@ import { ShowtimesModel } from "./models/show";
 import { filterToSpecificAnime } from "./lib/utils";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
+const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
 
 logger.info("Connecting to database...");
 mongoose.connect(process.env.MONGODB_URI, {
@@ -101,6 +103,7 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
         user_id: user.id,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
+        app_version: packageJson["version"],
     });
 });
 
@@ -112,12 +115,14 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
+            app_version: packageJson["version"],
         });
     } else {
         res.render("admin/projek/index", {
             user_id: user.id,
             is_admin: false,
             commit: fullCommits,
+            app_version: packageJson["version"],
         });
     }
 });
@@ -130,6 +135,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
+            app_version: packageJson["version"],
         });
     } else {
         const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
@@ -140,6 +146,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 is_admin: false,
                 path: req.path,
                 commit: fullCommits,
+                app_version: packageJson["version"],
             });
         } else {
             res.render("admin/projek/laman", {
@@ -148,6 +155,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 raw_data: JSON.stringify(animeData[0]),
                 anime_title: animeData[0].title,
                 custom_title: animeData[0].title + " - Projek - Panel Peladen",
+                app_version: packageJson["version"],
                 commit: fullCommits,
             });
         }
@@ -160,6 +168,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         user_id: user.id,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
+        app_version: packageJson["version"],
     });
 });
 
