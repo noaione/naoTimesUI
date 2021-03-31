@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include("../../_includes/header", {title: "Tambah Proyek - Panel Peladen", build_time: build_time}) %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        h1 {
+            font-size: xx-large;
+        }
+
+        h2 {
+            font-size: x-large;
+        }
+    </style>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <div x-data="{ sidebarOpen: false }">
+        <div class="flex h-screen bg-gray-100 dark:bg-gray-800 font-roboto">
+            <%- include("../../_includes/sidenav", {...locals, nav: "projeklaman"}) %>
+
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <header class="flex justify-between items-center p-6 bg-white dark:bg-gray-900">
+                    <div class="flex items-center space-x-4 lg:space-x-0">
+                        <button @click="sidebarOpen = true"
+                            class="text-gray-500 dark:text-gray-300 focus:outline-none lg:hidden">
+                            <span class="material-icons h-6 w-6 mt-2">menu</span>
+                            <!-- <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> -->
+                        </button>
+
+                        <div>
+                            <h1 class="text-2xl font-medium text-gray-800 dark:text-white">Tambah Proyek</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4">
+                        <button class="flex text-gray-600 dark:text-gray-300 transition-colors duration-300 ease-in-out hover:text-gray-400 focus:outline-none" onclick="toggleTheme();">
+                            <span class="material-icons">mode_night</span>
+                        </button>
+                        <div x-data="{ dropdownOpen: false }" class="relative">
+                            <button @click="dropdownOpen = ! dropdownOpen"
+                                class="flex items-center space-x-2 relative focus:outline-none">
+                                <h2 class="text-gray-700 dark:text-gray-300 text-sm hidden sm:block"><%= user_id %>
+                                </h2>
+                                <span class="material-icons mt-2 h-9 w-9 object-cover dark:text-white">
+                                    <% if (is_admin) { %>
+                                    admin_panel_settings
+                                    <% } else { %>
+                                    person
+                                    <% } %>
+                                </span>
+                            </button>
+
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+                                x-show="dropdownOpen" x-transition:enter="transition ease-out duration-100 transform"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75 transform"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95" @click.away="dropdownOpen = false">
+                                <a href="/api/auth/logout"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white">Keluar</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+            <main id="root" class="flex-1 overflow-x-auto overflow-y-auto" aria-type="projek-add">
+                <div class="container mx-auto px-6 pt-8 pb-4">
+                    <div id="projek-tambah" class="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
+                        <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
+                            <!-- Auto wrap to column mode for small screen -->
+                            <div class="flex flex-col md:flex-row py-1">
+                                <div class="icon h-5/6 p-1 mr-3" aria-class="projek-poster">
+                                    <div class="px-32 py-44 animate-pulse bg-gray-400"></div>
+                                </div>
+                                <div class="flex flex-col pb-2">
+                                    <form id="projek-tambah-form" method="POST" action="/api/showtimes/projek">
+
+                                        <div class>
+                                            <label for="username" class="text-xs font-semibold dark:text-white mb-1">Anime</label>
+                                            <select id="anime-select" class="w-full"></select>
+                                        </div>
+                                        <div class="text-xs font-semibold text-red-400">Role akan dibuat otomatis, cukup periksa Server anda untuk Role baru</div>
+                                        <div class="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-2">Staf</div>
+                                        <div class="text-xs font-semibold text-red-400">Mohon masukan ID Discord user, bisa dikosongkan</div>
+                                        <div class="grid gap-2 sm:grid-cols-1 lg:grid-cols-2">
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="tlor-id" class="text-sm font-semibold dark:text-white mb-1">Penerjemah</label>
+                                                    <input id="tlor-id" type="text" name="tlor-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="tlcer-id" class="text-sm font-semibold dark:text-white mb-1">Pemeriksa Terjemahan</label>
+                                                    <input id="tlcer-id" type="text" name="tlcer-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="enc-id" class="text-sm font-semibold dark:text-white mb-1">Peramu Video</label>
+                                                    <input id="enc-id" type="text" name="enc-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="editor-id" class="text-sm font-semibold dark:text-white mb-1">Penyunting</label>
+                                                    <input id="editor-id" type="text" name="editor-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="tser-id" class="text-sm font-semibold dark:text-white mb-1">Penata Rias</label>
+                                                    <input id="tser-id" type="text" name="tser-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="timer-id" class="text-sm font-semibold dark:text-white mb-1">Penyesuai Waktu</label>
+                                                    <input id="timer-id" type="text" name="timer-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                            <div class="flex -mx-3">
+                                                <div class="w-full px-3 mb-1">
+                                                    <label for="qcer-id" class="text-sm font-semibold dark:text-white mb-1">Pemeriksa Akhir</label>
+                                                    <input id="qcer-id" type="text" name="qcer-id"
+                                                        class="w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        placeholder="xxxxxxxxxxxxxxxxxx">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/projects.bundle.js"></script>
+</body>
+</html>
