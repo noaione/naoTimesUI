@@ -48,3 +48,48 @@ export function filterToSpecificAnime(results: ShowtimesProps, anime_id: string)
     const animeLists = results.anime.filter((res) => res.id === anime_id);
     return animeLists;
 }
+
+export function romanizeNumber(number: number): string {
+    if (isNaN(number)) {
+        return "NaN";
+    }
+    const digits = String(+number).split("");
+    const romankeys = [
+        "",
+        "C",
+        "CC",
+        "CCC",
+        "CD",
+        "D",
+        "DC",
+        "DCC",
+        "DCCC",
+        "CM",
+        "",
+        "X",
+        "XX",
+        "XXX",
+        "XL",
+        "L",
+        "LX",
+        "LXX",
+        "LXXX",
+        "XC",
+        "",
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "IX",
+    ];
+    let roman = "";
+    let i = 3;
+    while (i--) {
+        roman = (romankeys[+digits.pop() + i * 10] || "") + roman;
+    }
+    return Array(+digits.join("") + 1).join("M") + roman;
+}
