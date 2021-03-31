@@ -75,19 +75,23 @@
                         <div id="projek-data" class="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
                             <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
                                 <div class="flex py-1">
-                                    <div class="icon h-5/6 p-1 mr-3">
-                                        <img src="data:image/svg+xml,%3Csvg width='200' height='299' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='svg_4' x1='0' y1='0' x2='0.99609' y2='1' spreadMethod='pad'%3E%3Cstop stop-color='%23939393' stop-opacity='0.99219' offset='0.00781'/%3E%3Cstop stop-color='%23969696' stop-opacity='0.99219' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Ctitle%3ELayer 1%3C/title%3E%3Crect fill='url(%23svg_4)' stroke='%23000' opacity='undefined' x='0' y='0' width='200' height='299' id='svg_1' stroke-width='0'/%3E%3C/g%3E%3C/svg%3E"
-                                            class="transition duration-300 ease-out transform hover:-translate-y-1" aria-class="projek-poster">
+                                    <div class="icon h-5/6 p-1 mr-3" aria-class="projek-poster">
+                                        <div class="px-24 py-36 animate-pulse bg-gray-400"></div>
                                     </div>
                                     <div class="flex flex-col pb-2">
-                                        <div id="ostats-anime"
-                                            class="text-2xl font-bold text-gray-900 dark:text-gray-200"><%= anime_title %></div>
-                                        <div class="text-sm text-green-400 animate-pulse" aria-class="projek-kolaborasi">Memuat data...</div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-300 animate-pulse" aria-class="projek-alias">Alias: Memuat...</div>
+                                        <div id="ostats-anime" class="text-2xl font-bold text-gray-900 dark:text-gray-200"><%= anime_title %></div>
+                                        <div class="text-sm text-green-400 py-2 px-6 bg-gray-400 animate-pulse rounded-lg mt-1" aria-class="projek-kolaborasi"></div>
+                                        <div class="text-sm text-gray-600 dark:text-gray-300 py-2 px-6 bg-gray-400 animate-pulse rounded-lg mt-1" aria-class="projek-alias"></div>
                                         <div class="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1">Staf
                                         </div>
                                         <div class="flex flex-col gap-2 mt-2" aria-class="projek-roles">
-                                            <div id="role-to-delete" class="dark:text-gray-200 font-bold animate-pulse">Memuat data...</div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
+                                            <div class="py-2 px-6 bg-gray-400 font-bold animate-pulse rounded-lg"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -100,36 +104,116 @@
                             <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
                                 <div class="flex flex-col py-1" aria-show-episode="XX">
                                     <div class="flex justify-between items-center">
-                                        <div class="flex items-center font-bold text-black dark:text-gray-200">Episode
-                                            XX</div>
+                                        <div class="flex items-center font-bold bg-gray-400 rounded-lg py-2 px-20 animate-pulse"></div>
                                         <div class="flex items-center">
-                                            <button type="button" aria-show-episode="XX"
-                                                class="show-ep-edit focus:outline-none text-white text-sm py-1 px-3 rounded-md bg-red-500 hover:bg-red-600 hover:shadow-lg">Edit</button>
+                                            <div class="px-6 py-3 bg-gray-400 animate-pulse rounded-lg"></div>
                                         </div>
                                     </div>
-                                    <span class="font-semibold text-gray-800 dark:text-gray-300 ">Rilis: ❌</span>
-                                    <span class="font-semibold mt-2 dark:text-gray-100">Proses</span>
-                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
-                                        <div class="text-sm text-black rounded-full px-3 bg-green-300"
-                                            title="Pengalih Bahasa - naru">TL</div>
-                                        <div class="text-sm text-black rounded-full px-3 bg-yellow-300"
-                                            title="Pemeriksa Alih Bahasa - naru">TLC</div>
-                                        <div class="text-sm text-black rounded-full px-3 bg-blue-300"
-                                            title="Editor - naru">Edit</div>
-                                        <div class="text-sm text-black rounded-full px-3 bg-pink-300"
-                                            title="Penata Waktu - naru">Timing</div>
-                                        <div class="text-sm text-black rounded-full px-3 bg-purple-300"
-                                            title="Penata Rias - N4O">TS</div>
-                                        <div class="text-sm text-black rounded-full px-3 bg-indigo-300"
-                                            title="Pemeriksa Akhir - naru">QC</div>
+                                    <div class="flex">
+                                        <span class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></span>
                                     </div>
-                                    <span class="font-semibold mt-2 dark:text-gray-100">Beres</span>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
                                     <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
-                                        <div class="text-sm text-black rounded-full px-3 bg-red-300"
-                                            title="Peramu Video - naru">Encode</div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
+                                <div class="flex flex-col py-1" aria-show-episode="XX">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center font-bold bg-gray-400 rounded-lg py-2 px-20 animate-pulse"></div>
+                                        <div class="flex items-center">
+                                            <div class="px-6 py-3 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
+                                <div class="flex flex-col py-1" aria-show-episode="XX">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center font-bold bg-gray-400 rounded-lg py-2 px-20 animate-pulse"></div>
+                                        <div class="flex items-center">
+                                            <div class="px-6 py-3 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                    </div>
+                                    <div class="flex">
+                                        <span class="px-6 py-2 mt-3 bg-gray-400 animate-pulse rounded-lg"></span>
+                                    </div>
+                                    <div class="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                        <div class="px-8 py-2 bg-gray-400 animate-pulse rounded-lg"></div>
+                                    </div>
+                                </div>
+                            </div>                            
                         </div>
                     </div>
                 </main>
