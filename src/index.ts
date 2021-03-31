@@ -10,6 +10,7 @@ import express_session_redis from "connect-redis";
 import express_flash from "connect-flash";
 import mongoose from "mongoose";
 import { get } from "lodash";
+import shelljs from "shelljs";
 import path from "path";
 
 import passport from "./lib/passport";
@@ -32,6 +33,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const SECRET_KEYS = process.env.TOKEN_SECRET;
 const app = express();
+const gitExec = shelljs.exec(`git log --format="%H" -n 1`, { silent: true });
+let fullCommits = "";
+if (gitExec.code === 0) {
+    fullCommits = gitExec.stdout.trimEnd();
+    logger.info(`Running naoTimesUI version ${fullCommits.slice(0, 7)}`);
+}
 
 app.use("/robots.txt", (_q, res) => {
     res.send(`
@@ -93,6 +100,7 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
     res.render("admin/index", {
         user_id: user.id,
         is_admin: user.privilege === "owner",
+        commit: fullCommits,
     });
 });
 
@@ -103,11 +111,13 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             user_id: user.id,
             is_admin: user.privilege === "owner",
             path: req.path,
+            commit: fullCommits,
         });
     } else {
         res.render("admin/projek/index", {
             user_id: user.id,
             is_admin: false,
+            commit: fullCommits,
         });
     }
 });
@@ -119,6 +129,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             user_id: user.id,
             is_admin: user.privilege === "owner",
             path: req.path,
+            commit: fullCommits,
         });
     } else {
         const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
@@ -128,6 +139,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 user_id: user.id,
                 is_admin: false,
                 path: req.path,
+                commit: fullCommits,
             });
         } else {
             res.render("admin/projek/laman", {
@@ -136,6 +148,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 raw_data: JSON.stringify(animeData[0]),
                 anime_title: animeData[0].title,
                 custom_title: animeData[0].title + " - Projek - Panel Peladen",
+                commit: fullCommits,
             });
         }
     }
@@ -146,6 +159,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
     res.render("admin/atur", {
         user_id: user.id,
         is_admin: user.privilege === "owner",
+        commit: fullCommits,
     });
 });
 
