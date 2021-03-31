@@ -24,6 +24,8 @@ query ($search:String) {
             }
             coverImage {
                 medium
+                large
+                extraLarge
             }
         }
     }
