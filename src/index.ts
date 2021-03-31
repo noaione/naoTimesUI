@@ -20,7 +20,7 @@ import { APIRoutes } from "./routes/api";
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
 import { UserProps } from "./models/user";
 import { ShowtimesModel } from "./models/show";
-import { filterToSpecificAnime } from "./lib/utils";
+import { filterToSpecificAnime, romanizeNumber } from "./lib/utils";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
@@ -36,6 +36,18 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const SECRET_KEYS = process.env.TOKEN_SECRET;
 const app = express();
+const currentYear = romanizeNumber(new Date().getUTCFullYear());
+const sinceYear = romanizeNumber(packageJson["copyright"]["since"] || 2021);
+const copyrightTo = packageJson["copyright"]["name"] || "naoTimesDev";
+const copyrightData = {
+    name: copyrightTo,
+};
+if (currentYear !== sinceYear) {
+    copyrightData["year"] = `${sinceYear}-${currentYear}`;
+} else {
+    copyrightData["year"] = sinceYear;
+}
+
 const gitExec = shelljs.exec(`git log --format="%H" -n 1`, { silent: true });
 let fullCommits = "";
 if (gitExec.code === 0) {
@@ -108,6 +120,7 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
         commit: fullCommits,
         app_version: packageJson["version"],
         build_time: startTime,
+        copyright: copyrightData,
     });
 });
 
@@ -121,6 +134,7 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
+            copyright: copyrightData,
         });
     } else {
         res.render("admin/projek/index", {
@@ -129,6 +143,31 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
+            copyright: copyrightData,
+        });
+    }
+});
+
+app.get("/admin/projek/tambah", ensureLoggedIn("/"), async (req, res) => {
+    const user = req.user as UserProps;
+    if (user.privilege === "owner") {
+        res.status(403).render("admin/404", {
+            user_id: user.id,
+            is_admin: true,
+            path: req.path,
+            commit: fullCommits,
+            app_version: packageJson["version"],
+            build_time: startTime,
+            copyright: copyrightData,
+        });
+    } else {
+        res.render("admin/projek/tambah", {
+            user_id: user.id,
+            is_admin: false,
+            commit: fullCommits,
+            app_version: packageJson["version"],
+            build_time: startTime,
+            copyright: copyrightData,
         });
     }
 });
@@ -143,6 +182,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
+            copyright: copyrightData,
         });
     } else {
         const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
@@ -155,6 +195,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 commit: fullCommits,
                 app_version: packageJson["version"],
                 build_time: startTime,
+                copyright: copyrightData,
             });
         } else {
             res.render("admin/projek/laman", {
@@ -166,6 +207,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 app_version: packageJson["version"],
                 commit: fullCommits,
                 build_time: startTime,
+                copyright: copyrightData,
             });
         }
     }
@@ -179,6 +221,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         commit: fullCommits,
         app_version: packageJson["version"],
         build_time: startTime,
+        copyright: copyrightData,
     });
 });
 
