@@ -113,7 +113,7 @@ function css(cb) {
         plugins = [tailwindjit, autoprefixer, cssnano];
     }
     logger.info(
-        `PostCSS${plugins.length === 3 ? "+TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
+        `PostCSS+${plugins.length === 3 ? "TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
     );
     postcss(plugins)
         .process(cssSources, { from: "src/styles.css", to: "public/assets/main.css" })
