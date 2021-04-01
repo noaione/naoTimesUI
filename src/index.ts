@@ -202,6 +202,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             res.render("admin/projek/laman", {
                 user_id: user.id,
                 is_admin: false,
+                anime_id: animeData[0].id,
                 raw_data: JSON.stringify(animeData[0]),
                 anime_title: animeData[0].title,
                 custom_title: animeData[0].title + " - Projek - Panel Peladen",
