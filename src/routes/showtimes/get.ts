@@ -154,7 +154,7 @@ APIGetRoutes.get("/stats", ensureLoggedIn("/"), async (req, res) => {
             fetchServers.anime.forEach((anime) => {
                 let anyUndone = false;
                 anime.status.forEach((res) => {
-                    if (res.is_done) {
+                    if (!res.is_done) {
                         anyUndone = true;
                     }
                 });
