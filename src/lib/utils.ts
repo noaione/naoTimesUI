@@ -207,6 +207,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
     };
 
     const airingSchedules: any[] = get(rawResults, "airingSchedule.nodes", []);
+    if (airingSchedules.length < 1 && isNone(startDate)) return compiledData;
     if (airingSchedules.length < 1) {
         for (let i = 0; i < expected_episode; i++) {
             let airingTime = null;
@@ -252,7 +253,6 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
             compiledData["status"].push(statusSets);
         });
     }
-    console.info(compiledData);
 
     return compiledData;
 }

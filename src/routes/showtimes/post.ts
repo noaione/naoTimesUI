@@ -159,6 +159,21 @@ async function addNewProject(dataToAdd: any) {
             name: null,
         },
     };
+    const apiRequest = await getAnimeInfo(animeId);
+    if (Object.keys(apiRequest).length < 1) {
+        logger.error("Failed to fetch the API, got no results!");
+        return { success: false, message: "Gagal mendapatkan dari Anilist, mohon coba lagi nanti!" };
+    }
+    logger.info("Parsing results...");
+    const finalizedAnimeData = parseAnilistAPIResult(apiRequest, expectedEpisode);
+    if (finalizedAnimeData.status.length < 1) {
+        return {
+            success: false,
+            message:
+                // eslint-disable-next-line max-len
+                "Mohon maaf, anime tidak bisa ditambahkan karena tidak ada waktu tayang yang pasti, mohon coba lagi nanti",
+        };
+    }
     const cachedUserID = {};
     for (let i = 0; i < addedRoles.length; i++) {
         const element = addedRoles[i];
@@ -197,18 +212,14 @@ async function addNewProject(dataToAdd: any) {
 
     const roleId = generatedRole["id"];
     logger.info(`Fetching Anime information for ${animeId}`);
-    const apiRequest = await getAnimeInfo(animeId);
-    if (Object.keys(apiRequest).length < 1) {
-        logger.error("Failed to fetch the API, got no results!");
-        return { success: false, message: "Gagal mendapatkan dari Anilist, mohon coba lagi nanti!" };
-    }
-    logger.info("Parsing results...");
-    const finalizedAnimeData = parseAnilistAPIResult(apiRequest, expectedEpisode);
     finalizedAnimeData["role_id"] = roleId;
     finalizedAnimeData["assignments"] = validatedRoles;
     logger.info("Updating by pushing the new finalized data to the database...");
     try {
-        await ShowtimesModel.update({ id: { $eq: serverId } }, { $addToSet: { anime: finalizedAnimeData } });
+        await ShowtimesModel.updateOne(
+            { id: { $eq: serverId } },
+            { $addToSet: { anime: finalizedAnimeData } }
+        );
     } catch (err) {
         logger.error("Failed to update the server state, returning an undefined data...");
         console.error(err);
