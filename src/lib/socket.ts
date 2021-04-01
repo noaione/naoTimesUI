@@ -10,6 +10,8 @@ const sleep = promisify(setTimeout);
 const logger = MainLoggger.child({ cls: "SocketConn" });
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 logger.info(`Preparing a saved host:port at ${process.env.BOT_SOCKET_HOST}:${process.env.BOT_SOCKET_PORT}`);
+type SocketEvent = "authenticate" | "pull data" | "get server" | "get user" | "create role" | "ping";
+type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
     const HOST = process.env.BOT_SOCKET_HOST || "127.0.0.1";
@@ -31,7 +33,7 @@ function createNewSocket() {
     return client;
 }
 
-export function emitSocket(event: string, data: any) {
+export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
 
     client.on("connect", function () {
@@ -49,7 +51,7 @@ export function emitSocket(event: string, data: any) {
     });
 }
 
-export async function emitSocketAndWait(event: string, data: any) {
+export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
 
     let isConnected = false;
