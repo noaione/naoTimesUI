@@ -3,7 +3,7 @@ import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
 
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
-import { emitSocketAndWait } from "../../lib/socket";
+import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 
@@ -54,11 +54,11 @@ async function doAnimeChanges(
         role = role.toUpperCase();
         const userId: Nullable<string> = changes["user_id"];
         if (isNone(userId)) return databaseData;
-        const userInfo = await emitSocketAndWait("get user", userId);
         let userName: Nullable<string> = null;
-        if (userInfo.success === 1) {
-            userName = userInfo.name as string;
-        }
+        try {
+            const userInfo = await emitSocketAndWait("get user", userId);
+            userName = userInfo.name;
+        } catch (e) {}
         const newUserData = { id: userId, name: userName };
         databaseData.anime[indexAnime].assignments[role] = newUserData;
         return databaseData;
@@ -99,7 +99,7 @@ async function doAnimeChanges(
     return databaseData;
 }
 
-APIPutRoutes.put("/anime/:anime_id", ensureLoggedIn("/"), async (req, res) => {
+APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
     const jsonBody = req.body;
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
         return res.status(400).json({ message: "missing JSON body", code: 400 });
@@ -135,7 +135,17 @@ APIPutRoutes.put("/anime/:anime_id", ensureLoggedIn("/"), async (req, res) => {
                     const modifedData = await doAnimeChanges(eventType, serverData, changes);
                     // @ts-ignore
                     await ShowtimesModel.updateOne({ id: { $eq: userData.id } }, modifedData);
-                    res.json({ done: true });
+                    if (eventType === "staff") {
+                        const roleChange = changes.role;
+                        const indexAnime = _.findIndex(
+                            modifedData.anime,
+                            (pred) => pred.id === changes.anime_id
+                        );
+                        const roleChanges = modifedData.anime[indexAnime].assignments[roleChange];
+                        res.json({ ...roleChanges, success: true });
+                    } else {
+                        res.json({ success: false });
+                    }
                 }
             }
         } else {
@@ -143,7 +153,15 @@ APIPutRoutes.put("/anime/:anime_id", ensureLoggedIn("/"), async (req, res) => {
             const modifedData = await doAnimeChanges(eventType, serverData, changes);
             // @ts-ignore
             await ShowtimesModel.updateOne({ id: { $eq: userData.id } }, modifedData);
-            res.json({ done: true });
+            emitSocket("pull data", userData.id);
+            if (eventType === "staff") {
+                const roleChange = changes.role;
+                const indexAnime = _.findIndex(modifedData.anime, (pred) => pred.id === changes.anime_id);
+                const roleChanges = modifedData.anime[indexAnime].assignments[roleChange];
+                res.json({ ...roleChanges, success: true });
+            } else {
+                res.json({ success: false });
+            }
         }
     }
 });
