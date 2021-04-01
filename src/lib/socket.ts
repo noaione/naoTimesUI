@@ -10,7 +10,14 @@ const sleep = promisify(setTimeout);
 const logger = MainLoggger.child({ cls: "SocketConn" });
 dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 logger.info(`Preparing a saved host:port at ${process.env.BOT_SOCKET_HOST}:${process.env.BOT_SOCKET_PORT}`);
-type SocketEvent = "authenticate" | "pull data" | "get server" | "get user" | "create role" | "ping";
+type SocketEvent =
+    | "authenticate"
+    | "pull data"
+    | "get server"
+    | "get user"
+    | "create role"
+    | "announce drop"
+    | "ping";
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
