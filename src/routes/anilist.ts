@@ -14,6 +14,7 @@ query ($search:String) {
             format
             season
             seasonYear
+            episodes
             startDate {
                 year
             }
