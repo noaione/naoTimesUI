@@ -9,31 +9,31 @@ const ShowAnimeSchemas = createSchema(
         start_time: Type.number(),
         assignments: Type.object({ required: true }).of({
             TL: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             TLC: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             ENC: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             ED: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             TM: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             TS: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
             QC: Type.object({ required: true }).of({
-                id: Type.string({ required: true }),
+                id: Type.string(),
                 name: Type.string(),
             }),
         }),
@@ -93,6 +93,7 @@ const ShowAdminSchemas = createSchema(
     }
 );
 
+export type ShowAnimeProps = ExtractProps<typeof ShowAnimeSchemas>;
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
 export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
 export const ShowtimesModel = typedModel("showtimesdatas", ShowtimesSchemas);
