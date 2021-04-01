@@ -2,7 +2,7 @@ import _ from "lodash";
 import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
 
-import { isNone, Nullable } from "../../lib/utils";
+import { isNone, Nullable, verifyExist } from "../../lib/utils";
 import { emitSocketAndWait } from "../../lib/socket";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
@@ -15,16 +15,6 @@ type AnimeChangeEvent = "staff" | "status";
 interface StatusRoleChanges {
     role?: ProjectRole;
     tick?: boolean;
-}
-
-function verifyExist(data: any, key: string, expected: any) {
-    if (isNone(data)) return false;
-    if (isNone(data[key])) return false;
-    if (expected === "array") {
-        return Array.isArray(data[key]);
-    }
-    if (typeof data[key] !== expected) return false;
-    return true;
 }
 
 function verifyChangesContents(event: AnimeChangeEvent, changes: any) {
