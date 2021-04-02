@@ -65,8 +65,8 @@ const RoleColorPalette = {
 };
 
 const RoleExpandedName = {
-    TL: "Translasi",
-    TLC: "Cek Translasi",
+    TL: "Terjemahan",
+    TLC: "Cek Terjemahan",
     ENC: "Olahan Video",
     ED: "Menggubah Skrip",
     TM: "Selaras Waktu",
@@ -142,11 +142,12 @@ function generateEpisodeData(episodeStatus, aniId, extended = false) {
                 unfinishedStatus.forEach((role) => {
                     tempData += generateRole(role);
                 });
+                content += " sisa";
                 roleContent = ejs.render($RoleSlot, { content: tempData });
             } else {
                 roleContent = "Menunggu dirilis!";
             }
-            content = roleContent;
+            content += roleContent;
         } else {
             let airedContent = "";
             if (episodeStatus.airtime) {
