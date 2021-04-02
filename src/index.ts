@@ -22,6 +22,7 @@ import { filterToSpecificAnime, isNone, romanizeNumber } from "./lib/utils";
 import { UserProps } from "./models/user";
 import { ShowtimesModel } from "./models/show";
 import { APIRoutes } from "./routes/api";
+import { EmbedRouter } from "./routes/embed";
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
@@ -93,8 +94,12 @@ app.use(express_flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/favicon.*", (_, res) => {
-    res.sendFile("../public/assets/favicon.ico");
+app.use("/favicon.ico", (_, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", "assets", "favicon.ico"));
+});
+
+app.use("/favicon.png", (_, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", "assets", "favicon.png"));
 });
 
 app.use(expressLogger);
@@ -255,6 +260,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
 });
 
 app.use("/api", APIRoutes);
+app.use("/", EmbedRouter);
 
 app.use(expressErrorLogger);
 
