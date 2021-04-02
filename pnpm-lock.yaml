@@ -16,6 +16,7 @@ dependencies:
   express-session: 1.17.1
   express-winston: 4.1.0_winston@3.3.3
   ioredis: 4.24.5
+  javascript-time-ago: 2.3.4
   jquery: 3.6.0
   lodash: 4.17.21
   moment-timezone: 0.5.33
@@ -41,6 +42,7 @@ devDependencies:
   '@types/ejs': 3.0.6
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
+  '@types/javascript-time-ago': 2.0.2
   '@types/jquery': 3.5.5
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
@@ -428,6 +430,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-32nEh2Eq20xlgtIqVx1kkJkpqh5V1wqMsumK8Y9Izma/vW9k8Ro7sD+y4G6SyCqz8u9+HcssZ6+E83Modta38w==
+  /@types/javascript-time-ago/2.0.2:
+    dev: true
+    resolution:
+      integrity: sha512-uBUXwIG8YzPuWw5c6yV5RGvskkNOxnR+9hctOv8cptyMlB0IgfzeqFo0jkK+Ich8zGchvWghOT3Ryqr3bZmH3A==
   /@types/jquery/3.5.5:
     dependencies:
       '@types/sizzle': 2.3.2
@@ -3512,6 +3518,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-eLpKyrfG3mzvGE2Du8VoPbeSkRry093+tyNjdYaBbJS9v17knImYGNXQCUV0gLxQtF82m3E8iRb/wdSQZLoq7A==
+  /javascript-time-ago/2.3.4:
+    dependencies:
+      relative-time-format: 1.0.5
+    dev: false
+    resolution:
+      integrity: sha512-Tmy9C4MBGtC19AYhV8updznKqtiRSwJHIbDMeypsy3F0vxqgX5ytln4jwXRLVh82WW6ig4VGegi/Qhykpr4YQw==
   /jquery/3.6.0:
     dev: false
     resolution:
@@ -5206,6 +5218,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
+  /relative-time-format/1.0.5:
+    dev: false
+    resolution:
+      integrity: sha512-MAgx/YKcUQYJpIaWcfetPstElnWf26JxVis4PirdwVrrymFdbxyCSm6yENpfB1YuwFbtHSHksN3aBajVNxk10Q==
   /remove-bom-buffer/3.0.0:
     dependencies:
       is-buffer: 1.1.6
@@ -6498,6 +6514,7 @@ specifiers:
   '@types/ejs': 3.0.6
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
+  '@types/javascript-time-ago': ^2.0.2
   '@types/jquery': 3.5.5
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
@@ -6532,6 +6549,7 @@ specifiers:
   gulp: 4.0.2
   gulp-swc: 1.1.1
   ioredis: ^4.24.5
+  javascript-time-ago: ^2.3.4
   jquery: ^3.6.0
   lodash: ^4.17.21
   moment-timezone: ^0.5.33
