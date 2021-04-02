@@ -11,4 +11,39 @@
             <%- generated_ssr %>
         </div>
     </body>
+    <script>
+        var savedEpisodeCount = {};
+        function toggleButton(btn) {
+            // Get button role
+            var curRole = btn.getAttribute("data-current");
+            var animeId = btn.getAttribute("data-id");
+            var parent = btn.parentElement;
+            if (curRole === "less") {
+                var episode = btn.children[1].children[0].textContent;
+                savedEpisodeCount[animeId] = episode;
+                parent.children[1].classList = "hidden";
+                parent.children[2].classList = "grid grid-cols-2 justify-between";
+                btn.children[1].innerHTML = "Tutup...";
+                btn.children[0].classList = "h-5 w-5 transform rotate-180";
+                btn.setAttribute("data-current", "more");
+                btn.classList = "show-ep-btn flex flex-row mt-2 text-gray-500 hover:text-gray-400 dark:text-gray-300 transition-colors";
+            } else if (curRole === "more") {
+                parent.children[1].classList = "";
+                parent.children[2].classList = "hidden grid grid-cols-2 justify-between";
+                btn.children[1].innerHTML = 'Lihat <span slot="1">' + savedEpisodeCount[animeId] + "</span> episode selanjutnya...";
+                btn.children[0].classList = "h-5 w-5";
+                btn.setAttribute("data-current", "less");
+                btn.classList = "show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors";
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var allShowBtn = document.querySelectorAll("button.show-ep-btn");
+            for (let i = 0; i < allShowBtn.length; i++) {
+                allShowBtn[i].addEventListener("click", function (e) {
+                    e.preventDefault();
+                    toggleButton(this);
+                });
+            };
+        });
+    </script>
 </html>
