@@ -1,5 +1,22 @@
 {
-  "extends": [
-    "config:base"
-  ]
+    "extends": [
+        "config:base"
+    ],
+    "labels": ["type: dependency"],
+    "packageRules": [
+        {
+            "depTypeList": ["devDependencies"],
+            "addLabels": ["module: devtools", "priority: low"],
+            "branchPrefix": "renovate-devdeps/"
+        },
+        {
+            "depTypeList": ["dependencies"],
+            "addLabels": ["priority: medium"]
+        }
+    ],
+    "vulnerabilityAlerts": {
+        "labels": ["priority: high", "type: dependency", "tag: security"],
+        "assignees": ["@noaione"],
+        "branchPrefix": "renovate-vulndeps/"
+    }
 }
