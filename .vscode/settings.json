@@ -15,5 +15,10 @@
     "eslint.alwaysShowStatus": true,
     "eslint.format.enable": true,
     "eslint.lintTask.enable": true,
-    "eslint.validate": ["typescript", "typescriptreact", "javascript"]
+    "eslint.validate": [
+        "typescript",
+        "typescriptreact",
+        "javascript"
+    ],
+    "npm.packageManager": "pnpm"
 }
