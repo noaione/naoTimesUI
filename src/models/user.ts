@@ -7,6 +7,7 @@ const UserSchemas = createSchema(
         _id: Type.objectId({ required: false }),
         id: Type.string({ required: true }),
         secret: Type.string({ required: true }),
+        name: Type.string(),
         privilege: Type.string({ required: true, enum: UserPrivilege }),
     },
     {
