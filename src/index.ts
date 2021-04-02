@@ -83,7 +83,7 @@ app.use(
             maxAge: 24 * 60 * 60 * 1000,
         },
         secret: SECRET_KEYS,
-        name: "ntui",
+        name: "ntui.session",
         resave: true,
         saveUninitialized: true,
         store: new RedisStore({ client: RedisClient }),
@@ -116,12 +116,12 @@ app.get("/", (req, res) => {
 app.get("/admin", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
     res.render("admin/index", {
-        user_id: user.id,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
         app_version: packageJson["version"],
         build_time: startTime,
         copyright: copyrightData,
+        username: isNone(user.name) ? user.id : user.name,
     });
 });
 
@@ -129,22 +129,22 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
     if (user.privilege === "owner") {
         res.status(403).render("admin/404", {
-            user_id: user.id,
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
             copyright: copyrightData,
+            username: isNone(user.name) ? user.id : user.name,
         });
     } else {
         res.render("admin/projek/index", {
-            user_id: user.id,
             is_admin: false,
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
             copyright: copyrightData,
+            username: isNone(user.name) ? user.id : user.name,
         });
     }
 });
@@ -153,13 +153,13 @@ app.get("/admin/projek/tambah", ensureLoggedIn("/"), async (req, res) => {
     const user = req.user as UserProps;
     if (user.privilege === "owner") {
         res.status(403).render("admin/404", {
-            user_id: user.id,
             is_admin: true,
             path: req.path,
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
             copyright: copyrightData,
+            username: isNone(user.name) ? user.id : user.name,
         });
     } else {
         res.render("admin/projek/tambah", {
@@ -169,6 +169,7 @@ app.get("/admin/projek/tambah", ensureLoggedIn("/"), async (req, res) => {
             app_version: packageJson["version"],
             build_time: startTime,
             copyright: copyrightData,
+            username: isNone(user.name) ? user.id : user.name,
         });
     }
 });
@@ -177,20 +178,20 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
     const user = req.user as UserProps;
     if (user.privilege === "owner") {
         res.status(403).render("admin/404", {
-            user_id: user.id,
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
             app_version: packageJson["version"],
             build_time: startTime,
             copyright: copyrightData,
+            username: isNone(user.name) ? user.id : user.name,
         });
     } else {
         const serversData = await ShowtimesModel.findOne({ id: { $eq: user.id } });
         const animeData = filterToSpecificAnime(serversData, req.params.ani_id);
         if (animeData.length < 1) {
             res.status(404).render("admin/404", {
-                user_id: user.id,
+                username: isNone(user.name) ? user.id : user.name,
                 is_admin: false,
                 path: req.path,
                 commit: fullCommits,
@@ -200,7 +201,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             });
         } else {
             res.render("admin/projek/laman", {
-                user_id: user.id,
+                username: isNone(user.name) ? user.id : user.name,
                 is_admin: false,
                 anime_id: animeData[0].id,
                 raw_data: JSON.stringify(animeData[0]),
@@ -217,13 +218,39 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
 
 app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
     const user = req.user as UserProps;
+    const flashed = req.flash();
+    const resetError = get(flashed, "reseterror", []);
+    const resetInfo = get(flashed, "resetinfo", []);
+    const nameError = get(flashed, "nameerror", []);
+    const nameInfo = get(flashed, "nameinfo", []);
+    let parsedInfo = null,
+        parsedError = null,
+        parsedInfo2 = null,
+        parsedError2 = null;
+    if (resetError.length > 0) {
+        parsedError = resetError[0];
+    }
+    if (resetInfo.length > 0) {
+        parsedInfo = resetInfo[0];
+    }
+    if (nameError.length > 0) {
+        parsedError2 = nameError[0];
+    }
+    if (nameInfo.length > 0) {
+        parsedInfo2 = nameInfo[0];
+    }
     res.render("admin/atur", {
-        user_id: user.id,
+        username: isNone(user.name) ? user.id : user.name,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
         app_version: packageJson["version"],
         build_time: startTime,
         copyright: copyrightData,
+        // Flash
+        resetError: parsedError,
+        resetInfo: parsedInfo,
+        nameError: parsedError2,
+        nameInfo: parsedInfo2,
     });
 });
 
