@@ -1,6 +1,2 @@
-status = [
-    "build",
-    "lint"
-]
+status = ["bors build finished"]
 commit_title = "Rollup PR ${PR_REFS}"
-use_squash_merge = true
