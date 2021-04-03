@@ -1,4 +1,6 @@
 status = [
-    "Build Test%",
-    "Lint%"
+    "build",
+    "lint"
 ]
+commit_title = "Rollup PR ${PR_REFS}"
+use_squash_merge = true
