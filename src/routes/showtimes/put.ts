@@ -1,5 +1,6 @@
 import _ from "lodash";
 import express from "express";
+import moment from "moment-timezone";
 import { ensureLoggedIn } from "connect-ensure-login";
 
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
@@ -84,6 +85,7 @@ async function doAnimeChanges(
             if (isNaN(episode_no)) return databaseData;
         }
         if (typeof episode_no !== "number") return databaseData;
+        const currentUTC = moment.utc().unix();
         const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
         if (indexAnime === -1) return databaseData;
         const indexEpisode = _.findIndex(
@@ -94,6 +96,7 @@ async function doAnimeChanges(
         verifiedChanges.forEach((res) => {
             databaseData.anime[indexAnime].status[indexEpisode].progress[res.role] = res.tick;
         });
+        databaseData.anime[indexAnime].last_update = currentUTC;
         return databaseData;
     }
     return databaseData;
@@ -159,8 +162,17 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
                 const indexAnime = _.findIndex(modifedData.anime, (pred) => pred.id === changes.anime_id);
                 const roleChanges = modifedData.anime[indexAnime].assignments[roleChange];
                 res.json({ ...roleChanges, success: true });
+            } else if (eventType === "status") {
+                const indexAnime = _.findIndex(modifedData.anime, (pred) => pred.id === changes.anime_id);
+                const episodeSets = modifedData.anime[indexAnime].status;
+                const episodeInfo = _.find(episodeSets, (o) => o.episode === parseInt(changes.episode));
+                if (isNone(episodeInfo)) {
+                    res.json({ result: {}, success: false });
+                } else {
+                    res.json({ success: true, results: { progress: episodeInfo.progress } });
+                }
             } else {
-                res.json({ success: false });
+                res.json({ result: {}, success: false });
             }
         }
     }
