@@ -68,7 +68,9 @@ const ShowAnimeSchemas = createSchema(
 
 const ShowtimesSchemas = createSchema(
     {
+        _id: Type.objectId({ required: false }),
         id: Type.string({ required: true }),
+        name: Type.string(),
         fsdb_id: Type.number(),
         serverowner: Type.array({ required: true }).of(Type.string()),
         announce_channel: Type.string(),
@@ -81,6 +83,7 @@ const ShowtimesSchemas = createSchema(
     },
     {
         versionKey: false,
+        _id: false,
     }
 );
 
