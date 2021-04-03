@@ -244,8 +244,11 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
     if (nameInfo.length > 0) {
         parsedInfo2 = nameInfo[0];
     }
+    const ORIGIN = `${req.protocol}://${req.hostname}`;
     res.render("admin/atur", {
         username: isNone(user.name) ? user.id : user.name,
+        user_id: user.id,
+        embed_origin: ORIGIN,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
         app_version: packageJson["version"],

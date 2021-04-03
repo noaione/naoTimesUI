@@ -88,7 +88,7 @@
                                     <div class="text-sm font-semibold text-green-400"><%= resetInfo %></div>
                                     <% } %>
                                     <div class="flex flex-row pb-2">
-                                        <form id="projek-tambah-form" method="POST" action="/api/auth/reset">
+                                        <form id="passwd-reset" method="POST" action="/api/auth/reset">
                                             <div class="flex -mx-3">
                                                 <div class="w-full px-3 mb-1">
                                                     <label for="password-old" class="text-sm font-semibold dark:text-white mb-1">Password Lama</label>
@@ -119,7 +119,7 @@
                                     <div class="text-sm font-semibold text-green-400"><%= nameInfo %></div>
                                     <% } %>
                                     <div class="flex flex-row pb-2">
-                                        <form id="projek-tambah-form" method="POST" action="/api/auth/changename">
+                                        <form id="uname-change" method="POST" action="/api/auth/changename">
                                             <div class="flex -mx-3">
                                                 <div class="w-full px-3 mb-1">
                                                     <label for="name-new" class="text-sm font-semibold dark:text-white mb-1">Nama Baru</label>
@@ -132,6 +132,55 @@
                                                 </button>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+
+                                <div class="grid gap-2 sm:grid-cols-1 lg:grid-cols-2 py-1">
+                                    <div class="flex flex-col">
+                                        <h2 class="font-semibold dark:text-white mb-4">Website Embed</h2>
+                                        <div class="text-sm font-semibold text-blue-400">Buat URL untuk embed daftar utang di Website anda!</div>
+                                        <div class="block bg-gray-300 dark:bg-gray-800 px-3 py-2 dark:text-gray-300 mt-2">
+                                            <a id="embed-url" data-server-id="<%= user_id %>" data-accent="green" data-lang="id" data-dark="false" href="<%= embed_origin %>/embed?id=<%= user_id %>" target="_blank"><%= embed_origin %>/embed?id=<%= user_id %></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="hidden md:flex md:flex-col md:col-start-2">
+                                        <span class="dark:text-white mb-2 font-semibold ml-1">Pratinjau</span>
+                                        <iframe id="embed-framing-big" src="<%= embed_origin %>:5000/embed?id=<%= user_id %>"></iframe>
+                                    </div>
+
+                                    <label class="mt-2 flex flex-col col-start-1">
+                                        <span class="dark:text-white">Aksen Warna</span>
+                                        <select id="embed-color" class="form-select mt-1 block w-full">
+                                            <option value="green" selected>Hijau</option>
+                                            <option value="blue">Biru</option>
+                                            <option value="yellow">Kuning</option>
+                                            <option value="red">Merah</option>
+                                            <option value="indigo">Indigo</option>
+                                            <option value="purple">Ungu</option>
+                                            <option value="pink">Pink</option>
+                                            <option value="none">Tidak Ada</option>
+                                        </select>
+                                    </label>
+
+                                    <label class="mt-2 flex flex-col col-start-1">
+                                        <span class="dark:text-white">Bahasa</span>
+                                        <select id="embed-locale" class="form-select mt-1 block w-full">
+                                            <option value="id">Indonesia</option>
+                                            <option value="en">English</option>
+                                        </select>
+                                    </label>
+
+                                    <div class="flex flex-col mt-2 col-start-1">
+                                        <label class="inline-flex items-center">
+                                            <input id="embed-dark" type="checkbox" class="form-checkbox text-green-500 rounded focus:outline-none">
+                                            <span class="ml-2 dark:text-white">Dark Mode</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex flex-col md:hidden">
+                                        <span class="dark:text-white mb-2 ml-1">Pratinjau</span>
+                                        <iframe id="embed-framing-small" class="embed-framing" src="<%= embed_origin %>:5000/embed?id=<%= user_id %>"></iframe>
                                     </div>
                                 </div>
                             </div>
