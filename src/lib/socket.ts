@@ -15,6 +15,7 @@ type SocketEvent =
     | "pull data"
     | "get server"
     | "get user"
+    | "get user perms"
     | "create role"
     | "announce drop"
     | "ping";
