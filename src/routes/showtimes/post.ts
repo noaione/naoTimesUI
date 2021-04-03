@@ -22,7 +22,6 @@ query ($id:Int!) {
             native
         }
         coverImage {
-            extraLarge
             large
             medium
             color

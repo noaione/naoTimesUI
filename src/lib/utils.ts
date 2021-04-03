@@ -198,7 +198,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         start_time: startDate,
         poster_data: {
             color: rgbHexToRGBInt(coverImage.color),
-            url: coverImage.extraLarge || coverImage.large || coverImage.medium,
+            url: coverImage.large || coverImage.medium,
         },
         status: [],
         aliases: [],
