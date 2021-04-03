@@ -1,8 +1,14 @@
-import { Duration, Locale, Tense } from "javascript-time-ago/locale";
+import { ExtendedFormats, Locale, QuantifyType, Tense, TimeUnit } from "javascript-time-ago/locale";
 
-export interface ExtendedLocale extends Locale {
+export type ExtraLocale = { [K in TimeUnit]?: QuantifyType | string };
+
+export interface ExtendedLocale extends Omit<Locale, ExtendedFormats> {
     now: {
         now: Tense;
     };
-    mini?: Duration;
+    mini?: ExtraLocale;
+    "short-time"?: ExtraLocale;
+    "short-convenient"?: ExtraLocale;
+    "long-time"?: ExtraLocale;
+    "long-convenient"?: ExtraLocale;
 }
