@@ -8,24 +8,27 @@ import TimeAgo from "javascript-time-ago";
 import moment from "moment-timezone";
 
 // Import any timeAgo stuff here
-import id from "javascript-time-ago/locale/id";
 import en from "javascript-time-ago/locale/en";
-import { jv, su } from "./timeago";
+import { id, jv, su } from "./timeago";
 
 // Add new language mapping here.
-const LocaleMap = {
+export const LocaleMap = {
     id: LocaleID,
     en: LocaleEN,
     jv: LocaleJV,
     su: LocaleSU,
 };
 
+export const ValidLocale = Object.keys(LocaleMap);
+
 // Add the new time-ago locale here.
 // Call `TimeAgo.addLocale(MODULE)`
-TimeAgo.addDefaultLocale(id);
-TimeAgo.addLocale(en);
-TimeAgo.addLocale(jv);
-TimeAgo.addLocale(su);
+const TimeAgoLocaleExtra = [id, en, jv, su];
+TimeAgoLocaleExtra.forEach((locale) => {
+    // @ts-ignore
+    TimeAgo.addLocale(locale);
+});
+TimeAgo.setDefaultLocale("id");
 
 export type Locale = keyof typeof LocaleMap;
 // Add new TimeAgo language code here.
