@@ -56,7 +56,7 @@ devDependencies:
   autoprefixer: 10.2.5_postcss@8.2.9
   cross-env: 7.0.3
   cssnano: 4.1.10
-  esbuild: 0.11.2
+  esbuild: 0.11.4
   eslint: 7.23.0
   eslint-config-prettier: 8.1.0_eslint@7.23.0
   gulp: 4.0.2
@@ -2108,12 +2108,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-p5um32HOTO1kP+w7PRnB+5lQ43Z6muuMuIMffvDN8ZB4GcnjLBV6zGStpbASIMk4DCAvEaamhe2zhyCb/QXXsA==
-  /esbuild/0.11.2:
+  /esbuild/0.11.4:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-8d5FCQrR+juXC2u9zjTQ3+IYiuFuaWyKYwmApFJLquTrYNbk36H/+MkRQeTuOJg7IjUchRX2Ulwo1zRYXZ1pUg==
+      integrity: sha512-qWGlOOTwyTn4f846LoR47Mif4Aek4rY9ChdXN7q7G15HpDYq3pxwnPFWe2os/jOq8naFh2Z+FqWfkq8ZP6kATw==
   /escalade/3.1.1:
     dev: true
     engines:
@@ -6540,7 +6540,7 @@ specifiers:
   cssnano: 4.1.10
   dotenv: ^8.2.0
   ejs: ^3.1.6
-  esbuild: 0.11.2
+  esbuild: 0.11.4
   eslint: 7.23.0
   eslint-config-prettier: 8.1.0
   express: ^4.17.1
