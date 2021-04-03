@@ -3,16 +3,11 @@ import express from "express";
 import ejs from "ejs";
 import moment from "moment-timezone";
 
-import TimeAgo from "javascript-time-ago";
-import id from "javascript-time-ago/locale/id";
+import { timeAgoLocale, translate } from "./locale";
 
 import { isNone, Nullable } from "../../lib/utils";
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
 
-TimeAgo.addDefaultLocale(id);
-TimeAgo.setDefaultLocale("id");
-
-const timeAgo = new TimeAgo("id");
 const EmbedRouter = express.Router();
 const startTime = new Date().getTime();
 
@@ -64,17 +59,7 @@ const RoleColorPalette = {
     QC: "bg-pink-100 text-pink-800 border-pink-200",
 };
 
-const RoleExpandedName = {
-    TL: "Terjemahan",
-    TLC: "Cek Terjemahan",
-    ENC: "Olahan Video",
-    ED: "Menggubah Skrip",
-    TM: "Selaras Waktu",
-    TS: "Tata Rias",
-    QC: "Tinjauan Akhir",
-};
-
-function generateRole(roleName) {
+function generateRole(roleName, locale: "id" | "en") {
     const $roleContainer = `
     <div class="cursor-default group relative rounded border px-1 inline-block align-middle <%- colors %>">
         <span><%- role %></span>
@@ -87,6 +72,8 @@ function generateRole(roleName) {
     </div>
     `;
 
+    const RoleExpandedName = translate("ROLES", locale);
+
     return ejs.render($roleContainer, {
         role: roleName,
         roleExpand: RoleExpandedName[roleName],
@@ -94,7 +81,7 @@ function generateRole(roleName) {
     });
 }
 
-function generateEpisodeData(episodeStatus, aniId, extended = false) {
+function generateEpisodeData(episodeStatus, aniId: string, extended = false, locale: "id" | "en") {
     const unfinishedStatus = [];
     for (const [roleName, roleStat] of Object.entries(episodeStatus.progress)) {
         if (!roleStat) {
@@ -140,12 +127,13 @@ function generateEpisodeData(episodeStatus, aniId, extended = false) {
             if (unfinishedStatus.length > 0) {
                 let tempData = "";
                 unfinishedStatus.forEach((role) => {
-                    tempData += generateRole(role);
+                    tempData += generateRole(role, locale);
                 });
-                content += " sisa";
+                content += " " + translate("EPISODE_NEEDS", locale);
                 roleContent = ejs.render($RoleSlot, { content: tempData });
             } else {
-                roleContent = "Menunggu dirilis!";
+                // @ts-ignore
+                roleContent = translate("WAITING_RELEASE", locale);
             }
             content += roleContent;
         } else {
@@ -156,18 +144,19 @@ function generateEpisodeData(episodeStatus, aniId, extended = false) {
                     "<div class>" +
                     ejs.render($TimeSlot, {
                         dt_air: airTimeMoment.format(),
-                        content: "Tayang " + timeAgo.format(airTimeMoment.toDate()),
+                        content:
+                            translate("AIRED", locale) + " " + timeAgoLocale(episodeStatus.airtime, locale),
                     }) +
                     "</div>";
                 airedContent += `
                     <div class>
-                    <span slot="0">Belum ada progress</span>
+                    <span slot="0">${translate("NO_PROGRESS", locale)}</span>
                     </div>
                 `;
             } else {
                 airedContent += `
                     <div class>
-                    <span slot="0">Belum ada progress</span>
+                    <span slot="0">${translate("NO_PROGRESS", locale)}</span>
                     </div>
                 `;
             }
@@ -183,7 +172,7 @@ function generateEpisodeData(episodeStatus, aniId, extended = false) {
         content =
             "<div class>" +
             ejs.render($TimeSlot, {
-                content: "Tayang " + timeAgo.format(airTimeMoment.toDate()),
+                content: translate("AIRING", locale) + " " + timeAgoLocale(episodeStatus.airtime, locale),
                 dt_air: airTimeMoment.format(),
             }) +
             "</div>";
@@ -204,12 +193,15 @@ function generateEpisodeData(episodeStatus, aniId, extended = false) {
     });
 }
 
-function generateLastUpdate(lastUpdate: number): string {
+function generateLastUpdate(lastUpdate: number, locale: "id" | "en"): string {
     const $UpdateContainer = `
         <div class="absolute bottom-2 left-3 text-xs text-gray-400 dark:text-gray-300">
             <div class="flex flex-row gap-1 text-left">
                 <span>
-                    <div class="">Diperbaharui <time slot="2" datetime="<%= lu_dt %>"><%= lu_str %></time></div>
+                    <div class="">${translate(
+                        "LAST_UPDATE",
+                        locale
+                    )} <time slot="2" datetime="<%= lu_dt %>"><%= lu_str %></time></div>
                 </span>
             </div>
         </div>
@@ -218,25 +210,26 @@ function generateLastUpdate(lastUpdate: number): string {
     const momentLu = moment.utc(lastUpdate * 1000);
     return ejs.render($UpdateContainer, {
         lu_dt: momentLu.format(),
-        lu_str: timeAgo.format(momentLu.toDate()),
+        lu_str: timeAgoLocale(lastUpdate, locale),
     });
 }
 
-function getSeason(month: number): string {
+function getSeason(month: number, locale: "id" | "en"): string {
+    const SeasonLocale = translate("SEASON", locale);
     if (month >= 0 && month <= 2) {
-        return "❄ Musim Dingin";
+        return SeasonLocale["WINTER"];
     } else if (month >= 3 && month <= 5) {
-        return "⛅ Musim Semi";
+        return SeasonLocale["SPRING"];
     } else if (month >= 6 && month <= 8) {
-        return "🏖 Musim Panas";
+        return SeasonLocale["SUMMER"];
     } else if (month >= 9 && month <= 11) {
-        return "🍂 Musim Gugur";
+        return SeasonLocale["FALL"];
     } else if (month >= 12) {
-        return "❄ Musim Dingin";
+        return SeasonLocale["WINTER"];
     }
 }
 
-function generateSeason(startTime: Nullable<number>): string {
+function generateSeason(startTime: Nullable<number>, locale: "id" | "en"): string {
     if (isNone(startTime)) return "";
     const startTimeMoment = moment.utc(startTime * 1000);
 
@@ -251,10 +244,14 @@ function generateSeason(startTime: Nullable<number>): string {
     const month = startTimeMoment.month();
     const year = startTimeMoment.year();
 
-    return ejs.render($SeasonContainer, { season: `${getSeason(month)} ${year}` });
+    return ejs.render($SeasonContainer, { season: `${getSeason(month, locale)} ${year}` });
 }
 
-function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<string>, any] {
+function generateShowCard(
+    animeData: ShowAnimeProps,
+    accent: string,
+    locale: "en" | "id"
+): [Nullable<string>, any] {
     const title = animeData.title;
     const unfinishedEpisode = animeData.status.filter((episode) => !episode.is_done);
     if (unfinishedEpisode.length < 1) {
@@ -277,6 +274,7 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
             />
         </div>
     `;
+    const dropDownLocales = translate("DROPDOWN", locale);
 
     const $dropdownBtn = `
         <button class="show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors" data-id="<%= ani_id %>" data-current="less">
@@ -286,7 +284,7 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
                 </svg>
             </div>
             <div>
-                Lihat <span slot="1"><%= unpacked_ep %></span> episode selanjutnya...
+                ${dropDownLocales["EXPAND"]}
             </div>
         </button>
     `;
@@ -296,12 +294,13 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
     let dropDownButton = "";
     let extraChildData = "";
     if (restOfTheEpisode.length > 1) {
-        dropDownButton = ejs.render($dropdownBtn, {
-            ani_id: animeData.id,
-            unpacked_ep: restOfTheEpisode.length,
-        });
+        dropDownButton = ejs
+            .render($dropdownBtn, {
+                ani_id: animeData.id,
+            })
+            .replace("{{episode}}", `<span slot="1">${restOfTheEpisode.length}</span>`);
         restOfTheEpisode.forEach((episode) => {
-            extraChildData += generateEpisodeData(episode, animeData.id);
+            extraChildData += generateEpisodeData(episode, animeData.id, false, locale);
         });
     }
 
@@ -318,7 +317,7 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
     let mergedContent = "";
     const renderedImageBox = ejs.render($imgBase, { poster_url: animeData.poster_data.url, title });
     mergedContent += renderedImageBox;
-    const genEpisode = generateEpisodeData(firstEpisode, animeData.id);
+    const genEpisode = generateEpisodeData(firstEpisode, animeData.id, false, locale);
 
     const startTime = animeData.start_time || animeData.status[0].airtime;
 
@@ -337,16 +336,16 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
         extra_child: "",
         extra_attr: `data-role="less"`,
         content: genEpisode,
-        last_update_content: generateLastUpdate(animeData.last_update),
-        season_content: generateSeason(startTime),
+        last_update_content: generateLastUpdate(animeData.last_update, locale),
+        season_content: generateSeason(startTime, locale),
     });
     const extendedEpisode = ejs.render($mainMainShowArea, {
         extra_class: "hidden grid grid-cols-2 justify-between",
         extra_child: extraChildData,
         extra_attr: `data-role="more"`,
         content: genEpisode,
-        last_update_content: generateLastUpdate(animeData.last_update),
-        season_content: generateSeason(startTime),
+        last_update_content: generateLastUpdate(animeData.last_update, locale),
+        season_content: generateSeason(startTime, locale),
     });
     let bordering = "";
     if (accent === "none") {
@@ -357,14 +356,49 @@ function generateShowCard(animeData: ShowAnimeProps, accent: string): [Nullable<
     mergedContent += ejs.render($mainShowArea, {
         title: animeData.title,
         content: originalThing + extendedEpisode,
-        last_update_content: generateLastUpdate(animeData.last_update),
-        season_content: generateSeason(startTime),
         dropdown_btn: dropDownButton,
     });
     return [ejs.render($appShowBase, { content: mergedContent, bordering }), restOfTheEpisode];
 }
 
-function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>) {
+function generateSSRLocaleHelper(locale?: Nullable<string>) {
+    const validLocale = ["id", "en"];
+    let selLocale: "id" | "en";
+    if (isNone(locale)) {
+        selLocale = "id";
+    } else {
+        const _locale = locale.toLowerCase() as "id" | "en";
+        if (validLocale.includes(_locale)) {
+            selLocale = _locale;
+        } else {
+            selLocale = _locale;
+        }
+    }
+
+    const $LocaleMapChild = `
+        <div aria-type="<%= locale %>">
+            <%- content %>
+        </div>
+    `;
+
+    const $SpanInset = `
+        <span><%= locale_txt %></span>
+    `;
+
+    let mergedContent = "";
+    // @ts-ignore
+    validLocale.forEach((loc: "id" | "en") => {
+        const dropDownLoc = translate("DROPDOWN", loc);
+        let contentInner = "";
+        contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["EXPAND"] });
+        contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["RETRACT"] });
+        mergedContent += ejs.render($LocaleMapChild, { content: contentInner, locale: loc });
+    });
+
+    return [mergedContent, selLocale];
+}
+
+function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, locale?: Nullable<string>) {
     // TODO: Close bracket
     const $container = `
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent" style="position: relative;">
@@ -372,7 +406,9 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>) {
         </div>
     `;
     const validAccent = ["red", "yellow", "green", "blue", "indigo", "purple", "pink", "none"];
+    const validLocale = ["en", "id"];
     let selAccent: string;
+    let selLocale: "id" | "en";
     if (isNone(accent)) {
         selAccent = "green";
     } else {
@@ -383,6 +419,16 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>) {
             selAccent = "green";
         }
     }
+    if (isNone(locale)) {
+        selLocale = "id";
+    } else {
+        const _locale = locale.toLowerCase() as "id" | "en";
+        if (validLocale.includes(_locale)) {
+            selLocale = _locale;
+        } else {
+            selLocale = _locale;
+        }
+    }
 
     const projectData = _.sortBy(showData.anime, (o) => o.start_time);
     projectData.reverse();
@@ -390,7 +436,7 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>) {
     let compiledContent = "";
     const episodeMappings = {};
     projectData.forEach((anime) => {
-        const [renderedShow, episodeThingy] = generateShowCard(anime, selAccent);
+        const [renderedShow, episodeThingy] = generateShowCard(anime, selAccent, selLocale);
         if (isNone(renderedShow)) return;
         compiledContent += renderedShow;
         episodeMappings[anime.id] = episodeThingy;
@@ -410,21 +456,31 @@ EmbedRouter.get("/embed", async (req, res) => {
             res.render("404", { path: `/embed?id=${serverId}`, build_time: startTime });
         } else {
             const accents = queryParams.accent;
+            const locales = queryParams.lang || queryParams.locale;
             let accent: Nullable<any>;
             if (Array.isArray(accents)) {
                 accent = accents[0];
             } else {
                 accent = accents;
             }
-            const generatedSSR = generateSSRMain(serverRes, accent);
+            let locale: Nullable<any>;
+            if (Array.isArray(locales)) {
+                locale = locales[0];
+            } else {
+                locale = locales;
+            }
+            const generatedSSR = generateSSRMain(serverRes, accent, locale);
             let isDark = false;
             if (!isNone(queryParams.dark) && mapBoolean(queryParams.dark)) {
                 isDark = true;
             }
+            const localeGeneratedSSR = generateSSRLocaleHelper(locale);
             res.render("embed", {
                 server_id: serverId,
                 generated_ssr: generatedSSR,
                 darkMode: isDark ? "dark" : "",
+                locale_map_extra: localeGeneratedSSR[0],
+                locale_sel: localeGeneratedSSR[1],
             });
         }
     }

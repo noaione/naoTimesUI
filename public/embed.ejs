@@ -11,26 +11,40 @@
             <%- generated_ssr %>
         </div>
     </body>
+    <div class="hidden" aria-type="locale" aria-locale="<%= locale_sel %>">
+        <%- locale_map_extra %>
+    </div>
     <script>
+        var localeMapChild = {
+            "id": 0,
+            "en": 1,
+        }
+        var localeDiv = document.querySelector("div[aria-type=locale]");
+        var selLocale = localeDiv.getAttribute("aria-locale");
+        var localeHelper = localeDiv.children[localeMapChild[selLocale]];
         var savedEpisodeCount = {};
         function toggleButton(btn) {
             // Get button role
             var curRole = btn.getAttribute("data-current");
             var animeId = btn.getAttribute("data-id");
             var parent = btn.parentElement;
+            console.info(localeHelper);
+            var expandLocale = localeHelper.children[0].textContent;
+            var retractLocale = localeHelper.children[1].textContent;
             if (curRole === "less") {
                 var episode = btn.children[1].children[0].textContent;
                 savedEpisodeCount[animeId] = episode;
                 parent.children[1].classList = "hidden";
                 parent.children[2].classList = "grid grid-cols-2 justify-between";
-                btn.children[1].innerHTML = "Tutup...";
+                btn.children[1].innerHTML = retractLocale;
                 btn.children[0].classList = "h-5 w-5 transform rotate-180";
                 btn.setAttribute("data-current", "more");
                 btn.classList = "show-ep-btn flex flex-row mt-2 text-gray-500 hover:text-gray-400 dark:text-gray-300 transition-colors";
             } else if (curRole === "more") {
+                var expandMoreSpan = '<span slot="1">' + savedEpisodeCount[animeId] + "</span>";
                 parent.children[1].classList = "";
                 parent.children[2].classList = "hidden grid grid-cols-2 justify-between";
-                btn.children[1].innerHTML = 'Lihat <span slot="1">' + savedEpisodeCount[animeId] + "</span> episode selanjutnya...";
+                btn.children[1].innerHTML = expandLocale.replace("{{episode}}", expandMoreSpan);
                 btn.children[0].classList = "h-5 w-5";
                 btn.setAttribute("data-current", "less");
                 btn.classList = "show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors";
