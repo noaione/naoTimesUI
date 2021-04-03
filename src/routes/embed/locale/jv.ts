@@ -22,10 +22,10 @@ const Locale = {
     AIRED: "Tayang", // (Tayang) xx hari lalu
     AIRING: "Tayang", // (Tayang) dalam xx hari lalu
     SEASON: {
-        WINTER: "❄ Musim Dingin",
-        SPRING: "🌸 Musim Semi",
-        SUMMER: "🏖 Musim Panas",
-        FALL: "🍂 Musim Gugur",
+        WINTER: "Musim Dingin",
+        SPRING: "Musim Semi",
+        SUMMER: "Musim Panas",
+        FALL: "Musim Gugur",
     },
     DROPDOWN: {
         // {{episode}} will be substitued with remaining episode
