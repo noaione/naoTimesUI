@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - staging
+      - trying
+      - master
+  pull_request:
+    branches:
+      - staging
+      - trying
+      - master
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install PNPM on ${{ matrix.node-version }}
+      run: |
+        npm install -g pnpm
+    - name: Clean Install and Build on ${{ matrix.node-version }}
+      run: |
+        pnpm install
+        pnpm run build
+
+  lint:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install PNPM on ${{ matrix.node-version }}
+      run: |
+        npm install -g pnpm
+    - name: Clean Install on ${{ matrix.node-version }}
+      run: pnpm install
+    - name: Lint
+      run: |
+        pnpm run lint
+        pnpm run type-check
+
+  # Trigger bors manually
+  end-success:
+    name: bors build finished
+    if: success()
+    runs-on: ubuntu-latest
+    needs: [build,lint]
+
+    steps:
+      - name: Mark the job as successful
+        run: exit 0
+
+  end-failure:
+    name: bors build failed
+    if: "!success()"
+    runs-on: ubuntu-latest
+    needs: [build,lint]
+
+    steps:
+      - name: Mark the job as a failure
+        run: exit 1
