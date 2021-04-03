@@ -128,19 +128,34 @@ function css(cb) {
         });
 }
 
-function bundle(cb) {
+function bundle(cb, forceDev = false) {
     const logger = loggerMain.child({ fn: "bundle", cls: "GulpTasks" });
+    let isDev = !isProd;
+    if (forceDev) {
+        isDev = true;
+    }
     logger.info("Bundling projects.js!");
-    esbuild.buildSync({
-        entryPoints: ["lib/projects.js"],
-        bundle: true,
-        outfile: "public/assets/js/projects.bundle.js",
-        minify: isProd,
-        sourcemap: !isProd,
-        target: ["chrome58", "firefox57", "safari11"],
-        pure: ["console.log", "console.info"], // Strip any info log if minified
-    });
-    cb();
+    esbuild
+        .build({
+            entryPoints: ["lib/projects.js"],
+            bundle: true,
+            outfile: "public/assets/js/projects.bundle.js",
+            minify: !isDev,
+            sourcemap: isDev,
+            target: ["chrome58", "firefox57", "safari11", "edge79", "es2015"],
+            pure: ["console.log", "console.info"], // Strip any info log if minified
+        })
+        .then(() => {
+            logger.info(`Successfully bundled files.`);
+            cb();
+        })
+        .catch((err) => {
+            logger.error("An error occured while trying to bundle JS file");
+            console.error(err);
+            cb(new Error(err));
+        });
 }
 
+exports.bundle = bundle;
+exports.css = css;
 exports.default = gulp.series(start, clean, transpile, gulp.parallel(css, bundle));

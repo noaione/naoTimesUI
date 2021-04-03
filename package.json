@@ -10,6 +10,8 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production gulp",
     "build:dev": "cross-env NODE_ENV=development gulp",
+    "watch": "cross-env NODE_ENV=development gulp -f gulp-watch.js",
+    "watch:dev": "npm-run-all build:dev watch",
     "prod": "npm-run-all build prod:start",
     "prod:start": "node .",
     "dev": "npm-run-all build:dev dev:start",
