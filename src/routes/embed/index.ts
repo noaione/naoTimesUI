@@ -3,7 +3,7 @@ import express from "express";
 import ejs from "ejs";
 import moment from "moment-timezone";
 
-import { timeAgoLocale, translate } from "./locale";
+import { Locale, timeAgoLocale, translate } from "./locale";
 
 import { isNone, Nullable } from "../../lib/utils";
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
@@ -59,7 +59,7 @@ const RoleColorPalette = {
     QC: "bg-pink-100 text-pink-800 border-pink-200",
 };
 
-function generateRole(roleName, locale: "id" | "en") {
+function generateRole(roleName, locale: Locale) {
     const $roleContainer = `
     <div class="cursor-default group relative rounded border px-1 inline-block align-middle <%- colors %>">
         <span><%- role %></span>
@@ -81,7 +81,7 @@ function generateRole(roleName, locale: "id" | "en") {
     });
 }
 
-function generateEpisodeData(episodeStatus, aniId: string, extended = false, locale: "id" | "en") {
+function generateEpisodeData(episodeStatus, aniId: string, extended = false, locale: Locale) {
     const unfinishedStatus = [];
     for (const [roleName, roleStat] of Object.entries(episodeStatus.progress)) {
         if (!roleStat) {
@@ -193,7 +193,7 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
     });
 }
 
-function generateLastUpdate(lastUpdate: number, locale: "id" | "en"): string {
+function generateLastUpdate(lastUpdate: number, locale: Locale): string {
     const $UpdateContainer = `
         <div class="absolute bottom-2 left-3 text-xs text-gray-400 dark:text-gray-300">
             <div class="flex flex-row gap-1 text-left">
@@ -214,22 +214,22 @@ function generateLastUpdate(lastUpdate: number, locale: "id" | "en"): string {
     });
 }
 
-function getSeason(month: number, locale: "id" | "en"): string {
+function getSeason(month: number, locale: Locale): string {
     const SeasonLocale = translate("SEASON", locale);
     if (month >= 0 && month <= 2) {
-        return SeasonLocale["WINTER"];
+        return "❄ " + SeasonLocale["WINTER"];
     } else if (month >= 3 && month <= 5) {
-        return SeasonLocale["SPRING"];
+        return "🌸 " + SeasonLocale["SPRING"];
     } else if (month >= 6 && month <= 8) {
-        return SeasonLocale["SUMMER"];
+        return "☀ " + SeasonLocale["SUMMER"];
     } else if (month >= 9 && month <= 11) {
-        return SeasonLocale["FALL"];
+        return "🍂 " + SeasonLocale["FALL"];
     } else if (month >= 12) {
-        return SeasonLocale["WINTER"];
+        return "❄ " + SeasonLocale["WINTER"];
     }
 }
 
-function generateSeason(startTime: Nullable<number>, locale: "id" | "en"): string {
+function generateSeason(startTime: Nullable<number>, locale: Locale): string {
     if (isNone(startTime)) return "";
     const startTimeMoment = moment.utc(startTime * 1000);
 
@@ -250,7 +250,7 @@ function generateSeason(startTime: Nullable<number>, locale: "id" | "en"): strin
 function generateShowCard(
     animeData: ShowAnimeProps,
     accent: string,
-    locale: "en" | "id"
+    locale: Locale
 ): [Nullable<string>, any] {
     const title = animeData.title;
     const unfinishedEpisode = animeData.status.filter((episode) => !episode.is_done);
@@ -361,13 +361,13 @@ function generateShowCard(
     return [ejs.render($appShowBase, { content: mergedContent, bordering }), restOfTheEpisode];
 }
 
-function generateSSRLocaleHelper(locale?: Nullable<string>) {
+function generateSSRLocaleHelper(locale?: Nullable<Locale>) {
     const validLocale = ["id", "en"];
-    let selLocale: "id" | "en";
+    let selLocale: Locale;
     if (isNone(locale)) {
         selLocale = "id";
     } else {
-        const _locale = locale.toLowerCase() as "id" | "en";
+        const _locale = locale.toLowerCase() as Locale;
         if (validLocale.includes(_locale)) {
             selLocale = _locale;
         } else {
@@ -387,7 +387,7 @@ function generateSSRLocaleHelper(locale?: Nullable<string>) {
 
     let mergedContent = "";
     // @ts-ignore
-    validLocale.forEach((loc: "id" | "en") => {
+    validLocale.forEach((loc: Locale) => {
         const dropDownLoc = translate("DROPDOWN", loc);
         let contentInner = "";
         contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["EXPAND"] });
@@ -398,7 +398,7 @@ function generateSSRLocaleHelper(locale?: Nullable<string>) {
     return [mergedContent, selLocale];
 }
 
-function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, locale?: Nullable<string>) {
+function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, locale?: Nullable<Locale>) {
     // TODO: Close bracket
     const $container = `
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent" style="position: relative;">
@@ -408,7 +408,7 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     const validAccent = ["red", "yellow", "green", "blue", "indigo", "purple", "pink", "none"];
     const validLocale = ["en", "id"];
     let selAccent: string;
-    let selLocale: "id" | "en";
+    let selLocale: Locale;
     if (isNone(accent)) {
         selAccent = "green";
     } else {
@@ -422,7 +422,7 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     if (isNone(locale)) {
         selLocale = "id";
     } else {
-        const _locale = locale.toLowerCase() as "id" | "en";
+        const _locale = locale.toLowerCase() as Locale;
         if (validLocale.includes(_locale)) {
             selLocale = _locale;
         } else {
