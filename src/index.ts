@@ -24,6 +24,15 @@ import { ShowtimesModel } from "./models/show";
 import { APIRoutes } from "./routes/api";
 import { EmbedRouter } from "./routes/embed";
 
+// Supress warning from TimeAgo or Intl
+// Since it screamed about "locale is not supported" if I'm using a custom one.
+const originalWarn = console.warn;
+console.warn = (e?: any, ...args: any[]) => {
+    if (!e.includes("locale is not supported")) {
+        originalWarn(e, ...args);
+    }
+};
+
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 const packageJson = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json")).toString());
 const startTime = new Date().getTime().toString();
