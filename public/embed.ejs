@@ -15,20 +15,17 @@
         <%- locale_map_extra %>
     </div>
     <script>
-        var localeMapChild = {
-            "id": 0,
-            "en": 1,
-        }
+        var localeMapChild = JSON.parse(`<%- locale_map_helper %>`);
         var localeDiv = document.querySelector("div[aria-type=locale]");
         var selLocale = localeDiv.getAttribute("aria-locale");
-        var localeHelper = localeDiv.children[localeMapChild[selLocale]];
+        // Fallback to Indonesian if fail.
+        var localeHelper = localeDiv.children[localeMapChild[selLocale] || 0];
         var savedEpisodeCount = {};
         function toggleButton(btn) {
             // Get button role
             var curRole = btn.getAttribute("data-current");
             var animeId = btn.getAttribute("data-id");
             var parent = btn.parentElement;
-            console.info(localeHelper);
             var expandLocale = localeHelper.children[0].textContent;
             var retractLocale = localeHelper.children[1].textContent;
             if (curRole === "less") {

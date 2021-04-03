@@ -3,7 +3,7 @@ import express from "express";
 import ejs from "ejs";
 import moment from "moment-timezone";
 
-import { Locale, timeAgoLocale, translate } from "./locale";
+import { Locale, timeAgoLocale, translate, ValidLocale } from "./locale";
 
 import { isNone, Nullable } from "../../lib/utils";
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
@@ -362,13 +362,12 @@ function generateShowCard(
 }
 
 function generateSSRLocaleHelper(locale?: Nullable<Locale>) {
-    const validLocale = ["id", "en"];
     let selLocale: Locale;
     if (isNone(locale)) {
         selLocale = "id";
     } else {
         const _locale = locale.toLowerCase() as Locale;
-        if (validLocale.includes(_locale)) {
+        if (ValidLocale.includes(_locale)) {
             selLocale = _locale;
         } else {
             selLocale = _locale;
@@ -387,7 +386,7 @@ function generateSSRLocaleHelper(locale?: Nullable<Locale>) {
 
     let mergedContent = "";
     // @ts-ignore
-    validLocale.forEach((loc: Locale) => {
+    ValidLocale.forEach((loc: Locale) => {
         const dropDownLoc = translate("DROPDOWN", loc);
         let contentInner = "";
         contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["EXPAND"] });
@@ -406,7 +405,6 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
         </div>
     `;
     const validAccent = ["red", "yellow", "green", "blue", "indigo", "purple", "pink", "none"];
-    const validLocale = ["en", "id"];
     let selAccent: string;
     let selLocale: Locale;
     if (isNone(accent)) {
@@ -422,12 +420,7 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     if (isNone(locale)) {
         selLocale = "id";
     } else {
-        const _locale = locale.toLowerCase() as Locale;
-        if (validLocale.includes(_locale)) {
-            selLocale = _locale;
-        } else {
-            selLocale = _locale;
-        }
+        selLocale = locale;
     }
 
     const projectData = _.sortBy(showData.anime, (o) => o.start_time);
@@ -474,12 +467,17 @@ EmbedRouter.get("/embed", async (req, res) => {
             if (!isNone(queryParams.dark) && mapBoolean(queryParams.dark)) {
                 isDark = true;
             }
+            const mappedLocaledNumber = {};
+            ValidLocale.forEach((locale, index) => {
+                mappedLocaledNumber[locale] = index;
+            });
             const localeGeneratedSSR = generateSSRLocaleHelper(locale);
             res.render("embed", {
                 server_id: serverId,
                 generated_ssr: generatedSSR,
                 darkMode: isDark ? "dark" : "",
                 locale_map_extra: localeGeneratedSSR[0],
+                locale_map_helper: JSON.stringify(mappedLocaledNumber),
                 locale_sel: localeGeneratedSSR[1],
             });
         }
