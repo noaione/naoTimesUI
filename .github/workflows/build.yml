@@ -2,9 +2,15 @@ name: Build Test
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - staging
+      - trying
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - staging
+      - trying
+      - master
 
 jobs:
   build:
