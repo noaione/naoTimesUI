@@ -19,8 +19,8 @@ const Locale = {
         QC: "Tinjauan Akhir",
     },
     NO_PROGRESS: "Belum ada progres",
-    AIRED: "Tayang", // (Tayang) xx hari lalu
-    AIRING: "Tayang", // (Tayang) dalam xx hari lalu
+    AIRED: "Siaran", // (Tayang) xx hari lalu
+    AIRING: "Siaran", // (Tayang) dalam xx hari lalu
     SEASON: {
         WINTER: "Musim Dingin",
         SPRING: "Musim Semi",
@@ -32,7 +32,7 @@ const Locale = {
         EXPAND: "Lihat {{episode}} episode selanjutnya...",
         RETRACT: "Tutup...",
     },
-    LAST_UPDATE: "Diperbarui",
+    LAST_UPDATE: "Dianyari",
     EPISODE_NEEDS: "butuh",
     WAITING_RELEASE: "Menunggu dirilis...",
 };
