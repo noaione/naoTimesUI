@@ -4,6 +4,8 @@ import { ensureLoggedIn } from "connect-ensure-login";
 
 import passport from "../lib/passport";
 import { UserModel, UserProps } from "../models/user";
+import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
+import { emitSocketAndWait } from "../lib/socket";
 
 const AuthAPIRoutes = express.Router();
 
@@ -31,6 +33,110 @@ function checkStringValid(data: any): boolean {
     if (data === "" || data === " ") return false;
     return true;
 }
+
+function toStr(data: any): string {
+    if (typeof data === "number") {
+        return data.toString();
+    } else if (typeof data === "string") {
+        return data;
+    } else if (typeof data === "boolean") {
+        return data ? "true" : "false";
+    } else if (typeof data === "object") {
+        return JSON.stringify(data);
+    }
+    return null;
+}
+
+async function tryServerAdminAdd(adminId: string) {
+    const results = await ShowAdminModel.find({});
+    const firstRes = results[0];
+    const newAdminSets = firstRes.server_admin;
+    let changed = false;
+    if (!firstRes.server_admin.includes(adminId)) {
+        newAdminSets.push(adminId);
+        changed = true;
+    }
+    if (changed) {
+        await ShowAdminModel.findByIdAndUpdate(firstRes._id, { $set: { server_admin: newAdminSets } });
+    }
+}
+
+async function registerNewServer(server: any, admin: any) {
+    const serverName = server.name;
+    const serverId = server.id;
+
+    const adminId = admin.id;
+
+    const newShowtimesServer: ShowtimesProps = {
+        id: toStr(serverId),
+        name: serverName,
+        serverowner: [toStr(adminId)],
+        anime: [],
+        announce_channel: null,
+        konfirmasi: [],
+    };
+    await ShowtimesModel.insertMany([newShowtimesServer]);
+    await tryServerAdminAdd(toStr(adminId));
+}
+
+AuthAPIRoutes.post("/register", async (req, res) => {
+    const jsonBody = req.body;
+    if (!checkStringValid(jsonBody.server)) {
+        req.flash("error", "Mohon masukan server ID");
+        res.redirect("/registrasi");
+    } else if (!checkStringValid(jsonBody.admin)) {
+        req.flash("error", "Mohon masukan admin ID");
+        res.redirect("/registrasi");
+    } else {
+        const newServer = jsonBody.server;
+        const newAdmin = jsonBody.admin;
+        const checkIfServerExist = await ShowtimesModel.find({ id: { $eq: newServer } });
+        if (checkIfServerExist.length > 0) {
+            req.flash("error", "Server anda telah terdaftar!");
+            res.redirect("/registrasi");
+        } else {
+            try {
+                const verifyServer = await emitSocketAndWait("get server", newServer);
+                try {
+                    const verifyUser = await emitSocketAndWait("get user", newAdmin);
+                    try {
+                        const userPerms = await emitSocketAndWait("get user perms", {
+                            id: newServer,
+                            admin: newAdmin,
+                        });
+                        if (
+                            userPerms.includes("manage_guild") ||
+                            userPerms.includes("manage_server") ||
+                            userPerms.includes("administrator")
+                        ) {
+                            await registerNewServer(verifyServer, verifyUser);
+                            req.flash("info", "Sukses, silakan jalankan !tagih di server anda");
+                            res.redirect("/");
+                        } else {
+                            req.flash(
+                                "error",
+                                "Maaf, anda tidak memiliki hak yang cukup untuk menjadi Admin (Manage Guild)"
+                            );
+                            res.redirect("/registrasi");
+                        }
+                    } catch (e) {
+                        req.flash("error", "Terjadi kesalahan internal, mohon coba lagi");
+                        res.redirect("/registrasi");
+                    }
+                } catch (e) {
+                    req.flash("error", "Bot tidak dapat menemukan user tersebut!");
+                    res.redirect("/registrasi");
+                }
+            } catch (e) {
+                req.flash(
+                    "error",
+                    "Bot tidak dapat menemukan server tersebut! Pastikan Bot sudah di Invite!"
+                );
+                res.redirect("/registrasi");
+            }
+        }
+    }
+});
 
 // AuthAPIRoutes.use(express.json());
 AuthAPIRoutes.post("/reset", ensureLoggedIn("/"), async (req, res) => {

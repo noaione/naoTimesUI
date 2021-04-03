@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <%- include("_includes/header", {build_time: build_time}) %>
+    <%- include("_includes/header", {build_time: build_time, description: "Registrasi server anda ke naoTimes", title: "Registrasi"}) %>
     <style>
         h1 {
             font-size: xx-large;
@@ -34,53 +34,51 @@
                         href="https://discord.gg/7KyYecn" target="_blank">Support Server</a>
                 </div>
                 <div class="w-full md:w-1/2 py-10 px-5 md:px-10">
-                    <div class="text-center mb-10">
-                        <h1 class="font-bold text-3xl text-gray-900">Masuk</h1>
-                        <p>Password didapatkan melalui Bot</p>
-                        <p>Ketik <code class="text-red-500">!showui</code> di server discord anda</p>
-                        <p>Atau DM Bot dengan <code class="text-red-500">!showui server_id</code></p>
+                    <div class="text-center mb-5">
+                        <h1 class="font-bold text-3xl text-gray-900 mb-2">Registrasi</h1>
+                        <p>Mohon Invite Bot terlebih dahulu</p>
+                        <p>Lalu masukan server ID anda di sini dan klik Registrasi</p>
+                        <p>Admin ID, adalah User ID Discord</p>
+                        <p>Setelah registrasi, silakan periksa dengan perintah <code class="text-red-500">!tagih</code></p>
                         <% if (locals.error_msg) { %>
                         <p class="text-sm text-red-400 mt-2">Error: <%= error_msg %></p>
                         <% } %>
-                        <% if (locals.info_msg) { %>
-                        <p class="text-sm text-blue-500 mt-2"><%= info_msg %></p>
-                        <% } %>
                     </div>
                     <div>
-                        <form method="POST" action="/api/auth/login" id="login-form">
+                        <form method="POST" action="/api/auth/register" id="register-form">
                             <div class="flex -mx-3">
                                 <div class="w-full px-3 mb-5">
-                                    <label for="username" class="text-xs font-semibold px-1">Server ID</label>
+                                    <label for="server" class="text-xs font-semibold px-1">Server ID</label>
                                     <div class="flex">
                                         <div
                                             class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                             <i class="mdi mdi-server text-gray-400 text-lg"></i></div>
-                                        <input id="username" type="text" name="username"
+                                        <input id="server" type="text" name="server"
                                             class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-none focus:border-yellow-600"
                                             placeholder="xxxxxxxxxxxxxxxxxx">
                                     </div>
                                 </div>
                             </div>
                             <div class="flex -mx-3">
-                                <div class="w-full px-3 mb-12">
-                                    <label for="password" class="text-xs font-semibold px-1">Password</label>
+                                <div class="w-full px-3 mb-5">
+                                    <label for="admin" class="text-xs font-semibold px-1">Admin ID</label>
                                     <div class="flex">
                                         <div
                                             class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
-                                            <i class="mdi mdi-lock-outline text-gray-400 text-lg"></i></div>
-                                        <input id="password" type="password" name="password"
-                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
-                                            placeholder="**************">
+                                            <i class="mdi mdi-account text-gray-400 text-lg"></i></div>
+                                        <input id="admin" type="text" name="admin"
+                                            class="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-none focus:border-yellow-600"
+                                            placeholder="xxxxxxxxxxxxxxxxxx">
                                     </div>
                                 </div>
                             </div>
                             <div class="flex -mx-3">
-                                <div class="w-full px-3 mb-5 text-center">
+                                <div class="w-full px-3 mb-5">
                                     <button type="submit" id="sign-in-btn"
-                                        class="block w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700 text-white rounded-lg px-3 py-3 font-semibold">
-                                        Masuk
+                                        class="block w-full max-w-xs mx-auto transition-colors duraion-400 ease-in-out bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700 text-white rounded-lg px-3 py-3 font-semibold">
+                                        Daftar
                                     </button>
-                                    <a href="/registrasi" class="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100">Registrasi</a>
+                                    <a href="/" class="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100">Sudah terdaftar?</a>
                                 </div>
                             </div>
                         </form>
@@ -99,18 +97,18 @@
     </div>
     <script>
         function submitForm() {
-            document.getElementById("login-form").submit();
+            document.getElementById("register-form").submit();
         }
 
         // const signInBtn = document.getElementById("sign-in-btn");
         // signInBtn.addEventListener("click", (ev) => {
         //     submitForm();
         // });
-        const userNameSlot = document.getElementById("username");
-        const passwordSlot = document.getElementById("password");
+        const serverSlot = document.getElementById("server");
+        const adminSlot = document.getElementById("admin");
 
-        userNameSlot.addEventListener("keyup", onEnterSend);
-        passwordSlot.addEventListener("keyup", onEnterSend);
+        serverSlot.addEventListener("keyup", onEnterSend);
+        adminSlot.addEventListener("keyup", onEnterSend);
 
         function onEnterSend(event) {
             event.preventDefault();

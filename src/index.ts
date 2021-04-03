@@ -110,11 +110,24 @@ app.get("/", (req, res) => {
     } else {
         const flashed = req.flash();
         const errors = get(flashed, "error", []);
+        const infos = get(flashed, "info", []);
         if (errors.length > 0) {
             res.render("index", { error_msg: errors.join(", "), build_time: startTime });
+        } else if (infos.length > 0) {
+            res.render("index", { info_msg: infos.join(", "), build_time: startTime });
         } else {
             res.render("index", { error_msg: "", build_time: startTime });
         }
+    }
+});
+
+app.get("/registrasi", (req, res) => {
+    const flashed = req.flash();
+    const errors = get(flashed, "error", []);
+    if (errors.length > 0) {
+        res.render("registrasi", { error_msg: errors.join(", "), build_time: startTime });
+    } else {
+        res.render("registrasi", { build_time: startTime });
     }
 });
 
