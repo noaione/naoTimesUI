@@ -3,7 +3,7 @@ import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
 
 import passport from "../lib/passport";
-import { emitSocketAndWait } from "../lib/socket";
+import { emitSocket, emitSocketAndWait } from "../lib/socket";
 import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
 import { UserModel, UserProps } from "../models/user";
 
@@ -77,6 +77,7 @@ async function registerNewServer(server: any, admin: any) {
     };
     await ShowtimesModel.insertMany([newShowtimesServer]);
     await tryServerAdminAdd(toStr(adminId));
+    emitSocket("pull data", serverId);
 }
 
 AuthAPIRoutes.post("/register", async (req, res) => {
