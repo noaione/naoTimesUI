@@ -60,8 +60,22 @@ AnilistRoutes.get("/find", ensureLoggedIn("/"), async (req, res) => {
     } else {
         selectedQuery = queryParams.toString();
     }
+    selectedQuery = decodeURIComponent(selectedQuery);
     const matchedRes = await searchAnime(selectedQuery);
-    res.json({ results: matchedRes });
+    const repairedRes = matchedRes.map((result) => {
+        const finalized = {};
+        for (const [key, value] of Object.entries(result)) {
+            finalized[key] = value;
+        }
+        const titleSets = result.title || {};
+        const searchTitleMatch = titleSets.romaji || titleSets.english || titleSets.native;
+        // used specficially for tom-select
+        finalized["titlematch"] = searchTitleMatch;
+        finalized["titlematchen"] = titleSets.english || searchTitleMatch;
+        finalized["titlematchother"] = titleSets.native || searchTitleMatch;
+        return finalized;
+    });
+    res.json({ results: repairedRes });
 });
 
 export { AnilistRoutes };
