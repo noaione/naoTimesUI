@@ -6526,7 +6526,7 @@ specifiers:
   '@swc/cli': 0.1.36
   '@swc/core': 1.2.51
   '@tailwindcss/custom-forms': 0.2.1
-  '@tailwindcss/forms': ^0.3.2
+  '@tailwindcss/forms': 0.3.2
   '@tailwindcss/jit': 0.1.18
   '@types/body-parser': 1.19.0
   '@types/compression': 1.7.0
@@ -6552,7 +6552,7 @@ specifiers:
   autoprefixer: 10.2.5
   axios: ^0.21.1
   body-parser: ^1.19.0
-  cash-dom: ^8.1.0
+  cash-dom: 8.1.0
   compression: ^1.7.4
   connect-ensure-login: ^0.1.1
   connect-flash: ^0.1.1
@@ -6560,7 +6560,7 @@ specifiers:
   consolidate: ^0.16.0
   cookie: ^0.4.1
   cors: ^2.8.5
-  countup.js: ^2.0.7
+  countup.js: 2.0.7
   cross-env: 7.0.3
   cssnano: 4.1.10
   dotenv: ^8.2.0
@@ -6583,11 +6583,11 @@ specifiers:
   passport-local: ^1.0.0
   postcss: 8.2.9
   postcss-cli: 8.3.1
-  postcss-import: ^14.0.1
+  postcss-import: 14.0.1
   prettier: 2.2.1
   shelljs: 0.8.4
   tailwindcss: 2.0.4
-  tom-select: ^1.4.3
+  tom-select: 1.4.3
   ts-mongoose: ^0.0.24
   ts-node: 9.1.1
   typescript: 4.2.3
