@@ -5,6 +5,7 @@ const tailwind = require("tailwindcss");
 const tailwindjit = require("@tailwindcss/jit");
 const cssnano = require("cssnano");
 const postcss = require("postcss");
+const postcssImport = require("postcss-import");
 
 const swc = require("gulp-swc");
 
@@ -108,9 +109,9 @@ function transpile(cb) {
 function css(cb) {
     const logger = loggerMain.child({ fn: "css", cls: "GulpTasks" });
     const cssSources = fs.readFileSync("src/styles.css");
-    let plugins = [tailwind, autoprefixer];
+    let plugins = [postcssImport, tailwind, autoprefixer];
     if (isProd) {
-        plugins = [tailwindjit, autoprefixer, cssnano];
+        plugins = [postcssImport, tailwindjit, autoprefixer, cssnano];
     }
     logger.info(
         `PostCSS+${plugins.length === 3 ? "TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
@@ -141,6 +142,7 @@ function bundle(cb, forceDev = false) {
             bundle: true,
             outfile: "public/assets/js/projects.bundle.js",
             minify: !isDev,
+            platform: "browser",
             sourcemap: isDev,
             target: ["chrome58", "firefox57", "safari11", "edge79", "es2015"],
             pure: ["console.log", "console.info"], // Strip any info log if minified

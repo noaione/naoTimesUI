@@ -1,5 +1,4 @@
 dependencies:
-  '@tailwindcss/forms': 0.3.2_tailwindcss@2.0.4
   axios: 0.21.1
   body-parser: 1.19.0
   compression: 1.7.4
@@ -9,7 +8,6 @@ dependencies:
   consolidate: 0.16.0
   cookie: 0.4.1
   cors: 2.8.5
-  countup.js: 2.0.7
   dotenv: 8.2.0
   ejs: 3.1.6
   express: 4.17.1
@@ -17,20 +15,18 @@ dependencies:
   express-winston: 4.1.0_winston@3.3.3
   ioredis: 4.24.5
   javascript-time-ago: 2.3.4
-  jquery: 3.6.0
   lodash: 4.17.21
   moment-timezone: 0.5.33
   mongoose: 5.12.2
   passport: 0.4.1
   passport-local: 1.0.0
-  regenerator-runtime: 0.13.7
-  select2: 4.1.0-rc.0
   ts-mongoose: 0.0.24_aead86fe9c08252b38ad7894c500a86f
   winston: 3.3.3
 devDependencies:
   '@swc/cli': 0.1.36_@swc+core@1.2.51
   '@swc/core': 1.2.51
   '@tailwindcss/custom-forms': 0.2.1_tailwindcss@2.0.4
+  '@tailwindcss/forms': 0.3.2_tailwindcss@2.0.4
   '@tailwindcss/jit': 0.1.18_postcss@8.2.9+tailwindcss@2.0.4
   '@types/body-parser': 1.19.0
   '@types/compression': 1.7.0
@@ -44,7 +40,6 @@ devDependencies:
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
   '@types/javascript-time-ago': 2.0.2
-  '@types/jquery': 3.5.5
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
   '@types/mongoose': 5.10.4
@@ -55,6 +50,8 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 4.20.0_7448dc1756632cc6400f187319207d38
   '@typescript-eslint/parser': 4.20.0_eslint@7.23.0+typescript@4.2.3
   autoprefixer: 10.2.5_postcss@8.2.9
+  cash-dom: 8.1.0
+  countup.js: 2.0.7
   cross-env: 7.0.3
   cssnano: 4.1.10
   esbuild: 0.11.4
@@ -65,9 +62,11 @@ devDependencies:
   npm-run-all: 4.1.5
   postcss: 8.2.9
   postcss-cli: 8.3.1_postcss@8.2.9
+  postcss-import: 14.0.1_postcss@8.2.9
   prettier: 2.2.1
   shelljs: 0.8.4
   tailwindcss: 2.0.4_0bca15301caac8bc71ea0ad94045571f
+  tom-select: 1.4.3
   ts-node: 9.1.1_typescript@4.2.3
   typescript: 4.2.3
 lockfileVersion: 5.2
@@ -314,7 +313,7 @@ packages:
     dependencies:
       mini-svg-data-uri: 1.2.3
       tailwindcss: 2.0.4_0bca15301caac8bc71ea0ad94045571f
-    dev: false
+    dev: true
     peerDependencies:
       tailwindcss: '>=2.0.0'
     resolution:
@@ -1224,6 +1223,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-JUdjWpcxfJ9IPamy2f5JaRDCaqJOxDzOSKtbdx4rH9VivMd1vIzoPumsJa9LoMIi4Fx2BV2KZOxWhNkBjaYivQ==
+  /cash-dom/8.1.0:
+    dev: true
+    resolution:
+      integrity: sha512-QTa50rFuPaX8klEDEbwLr+jVutwpvZEBQ0NpMMyng+je7gNe9Bz/JsOLHIG24tvNSSSIN/Q1QD0bnF6PQzWKHA==
   /chalk/2.4.2:
     dependencies:
       ansi-styles: 3.2.1
@@ -1593,7 +1596,7 @@ packages:
     resolution:
       integrity: sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==
   /countup.js/2.0.7:
-    dev: false
+    dev: true
     resolution:
       integrity: sha512-FO0nQdvG1iQwHp28wdvkErxnNUSbdkzztqZ6YNHKLHydngD2tdiKEW8dFrqpahF3tj+Ma70h0vyYrCBzxlVWdg==
   /create-require/1.1.1:
@@ -3536,10 +3539,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Tmy9C4MBGtC19AYhV8updznKqtiRSwJHIbDMeypsy3F0vxqgX5ytln4jwXRLVh82WW6ig4VGegi/Qhykpr4YQw==
-  /jquery/3.6.0:
-    dev: false
-    resolution:
-      integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
   /js-tokens/4.0.0:
     dev: true
     resolution:
@@ -3898,6 +3897,7 @@ packages:
     resolution:
       integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
   /mini-svg-data-uri/1.2.3:
+    dev: true
     resolution:
       integrity: sha512-zd6KCAyXgmq6FV1mR10oKXYtvmA9vRoB6xPSTUJTbFApCtkefDnYueVR1gkof3KcdLZo1Y8mjF2DFmQMIxsHNQ==
   /minimatch/3.0.4:
@@ -4670,6 +4670,19 @@ packages:
     dev: true
     resolution:
       integrity: sha1-DpTQFERwCkgd4g3k1V+yZAVkJQ4=
+  /postcss-import/14.0.1_postcss@8.2.9:
+    dependencies:
+      postcss: 8.2.9
+      postcss-value-parser: 4.1.0
+      read-cache: 1.0.0
+      resolve: 1.20.0
+    dev: true
+    engines:
+      node: '>=10.0.0'
+    peerDependencies:
+      postcss: ^8.0.0
+    resolution:
+      integrity: sha512-Xn2+z++vWObbEPhiiKO1a78JiyhqipyrXHBb3AHpv0ks7Cdg+GxQQJ24ODNMTanldf7197gSP3axppO9yaG0lA==
   /postcss-js/3.0.3:
     dependencies:
       camelcase-css: 2.0.1
@@ -5206,10 +5219,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-8liAVezDmUcH+tdzoEGrhfbGcP7nOV4NkGE3a74+qqvE7nt9i4sKLGBuZNOnpI4WiGksiNPklZxva80061QiPg==
-  /regenerator-runtime/0.13.7:
-    dev: false
-    resolution:
-      integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
   /regex-not/1.0.2:
     dependencies:
       extend-shallow: 3.0.2
@@ -5433,10 +5442,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
-  /select2/4.1.0-rc.0:
-    dev: false
-    resolution:
-      integrity: sha512-Hr9TdhyHCZUtwznEH2CBf7967mEM0idtJ5nMtjvk3Up5tPukOLXbHUNmh10oRfeNIhj+3GD3niu+g6sVK+gK0A==
   /semver-greatest-satisfied-range/1.1.0:
     dependencies:
       sver-compat: 1.5.0
@@ -6020,6 +6025,10 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+  /tom-select/1.4.3:
+    dev: true
+    resolution:
+      integrity: sha512-0/cRGSz0t3P/3p3MmuRjuWMGcQUTh9488yrICWD7eMGpB/pFCchNsXKWWO/c0R32IBucHivj00qU+e8pNN8Oeg==
   /traverse/0.6.6:
     dev: true
     resolution:
@@ -6531,7 +6540,6 @@ specifiers:
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
   '@types/javascript-time-ago': 2.0.2
-  '@types/jquery': 3.5.5
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
   '@types/mongoose': 5.10.4
@@ -6544,6 +6552,7 @@ specifiers:
   autoprefixer: 10.2.5
   axios: ^0.21.1
   body-parser: ^1.19.0
+  cash-dom: ^8.1.0
   compression: ^1.7.4
   connect-ensure-login: ^0.1.1
   connect-flash: ^0.1.1
@@ -6566,7 +6575,6 @@ specifiers:
   gulp-swc: 1.1.1
   ioredis: ^4.24.5
   javascript-time-ago: ^2.3.4
-  jquery: ^3.6.0
   lodash: ^4.17.21
   moment-timezone: ^0.5.33
   mongoose: ^5.12.2
@@ -6575,11 +6583,11 @@ specifiers:
   passport-local: ^1.0.0
   postcss: 8.2.9
   postcss-cli: 8.3.1
+  postcss-import: ^14.0.1
   prettier: 2.2.1
-  regenerator-runtime: ^0.13.7
-  select2: ^4.1.0-rc.0
   shelljs: 0.8.4
   tailwindcss: 2.0.4
+  tom-select: ^1.4.3
   ts-mongoose: ^0.0.24
   ts-node: 9.1.1
   typescript: 4.2.3

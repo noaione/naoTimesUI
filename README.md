@@ -57,4 +57,4 @@ The Embed design is adapted from [are-we-there-yet](https://github.com/GrygrFlzr
 The Login screen is adapted from [Simple Register/Sign Up Form](https://tailwindcomponents.com/component/simple-registersign-up-form) by [Scott Windon](https://tailwindcomponents.com/u/scott-windon)
 
 Credits originally to the Author.
-This project also heavily utilized TailwindCSS, JQuery and EJS for it's website design.
+This project also heavily utilized TailwindCSS, cash-dom and EJS for it's website design.
