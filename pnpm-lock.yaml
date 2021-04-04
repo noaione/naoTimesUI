@@ -6787,7 +6787,7 @@ specifiers:
   express-winston: ^4.1.0
   gulp: 4.0.2
   gulp-swc: 1.1.1
-  husky: ^6.0.0
+  husky: 6.0.0
   ioredis: ^4.24.5
   javascript-time-ago: ^2.3.4
   lodash: ^4.17.21
