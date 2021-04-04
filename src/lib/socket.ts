@@ -1,10 +1,12 @@
-import dotenv from "dotenv";
 import net from "net";
 import path from "path";
 import { promisify } from "util";
 
+import dotenv from "dotenv";
+
 import { logger as MainLoggger } from "./logger";
 import { isNone } from "./utils";
+
 const sleep = promisify(setTimeout);
 
 const logger = MainLoggger.child({ cls: "SocketConn" });

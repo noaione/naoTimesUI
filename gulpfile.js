@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const gulp = require("gulp");
-const autoprefixer = require("autoprefixer");
-const tailwind = require("tailwindcss");
-const tailwindjit = require("@tailwindcss/jit");
-const cssnano = require("cssnano");
-const postcss = require("postcss");
-const postcssImport = require("postcss-import");
-
-const swc = require("gulp-swc");
-
-const esbuild = require("esbuild");
-
 const fs = require("fs");
 const path = require("path");
-const shelljs = require("shelljs");
 
+const tailwindjit = require("@tailwindcss/jit");
+const autoprefixer = require("autoprefixer");
+const cssnano = require("cssnano");
+const esbuild = require("esbuild");
+const gulp = require("gulp");
+const swc = require("gulp-swc");
 const _ = require("lodash");
+const postcss = require("postcss");
+const postcssImport = require("postcss-import");
+const shelljs = require("shelljs");
+const tailwind = require("tailwindcss");
 const winston = require("winston");
 
 const loggerMain = winston.createLogger({

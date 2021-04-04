@@ -1,10 +1,10 @@
-import _ from "lodash";
-import express from "express";
-import moment from "moment-timezone";
 import { ensureLoggedIn } from "connect-ensure-login";
+import express from "express";
+import _ from "lodash";
+import moment from "moment-timezone";
 
-import { isNone, Nullable, verifyExist } from "../../lib/utils";
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
+import { isNone, Nullable, verifyExist } from "../../lib/utils";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 

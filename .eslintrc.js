@@ -2,7 +2,14 @@ module.exports = {
     root: true,
     parser: "@typescript-eslint/parser",
     plugins: ["@typescript-eslint"],
-    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+    extends: [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "prettier",
+    ],
     env: {
         node: true,
         es6: true,
@@ -10,6 +17,17 @@ module.exports = {
     settings: {
         react: {
             version: "detect",
+        },
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"],
+        },
+        "import/resolver": {
+            typescript: {
+                alwaysTryTypes: true,
+            },
+            node: {
+                extensions: [".ts", ".js"],
+            },
         },
     },
     rules: {
@@ -73,12 +91,30 @@ module.exports = {
                 argsIgnorePattern: "^_",
             },
         ],
+        "import/no-named-as-default-member": "off",
+        "import/order": [
+            "error",
+            {
+                alphabetize: { order: "asc", caseInsensitive: true },
+                "newlines-between": "always",
+                groups: ["builtin", "external", "internal", "sibling", "parent", "index", "object"],
+            },
+        ],
     },
     overrides: [
         {
             files: ["tools/*.js", "lib/*.js"],
             rules: {
+                "@typescript-eslint/no-unused-vars": "off",
                 "@typescript-eslint/no-var-requires": "off",
+                "@typescript-eslint/": "off",
+            },
+        },
+        {
+            files: ["src/**/*.ts"],
+            rules: {
+                "import/default": "off",
+                "import/no-named-as-default": "off",
             },
         },
     ],

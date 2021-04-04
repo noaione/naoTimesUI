@@ -1,10 +1,10 @@
-import _ from "lodash";
-import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
+import express from "express";
+import _ from "lodash";
 
-import { isNone, Nullable } from "../../lib/utils";
 import { logger as MainLogger } from "../../lib/logger";
 import { emitSocket } from "../../lib/socket";
+import { isNone, Nullable } from "../../lib/utils";
 import { ShowtimesModel } from "../../models/show";
 import { UserProps } from "../../models/user";
 

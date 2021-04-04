@@ -1,9 +1,11 @@
-import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
+import express from "express";
+import { get } from "lodash";
+
 import { filterToSpecificAnime, isNone } from "../../lib/utils";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
-import { get } from "lodash";
+
 
 const APIGetRoutes = express.Router();
 

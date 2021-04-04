@@ -1,6 +1,7 @@
-import { UserModel, UserProps } from "../models/user";
 import { logger as MainLogger } from "./logger";
 import { Nullable } from "./utils";
+
+import { UserModel, UserProps } from "../models/user";
 
 export async function findUser(username: string): Promise<Nullable<UserProps>> {
     const logger = MainLogger.child({ fn: "findUser", cls: "lib.user" });

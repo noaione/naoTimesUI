@@ -1,11 +1,11 @@
-import express from "express";
 import bodyparser from "body-parser";
 import { ensureLoggedIn } from "connect-ensure-login";
+import express from "express";
 
 import passport from "../lib/passport";
-import { UserModel, UserProps } from "../models/user";
-import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
 import { emitSocketAndWait } from "../lib/socket";
+import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
+import { UserModel, UserProps } from "../models/user";
 
 const AuthAPIRoutes = express.Router();
 

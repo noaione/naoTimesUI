@@ -1,7 +1,7 @@
 import express from "express";
 
-import { AuthAPIRoutes } from "./auth";
 import { AnilistRoutes } from "./anilist";
+import { AuthAPIRoutes } from "./auth";
 import { APIDeleteRoutes, APIGetRoutes, APIPOSTRoutes, APIPutRoutes } from "./showtimes";
 
 const APIRoutes = express.Router();

@@ -1,13 +1,13 @@
 import axios from "axios";
-import express from "express";
 import { ensureLoggedIn } from "connect-ensure-login";
+import express from "express";
 import { get, has } from "lodash";
 
-import { UserProps } from "../../models/user";
-import { ShowtimesModel } from "../../models/show";
-import { isNone, parseAnilistAPIResult, verifyExist } from "../../lib/utils";
-import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { logger as MainLogger } from "../../lib/logger";
+import { emitSocket, emitSocketAndWait } from "../../lib/socket";
+import { isNone, parseAnilistAPIResult, verifyExist } from "../../lib/utils";
+import { ShowtimesModel } from "../../models/show";
+import { UserProps } from "../../models/user";
 
 const APIPOSTRoutes = express.Router();
 

@@ -1,26 +1,26 @@
-import * as cons from "consolidate";
-
-import dotenv from "dotenv";
-import express from "express";
-import express_compression from "compression";
-import express_cors from "cors";
-import { ensureLoggedIn } from "connect-ensure-login";
-import express_session from "express-session";
-import express_session_redis from "connect-redis";
-import express_flash from "connect-flash";
-import mongoose from "mongoose";
-import { get } from "lodash";
 import { readFileSync } from "fs";
-import shelljs from "shelljs";
 import path from "path";
 
+import express_compression from "compression";
+import { ensureLoggedIn } from "connect-ensure-login";
+import express_flash from "connect-flash";
+import express_session_redis from "connect-redis";
+import * as cons from "consolidate";
+import express_cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import express_session from "express-session";
+import { get } from "lodash";
+import mongoose from "mongoose";
+import shelljs from "shelljs";
+
+import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
 import passport from "./lib/passport";
 import redisCreate from "./lib/redis";
 import { emitSocketAndWait } from "./lib/socket";
-import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
 import { filterToSpecificAnime, isNone, romanizeNumber } from "./lib/utils";
-import { UserProps } from "./models/user";
 import { ShowtimesModel } from "./models/show";
+import { UserProps } from "./models/user";
 import { APIRoutes } from "./routes/api";
 import { EmbedRouter } from "./routes/embed";
 
@@ -82,6 +82,7 @@ const RedisClient = redisCreate();
 // Initial stuff.
 app.use(express_cors());
 app.use(express_compression());
+// eslint-disable-next-line import/namespace
 app.engine("html", cons.ejs);
 app.set("views", path.join(__dirname, "..", "public"));
 app.set("view engine", "ejs");

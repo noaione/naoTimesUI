@@ -2,6 +2,7 @@ import axios from "axios";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
 import { get } from "lodash";
+
 import { isNone } from "../lib/utils";
 
 const AnilistRoutes = express.Router();

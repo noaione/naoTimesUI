@@ -1,14 +1,16 @@
 // Import the locale here
-import LocaleID from "./id";
-import LocaleEN from "./en";
-import LocaleJV from "./jv";
-import LocaleSU from "./su";
-
 import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 import moment from "moment-timezone";
 
+import LocaleEN from "./en";
+import LocaleID from "./id";
+import LocaleJV from "./jv";
+// eslint-disable-next-line import/order
+import LocaleSU from "./su";
+
 // Import any timeAgo stuff here
-import en from "javascript-time-ago/locale/en";
+
 import { id, jv, su } from "./timeago";
 
 // Add new language mapping here.

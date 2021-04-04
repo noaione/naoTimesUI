@@ -1,5 +1,6 @@
-import moment from "moment-timezone";
 import { get, has } from "lodash";
+import moment from "moment-timezone";
+
 import { ShowAnimeProps, ShowtimesProps } from "../models/show";
 
 export type Nullable<T> = T | null;
