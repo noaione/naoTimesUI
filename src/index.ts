@@ -251,10 +251,14 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
     const resetInfo = get(flashed, "resetinfo", []);
     const nameError = get(flashed, "nameerror", []);
     const nameInfo = get(flashed, "nameinfo", []);
+    const channelError = get(flashed, "channelerror", []);
+    const channelInfo = get(flashed, "channelinfo", []);
     let parsedInfo = null,
         parsedError = null,
         parsedInfo2 = null,
-        parsedError2 = null;
+        parsedError2 = null,
+        parsedInfo3 = null,
+        parsedError3 = null;
     if (resetError.length > 0) {
         parsedError = resetError[0];
     }
@@ -266,6 +270,12 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
     }
     if (nameInfo.length > 0) {
         parsedInfo2 = nameInfo[0];
+    }
+    if (channelError.length > 0) {
+        parsedError3 = channelError[0];
+    }
+    if (channelInfo.length > 0) {
+        parsedInfo3 = channelInfo[0];
     }
     const ORIGIN = `${req.protocol}://${req.hostname}`;
     res.render("admin/atur", {
@@ -282,6 +292,8 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         resetInfo: parsedInfo,
         nameError: parsedError2,
         nameInfo: parsedInfo2,
+        channelInfo: parsedInfo3,
+        channelError: parsedError3,
     });
 });
 

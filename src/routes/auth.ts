@@ -1,9 +1,11 @@
 import bodyparser from "body-parser";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
+import { has } from "lodash";
 
 import passport from "../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../lib/socket";
+import { isNone } from "../lib/utils";
 import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
 import { UserModel, UserProps } from "../models/user";
 
@@ -181,6 +183,68 @@ AuthAPIRoutes.post("/changename", ensureLoggedIn("/"), async (req, res) => {
                 res.redirect("/admin/atur");
             });
         });
+    }
+});
+
+async function changeChannelId(serverId: string, channelId: string) {
+    let channelInfo;
+    try {
+        channelInfo = await emitSocketAndWait("get channel", { id: channelId, server: serverId });
+    } catch (e) {
+        const errorData: string = e.toString().toLowerCase();
+        let msgFucked = "Error tidak diketahui";
+        if (errorData.includes("bukanlah angka")) {
+            msgFucked = "ID bukanlah angka";
+        } else if (errorData.includes("menemukan server")) {
+            msgFucked = "Tidak dapat menemukan server";
+        } else if (errorData.includes("menemukan channel")) {
+            msgFucked = "Tidak dapat menemukan channel tersebut di server anda!";
+        } else if (errorData.includes("bukan textchannel")) {
+            msgFucked = "Channel bukanlah channel teks (Text Channel)";
+        }
+        return [false, "Gagal mendapatkan channel: " + msgFucked];
+    }
+
+    try {
+        await ShowtimesModel.findOneAndUpdate(
+            { id: { $eq: serverId } },
+            { $set: { announce_channel: channelInfo.id } }
+        );
+    } catch (e) {
+        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
+    }
+    emitSocket("pull data", serverId);
+    let channelName = channelInfo.name || channelId;
+    if (channelName !== channelId) {
+        channelName = "#" + channelName;
+    }
+    return [true, channelName];
+}
+
+AuthAPIRoutes.post("/announcechannel", ensureLoggedIn("/"), async (req, res) => {
+    console.info(req.body);
+    const reqData = req.body;
+    if (isNone(req.user)) {
+        res.status(404).json({ message: "Unauthorized", code: 403 });
+    } else {
+        if (!has(reqData, "channelid")) {
+            req.flash("channelerror", "Mohon masukan channel ID");
+            res.redirect("/admin/atur");
+        } else {
+            const userData = req.user as UserProps;
+            if (userData.privilege === "owner") {
+                res.redirect("/admin/atur");
+            } else {
+                const [result, msg] = await changeChannelId(userData.id, reqData.channelid);
+                if (!result) {
+                    req.flash("channelerror", msg);
+                    res.redirect("/admin/atur");
+                } else {
+                    req.flash("channelinfo", `Sukses merubah channel ke ${msg}`);
+                    res.redirect("/admin/atur");
+                }
+            }
+        }
     }
 });
 
