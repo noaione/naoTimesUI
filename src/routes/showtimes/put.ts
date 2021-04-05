@@ -3,6 +3,7 @@ import express from "express";
 import _ from "lodash";
 import moment from "moment-timezone";
 
+import { csrfProtected } from "../../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
@@ -102,7 +103,7 @@ async function doAnimeChanges(
     return databaseData;
 }
 
-APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
+APIPutRoutes.put("/projek", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
     const jsonBody = req.body;
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
         return res.status(400).json({ message: "missing JSON body", code: 400 });

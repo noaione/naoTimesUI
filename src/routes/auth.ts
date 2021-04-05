@@ -3,7 +3,7 @@ import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
 import { has } from "lodash";
 
-import passport from "../lib/passport";
+import { csrfProtected, passport } from "../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../lib/socket";
 import { isNone } from "../lib/utils";
 import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
@@ -20,6 +20,7 @@ AuthAPIRoutes.post(
         failureFlash: true,
         successRedirect: "/admin",
     }),
+    csrfProtected,
     (_, res) => {
         res.redirect("/admin");
     }
@@ -142,7 +143,7 @@ AuthAPIRoutes.post("/register", async (req, res) => {
 });
 
 // AuthAPIRoutes.use(express.json());
-AuthAPIRoutes.post("/reset", ensureLoggedIn("/"), async (req, res) => {
+AuthAPIRoutes.post("/reset", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
     const user = req.user as UserProps;
     const jsonBody = req.body;
     if (!checkStringValid(jsonBody.old) || !checkStringValid(jsonBody.new)) {
@@ -167,7 +168,7 @@ AuthAPIRoutes.post("/reset", ensureLoggedIn("/"), async (req, res) => {
     }
 });
 
-AuthAPIRoutes.post("/changename", ensureLoggedIn("/"), async (req, res) => {
+AuthAPIRoutes.post("/changename", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
     const user = req.user as UserProps;
     const jsonBody = req.body;
     if (!checkStringValid(jsonBody.newname)) {
@@ -221,7 +222,7 @@ async function changeChannelId(serverId: string, channelId: string) {
     return [true, channelName];
 }
 
-AuthAPIRoutes.post("/announcechannel", ensureLoggedIn("/"), async (req, res) => {
+AuthAPIRoutes.post("/announcechannel", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
     console.info(req.body);
     const reqData = req.body;
     if (isNone(req.user)) {

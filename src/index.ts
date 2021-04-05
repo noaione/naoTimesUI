@@ -6,6 +6,7 @@ import { ensureLoggedIn } from "connect-ensure-login";
 import express_flash from "connect-flash";
 import express_session_redis from "connect-redis";
 import * as cons from "consolidate";
+import cookieParser from "cookie-parser";
 import express_cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -15,7 +16,7 @@ import mongoose from "mongoose";
 import shelljs from "shelljs";
 
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
-import passport from "./lib/passport";
+import { passport } from "./lib/passport";
 import redisCreate from "./lib/redis";
 import { emitSocketAndWait } from "./lib/socket";
 import { filterToSpecificAnime, isNone, romanizeNumber } from "./lib/utils";
@@ -100,6 +101,7 @@ app.use(
         store: new RedisStore({ client: RedisClient }),
     })
 );
+app.use(cookieParser());
 app.use(express_flash());
 app.use(passport.initialize());
 app.use(passport.session());
