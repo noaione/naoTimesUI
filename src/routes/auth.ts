@@ -214,7 +214,11 @@ async function changeChannelId(serverId: string, channelId: string) {
         return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
     }
     emitSocket("pull data", serverId);
-    return [true, channelInfo.name || channelId];
+    let channelName = channelInfo.name || channelId;
+    if (channelName !== channelId) {
+        channelName = "#" + channelName;
+    }
+    return [true, channelName];
 }
 
 AuthAPIRoutes.post("/announcechannel", ensureLoggedIn("/"), async (req, res) => {
