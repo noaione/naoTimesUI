@@ -6803,9 +6803,9 @@ specifiers:
   '@types/connect-redis': 0.0.16
   '@types/consolidate': 0.14.0
   '@types/cookie': 0.4.0
-  '@types/cookie-parser': ^1.4.2
+  '@types/cookie-parser': 1.4.2
   '@types/cors': 2.8.10
-  '@types/csurf': ^1.11.0
+  '@types/csurf': 1.11.0
   '@types/ejs': 3.0.6
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
