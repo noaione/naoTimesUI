@@ -16,6 +16,7 @@ type SocketEvent =
     | "authenticate"
     | "pull data"
     | "get server"
+    | "get channel"
     | "get user"
     | "get user perms"
     | "create role"
