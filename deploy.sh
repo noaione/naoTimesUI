@@ -8,7 +8,7 @@ cd /var/www/naotimes-webui
 git pull
 
 # Install deps and build
-pnpm install
+pnpm install --frozen-lockfile
 pnpm run build
 
 # Restart pm2
