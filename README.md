@@ -2,6 +2,9 @@
 A web panel for naoTimes Showtimes Module
 
 This project use [pnpm](https://pnpm.js.org/)
+```
+npm install -g pnpm
+```
 
 ## Deployment
 
