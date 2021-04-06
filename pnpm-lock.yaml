@@ -9,7 +9,6 @@ dependencies:
   cookie: 0.4.1
   cookie-parser: 1.4.5
   cors: 2.8.5
-  csurf: 1.11.0
   dotenv: 8.2.0
   ejs: 3.1.6
   express: 4.17.1
@@ -1676,16 +1675,6 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
-  /csrf/3.1.0:
-    dependencies:
-      rndm: 1.2.0
-      tsscmp: 1.0.6
-      uid-safe: 2.1.5
-    dev: false
-    engines:
-      node: '>= 0.8'
-    resolution:
-      integrity: sha512-uTqEnCvWRk042asU6JtapDTcJeeailFy4ydOQS28bj1hcLnYRiqi8SsD2jS412AY1I/4qdOwWZun774iqywf9w==
   /css-color-names/0.0.4:
     dev: true
     resolution:
@@ -1829,17 +1818,6 @@ packages:
       node: '>=8.0.0'
     resolution:
       integrity: sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA==
-  /csurf/1.11.0:
-    dependencies:
-      cookie: 0.4.0
-      cookie-signature: 1.0.6
-      csrf: 3.1.0
-      http-errors: 1.7.3
-    dev: false
-    engines:
-      node: '>= 0.8.0'
-    resolution:
-      integrity: sha512-UCtehyEExKTxgiu8UHdGvHj4tnpE/Qctue03Giq5gPgMQ9cg/ciod5blZQ5a4uCEenNQjxyGuzygLdKUmee/bQ==
   /d/1.0.1:
     dependencies:
       es5-ext: 0.10.53
@@ -5632,10 +5610,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
-  /rndm/1.2.0:
-    dev: false
-    resolution:
-      integrity: sha1-8z/pz7Urv9UgqhgyO8ZdsRCht2w=
   /run-parallel/1.2.0:
     dependencies:
       queue-microtask: 1.2.3
@@ -6321,12 +6295,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
-  /tsscmp/1.0.6:
-    dev: false
-    engines:
-      node: '>=0.6.x'
-    resolution:
-      integrity: sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==
   /tsutils/3.21.0_typescript@4.2.3:
     dependencies:
       tslib: 1.14.1
@@ -6820,7 +6788,6 @@ specifiers:
   countup.js: 2.0.7
   cross-env: 7.0.3
   cssnano: 4.1.10
-  csurf: ^1.11.0
   dotenv: ^8.2.0
   ejs: ^3.1.6
   esbuild: 0.11.5

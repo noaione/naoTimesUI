@@ -4,7 +4,6 @@ import express from "express";
 import { get, has } from "lodash";
 
 import { logger as MainLogger } from "../../lib/logger";
-import { csrfProtected } from "../../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { isNone, parseAnilistAPIResult, verifyExist } from "../../lib/utils";
 import { ShowtimesModel } from "../../models/show";
@@ -65,7 +64,7 @@ async function getAnimeInfo(anime_id: string | number): Promise<any> {
     return get(res, "data.Media", {});
 }
 
-APIPOSTRoutes.post("/serverinfo", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
+APIPOSTRoutes.post("/serverinfo", ensureLoggedIn("/"), async (req, res) => {
     if (isNone(req.user)) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
@@ -79,7 +78,7 @@ APIPOSTRoutes.post("/serverinfo", ensureLoggedIn("/"), csrfProtected, async (req
     }
 });
 
-APIPOSTRoutes.post("/poll", ensureLoggedIn("/"), csrfProtected, (req, res) => {
+APIPOSTRoutes.post("/poll", ensureLoggedIn("/"), (req, res) => {
     if (isNone(req.user)) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
@@ -232,7 +231,7 @@ async function addNewProject(dataToAdd: any) {
 
 APIPOSTRoutes.use(express.json());
 
-APIPOSTRoutes.post("/projek", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
+APIPOSTRoutes.post("/projek", ensureLoggedIn("/"), async (req, res) => {
     const reqData = req.body;
     if (isNone(req.user)) {
         res.status(403).json({ message: "Unauthorized", code: 403 });

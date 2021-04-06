@@ -1,4 +1,3 @@
-import csurf from "csurf";
 import passport from "passport";
 import { Strategy } from "passport-local";
 
@@ -46,6 +45,4 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-const csrfProtected = csurf({ cookie: true });
-
-export { csrfProtected, passport };
+export { passport };
