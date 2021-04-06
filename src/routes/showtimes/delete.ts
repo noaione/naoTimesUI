@@ -3,7 +3,6 @@ import express from "express";
 import _ from "lodash";
 
 import { logger as MainLogger } from "../../lib/logger";
-import { csrfProtected } from "../../lib/passport";
 import { emitSocket } from "../../lib/socket";
 import { isNone, Nullable } from "../../lib/utils";
 import { ShowtimesModel } from "../../models/show";
@@ -121,7 +120,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     return { message: "Sukses", code: 200, success: true };
 }
 
-APIDeleteRoutes.delete("/projek", ensureLoggedIn("/"), csrfProtected, async (req, res) => {
+APIDeleteRoutes.delete("/projek", ensureLoggedIn("/"), async (req, res) => {
     const jsonBody = req.body;
     if (!_.has(jsonBody, "anime_id")) {
         return res.status(400).json({ message: "missing `anime_id` key", code: 400 });
