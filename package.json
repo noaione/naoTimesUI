@@ -10,7 +10,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production gulp",
     "build:dev": "cross-env NODE_ENV=development gulp",
-    "watch": "cross-env NODE_ENV=development gulp -f gulp-watch.js",
+    "watch": "cross-env TAILWIND_MODE=build NODE_ENV=development gulp -f gulp-watch.js",
     "watch:dev": "npm-run-all build:dev watch",
     "prod": "npm-run-all build prod:start",
     "prod:start": "node .",
@@ -68,7 +68,6 @@
     "@swc/core": "1.2.51",
     "@tailwindcss/custom-forms": "0.2.1",
     "@tailwindcss/forms": "0.3.2",
-    "@tailwindcss/jit": "0.1.18",
     "@types/body-parser": "1.19.0",
     "@types/compression": "1.7.0",
     "@types/connect-ensure-login": "0.1.5",

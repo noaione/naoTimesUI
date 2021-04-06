@@ -2,7 +2,6 @@
 const fs = require("fs");
 const path = require("path");
 
-const tailwindjit = require("@tailwindcss/jit");
 const autoprefixer = require("autoprefixer");
 const cssnano = require("cssnano");
 const esbuild = require("esbuild");
@@ -103,12 +102,15 @@ function transpile(cb) {
     }
 }
 
-function css(cb) {
+function css(cb, forceJIT = false) {
+    const extraConf = { mode: forceJIT ? "jit" : isProd ? "jit" : "" };
+    const mainConf = require("./tailwind.config");
+    const mergedConf = Object.assign({}, mainConf, extraConf);
     const logger = loggerMain.child({ fn: "css", cls: "GulpTasks" });
     const cssSources = fs.readFileSync("src/styles.css");
-    let plugins = [postcssImport, tailwind, autoprefixer];
+    let plugins = [postcssImport, tailwind(mergedConf), autoprefixer];
     if (isProd) {
-        plugins = [postcssImport, tailwindjit, autoprefixer, cssnano];
+        plugins = [postcssImport, tailwind(mergedConf), autoprefixer, cssnano];
     }
     logger.info(
         `PostCSS+${plugins.length === 3 ? "TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
