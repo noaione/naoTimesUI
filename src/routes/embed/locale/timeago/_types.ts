@@ -1,6 +1,6 @@
 import { ExtendedFormats, Locale, QuantifyType, Tense, TimeUnit } from "javascript-time-ago/locale";
 
-export type ExtraLocale = { [K in TimeUnit]?: QuantifyType | string };
+export type ExtraLocale = Partial<Record<TimeUnit, QuantifyType | string>>;
 
 export interface ExtendedLocale extends Omit<Locale, ExtendedFormats> {
     now: {
