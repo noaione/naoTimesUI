@@ -260,7 +260,7 @@ function generateShowCard(
     const firstEpisode = unfinishedEpisode[0];
 
     const $appShowBase = `
-        <div class="shadow-md rounded-md overflow-hidden flex flex-row items-start relative bg-white dark:bg-gray-700 <%- bordering %>">
+        <div class="shadow-md rounded-md overflow-hidden flex flex-row items-start relative bg-white dark:bg-gray-800 <%- bordering %>">
             <%- content %>
         </div>
     `;
