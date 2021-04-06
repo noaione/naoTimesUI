@@ -4,7 +4,7 @@
  * Modified by noaione <noaione0809@gmail.com>
  * With the help of Anonymous person
  * Created: 03 April 2021
- * Last Update: 03 April 2021
+ * Last Update: 06 April 2021
  *
  * (C) 2021 naoTimes Dev
  * MIT License
@@ -17,21 +17,21 @@ const Locale: ExtendedLocale = {
     long: {
         year: {
             previous: "warsa kala wingi",
-            current: "warsa punika",
+            current: "warsa puniki",
             next: "warsa ngajeng",
             past: "{0} warsa ingkang rumiyin",
             future: "lebet {0} warsa",
         },
         quarter: {
             previous: "triwulan rumiyin/kala wingi",
-            current: "triwulan punika",
+            current: "triwulan puniki",
             next: "triwulan saklajengipun",
             past: "{0} triwulan ingkang rumiyin",
             future: "lebet {0} triwulan",
         },
         month: {
             previous: "sasi kala wingi",
-            current: "sasi punika",
+            current: "sasi puniki",
             next: "sasi ngajeng",
             past: "{0} sasi ingkang rumiyin",
             future: "lebet {0} sasi",
