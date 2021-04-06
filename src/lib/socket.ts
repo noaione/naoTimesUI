@@ -98,6 +98,9 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
         parsedData = parsedData.replace("\x04", "");
     }
     const JSONified = JSON.parse(parsedData);
+    if (JSONified.success === 0) {
+        throw new Error(JSONified.message);
+    }
     if (JSONified.success === -1) {
         // Need auth, redo the whole thing.
         if (isNone(process.env.BOT_SOCKET_PASSWORD)) {
@@ -107,14 +110,15 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
         try {
             logger.info("Server requested authentication, authenticating with provided password");
             await emitSocketAndWait("authenticate", process.env.BOT_SOCKET_PASSWORD);
-            logger.info("Authentication completed, emitting the original event again.");
-            return await emitSocketAndWait(event, data);
         } catch (e) {
             throw new Error("Wrong password for authenticating, cannot emit the original event");
         }
-    }
-    if (JSONified.success !== 1) {
-        throw new Error(JSONified.message);
+        try {
+            logger.info("Authentication completed, emitting the original event again.");
+            return await emitSocketAndWait(event, data);
+        } catch (e) {
+            throw new Error(e.toString().replace("Error: ", ""));
+        }
     }
     return JSONified.message;
 }
