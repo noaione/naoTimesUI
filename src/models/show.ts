@@ -89,9 +89,12 @@ const ShowtimesSchemas = createSchema(
 
 const ShowAdminSchemas = createSchema(
     {
-        server_admin: Type.array({ required: true }).of(Type.string()),
+        _id: Type.objectId({ required: false }),
+        id: Type.string({ required: true }),
+        servers: Type.array({ required: true }).of(Type.string({ required: true })),
     },
     {
+        _id: false,
         versionKey: false,
     }
 );
