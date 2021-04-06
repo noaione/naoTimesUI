@@ -178,4 +178,54 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
     }
 });
 
+async function tryToAddNewAdmin(serverId: string, newAdminId: string) {
+    const adminIdNumber = parseInt(newAdminId);
+    if (isNaN(adminIdNumber)) {
+        return ["Admin ID bukanlah angka", false];
+    }
+    let serverAdmin: string[];
+    try {
+        const showtimesData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+        serverAdmin = showtimesData.serverowner;
+    } catch (e) {
+        console.error(e);
+        return ["Gagal mengambil database, mohon coba lagi nanti", false];
+    }
+    if (!serverAdmin.includes(newAdminId)) {
+        try {
+            await ShowtimesModel.findOneAndUpdate(
+                { id: { $eq: serverId } },
+                { $addToSet: { serverowner: newAdminId } }
+            );
+        } catch (e) {
+            return ["Gagal memperbarui database, mohon coba lagi nanti", false];
+        }
+    }
+    emitSocket("pull data", serverId);
+    return ["Sukses", true];
+}
+
+APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
+    const jsonBody = req.body;
+    if (isNone(jsonBody.adminid)) {
+        res.status(400).json({ message: "missing adminid key", code: 400 });
+    } else {
+        if (isNone(req.user)) {
+            res.status(403).json({ message: "Unauthorized", code: 403 });
+        } else {
+            const userData = req.user as UserProps;
+            if (userData.privilege === "owner") {
+                res.status(504).json({ message: "Not implemented for Admin", code: 504 });
+            } else {
+                const [msg, status] = await tryToAddNewAdmin(userData.id, jsonBody.adminid);
+                if (status) {
+                    res.json({ message: msg, code: 200 });
+                } else {
+                    res.status(500).json({ message: msg, code: 500 });
+                }
+            }
+        }
+    }
+});
+
 export { APIPutRoutes };
