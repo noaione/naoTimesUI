@@ -26,9 +26,9 @@ const Locale = {
     AIRING: "Airing", // (Airing) in xx days
     SEASON: {
         WINTER: "Winter",
-        SPRING: "🌸 Spring",
-        SUMMER: "🏖 Summer",
-        FALL: "🍂 Fall",
+        SPRING: "Spring",
+        SUMMER: "Summer",
+        FALL: "Fall",
     },
     DROPDOWN: {
         // {{episode}} will be substitued with remainder of the episode
