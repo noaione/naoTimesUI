@@ -2,7 +2,7 @@
  * Javanese localization
  * Created by noaione <noaione0809@gmail.com>
  * Created: 04 April 2021
- * Last Update: 04 April 2021
+ * Last Update: 06 April 2021
  *
  * (C) 2021 naoTimes Dev
  * MIT License
@@ -18,7 +18,7 @@ const Locale = {
         TS: "Tata Rias",
         QC: "Tinjauan Akhir",
     },
-    NO_PROGRESS: "Belum ada progres",
+    NO_PROGRESS: "Durung ana kemajuan",
     AIRED: "Siaran", // (Tayang) xx hari lalu
     AIRING: "Siaran", // (Tayang) dalam xx hari lalu
     SEASON: {
@@ -33,8 +33,8 @@ const Locale = {
         RETRACT: "Tutup...",
     },
     LAST_UPDATE: "Dianyari",
-    EPISODE_NEEDS: "butuh",
-    WAITING_RELEASE: "Menunggu dirilis...",
+    EPISODE_NEEDS: "betah",
+    WAITING_RELEASE: "Ngentosi dirilis...",
 };
 
 export default Locale;

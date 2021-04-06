@@ -2,7 +2,7 @@
  * Sundanese localization
  * Created by noaione <noaione0809@gmail.com>
  * Created: 04 April 2021
- * Last Update: 04 April 2021
+ * Last Update: 06 April 2021
  *
  * (C) 2021 naoTimes Dev
  * MIT License
@@ -18,11 +18,11 @@ const Locale = {
         TS: "Tata Rias",
         QC: "Tinjauan Akhir",
     },
-    NO_PROGRESS: "Belum ada progres",
+    NO_PROGRESS: "Tacan aya kemajuan",
     AIRED: "Tayang", // (Tayang) xx hari lalu
     AIRING: "Tayang", // (Tayang) dalam xx hari lalu
     SEASON: {
-        WINTER: "Musim Dingin",
+        WINTER: "Musim Tiris",
         SPRING: "Musim Semi",
         SUMMER: "Musim Panas",
         FALL: "Musim Gugur",
@@ -32,8 +32,8 @@ const Locale = {
         EXPAND: "Lihat {{episode}} episode selanjutnya...",
         RETRACT: "Tutup...",
     },
-    LAST_UPDATE: "Diperbarui",
-    EPISODE_NEEDS: "butuh",
+    LAST_UPDATE: "Diropéa",
+    EPISODE_NEEDS: "peryogi",
     WAITING_RELEASE: "Menunggu dirilis...",
 };
 
