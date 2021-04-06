@@ -109,6 +109,7 @@ AuthAPIRoutes.post("/register", async (req, res) => {
                             admin: newAdmin,
                         });
                         if (
+                            userPerms.includes("owner") ||
                             userPerms.includes("manage_guild") ||
                             userPerms.includes("manage_server") ||
                             userPerms.includes("administrator")
