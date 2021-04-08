@@ -2,10 +2,11 @@ import bodyparser from "body-parser";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
 import { has } from "lodash";
+import { Types } from "mongoose";
 
 import { passport } from "../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../lib/socket";
-import { isNone } from "../lib/utils";
+import { isNone, Nullable } from "../lib/utils";
 import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../models/show";
 import { UserModel, UserProps } from "../models/user";
 
@@ -49,17 +50,21 @@ function toStr(data: any): string {
     return null;
 }
 
-async function tryServerAdminAdd(adminId: string) {
-    const results = await ShowAdminModel.find({});
-    const firstRes = results[0];
-    const newAdminSets = firstRes.server_admin;
-    let changed = false;
-    if (!firstRes.server_admin.includes(adminId)) {
-        newAdminSets.push(adminId);
-        changed = true;
+async function tryServerAdminAdd(adminId: string, serverId: string) {
+    const existingUsers = await ShowAdminModel.find({ id: { $eq: adminId } });
+    let existingId: Nullable<Types.ObjectId>;
+    if (existingUsers.length > 0) {
+        existingId = existingUsers[0]._id;
     }
-    if (changed) {
-        await ShowAdminModel.findByIdAndUpdate(firstRes._id, { $set: { server_admin: newAdminSets } });
+    if (isNone(existingId)) {
+        const newSuperAdmin = {
+            _id: new Types.ObjectId(),
+            id: serverId,
+            servers: [serverId],
+        };
+        await ShowAdminModel.insertMany([newSuperAdmin]);
+    } else {
+        await ShowAdminModel.findByIdAndUpdate(existingId, { $addToSet: { servers: serverId } });
     }
 }
 
@@ -77,8 +82,9 @@ async function registerNewServer(server: any, admin: any) {
         announce_channel: null,
         konfirmasi: [],
     };
+    // @ts-ignore
     await ShowtimesModel.insertMany([newShowtimesServer]);
-    await tryServerAdminAdd(toStr(adminId));
+    await tryServerAdminAdd(toStr(adminId), toStr(serverId));
     emitSocket("pull data", serverId);
 }
 

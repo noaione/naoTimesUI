@@ -16,6 +16,10 @@
         h2 {
             font-size: x-large;
         }
+
+        h3 {
+            font-size: larger;
+        }
     </style>
 </head>
 
@@ -81,7 +85,7 @@
 
                                 <% if (!is_admin) { %>
                                 <div class="flex flex-col py-1">
-                                    <h2 class="font-semibold dark:text-white mb-4">Ubah Channel Announcer</h2>
+                                    <h3 class="font-semibold dark:text-white mb-2">Ubah Channel Announcer</h3>
                                     <% if (locals.channelError && channelError) { %>
                                     <div class="text-sm font-semibold text-red-400"><%= channelError %></div>
                                     <% } %>
@@ -97,8 +101,31 @@
                                                 </div>
                                             </div>
                                             <div class="flex mt-2">
-                                                <button id="channel-change-btn" type="submit" class="rounded-lg text-white px-3 py-1 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-green-800">
-                                                    <span class="text-lg font-semibold">Ubah</span>
+                                                <button id="channel-change-btn" type="submit" class="rounded-lg text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-blue-800">
+                                                    <span class="text-base font-semibold">Ubah</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                <% if (!is_admin) { %>
+                                <div class="flex flex-col py-1">
+                                    <h3 class="font-semibold dark:text-white mb-2">Atur Admin</h3>
+                                    <div class="flex flex-row pb-2" id="adminform-change">
+                                        <form id="adminform-change" action="/api/showtimes/admin">
+                                            <div id="admin-list" class="flex flex-col">
+                                                <% for (let i = 0; i < serverAdmin.length; i++) { %>
+                                                    <span class="dark:text-white">- <%= serverAdmin[i] %></span>
+                                                <% } %>
+                                            </div>
+                                            <div class="flex mt-2">
+                                                <button id="admin-add-btn" type="submit" class="rounded-lg text-white px-4 py-2 mr-2 bg-green-600 hover:bg-green-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-green-800 hidden">
+                                                    <span class="text-base font-semibold">Tambah</span>
+                                                </button>
+                                                <button id="admin-change-btn" type="submit" class="rounded-lg text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-blue-800" data-role="show">
+                                                    <span class="text-base font-semibold">Ubah</span>
                                                 </button>
                                             </div>
                                         </form>
@@ -107,7 +134,7 @@
                                 <% } %>
 
                                 <div class="flex flex-col py-1">
-                                    <h2 class="font-semibold dark:text-white mb-4">Ubah Password</h2>
+                                    <h3 class="font-semibold dark:text-white mb-2">Ubah Password</h3>
                                     <% if (locals.resetError && resetError) { %>
                                     <div class="text-sm font-semibold text-red-400"><%= resetError %></div>
                                     <% } %>
@@ -129,8 +156,8 @@
                                                 </div>
                                             </div>
                                             <div class="flex mt-2">
-                                                <button id="passwd-change-btn" type="submit" class="rounded-lg text-white px-3 py-1 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-green-800">
-                                                    <span class="text-lg font-semibold">Ubah</span>
+                                                <button id="passwd-change-btn" type="submit" class="rounded-lg text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-blue-800">
+                                                    <span class="text-base font-semibold">Ubah</span>
                                                 </button>
                                             </div>
                                         </form>
@@ -138,7 +165,7 @@
                                 </div>
 
                                 <div class="flex flex-col py-1">
-                                    <h2 class="font-semibold dark:text-white mb-4">Ubah Nama</h2>
+                                    <h3 class="font-semibold dark:text-white mb-2">Ubah Nama</h3>
                                     <% if (locals.nameError && nameError) { %>
                                     <div class="text-sm font-semibold text-red-400"><%= nameError %></div>
                                     <% } %>
@@ -154,17 +181,18 @@
                                                 </div>
                                             </div>
                                             <div class="flex mt-2">
-                                                <button id="name-change-btn" type="submit" class="rounded-lg text-white px-3 py-1 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-green-800">
-                                                    <span class="text-lg font-semibold">Ubah</span>
+                                                <button id="name-change-btn" type="submit" class="rounded-lg text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition duration-300 place-self-center hover:stack-shadow-3 ring-offset-blue-800">
+                                                    <span class="text-base font-semibold">Ubah</span>
                                                 </button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
 
+                                <% if (!is_admin) { %>
                                 <div class="grid gap-2 sm:grid-cols-1 lg:grid-cols-2 py-1">
                                     <div class="flex flex-col">
-                                        <h2 class="font-semibold dark:text-white mb-4">Website Embed</h2>
+                                        <h3 class="font-semibold dark:text-white mb-2">Website Embed</h3>
                                         <div class="text-sm font-semibold text-blue-400">Buat URL untuk embed daftar utang di Website anda!</div>
                                         <div class="block bg-gray-300 dark:bg-gray-800 px-3 py-2 dark:text-gray-300 mt-2">
                                             <a id="embed-url" data-server-id="<%= user_id %>" data-accent="green" data-lang="id" data-dark="false" href="<%= embed_origin %>/embed?id=<%= user_id %>" target="_blank"><%= embed_origin %>/embed?id=<%= user_id %></a>
@@ -210,6 +238,7 @@
                                         <iframe id="embed-framing-small" class="embed-framing" src="<%= embed_origin %>:5000/embed?id=<%= user_id %>"></iframe>
                                     </div>
                                 </div>
+                                <% } %>
                             </div>
                         </div>
                     </div>

@@ -246,7 +246,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
     }
 });
 
-app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
+app.get("/admin/atur", ensureLoggedIn("/"), async (req, res) => {
     const user = req.user as UserProps;
     const flashed = req.flash();
     const resetError = get(flashed, "reseterror", []);
@@ -280,6 +280,11 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         parsedInfo3 = channelInfo[0];
     }
     const ORIGIN = `${req.protocol}://${req.hostname}`;
+    let serverAdmin = [];
+    if (user.privilege !== "owner") {
+        const fetchedModel = await ShowtimesModel.findOne({ id: { $eq: user.id } }, { serverowner: 1 });
+        serverAdmin = fetchedModel.serverowner;
+    }
     res.render("admin/atur", {
         username: isNone(user.name) ? user.id : user.name,
         user_id: user.id,
@@ -296,6 +301,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), (req, res) => {
         nameInfo: parsedInfo2,
         channelInfo: parsedInfo3,
         channelError: parsedError3,
+        serverAdmin,
     });
 });
 
