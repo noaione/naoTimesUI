@@ -265,7 +265,7 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
 
     const verifiedList: string[] = [];
     aliases.forEach((res) => {
-        if (typeof res === "string") {
+        if (typeof res === "string" && res && res !== "" && res !== " ") {
             verifiedList.push(res);
         }
     });
@@ -286,10 +286,10 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
 
 APIPutRoutes.put("/alias", ensureLoggedIn("/"), async (req, res) => {
     const jsonBody = req.body;
-    if (verifyExist(jsonBody, "animeId", "string")) {
+    if (!verifyExist(jsonBody, "animeId", "string")) {
         return res.status(400).json({ message: "Missing animeId key", code: 400 });
     }
-    if (verifyExist(jsonBody, "aliases", "array")) {
+    if (!verifyExist(jsonBody, "aliases", "array")) {
         return res.status(400).json({ message: "Missing aliases key", code: 400 });
     }
 
