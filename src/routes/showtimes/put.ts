@@ -179,6 +179,9 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
 });
 
 async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]) {
+    if (newAdminIds.length < 1) {
+        return ["Admin IDs kosong, mohon isi dengan Discord ID", false];
+    }
     let successCheck1 = true;
     let failed = "";
     newAdminIds.forEach((admin) => {
