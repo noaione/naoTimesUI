@@ -24,7 +24,8 @@
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <%- include ("../_includes/alpinejs") %>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
     <div x-data="{ sidebarOpen: false }">
         <div class="flex h-screen bg-gray-100 dark:bg-gray-800 font-roboto">
             <%- include("../_includes/sidenav", {...locals, nav: "settings"}) %>
@@ -70,7 +71,8 @@
                                 x-transition:enter-end="opacity-100 scale-100"
                                 x-transition:leave="transition ease-in duration-75 transform"
                                 x-transition:leave-start="opacity-100 scale-100"
-                                x-transition:leave-end="opacity-0 scale-95" @click.away="dropdownOpen = false">
+                                x-transition:leave-end="opacity-0 scale-95" @click.away="dropdownOpen = false"
+                                style="display: none;">
                                 <a href="/api/auth/logout"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white">Keluar</a>
                             </div>
