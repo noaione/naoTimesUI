@@ -5,7 +5,7 @@ import _ from "lodash";
 import { logger as MainLogger } from "../../lib/logger";
 import { emitSocket } from "../../lib/socket";
 import { isNone, Nullable } from "../../lib/utils";
-import { ShowAdminModel, ShowtimesModel } from "../../models/show";
+import { ShowtimesModel } from "../../models/show";
 import { UserProps } from "../../models/user";
 
 const APIDeleteRoutes = express.Router();
@@ -134,67 +134,6 @@ APIDeleteRoutes.delete("/projek", ensureLoggedIn("/"), async (req, res) => {
         } else {
             const results = await deleteAnimeId(jsonBody.anime_id, userData.id);
             res.status(results.code).json({ ...results });
-        }
-    }
-});
-
-async function tryToRemoveAdmin(serverId: string, oldAdminid: string) {
-    const adminIdNumber = parseInt(oldAdminid);
-    if (isNaN(adminIdNumber)) {
-        return ["Admin ID bukanlah angka", false];
-    }
-    let serverAdmin: string[];
-    let collectedAdmin: Nullable<string[]>;
-    try {
-        const showtimesData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
-        serverAdmin = showtimesData.serverowner;
-        const showAdmin = await ShowAdminModel.find({ id: { $eq: oldAdminid } });
-        if (showAdmin.length > 0) {
-            collectedAdmin = showAdmin[0].servers;
-        }
-    } catch (e) {
-        console.error(e);
-        return ["Gagal mengambil database, mohon coba lagi nanti", false];
-    }
-    if (!isNone(collectedAdmin)) {
-        if (collectedAdmin.includes(serverId)) {
-            return ["Tidak dapat menghapus Admin karena merupakan Super Admin", false];
-        }
-    }
-    if (serverAdmin.includes(oldAdminid)) {
-        serverAdmin = serverAdmin.filter((adm) => adm !== oldAdminid);
-    }
-    try {
-        await ShowtimesModel.findOneAndUpdate(
-            { id: { $eq: serverId } },
-            { $set: { serverowner: serverAdmin } }
-        );
-    } catch (e) {
-        return ["Gagal memperbarui database, mohon coba lagi nanti", false];
-    }
-    emitSocket("pull data", serverId);
-    return ["Sukses", true];
-}
-
-APIDeleteRoutes.delete("/admin", ensureLoggedIn("/"), async (req, res) => {
-    const jsonBody = req.body;
-    if (isNone(jsonBody.adminid)) {
-        res.status(400).json({ message: "missing adminid key", code: 400 });
-    } else {
-        if (isNone(req.user)) {
-            res.status(403).json({ message: "Unauthorized", code: 403 });
-        } else {
-            const userData = req.user as UserProps;
-            if (userData.privilege === "owner") {
-                res.status(504).json({ message: "Not implemented for Admin", code: 504 });
-            } else {
-                const [msg, status] = await tryToRemoveAdmin(userData.id, jsonBody.adminid);
-                if (status) {
-                    res.json({ message: msg, code: 200 });
-                } else {
-                    res.status(500).json({ message: msg, code: 500 });
-                }
-            }
         }
     }
 });

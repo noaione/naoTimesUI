@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
-import { ShowtimesModel, ShowtimesProps } from "../../models/show";
+import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 
 const APIPutRoutes = express.Router();
@@ -178,37 +178,55 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
     }
 });
 
-async function tryToAddNewAdmin(serverId: string, newAdminId: string) {
-    const adminIdNumber = parseInt(newAdminId);
-    if (isNaN(adminIdNumber)) {
-        return ["Admin ID bukanlah angka", false];
+async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]) {
+    let successCheck1 = true;
+    let failed = "";
+    newAdminIds.forEach((admin) => {
+        if (isNaN(parseInt(admin))) {
+            successCheck1 = false;
+            failed = admin;
+        }
+    });
+    if (!successCheck1) {
+        return [`Salah satu admin ID bukanlah angka: ${failed}`, false];
     }
-    let serverAdmin: string[];
+    let successCheck2 = false;
     try {
-        const showtimesData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
-        serverAdmin = showtimesData.serverowner;
+        const showAdmin = await ShowAdminModel.find({});
+        const serversAdminsSets: string[] = [];
+        showAdmin.forEach((res) => {
+            if (res.servers.includes(serverId)) {
+                serversAdminsSets.push(res.id);
+            }
+        });
+        serversAdminsSets.forEach((admin) => {
+            if (newAdminIds.includes(admin)) {
+                successCheck2 = true;
+            }
+        });
     } catch (e) {
         console.error(e);
         return ["Gagal mengambil database, mohon coba lagi nanti", false];
     }
-    if (!serverAdmin.includes(newAdminId)) {
-        try {
-            await ShowtimesModel.findOneAndUpdate(
-                { id: { $eq: serverId } },
-                { $addToSet: { serverowner: newAdminId } }
-            );
-        } catch (e) {
-            return ["Gagal memperbarui database, mohon coba lagi nanti", false];
-        }
+    if (!successCheck2) {
+        return ["Tidak dapat menemukan Server Admin utama dalam list baru, mohon cek lagi", false];
+    }
+    try {
+        await ShowtimesModel.findOneAndUpdate(
+            { id: { $eq: serverId } },
+            { $set: { serverowner: newAdminIds } }
+        );
+    } catch (e) {
+        return ["Gagal memperbarui database, mohon coba lagi nanti", false];
     }
     emitSocket("pull data", serverId);
-    return ["Sukses", true];
+    return ["sukses", true];
 }
 
 APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
     const jsonBody = req.body;
-    if (isNone(jsonBody.adminid)) {
-        res.status(400).json({ message: "missing adminid key", code: 400 });
+    if (isNone(jsonBody.adminids)) {
+        res.status(400).json({ message: "missing adminids key", code: 400 });
     } else {
         if (isNone(req.user)) {
             res.status(403).json({ message: "Unauthorized", code: 403 });
@@ -217,7 +235,7 @@ APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
             if (userData.privilege === "owner") {
                 res.status(504).json({ message: "Not implemented for Admin", code: 504 });
             } else {
-                const [msg, status] = await tryToAddNewAdmin(userData.id, jsonBody.adminid);
+                const [msg, status] = await tryToAdjustAdminData(userData.id, jsonBody.adminids);
                 if (status) {
                     res.json({ message: msg, code: 200 });
                 } else {
