@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
-import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../../models/show";
+import { ShowAdminModel, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 
 const APIPutRoutes = express.Router();
@@ -244,6 +244,71 @@ APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
                 } else {
                     res.status(500).json({ message: msg, code: 500 });
                 }
+            }
+        }
+    }
+});
+
+async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases: string[]) {
+    let animeData: ShowAnimeProps[] = [];
+    try {
+        const rawData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+        animeData = rawData.anime;
+    } catch (e) {
+        return [aliases, "Tidak dapat menghubungi database, mohon coba lagi nanti", false];
+    }
+
+    const animeIdx = _.findIndex(animeData, (o) => o.id === animeId);
+    if (animeIdx === -1) {
+        return [aliases, "Tidak dapat menemukan Anime tersebut", false];
+    }
+
+    const verifiedList: string[] = [];
+    aliases.forEach((res) => {
+        if (typeof res === "string" && res && res !== "" && res !== " ") {
+            verifiedList.push(res);
+        }
+    });
+
+    animeData[animeIdx].aliases = verifiedList;
+    const animeSet = `anime.${animeIdx}`;
+    const $setsData = {};
+    $setsData[animeSet] = animeData;
+
+    try {
+        await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: $setsData });
+    } catch (e) {
+        return [aliases, "Gagal memperbarui database, mohon coba lagi nanti", false];
+    }
+    emitSocket("pull data", serverId);
+    return [verifiedList, "sukses", true];
+}
+
+APIPutRoutes.put("/alias", ensureLoggedIn("/"), async (req, res) => {
+    const jsonBody = req.body;
+    if (!verifyExist(jsonBody, "animeId", "string")) {
+        return res.status(400).json({ message: "Missing animeId key", code: 400 });
+    }
+    if (!verifyExist(jsonBody, "aliases", "array")) {
+        return res.status(400).json({ message: "Missing aliases key", code: 400 });
+    }
+
+    if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
+    } else {
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(504).json({ message: "Not implemented for Admin", code: 504 });
+        } else {
+            const [newaliases, msg, status] = await tryToAdjustAliasesData(
+                userData.id,
+                jsonBody.animeId,
+                jsonBody.aliases
+            );
+            if (status) {
+                res.json({ data: newaliases, message: msg, code: 200 });
+            } else {
+                res.status(500).json({ data: newaliases, message: msg, code: 500 });
             }
         }
     }
