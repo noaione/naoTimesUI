@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Help
+    url: https://discord.gg/vqKWb3QVYR
+    about: Please ask any question regarding the Website here
+  - name: Security Issue
+    url: mailto:noaione0809@gmail.com
+    about: Please report any Security Issue directly to my Email.
+    
