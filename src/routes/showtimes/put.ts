@@ -270,10 +270,9 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
         }
     });
 
-    animeData[animeIdx].aliases = verifiedList;
-    const animeSet = `anime.${animeIdx}`;
+    const animeSet = `anime.${animeIdx}.aliases`;
     const $setsData = {};
-    $setsData[animeSet] = animeData;
+    $setsData[animeSet] = verifiedList;
 
     try {
         await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: $setsData });
