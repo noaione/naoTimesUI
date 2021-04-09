@@ -40,25 +40,22 @@ export const logger = createLogger({
         winston.format.printf((info: WinstonLogInfo) => {
             let initformat = `[${wrapColor(info["timestamp"], GRAY)}][${info.level}]`;
             const squareMode = _.get(info, "squared", false);
-            if (squareMode) {
-                initformat += "[";
-            } else {
-                initformat += " ";
-            }
             const hasCls = _.has(info, "cls");
+            const hasFn = _.has(info, "fn");
+            if (hasCls || hasFn) {
+                initformat += squareMode ? "[" : " ";
+            }
             if (hasCls) {
                 initformat += wrapColor(info["cls"], "\u001b[35m");
             }
-            if (_.has(info, "fn")) {
+            if (hasFn) {
                 if (hasCls) {
                     initformat += ".";
                 }
                 initformat += wrapColor(info["fn"], "\u001b[36m");
             }
-            if (squareMode) {
-                initformat += "]";
-            } else {
-                initformat += "()";
+            if (hasCls || hasFn) {
+                initformat += squareMode ? "]" : "()";
             }
             return initformat + `: ${info.message}`;
         })
