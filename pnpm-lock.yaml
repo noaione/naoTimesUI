@@ -14,7 +14,7 @@ specifiers:
   '@types/cookie': 0.4.0
   '@types/cookie-parser': 1.4.2
   '@types/cors': 2.8.10
-  '@types/csurf': 1.11.0
+  '@types/csurf': 1.11.1
   '@types/ejs': 3.0.6
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
@@ -117,7 +117,7 @@ devDependencies:
   '@types/cookie': 0.4.0
   '@types/cookie-parser': 1.4.2
   '@types/cors': 2.8.10
-  '@types/csurf': 1.11.0
+  '@types/csurf': 1.11.1
   '@types/ejs': 3.0.6
   '@types/express-session': 1.17.3
   '@types/ioredis': 4.22.2
@@ -456,8 +456,8 @@ packages:
     resolution: {integrity: sha512-C7srjHiVG3Ey1nR6d511dtDkCEjxuN9W1HWAEjGq8kpcwmNM6JJkpC0xvabM7BXTG2wDq8Eu33iH9aQKa7IvLQ==}
     dev: true
 
-  /@types/csurf/1.11.0:
-    resolution: {integrity: sha512-IwqGRWImcbIdwumGprYR0EgIZ7GAklOIGaNqe2u7jb0YUilg7yrrxXth11VA/AJK8wQWYHxTQagkCE75oaoBvQ==}
+  /@types/csurf/1.11.1:
+    resolution: {integrity: sha512-GIdkIfC6/2k+NJdyALSSJ3ek01SPosqMmSdDvWkYY2x7ZR4dgN3G8Xcn+W36l+wiTNM+VHdwdyigXpbetiMC0A==}
     dependencies:
       '@types/express-serve-static-core': 4.17.19
     dev: true
