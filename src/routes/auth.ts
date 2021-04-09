@@ -4,6 +4,7 @@ import express from "express";
 import { has } from "lodash";
 import { Types } from "mongoose";
 
+import { logger as MainLogger } from "../lib/logger";
 import { passport } from "../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../lib/socket";
 import { isNone, Nullable } from "../lib/utils";
@@ -51,19 +52,27 @@ function toStr(data: any): string {
 }
 
 async function tryServerAdminAdd(adminId: string, serverId: string) {
+    const logger = MainLogger.child({
+        cls: `AuthRegister[${serverId}]`,
+        fn: `tryServerAdminAdd[${adminId}]`,
+    });
+    logger.info("Searching for admin id in ShowAdmin database...");
     const existingUsers = await ShowAdminModel.find({ id: { $eq: adminId } });
     let existingId: Nullable<Types.ObjectId>;
     if (existingUsers.length > 0) {
         existingId = existingUsers[0]._id;
+        logger.info(`Got some existing user ID on it, ${existingUsers[0].id}`);
     }
     if (isNone(existingId)) {
+        logger.info("No existing data found, creating new super admin!");
         const newSuperAdmin = {
             _id: new Types.ObjectId(),
-            id: serverId,
+            id: adminId,
             servers: [serverId],
         };
         await ShowAdminModel.insertMany([newSuperAdmin]);
     } else {
+        logger.info("Existing data found, updating with new server ID!");
         await ShowAdminModel.findByIdAndUpdate(existingId, { $addToSet: { servers: serverId } });
     }
 }
