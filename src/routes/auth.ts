@@ -75,6 +75,7 @@ async function tryServerAdminAdd(adminId: string, serverId: string) {
         logger.info("Existing data found, updating with new server ID!");
         await ShowAdminModel.findByIdAndUpdate(existingId, { $addToSet: { servers: serverId } });
     }
+    emitSocket("pull admin", adminId);
 }
 
 async function registerNewServer(server: any, admin: any) {
