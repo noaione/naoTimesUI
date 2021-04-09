@@ -45,7 +45,7 @@ specifiers:
   cssnano: 4.1.11
   dotenv: ^8.2.0
   ejs: ^3.1.6
-  esbuild: 0.11.5
+  esbuild: 0.11.6
   eslint: 7.23.0
   eslint-config-prettier: 8.1.0
   eslint-import-resolver-typescript: 2.4.0
@@ -136,7 +136,7 @@ devDependencies:
   countup.js: 2.0.7
   cross-env: 7.0.3
   cssnano: 4.1.11
-  esbuild: 0.11.5
+  esbuild: 0.11.6
   eslint: 7.23.0
   eslint-config-prettier: 8.1.0_eslint@7.23.0
   eslint-import-resolver-typescript: 2.4.0_3067c095822f9ee95e5e60ccdfea7e7c
@@ -2232,8 +2232,8 @@ packages:
       es6-symbol: 3.1.3
     dev: true
 
-  /esbuild/0.11.5:
-    resolution: {integrity: sha512-aRs6jAE+bVRp1tyfzUugAw1T/Y0Fwzp4Z2ROikF3h+UifoD5QlEbEYQGc6orNnnSIRhWR5VWBH7LozlAumaLHg==}
+  /esbuild/0.11.6:
+    resolution: {integrity: sha512-L+nKW9ftVS/N2CVJMR9YmXHbkm+vHzlNYuo09rzipQhF7dYNvRLfWoEPSDRTl10and4owFBV9rJ2CTFNtLIOiw==}
     hasBin: true
     requiresBuild: true
     dev: true
