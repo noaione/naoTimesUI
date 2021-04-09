@@ -36,7 +36,7 @@ export const logger = createLogger({
     level: "info",
     format: winston.format.combine(
         winston.format.colorize({ level: true, message: false }),
-        winston.format.timestamp(),
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.printf((info: WinstonLogInfo) => {
             let initformat = `[${wrapColor(info["timestamp"], GRAY)}][${info.level}]`;
             const squareMode = _.get(info, "squared", false);
@@ -70,7 +70,7 @@ export const expressLogger = WinstonLog({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.timestamp(),
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.ms(),
         winston.format.printf((info) => {
             const method = info.meta.req.method;
@@ -104,7 +104,7 @@ export const expressErrorLogger = WinstonErrorLog({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.timestamp(),
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.ms(),
         winston.format.printf((info) => {
             const method = info.meta.req.method;
