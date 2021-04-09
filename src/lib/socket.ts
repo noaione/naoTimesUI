@@ -15,10 +15,15 @@ logger.info(`Preparing a saved host:port at ${process.env.BOT_SOCKET_HOST}:${pro
 type SocketEvent =
     | "authenticate"
     | "pull data"
+    | "pull admin"
     | "get server"
     | "get channel"
     | "get user"
     | "get user perms"
+    | "delete server"
+    | "delete admin"
+    | "delete role"
+    | "delete roles"
     | "create role"
     | "announce drop"
     | "ping";
