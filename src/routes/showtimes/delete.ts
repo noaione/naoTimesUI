@@ -5,8 +5,8 @@ import _ from "lodash";
 import { logger as MainLogger } from "../../lib/logger";
 import { emitSocket } from "../../lib/socket";
 import { isNone, Nullable } from "../../lib/utils";
-import { ShowtimesModel } from "../../models/show";
-import { UserProps } from "../../models/user";
+import { ShowAdminModel, ShowtimesModel } from "../../models/show";
+import { UserModel, UserProps } from "../../models/user";
 
 const APIDeleteRoutes = express.Router();
 
@@ -134,6 +134,97 @@ APIDeleteRoutes.delete("/projek", ensureLoggedIn("/"), async (req, res) => {
         } else {
             const results = await deleteAnimeId(jsonBody.anime_id, userData.id);
             res.status(results.code).json({ ...results });
+        }
+    }
+});
+
+async function deleteAndUnlinkEverything(serverId: string) {
+    const logger = MainLogger.child({
+        cls: `ShowtimesDelete[${serverId}]`,
+        fn: "deleteAndUnlink",
+    });
+    logger.info("Fetching server data...");
+    const serverData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+    const serverAdmins = serverData.serverowner;
+    logger.info("Fetching super admins data...");
+    const showAdmins = await ShowAdminModel.find({});
+    const shouldBeDeleted = [];
+    const shouldBeUpdated: { [key: string]: string[] } = {};
+    showAdmins.forEach((admins) => {
+        if (serverAdmins.includes(admins.id)) {
+            if (admins.servers.includes(serverId)) {
+                const newServerSets = admins.servers.filter((res) => res !== serverId);
+                if (newServerSets.length > 0) {
+                    shouldBeUpdated[admins.id] = newServerSets;
+                } else {
+                    shouldBeDeleted.push(admins.id);
+                }
+            }
+        }
+    });
+
+    for (let i = 0; i < shouldBeDeleted.length; i++) {
+        const elemDel = shouldBeDeleted[i];
+        logger.info(`Deleting ${elemDel} from database...`);
+        await ShowAdminModel.findOneAndDelete({ id: { $eq: elemDel } });
+    }
+    for (const [adminId, srvList] of Object.entries(shouldBeUpdated)) {
+        logger.info(`Updating ${adminId}...`);
+        await ShowAdminModel.findOneAndUpdate({ id: { $eq: adminId } }, { $set: { servers: srvList } });
+    }
+
+    logger.info("Checking collaboration data...");
+    const unlinkKolaborasi = [];
+    serverData.anime.forEach((anime) => {
+        anime.kolaborasi.forEach((srvId) => {
+            if (srvId === serverId) {
+                return;
+            }
+            unlinkKolaborasi.push({ id: srvId, animeId: anime.id });
+        });
+    });
+
+    logger.info(`Will unlink ${unlinkKolaborasi.length} collaboration data!`);
+    for (let i = 0; i < unlinkKolaborasi.length; i++) {
+        const unlink = unlinkKolaborasi[i];
+        const osrvData = await ShowtimesModel.findOne({ id: { $eq: unlink.id } }, { anime: 1 });
+        const animeId = _.findIndex(osrvData.anime, (o) => o.id === unlink.animeId);
+        if (animeId === -1) return;
+        let kolebData = osrvData.anime[animeId].kolaborasi;
+        if (kolebData.length < 1) return;
+        kolebData = kolebData.filter((o) => o !== serverId);
+        if (kolebData.length === 1 && kolebData[0] === unlink.id) {
+            kolebData = [];
+        }
+        const animeSet = `anime.${animeId}.kolaborasi`;
+        logger.info(`Unlinking anime data at index ${animeId} on server ${unlink.id}`);
+        const $setsData = {};
+        $setsData[animeSet] = kolebData;
+        await ShowtimesModel.updateOne({ id: { $eq: unlink.id } }, { $set: $setsData });
+    }
+
+    logger.info("Deleting the server from database");
+    await ShowtimesModel.deleteOne({ id: { $eq: serverId } });
+    logger.info("Server deleted, removing from User database");
+    await UserModel.deleteOne({ id: { $eq: serverId } });
+    logger.info("Cleaning up...");
+}
+
+APIDeleteRoutes.delete("/server", ensureLoggedIn("/"), async (req, res) => {
+    if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
+    } else {
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(504).json({ code: 504, message: "Not implemented" });
+        } else {
+            try {
+                await deleteAndUnlinkEverything(userData.id);
+                req.logOut();
+                res.json({ code: 200 });
+            } catch (e) {
+                res.json({ code: 500 });
+            }
         }
     }
 });
