@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
 import { isNone, Nullable, verifyExist } from "../../lib/utils";
-import { ShowtimesModel, ShowtimesProps } from "../../models/show";
+import { ShowAdminModel, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
 
 const APIPutRoutes = express.Router();
@@ -173,6 +173,141 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
                 }
             } else {
                 res.json({ result: {}, success: false });
+            }
+        }
+    }
+});
+
+async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]) {
+    if (newAdminIds.length < 1) {
+        return ["Admin IDs kosong, mohon isi dengan Discord ID", false];
+    }
+    let successCheck1 = true;
+    let failed = "";
+    newAdminIds.forEach((admin) => {
+        if (isNaN(parseInt(admin))) {
+            successCheck1 = false;
+            failed = admin;
+        }
+    });
+    if (!successCheck1) {
+        return [`Salah satu admin ID bukanlah angka: ${failed}`, false];
+    }
+    let successCheck2 = false;
+    try {
+        const showAdmin = await ShowAdminModel.find({});
+        const serversAdminsSets: string[] = [];
+        showAdmin.forEach((res) => {
+            if (res.servers.includes(serverId)) {
+                serversAdminsSets.push(res.id);
+            }
+        });
+        serversAdminsSets.forEach((admin) => {
+            if (newAdminIds.includes(admin)) {
+                successCheck2 = true;
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        return ["Gagal mengambil database, mohon coba lagi nanti", false];
+    }
+    if (!successCheck2) {
+        return ["Tidak dapat menemukan Server Admin utama dalam list baru, mohon cek lagi", false];
+    }
+    try {
+        await ShowtimesModel.findOneAndUpdate(
+            { id: { $eq: serverId } },
+            { $set: { serverowner: newAdminIds } }
+        );
+    } catch (e) {
+        return ["Gagal memperbarui database, mohon coba lagi nanti", false];
+    }
+    emitSocket("pull data", serverId);
+    return ["sukses", true];
+}
+
+APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
+    const jsonBody = req.body;
+    if (isNone(jsonBody.adminids)) {
+        res.status(400).json({ message: "missing adminids key", code: 400 });
+    } else {
+        if (isNone(req.user)) {
+            res.status(403).json({ message: "Unauthorized", code: 403 });
+        } else {
+            const userData = req.user as UserProps;
+            if (userData.privilege === "owner") {
+                res.status(504).json({ message: "Not implemented for Admin", code: 504 });
+            } else {
+                const [msg, status] = await tryToAdjustAdminData(userData.id, jsonBody.adminids);
+                if (status) {
+                    res.json({ message: msg, code: 200 });
+                } else {
+                    res.status(500).json({ message: msg, code: 500 });
+                }
+            }
+        }
+    }
+});
+
+async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases: string[]) {
+    let animeData: ShowAnimeProps[] = [];
+    try {
+        const rawData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+        animeData = rawData.anime;
+    } catch (e) {
+        return [aliases, "Tidak dapat menghubungi database, mohon coba lagi nanti", false];
+    }
+
+    const animeIdx = _.findIndex(animeData, (o) => o.id === animeId);
+    if (animeIdx === -1) {
+        return [aliases, "Tidak dapat menemukan Anime tersebut", false];
+    }
+
+    const verifiedList: string[] = [];
+    aliases.forEach((res) => {
+        if (typeof res === "string" && res && res !== "" && res !== " ") {
+            verifiedList.push(res);
+        }
+    });
+
+    const animeSet = `anime.${animeIdx}.aliases`;
+    const $setsData = {};
+    $setsData[animeSet] = verifiedList;
+
+    try {
+        await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: $setsData });
+    } catch (e) {
+        return [aliases, "Gagal memperbarui database, mohon coba lagi nanti", false];
+    }
+    emitSocket("pull data", serverId);
+    return [verifiedList, "sukses", true];
+}
+
+APIPutRoutes.put("/alias", ensureLoggedIn("/"), async (req, res) => {
+    const jsonBody = req.body;
+    if (!verifyExist(jsonBody, "animeId", "string")) {
+        return res.status(400).json({ message: "Missing animeId key", code: 400 });
+    }
+    if (!verifyExist(jsonBody, "aliases", "array")) {
+        return res.status(400).json({ message: "Missing aliases key", code: 400 });
+    }
+
+    if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
+    } else {
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(504).json({ message: "Not implemented for Admin", code: 504 });
+        } else {
+            const [newaliases, msg, status] = await tryToAdjustAliasesData(
+                userData.id,
+                jsonBody.animeId,
+                jsonBody.aliases
+            );
+            if (status) {
+                res.json({ data: newaliases, message: msg, code: 200 });
+            } else {
+                res.status(500).json({ data: newaliases, message: msg, code: 500 });
             }
         }
     }

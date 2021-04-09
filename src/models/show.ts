@@ -89,9 +89,12 @@ const ShowtimesSchemas = createSchema(
 
 const ShowAdminSchemas = createSchema(
     {
-        server_admin: Type.array({ required: true }).of(Type.string()),
+        _id: Type.objectId({ required: false }),
+        id: Type.string({ required: true }),
+        servers: Type.array({ required: true }).of(Type.string({ required: true })),
     },
     {
+        _id: false,
         versionKey: false,
     }
 );
@@ -100,4 +103,4 @@ export type ShowAnimeProps = ExtractProps<typeof ShowAnimeSchemas>;
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
 export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
 export const ShowtimesModel = typedModel("showtimesdatas", ShowtimesSchemas);
-export const ShowAdminModel = typedModel("server_admin", ShowAdminSchemas, "server_admin");
+export const ShowAdminModel = typedModel("showtimesadmin", ShowAdminSchemas, "showtimesadmin");

@@ -1,6 +1,6 @@
 {
   "name": "naotimes-panel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "copyright": {
     "name": "naoTimesDev",
     "since": 2019
@@ -15,7 +15,7 @@
     "prod": "npm-run-all build prod:start",
     "prod:start": "node .",
     "dev": "npm-run-all build:dev dev:start",
-    "dev:start": "ts-node --transpile-only ./src/index.ts",
+    "dev:start": "nodemon ./src/index.ts",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "eslint --ext ts --ext tsx --ext js src/ lib/",
@@ -103,6 +103,7 @@
     "gulp": "4.0.2",
     "gulp-swc": "1.1.1",
     "husky": "6.0.0",
+    "nodemon": "^2.0.7",
     "npm-run-all": "4.1.5",
     "postcss": "8.2.9",
     "postcss-cli": "8.3.1",

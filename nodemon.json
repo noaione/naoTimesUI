@@ -1,0 +1,19 @@
+{
+    "verbose": true,
+    "ignore": [
+        "public/assets/**/*.js",
+        "public/assets/**/*.css",
+        "public/**/*.ejs",
+        "lib/**/*.js"
+    ],
+    "watch": [
+        "src/"
+    ],
+    "execMap": {
+        "ts": "ts-node --transpile-only"
+    },
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "ext": "ts"
+}
