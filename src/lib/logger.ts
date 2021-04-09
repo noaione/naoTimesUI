@@ -14,8 +14,29 @@ const reqTypeColor = {
 const GRAY = "\u001b[90m";
 const RESET = "\u001b[39m";
 
-function wrapColor(text: string, color: string) {
+function wrapColor(text?: string, color?: string) {
+    if (typeof text !== "string") {
+        return "";
+    }
+    if (typeof color !== "string") {
+        return text;
+    }
     return `${color}${text}${RESET}`;
+}
+
+function stringify<T>(text: T): T | string {
+    if (typeof text === "object") {
+        return JSON.stringify(text);
+    } else if (typeof text === "number") {
+        return text.toString();
+    } else if (typeof text === "function") {
+        return "Function: " + text.name;
+    } else if (typeof text === "boolean") {
+        return text ? "true" : "false";
+    } else if (typeof text === "string") {
+        return text;
+    }
+    return text;
 }
 
 interface WinstonLogInfo extends winston.Logform.TransformableInfo {
@@ -57,7 +78,7 @@ export const logger = createLogger({
             if (hasCls || hasFn) {
                 initformat += squareMode ? "]" : "()";
             }
-            return initformat + `: ${info.message}`;
+            return initformat + `: ${stringify(info.message)}`;
         })
     ),
     transports: [new winston.transports.Console()],
