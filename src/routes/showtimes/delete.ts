@@ -167,15 +167,19 @@ async function deleteAndUnlinkEverything(serverId: string) {
         const elemDel = shouldBeDeleted[i];
         logger.info(`Deleting ${elemDel} from database...`);
         await ShowAdminModel.findOneAndDelete({ id: { $eq: elemDel } });
+        emitSocket("delete admin", elemDel);
     }
     for (const [adminId, srvList] of Object.entries(shouldBeUpdated)) {
         logger.info(`Updating ${adminId}...`);
         await ShowAdminModel.findOneAndUpdate({ id: { $eq: adminId } }, { $set: { servers: srvList } });
+        emitSocket("pull admin", adminId);
     }
 
     logger.info("Checking collaboration data...");
     const unlinkKolaborasi = [];
+    let removeRoles = [];
     serverData.anime.forEach((anime) => {
+        removeRoles.push(anime.role_id);
         anime.kolaborasi.forEach((srvId) => {
             if (srvId === serverId) {
                 return;
@@ -183,6 +187,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
             unlinkKolaborasi.push({ id: srvId, animeId: anime.id });
         });
     });
+    removeRoles = removeRoles.filter((res) => typeof res === "string");
 
     logger.info(`Will unlink ${unlinkKolaborasi.length} collaboration data!`);
     for (let i = 0; i < unlinkKolaborasi.length; i++) {
@@ -208,6 +213,8 @@ async function deleteAndUnlinkEverything(serverId: string) {
     logger.info("Server deleted, removing from User database");
     await UserModel.deleteOne({ id: { $eq: serverId } });
     logger.info("Cleaning up...");
+    emitSocket("delete server", serverId);
+    emitSocket("delete roles", { id: serverId, roles: removeRoles });
 }
 
 APIDeleteRoutes.delete("/server", ensureLoggedIn("/"), async (req, res) => {
