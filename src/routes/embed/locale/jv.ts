@@ -19,20 +19,20 @@ const Locale = {
         QC: "Tinjauan Akhir",
     },
     NO_PROGRESS: "Durung ana kemajuan",
-    AIRED: "Siaran", // (Tayang) xx hari lalu
-    AIRING: "Siaran", // (Tayang) dalam xx hari lalu
+    AIRED: "Siaran {0}", // (Tayang) xx hari lalu
+    AIRING: "Siaran {0}", // (Tayang) dalam xx hari lalu
     SEASON: {
-        WINTER: "Musim Dingin",
-        SPRING: "Musim Semi",
-        SUMMER: "Musim Panas",
-        FALL: "Musim Gugur",
+        WINTER: "Musim Dingin {0}",
+        SPRING: "Musim Semi {0}",
+        SUMMER: "Musim Panas {0}",
+        FALL: "Musim Gugur {0}",
     },
     DROPDOWN: {
         // {{episode}} will be substitued with remaining episode
-        EXPAND: "Lihat {{episode}} episode selanjutnya...",
+        EXPAND: "Lihat {0} episode selanjutnya...",
         RETRACT: "Tutup...",
     },
-    LAST_UPDATE: "Dianyari",
+    LAST_UPDATE: "Dianyari {0}",
     EPISODE_NEEDS: "betah",
     WAITING_RELEASE: "Ngentosi dirilis...",
 };

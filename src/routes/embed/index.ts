@@ -59,7 +59,7 @@ const RoleColorPalette = {
     QC: "bg-pink-100 text-pink-800 border-pink-200",
 };
 
-function generateRole(roleName, locale: Locale) {
+function generateRole(roleName: string, locale: Locale) {
     const $roleContainer = `
     <div class="cursor-default group relative rounded border px-1 inline-block align-middle <%- colors %>">
         <span><%- role %></span>
@@ -72,11 +72,11 @@ function generateRole(roleName, locale: Locale) {
     </div>
     `;
 
-    const RoleExpandedName = translate("ROLES", locale);
+    const RoleExpandedName = translate(`ROLES.${roleName.toUpperCase()}`, locale);
 
     return ejs.render($roleContainer, {
         role: roleName,
-        roleExpand: RoleExpandedName[roleName],
+        roleExpand: RoleExpandedName,
         colors: RoleColorPalette[roleName],
     });
 }
@@ -144,8 +144,7 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
                     "<div class>" +
                     ejs.render($TimeSlot, {
                         dt_air: airTimeMoment.format(),
-                        content:
-                            translate("AIRED", locale) + " " + timeAgoLocale(episodeStatus.airtime, locale),
+                        content: translate("AIRED", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
                     }) +
                     "</div>";
                 airedContent += `
@@ -172,7 +171,7 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
         content =
             "<div class>" +
             ejs.render($TimeSlot, {
-                content: translate("AIRING", locale) + " " + timeAgoLocale(episodeStatus.airtime, locale),
+                content: translate("AIRING", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
                 dt_air: airTimeMoment.format(),
             }) +
             "</div>";
@@ -198,34 +197,38 @@ function generateLastUpdate(lastUpdate: number, locale: Locale): string {
         <div class="absolute bottom-2 left-3 text-xs text-gray-400 dark:text-gray-300">
             <div class="flex flex-row gap-1 text-left">
                 <span>
-                    <div class="">${translate(
-                        "LAST_UPDATE",
-                        locale
-                    )} <time slot="2" datetime="<%= lu_dt %>"><%= lu_str %></time></div>
+                    <div class=""><%- content %></div>
                 </span>
             </div>
         </div>
     `;
 
     const momentLu = moment.utc(lastUpdate * 1000);
-    return ejs.render($UpdateContainer, {
+    const $TimeSlot = `<time slot="2" datetime="<%= lu_dt %>"><%= lu_str %></time>`;
+    const renderedTimeSlot = ejs.render($TimeSlot, {
         lu_dt: momentLu.format(),
         lu_str: timeAgoLocale(lastUpdate, locale),
     });
+
+    const translated = translate("LAST_UPDATE", locale, [renderedTimeSlot]);
+
+    return ejs.render($UpdateContainer, {
+        content: translated,
+    });
 }
 
-function getSeason(month: number, locale: Locale): string {
-    const SeasonLocale = translate("SEASON", locale);
+function getSeason(month: number, year: number, locale: Locale): string {
+    const yearS = year.toString();
     if (month >= 0 && month <= 2) {
-        return "❄ " + SeasonLocale["WINTER"];
+        return "❄ " + translate("SEASON.WINTER", locale, [yearS]);
     } else if (month >= 3 && month <= 5) {
-        return "🌸 " + SeasonLocale["SPRING"];
+        return "🌸 " + translate("SEASON.SPRING", locale, [yearS]);
     } else if (month >= 6 && month <= 8) {
-        return "☀ " + SeasonLocale["SUMMER"];
+        return "☀ " + translate("SEASON.SUMMER", locale, [yearS]);
     } else if (month >= 9 && month <= 11) {
-        return "🍂 " + SeasonLocale["FALL"];
+        return "🍂 " + translate("SEASON.FALL", locale, [yearS]);
     } else if (month >= 12) {
-        return "❄ " + SeasonLocale["WINTER"];
+        return "❄ " + translate("SEASON.WINTER", locale, [yearS]);
     }
 }
 
@@ -244,7 +247,7 @@ function generateSeason(startTime: Nullable<number>, locale: Locale): string {
     const month = startTimeMoment.month();
     const year = startTimeMoment.year();
 
-    return ejs.render($SeasonContainer, { season: `${getSeason(month, locale)} ${year}` });
+    return ejs.render($SeasonContainer, { season: getSeason(month, year, locale) });
 }
 
 function generateShowCard(
@@ -274,7 +277,6 @@ function generateShowCard(
             />
         </div>
     `;
-    const dropDownLocales = translate("DROPDOWN", locale);
 
     const $dropdownBtn = `
         <button class="show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors" data-id="<%= ani_id %>" data-current="less">
@@ -284,7 +286,7 @@ function generateShowCard(
                 </svg>
             </div>
             <div>
-                ${dropDownLocales["EXPAND"]}
+                REPLACE_ME
             </div>
         </button>
     `;
@@ -298,7 +300,10 @@ function generateShowCard(
             .render($dropdownBtn, {
                 ani_id: animeData.id,
             })
-            .replace("{{episode}}", `<span slot="1">${restOfTheEpisode.length}</span>`);
+            .replace(
+                "REPLACE_ME",
+                translate("DROPDOWN.EXPAND", locale, [`<span slot="1">${restOfTheEpisode.length}</span>`])
+            );
         restOfTheEpisode.forEach((episode) => {
             extraChildData += generateEpisodeData(episode, animeData.id, false, locale);
         });
@@ -387,10 +392,9 @@ function generateSSRLocaleHelper(locale?: Nullable<Locale>) {
     let mergedContent = "";
     // @ts-ignore
     ValidLocale.forEach((loc: Locale) => {
-        const dropDownLoc = translate("DROPDOWN", loc);
         let contentInner = "";
-        contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["EXPAND"] });
-        contentInner += ejs.render($SpanInset, { locale_txt: dropDownLoc["RETRACT"] });
+        contentInner += ejs.render($SpanInset, { locale_txt: translate("DROPDOWN.EXPAND", locale) });
+        contentInner += ejs.render($SpanInset, { locale_txt: translate("DROPDOWN.RETRACT", locale) });
         mergedContent += ejs.render($LocaleMapChild, { content: contentInner, locale: loc });
     });
 

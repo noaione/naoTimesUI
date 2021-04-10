@@ -13,6 +13,8 @@ import LocaleSU from "./su";
 
 import { id, jv, su } from "./timeago";
 
+import { isNone } from "../../../lib/utils";
+
 // Add new language mapping here.
 export const LocaleMap = {
     id: LocaleID,
@@ -36,10 +38,27 @@ export type Locale = keyof typeof LocaleMap;
 // Add new TimeAgo language code here.
 export type TimeAgoLocale = "id" | "en" | "jv" | "su";
 
-export function translate(key: keyof typeof LocaleID, lang: Locale) {
+function walkKey(data: any, notations: string) {
+    const splitNots = notations.split(".");
+    splitNots.forEach((nots) => {
+        if (isNone(data)) return;
+        data = data[nots];
+    });
+    return data;
+}
+
+export function translate(key: string, lang: Locale, extras: string[] = null) {
     // Fallback to Indonesian
     const Locale = LocaleMap[lang] || LocaleID;
-    return Locale[key];
+    let localized = walkKey(Locale, key);
+    if (Array.isArray(extras)) {
+        extras.forEach((val, idx) => {
+            if (typeof localized === "string") {
+                localized = localized.replace(`{${idx}}`, val);
+            }
+        });
+    }
+    return localized;
 }
 
 export function timeAgoLocale(unix: number, lang: TimeAgoLocale): string {

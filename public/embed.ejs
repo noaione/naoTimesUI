@@ -41,7 +41,7 @@
                 var expandMoreSpan = '<span slot="1">' + savedEpisodeCount[animeId] + "</span>";
                 parent.children[1].classList = "";
                 parent.children[2].classList = "hidden grid grid-cols-2 justify-between";
-                btn.children[1].innerHTML = expandLocale.replace("{{episode}}", expandMoreSpan);
+                btn.children[1].innerHTML = expandLocale.replace("{0}", expandMoreSpan);
                 btn.children[0].classList = "h-5 w-5";
                 btn.setAttribute("data-current", "less");
                 btn.classList = "show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors";

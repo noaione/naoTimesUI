@@ -20,23 +20,20 @@ const Locale = {
         QC: "Quality Checking",
     },
     NO_PROGRESS: "No progress",
-    // This will be combined with javascript-time-ago
-    // Dont add the word `in` or `ago` to it.
-    AIRED: "Aired", // (Aired) xx days ago
-    AIRING: "Airing", // (Airing) in xx days
+    AIRED: "Aired {0}", // (Aired) xx days agi
+    AIRING: "Airing {0}", // (Airing) in xx days
     SEASON: {
-        WINTER: "Winter",
-        SPRING: "Spring",
-        SUMMER: "Summer",
-        FALL: "Fall",
+        WINTER: "Winter {0}",
+        SPRING: "Spring {0}",
+        SUMMER: "Summer {0}",
+        FALL: "Fall {0}",
     },
     DROPDOWN: {
-        // {{episode}} will be substitued with remainder of the episode
-        // It's a templating style, please add it so it looks proper.
-        EXPAND: "See next {{episode}} episode...",
+        // {{episode}} will be substitued with remaining episode
+        EXPAND: "See next {0} episode...",
         RETRACT: "Close...",
     },
-    LAST_UPDATE: "Updated",
+    LAST_UPDATE: "Updated {0}",
     EPISODE_NEEDS: "needs",
     WAITING_RELEASE: "Waiting for release...",
 };
