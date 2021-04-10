@@ -113,15 +113,19 @@ export const logger = createLogger({
             return initformat + `: ${stringify(info.message)}`;
         })
     ),
-    transports: [
-        new winston.transports.Console(),
+    transports: [new winston.transports.Console()],
+});
+
+if (process.env.NODE_ENV === "production") {
+    logger.info("Enabling Sentry Transport for Winston logger...");
+    logger.add(
         new SentryTransport({
             sentry: { dsn: process.env.SENTRY_IO_DSN, serverName: "naotimes-panel-winston" },
             level: "info",
             format: sentryFormat,
-        }),
-    ],
-});
+        })
+    );
+}
 
 export const expressLogger = WinstonLog({
     transports: [new winston.transports.Console()],

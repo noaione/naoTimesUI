@@ -71,18 +71,21 @@ if (gitExec.code === 0) {
     logger.info(`Running naoTimesUI v${packageJson["version"]}`);
 }
 
-Sentry.init({
-    dsn: process.env.SENTRY_IO_DSN,
-    serverName: "naotimes-panel",
-    integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-        new Tracing.Integrations.Express({ app }),
-    ],
-    tracesSampleRate: 1.0,
-});
+if (process.env.NODE_ENV === "production") {
+    logger.info("Enabling Sentry Support...");
+    Sentry.init({
+        dsn: process.env.SENTRY_IO_DSN,
+        serverName: "naotimes-panel",
+        integrations: [
+            new Sentry.Integrations.Http({ tracing: true }),
+            new Tracing.Integrations.Express({ app }),
+        ],
+        tracesSampleRate: 1.0,
+    });
 
-app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.tracingHandler());
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+}
 
 app.use("/robots.txt", (_q, res) => {
     res.send(`
