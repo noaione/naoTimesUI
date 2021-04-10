@@ -94,6 +94,13 @@
                                     <% if (locals.channelInfo && channelInfo) { %>
                                     <div class="text-sm font-semibold text-green-400"><%= channelInfo %></div>
                                     <% } %>
+                                    <div id="announcer-name" class="flex flex-col">
+                                        <% if (channelAnnounce) { %>
+                                            <span class="dark:text-white">ID: <%= channelAnnounce %></span>
+                                        <% } else { %>
+                                            <span class="dark:text-white">Tidak ada kanal announcer</span>
+                                        <% } %>
+                                    </div>
                                     <div class="flex flex-row pb-2">
                                         <form id="channelid-change" method="POST" action="/api/auth/announcechannel">
                                             <div class="flex -mx-3">

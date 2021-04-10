@@ -299,9 +299,14 @@ app.get("/admin/atur", ensureLoggedIn("/"), async (req, res) => {
     }
     const ORIGIN = `${req.protocol}://${req.hostname}`;
     let serverAdmin = [];
+    let channelAnnounce = "";
     if (user.privilege !== "owner") {
-        const fetchedModel = await ShowtimesModel.findOne({ id: { $eq: user.id } }, { serverowner: 1 });
+        const fetchedModel = await ShowtimesModel.findOne(
+            { id: { $eq: user.id } },
+            { serverowner: 1, announce_channel: 1 }
+        );
         serverAdmin = fetchedModel.serverowner;
+        channelAnnounce = fetchedModel.announce_channel;
     }
     res.render("admin/atur", {
         username: isNone(user.name) ? user.id : user.name,
@@ -320,6 +325,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), async (req, res) => {
         channelInfo: parsedInfo3,
         channelError: parsedError3,
         serverAdmin,
+        channelAnnounce,
     });
 });
 
