@@ -142,7 +142,7 @@ function bundle(cb, forceDev = false) {
             outfile: "public/assets/js/projects.bundle.js",
             minify: !isDev,
             platform: "browser",
-            sourcemap: isDev,
+            sourcemap: true,
             target: ["chrome58", "firefox57", "safari11", "edge79", "es2015"],
             pure: ["console.log", "console.info"], // Strip any info log if minified
         })
