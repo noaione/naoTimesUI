@@ -4,7 +4,9 @@
         "public/assets/**/*.js",
         "public/assets/**/*.css",
         "public/**/*.ejs",
-        "lib/**/*.js"
+        "lib/**/*.js",
+        "src/**/*.pcss",
+        "src/**/*.css"
     ],
     "watch": [
         "src/"
