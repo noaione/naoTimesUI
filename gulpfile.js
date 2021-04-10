@@ -10,6 +10,7 @@ const swc = require("gulp-swc");
 const _ = require("lodash");
 const postcss = require("postcss");
 const postcssImport = require("postcss-import");
+const postcssPresetEnv = require("postcss-preset-env");
 const shelljs = require("shelljs");
 const tailwind = require("tailwindcss");
 const winston = require("winston");
@@ -80,6 +81,7 @@ function clean(cb) {
     logger.info("Cleaning generated files...");
     shelljs.rm(
         path.join(__dirname, "public", "assets", "main.css"),
+        path.join(__dirname, "public", "assets", "main.css.map"),
         path.join(__dirname, "public", "assets", "js", "projects.bundle.js"),
         path.join(__dirname, "public", "assets", "js", "projects.bundle.map.js"),
         path.join(__dirname, "public", "assets", "js", "projects.bundle.js.map")
@@ -107,16 +109,28 @@ function css(cb, forceJIT = false) {
     const mainConf = require("./tailwind.config");
     const mergedConf = Object.assign({}, mainConf, extraConf);
     const logger = loggerMain.child({ fn: "css", cls: "GulpTasks" });
-    const cssSources = fs.readFileSync("src/styles.css");
-    let plugins = [postcssImport, tailwind(mergedConf), autoprefixer];
+    const cssSources = fs.readFileSync("./src/styles/main.pcss", "utf-8");
+    const rootPath = path.join(__dirname, "src", "styles");
+    let plugins = [
+        postcssImport({ root: rootPath }),
+        tailwind(mergedConf),
+        autoprefixer,
+        postcssPresetEnv({
+            stage: 1,
+        }),
+    ];
     if (isProd) {
-        plugins = [postcssImport, tailwind(mergedConf), autoprefixer, cssnano];
+        plugins.push(cssnano);
     }
     logger.info(
         `PostCSS+${plugins.length === 3 ? "TailwindJIT" : "Tailwind"} with ${plugins.length - 1} plugins`
     );
     postcss(plugins)
-        .process(cssSources, { from: "src/styles.css", to: "public/assets/main.css" })
+        .process(cssSources, {
+            from: "src/styles/main.pcss",
+            to: "public/assets/main.css",
+            map: { inline: false },
+        })
         .then((result) => {
             logger.info("Saving process css!");
             fs.writeFileSync("public/assets/main.css", result.css);
