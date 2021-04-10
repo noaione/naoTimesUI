@@ -1,10 +1,12 @@
 // Import the locale here
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
+import jp from "javascript-time-ago/locale/ja";
 import moment from "moment-timezone";
 
 import LocaleEN from "./en";
 import LocaleID from "./id";
+import LocaleJP from "./jp";
 import LocaleJV from "./jv";
 // eslint-disable-next-line import/order
 import LocaleSU from "./su";
@@ -21,13 +23,15 @@ export const LocaleMap = {
     en: LocaleEN,
     jv: LocaleJV,
     su: LocaleSU,
+    jp: LocaleJP,
+    ja: LocaleJP,
 };
 
 export const ValidLocale = Object.keys(LocaleMap);
 
 // Add the new time-ago locale here.
 // Call `TimeAgo.addLocale(MODULE)`
-const TimeAgoLocaleExtra = [id, en, jv, su];
+const TimeAgoLocaleExtra = [id, en, jv, su, jp];
 TimeAgoLocaleExtra.forEach((locale) => {
     // @ts-ignore
     TimeAgo.addLocale(locale);
@@ -36,7 +40,7 @@ TimeAgo.setDefaultLocale("id");
 
 export type Locale = keyof typeof LocaleMap;
 // Add new TimeAgo language code here.
-export type TimeAgoLocale = "id" | "en" | "jv" | "su";
+export type TimeAgoLocale = "id" | "en" | "jv" | "su" | "ja" | "jp";
 
 function walkKey(data: any, notations: string) {
     const splitNots = notations.split(".");
@@ -62,6 +66,10 @@ export function translate(key: string, lang: Locale, extras: string[] = null) {
 }
 
 export function timeAgoLocale(unix: number, lang: TimeAgoLocale): string {
+    // Special case
+    if (lang === "jp") {
+        lang = "ja";
+    }
     // Create a new TimeAgo class.
     const timeAgo = new TimeAgo(lang);
     // And then format it
