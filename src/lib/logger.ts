@@ -1,6 +1,12 @@
+import path from "path";
+
+import dotenv from "dotenv";
 import { errorLogger as WinstonErrorLog, logger as WinstonLog } from "express-winston";
 import _ from "lodash";
 import winston, { createLogger } from "winston";
+import SentryTransport from "winston-transport-sentry-node";
+
+dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 const reqTypeColor = {
     GET: "\u001b[32m",
@@ -53,6 +59,32 @@ interface WinstonLogInfo extends winston.Logform.TransformableInfo {
     fn?: string;
 }
 
+const sentryFormat = winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+    winston.format.printf((info: WinstonLogInfo) => {
+        let initformat = `[${info.timestamp}][${info.level}]`;
+        const squareMode = _.get(info, "squared", false);
+        const hasCls = _.has(info, "cls");
+        const hasFn = _.has(info, "fn");
+        if (hasCls || hasFn) {
+            initformat += squareMode ? "[" : " ";
+        }
+        if (hasCls) {
+            initformat += info["cls"];
+        }
+        if (hasFn) {
+            if (hasCls) {
+                initformat += ".";
+            }
+            initformat += info["fn"];
+        }
+        if (hasCls || hasFn) {
+            initformat += squareMode ? "]" : "()";
+        }
+        return initformat + `: ${stringify(info.message)}`;
+    })
+);
+
 export const logger = createLogger({
     level: "info",
     format: winston.format.combine(
@@ -81,7 +113,14 @@ export const logger = createLogger({
             return initformat + `: ${stringify(info.message)}`;
         })
     ),
-    transports: [new winston.transports.Console()],
+    transports: [
+        new winston.transports.Console(),
+        new SentryTransport({
+            sentry: { dsn: process.env.SENTRY_IO_DSN, serverName: "naotimes-panel-winston" },
+            level: "info",
+            format: sentryFormat,
+        }),
+    ],
 });
 
 export const expressLogger = WinstonLog({

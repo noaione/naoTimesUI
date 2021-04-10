@@ -12,6 +12,7 @@ npm install -g pnpm
 - naoTimes Bot with `naotimesui` cogs enabled
 - Redis Server
 - MongoDB with Showtimes DB in it.
+- Sentry.io account
 
 You need to have naoTimes bot ready with the `naotimesui` cogs enabled since it will be use to fetch some information from Discord.
 After that, set the IP and Port of the deployed `naotimesui` cogs Socket to the `.env` file.

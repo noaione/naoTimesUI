@@ -1,6 +1,8 @@
 import { readFileSync } from "fs";
 import path from "path";
 
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
 import express_compression from "compression";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express_flash from "connect-flash";
@@ -68,6 +70,19 @@ if (gitExec.code === 0) {
 } else {
     logger.info(`Running naoTimesUI v${packageJson["version"]}`);
 }
+
+Sentry.init({
+    dsn: process.env.SENTRY_IO_DSN,
+    serverName: "naotimes-panel",
+    integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Tracing.Integrations.Express({ app }),
+    ],
+    tracesSampleRate: 1.0,
+});
+
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 
 app.use("/robots.txt", (_q, res) => {
     res.send(`
