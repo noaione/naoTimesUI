@@ -356,7 +356,7 @@ function generateShowCard(
     if (accent === "none") {
         bordering = "border-none";
     } else {
-        bordering = `rounded-t-none border-t-2 border-${accent}-500 dark:border-${accent}-400`;
+        bordering = `rounded-t-none border-t-3 border-${accent}-500 dark:border-${accent}-400`;
     }
     mergedContent += ejs.render($mainShowArea, {
         title: animeData.title,
