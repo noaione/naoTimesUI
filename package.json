@@ -13,7 +13,7 @@
     "watch": "cross-env TAILWIND_MODE=build NODE_ENV=development gulp -f gulp-watch.js",
     "watch:dev": "npm-run-all build:dev watch",
     "prod": "npm-run-all build prod:start",
-    "prod:start": "node .",
+    "prod:start": "cross-env NODE_ENV=production node .",
     "dev": "npm-run-all build:dev dev:start",
     "dev:start": "nodemon ./src/index.ts",
     "type-check": "tsc --pretty --noEmit",
