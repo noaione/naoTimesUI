@@ -404,6 +404,7 @@ Temporary Items
 public/main.css
 public/tailwind.css
 public/assets/**/*.css
+public/assets/**/*.css.map
 
 public/assets/js/*.js
 public/assets/js/*.js.map
