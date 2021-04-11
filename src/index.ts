@@ -71,6 +71,12 @@ if (gitExec.code === 0) {
     logger.info(`Running naoTimesUI v${packageJson["version"]}`);
 }
 
+// Opt-out of FLoC thing, even though I don't use ads
+app.use((_q, res, next) => {
+    res.setHeader("Permissions-Policy", "interest-cohort=()");
+    next();
+});
+
 if (process.env.NODE_ENV === "production") {
     logger.info("Enabling Sentry Support...");
     Sentry.init({
