@@ -2,7 +2,7 @@
  * Sundanese localization
  * Created by noaione <noaione0809@gmail.com>
  * Created: 04 April 2021
- * Last Update: 06 April 2021
+ * Last Update: 12 April 2021
  *
  * (C) 2021 naoTimes Dev
  * MIT License
@@ -22,19 +22,20 @@ const Locale = {
     AIRED: "Tayang {0}", // (Tayang) xx hari lalu
     AIRING: "Tayang {0}", // (Tayang) dalam xx hari lalu
     SEASON: {
-        WINTER: "Musim Tiris {0}",
-        SPRING: "Musim Semi {0}",
-        SUMMER: "Musim Panas {0}",
-        FALL: "Musim Gugur {0}",
+        // {0} will be replace by year
+        WINTER: "Usum Tiris {0}",
+        SPRING: "Cinyusu {0}",
+        SUMMER: "Usum Panas {0}",
+        FALL: "Usum Muguran {0}",
     },
     DROPDOWN: {
-        // {{episode}} will be substitued with remaining episode
-        EXPAND: "Lihat {0} episode selanjutnya...",
+        // {0} will be substitued with remaining episode
+        EXPAND: "Tingali {0} episode salajengna...",
         RETRACT: "Tutup...",
     },
     LAST_UPDATE: "Diropéa {0}",
     EPISODE_NEEDS: "peryogi",
-    WAITING_RELEASE: "Menunggu dirilis...",
+    WAITING_RELEASE: "Ngantosan dirilis...",
 };
 
 export default Locale;
