@@ -36,6 +36,10 @@
         <%- locale_map_extra %>
     </div>
     <script>
+        function announceHeight() {
+            window.parent.postMessage(JSON.stringify({action: "resize", height: document.body.scrollHeight}));
+        }
+
         var localeMapChild = JSON.parse(`<%- locale_map_helper %>`);
         var localeDiv = document.querySelector("div[aria-type=locale]");
         var selLocale = localeDiv.getAttribute("aria-locale");
@@ -67,7 +71,7 @@
                 btn.setAttribute("data-current", "less");
                 btn.classList = "show-ep-btn flex flex-row mt-2 text-blue-500 hover:text-blue-400 dark:text-blue-300 transition-colors";
             }
-            embedResizer(window.parent);
+            announceHeight();
         }
         document.addEventListener("DOMContentLoaded", function (event) {
             var allShowBtn = document.querySelectorAll("button.show-ep-btn");
@@ -77,32 +81,8 @@
                     toggleButton(this);
                 });
             };
+            // Broadcast message
+            announceHeight();
         });
-
-        function embedResizer(parentElem) {
-            var thisParent;
-            if (typeof parentElem === "undefined" || parentElem === null) {
-                thisParent = document;
-            } else {
-                var parent = parentElem.document.getElementsByTagName("iframe");
-                for (let i = 0; i < parent.length; i++) {
-                    var elemSel = parent[i];
-                    console.info("Checking", elemSel);
-                    if (elemSel.getElementsByTagName("html")[0].getAttribute("data-iframe") === "naotimes-project-embed") {
-                        thisParent = elemSel;
-                        break;
-                    }
-                }
-            }
-
-            var elem = document.documentElement;
-            if (typeof thisParent !== "undefined") {
-                thisParent.style.height = elem.scrollHeight + "px";
-            }
-        }
-
-        window.parent.onload = function () {
-            embedResizer(this);
-        }
     </script>
 </html>
