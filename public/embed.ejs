@@ -37,7 +37,9 @@
     </div>
     <script>
         function announceHeight() {
-            window.parent.postMessage(JSON.stringify({action: "resize", height: document.body.scrollHeight}));
+            var message = JSON.stringify({action: "resize", height: document.body.scrollHeight})
+            // console.info("Broadcasting message to window parent:", message);
+            window.parent.postMessage(message, "*");
         }
 
         var localeMapChild = JSON.parse(`<%- locale_map_helper %>`);
