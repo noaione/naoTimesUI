@@ -467,42 +467,47 @@ EmbedRouter.get("/embed", async (req, res) => {
         res.render("404", { path: "/embed", build_time: startTime });
     } else {
         const serverId = queryParams.id;
-        const serverRes = await ShowtimesModel.findOne({ id: { $eq: serverId } });
-        if (isNone(serverRes.anime)) {
+        try {
+            const serverRes = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+            const animeData = serverRes.anime;
+            if (isNone(animeData)) {
+                res.render("404", { path: `/embed?id=${serverId}`, build_time: startTime });
+            } else {
+                const accents = queryParams.accent;
+                const locales = queryParams.lang || queryParams.locale;
+                let accent: Nullable<any>;
+                if (Array.isArray(accents)) {
+                    accent = accents[0];
+                } else {
+                    accent = accents;
+                }
+                let locale: Nullable<any>;
+                if (Array.isArray(locales)) {
+                    locale = locales[0];
+                } else {
+                    locale = locales;
+                }
+                const generatedSSR = generateSSRMain(serverRes, accent, locale);
+                let isDark = false;
+                if (!isNone(queryParams.dark) && mapBoolean(queryParams.dark)) {
+                    isDark = true;
+                }
+                const mappedLocaledNumber = {};
+                ValidLocale.forEach((locale, index) => {
+                    mappedLocaledNumber[locale] = index;
+                });
+                const localeGeneratedSSR = generateSSRLocaleHelper(locale);
+                res.render("embed", {
+                    server_id: serverId,
+                    generated_ssr: generatedSSR,
+                    darkMode: isDark ? "dark" : "",
+                    locale_map_extra: localeGeneratedSSR[0],
+                    locale_map_helper: JSON.stringify(mappedLocaledNumber),
+                    locale_sel: localeGeneratedSSR[1],
+                });
+            }
+        } catch (e) {
             res.render("404", { path: `/embed?id=${serverId}`, build_time: startTime });
-        } else {
-            const accents = queryParams.accent;
-            const locales = queryParams.lang || queryParams.locale;
-            let accent: Nullable<any>;
-            if (Array.isArray(accents)) {
-                accent = accents[0];
-            } else {
-                accent = accents;
-            }
-            let locale: Nullable<any>;
-            if (Array.isArray(locales)) {
-                locale = locales[0];
-            } else {
-                locale = locales;
-            }
-            const generatedSSR = generateSSRMain(serverRes, accent, locale);
-            let isDark = false;
-            if (!isNone(queryParams.dark) && mapBoolean(queryParams.dark)) {
-                isDark = true;
-            }
-            const mappedLocaledNumber = {};
-            ValidLocale.forEach((locale, index) => {
-                mappedLocaledNumber[locale] = index;
-            });
-            const localeGeneratedSSR = generateSSRLocaleHelper(locale);
-            res.render("embed", {
-                server_id: serverId,
-                generated_ssr: generatedSSR,
-                darkMode: isDark ? "dark" : "",
-                locale_map_extra: localeGeneratedSSR[0],
-                locale_map_helper: JSON.stringify(mappedLocaledNumber),
-                locale_sel: localeGeneratedSSR[1],
-            });
         }
     }
 });
