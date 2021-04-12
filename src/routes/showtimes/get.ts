@@ -1,11 +1,11 @@
 import { ensureLoggedIn } from "connect-ensure-login";
 import express from "express";
-import { get } from "lodash";
+import { get, has } from "lodash";
+import moment from "moment-timezone";
 
-import { filterToSpecificAnime, isNone } from "../../lib/utils";
-import { ShowtimesModel, ShowtimesProps } from "../../models/show";
+import { determineSeason, filterToSpecificAnime, isNone, Nullable, seasonNaming } from "../../lib/utils";
+import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
 import { UserProps } from "../../models/user";
-
 
 const APIGetRoutes = express.Router();
 
@@ -257,6 +257,128 @@ APIGetRoutes.get("/statuses/:anime_id", ensureLoggedIn("/"), async (req, res) =>
                 code: 200,
             });
         }
+    }
+});
+
+interface IResultOldDataset {
+    id: string;
+    title: string;
+    episode: string | number;
+    airing_time: number;
+    staff: {
+        TL: string;
+        TLC: string;
+        Encode: string;
+        Edit: string;
+        TS: string;
+        Timing: string;
+        QC: string;
+    };
+    status: {
+        TL: boolean;
+        TLC: boolean;
+        Encode: boolean;
+        Edit: boolean;
+        TS: boolean;
+        Timing: boolean;
+        QC: boolean;
+    };
+}
+
+interface IResultsOldStyles {
+    data: IResultOldDataset[];
+    name: string;
+    total_data: number;
+}
+
+interface IResultOldSeasonKey {
+    [season: string]: IResultsOldStyles;
+}
+
+function keyNamingRole(key: string) {
+    switch (key) {
+        case "ED":
+            return "Edit";
+        case "TM":
+            return "Timing";
+        case "ENC":
+            return "Encode";
+        default:
+            return key;
+    }
+}
+
+function parseStatusOldStyles(animeData: ShowAnimeProps[]): IResultOldSeasonKey {
+    const seasonKeys: IResultOldSeasonKey = {};
+    animeData.forEach((anime) => {
+        let fetched = false;
+        anime.status.forEach((status) => {
+            if (!status.is_done && !fetched) {
+                fetched = true;
+                const mm = moment.utc(status.airtime * 1000);
+                // @ts-ignore
+                const seasonNo: 0 | 1 | 2 | 3 = determineSeason(mm.month());
+                const year = mm.year();
+                const ySeason = `${year}_${seasonNo}`;
+                if (!has(seasonKeys, ySeason)) {
+                    seasonKeys[ySeason] = {
+                        data: [],
+                        name: `${seasonNaming(seasonNo)} ${year}`,
+                        total_data: 0,
+                    };
+                }
+                const newStatus = {};
+                for (const [key, val] of Object.entries(status.progress)) {
+                    newStatus[keyNamingRole(key)] = val;
+                }
+                const staffAssigned = {};
+                for (const [staff, staffData] of Object.entries(anime.assignments)) {
+                    staffAssigned[keyNamingRole(staff)] = staffData.name || "Tidak diketahui";
+                }
+                const dataToAdd: IResultOldDataset = {
+                    id: anime.id,
+                    title: anime.title,
+                    episode: status.episode.toString(),
+                    airing_time: status.airtime,
+                    // @ts-ignore
+                    status: newStatus,
+                    // @ts-ignore
+                    staff: staffAssigned,
+                };
+                seasonKeys[ySeason]["data"].push(dataToAdd);
+                seasonKeys[ySeason]["total_data"]++;
+            }
+        });
+    });
+    return seasonKeys;
+}
+
+// Fallback for old utang.naoti.me URL.
+APIGetRoutes.get("/status/:server_id", async (req, res) => {
+    const server_id = req.params.server_id;
+    try {
+        let animeSets: Nullable<ShowAnimeProps>;
+        try {
+            const serverRes = await ShowtimesModel.findOne({ id: { $eq: server_id } });
+            // @ts-ignore
+            animeSets = serverRes.anime;
+            if (isNone(animeSets)) {
+                res.status(404).json({ message: "Cannot find that server", status_code: 404 });
+            } else {
+                // @ts-ignore
+                const results = parseStatusOldStyles(animeSets);
+                res.json(results);
+            }
+        } catch (e) {
+            res.status(404).json({ message: "Cannot find that server", status_code: 404 });
+        }
+        if (isNone(animeSets)) {
+            res.status(404).json({ message: "Cannot find that server", status_code: 404 });
+        } else {
+            // parse
+        }
+    } catch (e) {
+        res.status(500).json({ message: `An error occured, ${e.toString()}`, status_code: 500 });
     }
 });
 
