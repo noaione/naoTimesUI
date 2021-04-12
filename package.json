@@ -98,7 +98,7 @@
     "countup.js": "2.0.7",
     "cross-env": "7.0.3",
     "cssnano": "5.0.0",
-    "esbuild": "0.11.6",
+    "esbuild": "0.11.8",
     "eslint": "7.24.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-import-resolver-typescript": "2.4.0",
