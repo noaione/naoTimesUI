@@ -427,7 +427,16 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
         selLocale = locale;
     }
 
-    const projectData = _.sortBy(showData.anime, (o) => o.start_time);
+    const newAnimeSets = [];
+    showData.anime.forEach((res) => {
+        const deepCopy = _.cloneDeep(res);
+        if (isNone(deepCopy["start_time"])) {
+            deepCopy["start_time"] = res["status"][0]["airtime"];
+        }
+        newAnimeSets.push(deepCopy);
+    });
+
+    const projectData = _.sortBy(newAnimeSets, (o) => o.start_time);
     projectData.reverse();
 
     let compiledContent = "";
