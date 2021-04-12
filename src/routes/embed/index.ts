@@ -427,11 +427,21 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
         selLocale = locale;
     }
 
+    function selectTime(statusSets: any[]) {
+        let selected: Nullable<number> = null;
+        statusSets.forEach((sets) => {
+            if (typeof sets["airtime"] === "number") {
+                selected = sets["airtime"];
+            }
+        });
+        return selected;
+    }
+
     const newAnimeSets = [];
     showData.anime.forEach((res) => {
         const deepCopy = _.cloneDeep(res);
         if (isNone(deepCopy["start_time"])) {
-            deepCopy["start_time"] = res["status"][0]["airtime"];
+            deepCopy["start_time"] = selectTime(res["status"]);
         }
         newAnimeSets.push(deepCopy);
     });
