@@ -47,7 +47,7 @@ specifiers:
   cors: ^2.8.5
   countup.js: 2.0.7
   cross-env: 7.0.3
-  cssnano: 5.0.0
+  cssnano: 5.0.1
   dotenv: ^8.2.0
   ejs: ^3.1.6
   esbuild: 0.11.8
@@ -151,7 +151,7 @@ devDependencies:
   cash-dom: 8.1.0
   countup.js: 2.0.7
   cross-env: 7.0.3
-  cssnano: 5.0.0_postcss@8.2.10
+  cssnano: 5.0.1_postcss@8.2.10
   esbuild: 0.11.8
   eslint: 7.24.0
   eslint-config-airbnb-base: 14.2.1_dc9d9d711f9715ea38ced5881f20889e
@@ -1981,17 +1981,15 @@ packages:
       postcss: 8.2.10
     dev: true
 
-  /cssnano/5.0.0_postcss@8.2.10:
-    resolution: {integrity: sha512-beaqJEU9aI0B2PpKWXy+UJdtw+Q2J2c2f2nHVphL/gb2wvkuQV+Zxf5Q5SsNXiPUb9Djo/+ja+UOelQWhHnVow==}
+  /cssnano/5.0.1_postcss@8.2.10:
+    resolution: {integrity: sha512-5WubEmKcK2cqw43DUAayRBiIlTdX7iX3ZowrWDVxSVcW3hyohVnbJ4K4mbnWtJp5rfJnUwHg5H4mDAGzmuCM3g==}
     engines: {node: ^10 || ^12 || >=14.0}
-    requiresBuild: true
     peerDependencies:
       postcss: ^8.2.1
     dependencies:
       cosmiconfig: 7.0.0
       cssnano-preset-default: 5.0.0_postcss@8.2.10
       is-resolvable: 1.1.0
-      opencollective-postinstall: 2.0.3
       postcss: 8.2.10
     dev: true
 
@@ -4653,11 +4651,6 @@ packages:
     dependencies:
       fn.name: 1.1.0
     dev: false
-
-  /opencollective-postinstall/2.0.3:
-    resolution: {integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==}
-    hasBin: true
-    dev: true
 
   /optionator/0.9.1:
     resolution: {integrity: sha512-74RlY5FCnhq4jRxVUPKDaRwrVNXMqsGsiW6AJw4XK8hmtm10wC0ypZBLw5IIp85NZMr91+qd1RvvENwg7jjRFw==}
