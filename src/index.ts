@@ -6,6 +6,7 @@ import * as Tracing from "@sentry/tracing";
 import express_compression from "compression";
 import { ensureLoggedIn } from "connect-ensure-login";
 import express_flash from "connect-flash";
+import connect_livereload from "connect-livereload";
 import express_session_redis from "connect-redis";
 import * as cons from "consolidate";
 import cookieParser from "cookie-parser";
@@ -107,6 +108,12 @@ const RedisClient = redisCreate();
 // Initial stuff.
 app.use(express_cors());
 app.use(express_compression());
+
+if (process.env.NODE_ENV === "development") {
+    logger.info("Binding connect-livereload");
+    app.use(connect_livereload({ port: 35729 }));
+}
+
 // eslint-disable-next-line import/namespace
 app.engine("html", cons.ejs);
 app.set("views", path.join(__dirname, "..", "public"));
