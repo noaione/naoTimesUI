@@ -9,7 +9,7 @@ import { isNone, Nullable } from "../../lib/utils";
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../models/show";
 
 const EmbedRouter = express.Router();
-const startTime = new Date().getTime();
+const buildStartTime = new Date().getTime();
 
 export function mapBoolean<T extends any>(input_data: T): boolean {
     if (isNone(input_data)) {
@@ -83,6 +83,7 @@ function generateRole(roleName: string, locale: Locale) {
 
 function generateEpisodeData(episodeStatus, aniId: string, extended = false, locale: Locale) {
     const unfinishedStatus = [];
+    // eslint-disable-next-line no-restricted-syntax
     for (const [roleName, roleStat] of Object.entries(episodeStatus.progress)) {
         if (!roleStat) {
             unfinishedStatus.push(roleName);
@@ -129,7 +130,7 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
                 unfinishedStatus.forEach((role) => {
                     tempData += generateRole(role, locale);
                 });
-                content += " " + translate("EPISODE_NEEDS", locale);
+                content += ` ${translate("EPISODE_NEEDS", locale)}`;
                 roleContent = ejs.render($RoleSlot, { content: tempData });
             } else {
                 // @ts-ignore
@@ -140,13 +141,10 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
             let airedContent = "";
             if (episodeStatus.airtime) {
                 const airTimeMoment = moment.utc(episodeStatus.airtime * 1000);
-                airedContent =
-                    "<div class>" +
-                    ejs.render($TimeSlot, {
-                        dt_air: airTimeMoment.format(),
-                        content: translate("AIRED", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
-                    }) +
-                    "</div>";
+                airedContent = `<div class>${ejs.render($TimeSlot, {
+                    dt_air: airTimeMoment.format(),
+                    content: translate("AIRED", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
+                })}</div>`;
                 airedContent += `
                     <div class>
                     <span slot="0">${translate("NO_PROGRESS", locale)}</span>
@@ -168,13 +166,10 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
             </time>
         `;
         const airTimeMoment = moment.utc(episodeStatus.airtime * 1000);
-        content =
-            "<div class>" +
-            ejs.render($TimeSlot, {
-                content: translate("AIRING", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
-                dt_air: airTimeMoment.format(),
-            }) +
-            "</div>";
+        content = `<div class>${ejs.render($TimeSlot, {
+            content: translate("AIRING", locale, [timeAgoLocale(episodeStatus.airtime, locale)]),
+            dt_air: airTimeMoment.format(),
+        })}</div>`;
     }
 
     let extraClass = "";
@@ -188,7 +183,7 @@ function generateEpisodeData(episodeStatus, aniId: string, extended = false, loc
         wrap_mode: shouldWrap ? "flex-col" : "flex-row",
         ep_no: episodeStatus.episode,
         extra_class: extraClass,
-        content: content,
+        content,
     });
 }
 
@@ -220,15 +215,19 @@ function generateLastUpdate(lastUpdate: number, locale: Locale): string {
 function getSeason(month: number, year: number, locale: Locale): string {
     const yearS = year.toString();
     if (month >= 0 && month <= 2) {
-        return "❄ " + translate("SEASON.WINTER", locale, [yearS]);
-    } else if (month >= 3 && month <= 5) {
-        return "🌸 " + translate("SEASON.SPRING", locale, [yearS]);
-    } else if (month >= 6 && month <= 8) {
-        return "☀ " + translate("SEASON.SUMMER", locale, [yearS]);
-    } else if (month >= 9 && month <= 11) {
-        return "🍂 " + translate("SEASON.FALL", locale, [yearS]);
-    } else if (month >= 12) {
-        return "❄ " + translate("SEASON.WINTER", locale, [yearS]);
+        return `❄ ${translate("SEASON.WINTER", locale, [yearS])}`;
+    }
+    if (month >= 3 && month <= 5) {
+        return `🌸 ${translate("SEASON.SPRING", locale, [yearS])}`;
+    }
+    if (month >= 6 && month <= 8) {
+        return `☀ ${translate("SEASON.SUMMER", locale, [yearS])}`;
+    }
+    if (month >= 9 && month <= 11) {
+        return `🍂 ${translate("SEASON.FALL", locale, [yearS])}`;
+    }
+    if (month >= 12) {
+        return `❄ ${translate("SEASON.WINTER", locale, [yearS])}`;
     }
 }
 
@@ -255,7 +254,7 @@ function generateShowCard(
     accent: string,
     locale: Locale
 ): [Nullable<string>, any] {
-    const title = animeData.title;
+    const { title } = animeData;
     const unfinishedEpisode = animeData.status.filter((episode) => !episode.is_done);
     if (unfinishedEpisode.length < 1) {
         return [null, []];
@@ -371,11 +370,11 @@ function generateSSRLocaleHelper(locale?: Nullable<Locale>) {
     if (isNone(locale)) {
         selLocale = "id";
     } else {
-        const _locale = locale.toLowerCase() as Locale;
-        if (ValidLocale.includes(_locale)) {
-            selLocale = _locale;
+        const checkLocale = locale.toLowerCase() as Locale;
+        if (ValidLocale.includes(checkLocale)) {
+            selLocale = checkLocale;
         } else {
-            selLocale = _locale;
+            selLocale = checkLocale;
         }
     }
 
@@ -414,9 +413,9 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     if (isNone(accent)) {
         selAccent = "green";
     } else {
-        accent = accent.toLowerCase();
-        if (validAccent.includes(accent)) {
-            selAccent = accent;
+        const loweredAccent = accent.toLowerCase();
+        if (validAccent.includes(loweredAccent)) {
+            selAccent = loweredAccent;
         } else {
             selAccent = "green";
         }
@@ -430,8 +429,8 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     function selectTime(statusSets: any[]) {
         let selected: Nullable<number> = null;
         statusSets.forEach((sets) => {
-            if (typeof sets["airtime"] === "number") {
-                selected = sets["airtime"];
+            if (typeof sets.airtime === "number") {
+                selected = sets.airtime;
             }
         });
         return selected;
@@ -440,8 +439,8 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
     const newAnimeSets = [];
     showData.anime.forEach((res) => {
         const deepCopy = _.cloneDeep(res);
-        if (isNone(deepCopy["start_time"])) {
-            deepCopy["start_time"] = selectTime(res["status"]);
+        if (isNone(deepCopy.start_time)) {
+            deepCopy.start_time = selectTime(res.status);
         }
         newAnimeSets.push(deepCopy);
     });
@@ -464,26 +463,26 @@ function generateSSRMain(showData: ShowtimesProps, accent?: Nullable<string>, lo
 EmbedRouter.get("/embed", async (req, res) => {
     const queryParams = req.query;
     if (isNone(queryParams.id)) {
-        res.render("404", { path: "/embed", build_time: startTime });
+        res.render("404", { path: "/embed", build_time: buildStartTime });
     } else {
         const serverId = queryParams.id;
         try {
             const serverRes = await ShowtimesModel.findOne({ id: { $eq: serverId } });
             const animeData = serverRes.anime;
             if (isNone(animeData)) {
-                res.render("404", { path: `/embed?id=${serverId}`, build_time: startTime });
+                res.render("404", { path: `/embed?id=${serverId}`, build_time: buildStartTime });
             } else {
                 const accents = queryParams.accent;
                 const locales = queryParams.lang || queryParams.locale;
                 let accent: Nullable<any>;
                 if (Array.isArray(accents)) {
-                    accent = accents[0];
+                    [accent] = accents;
                 } else {
                     accent = accents;
                 }
                 let locale: Nullable<any>;
                 if (Array.isArray(locales)) {
-                    locale = locales[0];
+                    [locale] = locales;
                 } else {
                     locale = locales;
                 }
@@ -493,8 +492,8 @@ EmbedRouter.get("/embed", async (req, res) => {
                     isDark = true;
                 }
                 const mappedLocaledNumber = {};
-                ValidLocale.forEach((locale, index) => {
-                    mappedLocaledNumber[locale] = index;
+                ValidLocale.forEach((loc, index) => {
+                    mappedLocaledNumber[loc] = index;
                 });
                 const localeGeneratedSSR = generateSSRLocaleHelper(locale);
                 res.render("embed", {
@@ -507,7 +506,7 @@ EmbedRouter.get("/embed", async (req, res) => {
                 });
             }
         } catch (e) {
-            res.render("404", { path: `/embed?id=${serverId}`, build_time: startTime });
+            res.render("404", { path: `/embed?id=${serverId}`, build_time: buildStartTime });
         }
     }
 });

@@ -16,6 +16,7 @@ import express from "express";
 import express_session from "express-session";
 import { get } from "lodash";
 import mongoose from "mongoose";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import shelljs from "shelljs";
 
 import { expressErrorLogger, expressLogger, logger } from "./lib/logger";
@@ -52,24 +53,23 @@ mongoose.connect(process.env.MONGODB_URI, {
 const SECRET_KEYS = process.env.TOKEN_SECRET;
 const app = express();
 const currentYear = romanizeNumber(new Date().getUTCFullYear());
-const sinceYear = romanizeNumber(packageJson["copyright"]["since"] || 2021);
-const copyrightTo = packageJson["copyright"]["name"] || "naoTimesDev";
+const sinceYear = romanizeNumber(packageJson.copyright.since || 2021);
+const copyrightTo = packageJson.copyright.name || "naoTimesDev";
 const copyrightData = {
     name: copyrightTo,
+    year: sinceYear,
 };
 if (currentYear !== sinceYear) {
-    copyrightData["year"] = `${sinceYear}-${currentYear}`;
-} else {
-    copyrightData["year"] = sinceYear;
+    copyrightData.year = `${sinceYear}-${currentYear}`;
 }
 
 const gitExec = shelljs.exec(`git log --format="%H" -n 1`, { silent: true });
 let fullCommits = "";
 if (gitExec.code === 0) {
     fullCommits = gitExec.stdout.trimEnd();
-    logger.info(`Running naoTimesUI v${packageJson["version"]} (${fullCommits.slice(0, 7)})`);
+    logger.info(`Running naoTimesUI v${packageJson.version} (${fullCommits.slice(0, 7)})`);
 } else {
-    logger.info(`Running naoTimesUI v${packageJson["version"]}`);
+    logger.info(`Running naoTimesUI v${packageJson.version}`);
 }
 
 // Opt-out of FLoC thing, even though I don't use ads
@@ -179,7 +179,7 @@ app.get("/admin", ensureLoggedIn("/"), (req, res) => {
     res.render("admin/index", {
         is_admin: user.privilege === "owner",
         commit: fullCommits,
-        app_version: packageJson["version"],
+        app_version: packageJson.version,
         build_time: startTime,
         copyright: copyrightData,
         username: isNone(user.name) ? user.id : user.name,
@@ -193,7 +193,7 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
-            app_version: packageJson["version"],
+            app_version: packageJson.version,
             build_time: startTime,
             copyright: copyrightData,
             username: isNone(user.name) ? user.id : user.name,
@@ -202,7 +202,7 @@ app.get("/admin/projek", ensureLoggedIn("/"), (req, res) => {
         res.render("admin/projek/index", {
             is_admin: false,
             commit: fullCommits,
-            app_version: packageJson["version"],
+            app_version: packageJson.version,
             build_time: startTime,
             copyright: copyrightData,
             username: isNone(user.name) ? user.id : user.name,
@@ -217,7 +217,7 @@ app.get("/admin/projek/tambah", ensureLoggedIn("/"), async (req, res) => {
             is_admin: true,
             path: req.path,
             commit: fullCommits,
-            app_version: packageJson["version"],
+            app_version: packageJson.version,
             build_time: startTime,
             copyright: copyrightData,
             username: isNone(user.name) ? user.id : user.name,
@@ -227,7 +227,7 @@ app.get("/admin/projek/tambah", ensureLoggedIn("/"), async (req, res) => {
             user_id: user.id,
             is_admin: false,
             commit: fullCommits,
-            app_version: packageJson["version"],
+            app_version: packageJson.version,
             build_time: startTime,
             copyright: copyrightData,
             username: isNone(user.name) ? user.id : user.name,
@@ -242,7 +242,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
             is_admin: user.privilege === "owner",
             path: req.path,
             commit: fullCommits,
-            app_version: packageJson["version"],
+            app_version: packageJson.version,
             build_time: startTime,
             copyright: copyrightData,
             username: isNone(user.name) ? user.id : user.name,
@@ -256,7 +256,7 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 is_admin: false,
                 path: req.path,
                 commit: fullCommits,
-                app_version: packageJson["version"],
+                app_version: packageJson.version,
                 build_time: startTime,
                 copyright: copyrightData,
             });
@@ -267,8 +267,8 @@ app.get("/admin/projek/:ani_id", ensureLoggedIn("/"), async (req, res) => {
                 anime_id: animeData[0].id,
                 raw_data: JSON.stringify(animeData[0]),
                 anime_title: animeData[0].title,
-                custom_title: animeData[0].title + " - Projek - Panel Peladen",
-                app_version: packageJson["version"],
+                custom_title: `${animeData[0].title} - Projek - Panel Peladen`,
+                app_version: packageJson.version,
                 commit: fullCommits,
                 build_time: startTime,
                 copyright: copyrightData,
@@ -286,29 +286,29 @@ app.get("/admin/atur", ensureLoggedIn("/"), async (req, res) => {
     const nameInfo = get(flashed, "nameinfo", []);
     const channelError = get(flashed, "channelerror", []);
     const channelInfo = get(flashed, "channelinfo", []);
-    let parsedInfo = null,
-        parsedError = null,
-        parsedInfo2 = null,
-        parsedError2 = null,
-        parsedInfo3 = null,
-        parsedError3 = null;
+    let parsedInfo = null;
+    let parsedError = null;
+    let parsedInfo2 = null;
+    let parsedError2 = null;
+    let parsedInfo3 = null;
+    let parsedError3 = null;
     if (resetError.length > 0) {
-        parsedError = resetError[0];
+        [parsedError] = resetError;
     }
     if (resetInfo.length > 0) {
-        parsedInfo = resetInfo[0];
+        [parsedInfo] = resetInfo;
     }
     if (nameError.length > 0) {
-        parsedError2 = nameError[0];
+        [parsedError2] = nameError;
     }
     if (nameInfo.length > 0) {
-        parsedInfo2 = nameInfo[0];
+        [parsedInfo2] = nameInfo;
     }
     if (channelError.length > 0) {
-        parsedError3 = channelError[0];
+        [parsedError3] = channelError;
     }
     if (channelInfo.length > 0) {
-        parsedInfo3 = channelInfo[0];
+        [parsedInfo3] = channelInfo;
     }
     const ORIGIN = `${req.protocol}://${req.hostname}`;
     let serverAdmin = [];
@@ -327,7 +327,7 @@ app.get("/admin/atur", ensureLoggedIn("/"), async (req, res) => {
         embed_origin: ORIGIN,
         is_admin: user.privilege === "owner",
         commit: fullCommits,
-        app_version: packageJson["version"],
+        app_version: packageJson.version,
         build_time: startTime,
         copyright: copyrightData,
         // Flash
@@ -352,7 +352,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(function (err: any, _q: express.Request, res: express.Response, _n: express.NextFunction) {
+app.use((err: any, _q: express.Request, res: express.Response, _n: express.NextFunction) => {
     console.error(err.stack);
     if (!res.headersSent) {
         res.status(500).render("error_page", {

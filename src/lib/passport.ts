@@ -13,10 +13,13 @@ const localStrategy = new Strategy(
         findUser(username)
             .then((user) => {
                 if (user && validatePassword(user, password)) {
-                    try {
-                        delete user["_id"];
-                    } catch (_) {}
-                    done(null, user);
+                    const realUserData = {
+                        id: user.id,
+                        name: user.name,
+                        secret: user.secret,
+                        privilege: user.privilege,
+                    };
+                    done(null, realUserData);
                 } else if (user && !validatePassword(user, password)) {
                     done(null, null, {
                         message: "Kombinasi server ID dan password salah!",

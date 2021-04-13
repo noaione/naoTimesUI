@@ -192,9 +192,7 @@ const Locale: ExtendedLocale = {
         },
     },
     // Default quantify from the module.
-    quantify: (_n) => {
-        return "other";
-    },
+    quantify: (_n) => "other",
 };
 
 export default Locale;

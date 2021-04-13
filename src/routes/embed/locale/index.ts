@@ -46,6 +46,7 @@ function walkKey(data: any, notations: string) {
     const splitNots = notations.split(".");
     splitNots.forEach((nots) => {
         if (isNone(data)) return;
+        // eslint-disable-next-line no-param-reassign
         data = data[nots];
     });
     return data;
@@ -53,8 +54,8 @@ function walkKey(data: any, notations: string) {
 
 export function translate(key: string, lang: Locale, extras: string[] = null) {
     // Fallback to Indonesian
-    const Locale = LocaleMap[lang] || LocaleID;
-    let localized = walkKey(Locale, key);
+    const LocaleData = LocaleMap[lang] || LocaleID;
+    let localized = walkKey(LocaleData, key);
     if (Array.isArray(extras)) {
         extras.forEach((val, idx) => {
             if (typeof localized === "string") {
@@ -67,11 +68,12 @@ export function translate(key: string, lang: Locale, extras: string[] = null) {
 
 export function timeAgoLocale(unix: number, lang: TimeAgoLocale): string {
     // Special case
+    let realLang = lang;
     if (lang === "jp") {
-        lang = "ja";
+        realLang = "ja";
     }
     // Create a new TimeAgo class.
-    const timeAgo = new TimeAgo(lang);
+    const timeAgo = new TimeAgo(realLang);
     // And then format it
     return timeAgo.format(moment.unix(unix).toDate());
 }

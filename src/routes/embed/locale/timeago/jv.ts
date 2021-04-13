@@ -77,9 +77,7 @@ const Locale: ExtendedLocale = {
             future: "nembe mawon",
         },
     },
-    quantify: (_n) => {
-        return "other";
-    },
+    quantify: (_n) => "other",
 };
 
 export default Locale;

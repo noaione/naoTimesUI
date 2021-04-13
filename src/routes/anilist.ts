@@ -64,16 +64,18 @@ AnilistRoutes.get("/find", ensureLoggedIn("/"), async (req, res) => {
     selectedQuery = decodeURIComponent(selectedQuery);
     const matchedRes = await searchAnime(selectedQuery);
     const repairedRes = matchedRes.map((result) => {
-        const finalized = {};
-        for (const [key, value] of Object.entries(result)) {
-            finalized[key] = value;
-        }
         const titleSets = result.title || {};
         const searchTitleMatch = titleSets.romaji || titleSets.english || titleSets.native;
         // used specficially for tom-select
-        finalized["titlematch"] = searchTitleMatch;
-        finalized["titlematchen"] = titleSets.english || searchTitleMatch;
-        finalized["titlematchother"] = titleSets.native || searchTitleMatch;
+        const finalized = {
+            titlematch: searchTitleMatch,
+            titlematchen: titleSets.english || searchTitleMatch,
+            titlematchother: titleSets.native || searchTitleMatch,
+        };
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [key, value] of Object.entries(result)) {
+            finalized[key] = value;
+        }
         return finalized;
     });
     res.json({ results: repairedRes });

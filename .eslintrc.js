@@ -3,7 +3,8 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     plugins: ["@typescript-eslint"],
     extends: [
-        "eslint:recommended",
+        "airbnb-base/legacy",
+        "eslint-config-airbnb-base/whitespace",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
@@ -55,6 +56,7 @@ module.exports = {
                 ignoreUrls: true,
                 ignoreRegExpLiterals: true,
                 ignoreTemplateLiterals: true,
+                ignoreStrings: true,
             },
         ],
         "comma-dangle": [
@@ -100,10 +102,21 @@ module.exports = {
                 groups: ["builtin", "external", "internal", "sibling", "parent", "index", "object"],
             },
         ],
+        "import/extensions": "off",
+        "import/prefer-default-export": "off",
+        radix: "off",
+        "no-plusplus": "off",
+        "no-await-in-loop": "off",
+        "no-console": ["warn", { allow: ["warn", "error"] }],
+        camelcase: "off",
+        "consistent-return": "off",
+        "no-continue": "off",
+        "no-underscore-dangle": ["warn", { allowFunctionParams: true }],
+        "dot-notation": ["warn", { allowPattern: "^[a-z]+(_[a-z]+)+$" }],
     },
     overrides: [
         {
-            files: ["tools/*.js", "lib/*.js"],
+            files: ["tools/**/*.js", "lib/**/*.js"],
             rules: {
                 "@typescript-eslint/no-unused-vars": "off",
                 "@typescript-eslint/no-var-requires": "off",
@@ -115,6 +128,18 @@ module.exports = {
             rules: {
                 "import/default": "off",
                 "import/no-named-as-default": "off",
+            },
+        },
+        {
+            files: ["lib/**/*.js"],
+            rules: {
+                "import/no-extraneous-dependencies": [
+                    "warn",
+                    {
+                        devDependencies: true,
+                    },
+                ],
+                "no-console": ["warn", { allow: ["warn", "error", "info"] }],
             },
         },
     ],

@@ -8,12 +8,11 @@ export default function createRedisClient() {
         throw new Error(`createRedisClient: Invalid configuration for RedisDB\nClient: ${HOST}:${PORT}`);
     }
     const PORTNUM = parseInt(PORT);
-    if (isNaN(PORTNUM)) {
+    if (Number.isNaN(PORTNUM)) {
         throw new Error(`createRedisClient: Port is not a number`);
     }
     if (PASS) {
         return new Redis(PORTNUM, HOST, { password: PASS });
-    } else {
-        return new Redis(PORTNUM, HOST);
     }
+    return new Redis(PORTNUM, HOST);
 }

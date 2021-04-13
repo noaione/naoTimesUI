@@ -24,13 +24,17 @@ export function isNone(value: any): value is NoneType {
 export function determineSeason(month: number): number {
     if (month >= 0 && month <= 2) {
         return 0;
-    } else if (month >= 3 && month <= 5) {
+    }
+    if (month >= 3 && month <= 5) {
         return 1;
-    } else if (month >= 6 && month <= 8) {
+    }
+    if (month >= 6 && month <= 8) {
         return 2;
-    } else if (month >= 9 && month <= 11) {
+    }
+    if (month >= 9 && month <= 11) {
         return 3;
-    } else if (month >= 12) {
+    }
+    if (month >= 12) {
         return 0;
     }
 }
@@ -73,7 +77,7 @@ export function verifyExist(data: any, key: string, expected: JSTypeof) {
 }
 
 export function romanizeNumber(number: number): string {
-    if (isNaN(number)) {
+    if (Number.isNaN(number)) {
         return "NaN";
     }
     const digits = String(+number).split("");
@@ -119,10 +123,10 @@ export function romanizeNumber(number: number): string {
 
 function rgbHexToRGBInt(hexStr: Nullable<string>): number {
     if (isNone(hexStr)) return 2012582;
-    hexStr = hexStr.replace("#", "").toUpperCase();
-    const R = parseInt(hexStr.slice(0, 2), 16);
-    const G = parseInt(hexStr.slice(2, 4), 16);
-    const B = parseInt(hexStr.slice(4, 6), 16);
+    const hexedStr = hexStr.replace("#", "").toUpperCase();
+    const R = parseInt(hexedStr.slice(0, 2), 16);
+    const G = parseInt(hexedStr.slice(2, 4), 16);
+    const B = parseInt(hexedStr.slice(4, 6), 16);
     return 256 * 256 * R + 256 * G + B;
 }
 
@@ -183,11 +187,11 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         rawResults = originalData.data.Media;
     }
     // This will convert the data to the database format
-    const anilistId = intToStr(rawResults["id"]);
-    const malId = intToStr(rawResults["idMal"]);
+    const anilistId = intToStr(rawResults.id);
+    const malId = intToStr(rawResults.idMal);
     const animeTitle = get(rawResults, "title", {});
     const realTitle = animeTitle.romaji || animeTitle.english || animeTitle.native;
-    const coverImage = rawResults["coverImage"];
+    const { coverImage } = rawResults;
 
     const startDate = parseAnilistDate(rawResults.startDate);
 
@@ -229,7 +233,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
                 },
                 airtime: airingTime,
             };
-            compiledData["status"].push(statusSets);
+            compiledData.status.push(statusSets);
         }
     } else {
         airingSchedules.forEach((node) => {
@@ -249,9 +253,9 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
                     TS: false,
                     QC: false,
                 },
-                airtime: airtime,
+                airtime,
             };
-            compiledData["status"].push(statusSets);
+            compiledData.status.push(statusSets);
         });
     }
 

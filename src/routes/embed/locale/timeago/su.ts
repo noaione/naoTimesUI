@@ -72,9 +72,7 @@ const Locale: ExtendedLocale = {
             past: "nembe",
         },
     },
-    quantify: (_n) => {
-        return "other";
-    },
+    quantify: (_n) => "other",
 };
 
 export default Locale;

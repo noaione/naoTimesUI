@@ -169,6 +169,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
         await ShowAdminModel.findOneAndDelete({ id: { $eq: elemDel } });
         emitSocket("delete admin", elemDel);
     }
+    // eslint-disable-next-line no-restricted-syntax
     for (const [adminId, srvList] of Object.entries(shouldBeUpdated)) {
         logger.info(`Updating ${adminId}...`);
         await ShowAdminModel.findOneAndUpdate({ id: { $eq: adminId } }, { $set: { servers: srvList } });

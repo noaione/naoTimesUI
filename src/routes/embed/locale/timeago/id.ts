@@ -221,9 +221,7 @@ const Locale: ExtendedLocale = {
         second: "{0} detik",
     },
     // Default quantify from the module.
-    quantify: (_n) => {
-        return "other";
-    },
+    quantify: (_n) => "other",
 };
 
 export default Locale;

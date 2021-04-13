@@ -25,7 +25,8 @@ function verifyChangesContents(event: AnimeChangeEvent, changes: any) {
             verifyExist(changes, "anime_id", "string") &&
             verifyExist(changes, "user_id", "string")
         );
-    } else if (event === "status") {
+    }
+    if (event === "status") {
         const episode =
             verifyExist(changes, "episode", "string") || verifyExist(changes, "episode", "number");
         return (
@@ -41,19 +42,19 @@ async function doAnimeChanges(
     changes: any
 ): Promise<ShowtimesProps> {
     if (event === "staff") {
-        let role: Nullable<string> = changes["role"];
+        let { role } = changes;
         if (isNone(role)) {
             return databaseData;
         }
         if (!["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role)) {
             return databaseData;
         }
-        const anime_id: Nullable<string> = changes["anime_id"];
+        const { anime_id } = changes;
         if (isNone(anime_id)) return databaseData;
         const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
         if (indexAnime === -1) return databaseData;
         role = role.toUpperCase();
-        const userId: Nullable<string> = changes["user_id"];
+        const userId: Nullable<string> = changes.user_id;
         if (isNone(userId)) return databaseData;
         let userName: Nullable<string> = null;
         try {
@@ -61,10 +62,12 @@ async function doAnimeChanges(
             userName = userInfo.name;
         } catch (e) {}
         const newUserData = { id: userId, name: userName };
+        // eslint-disable-next-line no-param-reassign
         databaseData.anime[indexAnime].assignments[role] = newUserData;
         return databaseData;
-    } else if (event === "status") {
-        const rolesSets: Nullable<StatusRoleChanges[]> = changes["roles"];
+    }
+    if (event === "status") {
+        const rolesSets: Nullable<StatusRoleChanges[]> = changes.roles;
         if (isNone(rolesSets)) {
             return databaseData;
         }
@@ -76,13 +79,13 @@ async function doAnimeChanges(
             if (typeof res.tick !== "boolean") return;
             verifiedChanges.push({ role, tick: res.tick });
         });
-        const anime_id: Nullable<string> = changes["anime_id"];
+        const { anime_id } = changes;
         if (isNone(anime_id)) return databaseData;
-        let episode_no: Nullable<number | string> = changes["episode"];
+        let episode_no: Nullable<number | string> = changes.episode;
         if (isNone(episode_no)) return databaseData;
         if (typeof episode_no === "string") {
             episode_no = parseInt(episode_no);
-            if (isNaN(episode_no)) return databaseData;
+            if (Number.isNaN(episode_no)) return databaseData;
         }
         if (typeof episode_no !== "number") return databaseData;
         const currentUTC = moment.utc().unix();
@@ -94,8 +97,10 @@ async function doAnimeChanges(
         );
         if (indexEpisode === -1) return databaseData;
         verifiedChanges.forEach((res) => {
+            // eslint-disable-next-line no-param-reassign
             databaseData.anime[indexAnime].status[indexEpisode].progress[res.role] = res.tick;
         });
+        // eslint-disable-next-line no-param-reassign
         databaseData.anime[indexAnime].last_update = currentUTC;
         return databaseData;
     }
@@ -115,7 +120,7 @@ APIPutRoutes.put("/projek", ensureLoggedIn("/"), async (req, res) => {
     if (!["status", "staff"].includes(eventType)) {
         return res.status(400).json({ message: "unknown event type", code: 400 });
     }
-    const changes: Nullable<any> = jsonBody.changes;
+    const { changes } = jsonBody;
     if (isNone(changes)) {
         return res.status(400).json({ message: "missing changes data", code: 400 });
     }
@@ -185,7 +190,7 @@ async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]) {
     let successCheck1 = true;
     let failed = "";
     newAdminIds.forEach((admin) => {
-        if (isNaN(parseInt(admin))) {
+        if (Number.isNaN(parseInt(admin))) {
             successCheck1 = false;
             failed = admin;
         }
@@ -230,20 +235,18 @@ APIPutRoutes.put("/admin", ensureLoggedIn("/"), async (req, res) => {
     const jsonBody = req.body;
     if (isNone(jsonBody.adminids)) {
         res.status(400).json({ message: "missing adminids key", code: 400 });
+    } else if (isNone(req.user)) {
+        res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
-        if (isNone(req.user)) {
-            res.status(403).json({ message: "Unauthorized", code: 403 });
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
+            res.status(504).json({ message: "Not implemented for Admin", code: 504 });
         } else {
-            const userData = req.user as UserProps;
-            if (userData.privilege === "owner") {
-                res.status(504).json({ message: "Not implemented for Admin", code: 504 });
+            const [msg, status] = await tryToAdjustAdminData(userData.id, jsonBody.adminids);
+            if (status) {
+                res.json({ message: msg, code: 200 });
             } else {
-                const [msg, status] = await tryToAdjustAdminData(userData.id, jsonBody.adminids);
-                if (status) {
-                    res.json({ message: msg, code: 200 });
-                } else {
-                    res.status(500).json({ message: msg, code: 500 });
-                }
+                res.status(500).json({ message: msg, code: 500 });
             }
         }
     }

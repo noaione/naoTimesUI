@@ -41,11 +41,14 @@ function checkStringValid(data: any): boolean {
 function toStr(data: any): string {
     if (typeof data === "number") {
         return data.toString();
-    } else if (typeof data === "string") {
+    }
+    if (typeof data === "string") {
         return data;
-    } else if (typeof data === "boolean") {
+    }
+    if (typeof data === "boolean") {
         return data ? "true" : "false";
-    } else if (typeof data === "object") {
+    }
+    if (typeof data === "object") {
         return JSON.stringify(data);
     }
     return null;
@@ -60,6 +63,7 @@ async function tryServerAdminAdd(adminId: string, serverId: string) {
     const existingUsers = await ShowAdminModel.find({ id: { $eq: adminId } });
     let existingId: Nullable<Types.ObjectId>;
     if (existingUsers.length > 0) {
+        // eslint-disable-next-line no-underscore-dangle
         existingId = existingUsers[0]._id;
         logger.info(`Got some existing user ID on it, ${existingUsers[0].id}`);
     }
@@ -172,7 +176,7 @@ AuthAPIRoutes.post("/reset", ensureLoggedIn("/"), async (req, res) => {
             // @ts-ignore
             req.session.passport.user.secret = jsonBody.new;
             req.session.save((_e) => {
-                req.session.reload((_e) => {
+                req.session.reload((_r) => {
                     req.flash("resetinfo", "Sukses mengubah password");
                     res.redirect("/admin/atur");
                 });
@@ -195,7 +199,7 @@ AuthAPIRoutes.post("/changename", ensureLoggedIn("/"), async (req, res) => {
         // @ts-ignore
         req.session.passport.user.name = jsonBody.newname;
         req.session.save((_e) => {
-            req.session.reload((_e) => {
+            req.session.reload((_r) => {
                 req.flash("nameinfo", "Sukses mengubah nama");
                 res.redirect("/admin/atur");
             });
@@ -219,7 +223,7 @@ async function changeChannelId(serverId: string, channelId: string) {
         } else if (errorData.includes("bukan textchannel")) {
             msgFucked = "Channel bukanlah channel teks (Text Channel)";
         }
-        return [false, "Gagal mendapatkan channel: " + msgFucked];
+        return [false, `Gagal mendapatkan channel: ${msgFucked}`];
     }
 
     try {
@@ -233,33 +237,30 @@ async function changeChannelId(serverId: string, channelId: string) {
     emitSocket("pull data", serverId);
     let channelName = channelInfo.name || channelId;
     if (channelName !== channelId) {
-        channelName = "#" + channelName;
+        channelName = `#${channelName}`;
     }
     return [true, channelName];
 }
 
 AuthAPIRoutes.post("/announcechannel", ensureLoggedIn("/"), async (req, res) => {
-    console.info(req.body);
     const reqData = req.body;
     if (isNone(req.user)) {
         res.status(404).json({ message: "Unauthorized", code: 403 });
+    } else if (!has(reqData, "channelid")) {
+        req.flash("channelerror", "Mohon masukan channel ID");
+        res.redirect("/admin/atur");
     } else {
-        if (!has(reqData, "channelid")) {
-            req.flash("channelerror", "Mohon masukan channel ID");
+        const userData = req.user as UserProps;
+        if (userData.privilege === "owner") {
             res.redirect("/admin/atur");
         } else {
-            const userData = req.user as UserProps;
-            if (userData.privilege === "owner") {
+            const [result, msg] = await changeChannelId(userData.id, reqData.channelid);
+            if (!result) {
+                req.flash("channelerror", msg);
                 res.redirect("/admin/atur");
             } else {
-                const [result, msg] = await changeChannelId(userData.id, reqData.channelid);
-                if (!result) {
-                    req.flash("channelerror", msg);
-                    res.redirect("/admin/atur");
-                } else {
-                    req.flash("channelinfo", `Sukses merubah channel ke ${msg}`);
-                    res.redirect("/admin/atur");
-                }
+                req.flash("channelinfo", `Sukses merubah channel ke ${msg}`);
+                res.redirect("/admin/atur");
             }
         }
     }

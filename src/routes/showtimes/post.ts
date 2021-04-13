@@ -5,7 +5,7 @@ import { get, has } from "lodash";
 
 import { logger as MainLogger } from "../../lib/logger";
 import { emitSocket, emitSocketAndWait } from "../../lib/socket";
-import { isNone, parseAnilistAPIResult, verifyExist } from "../../lib/utils";
+import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "../../lib/utils";
 import { ShowtimesModel } from "../../models/show";
 import { UserProps } from "../../models/user";
 
@@ -44,14 +44,15 @@ query ($id:Int!) {
 }
 `;
 
-async function getAnimeInfo(anime_id: string | number): Promise<any> {
-    if (typeof anime_id !== "number") {
-        anime_id = parseInt(anime_id);
-        if (isNaN(anime_id)) return {};
+async function getAnimeInfo(animeId: string | number): Promise<any> {
+    let parsedAniId: Nullable<number>;
+    if (typeof animeId !== "number") {
+        parsedAniId = parseInt(animeId);
+        if (Number.isNaN(parsedAniId)) return {};
     }
     const req = await axios.post(
         "https://graphql.anilist.co",
-        { query: AnimeInfoQuery, variables: { id: anime_id } },
+        { query: AnimeInfoQuery, variables: { id: animeId } },
         {
             headers: {
                 "Content-Type": "application/json",
@@ -103,12 +104,12 @@ async function addNewProject(dataToAdd: any) {
         return { success: false, message: "missing anime key that should be an object" };
     }
     const VALID_ROLES = ["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"];
-    const animeData = dataToAdd["anime"];
-    const serverId: string = dataToAdd["server"];
+    const animeData = dataToAdd.anime;
+    const serverId: string = dataToAdd.server;
     const logger = MainLogger.child({ cls: "ShowtimesPOST", fn: `AddNewProject[${serverId}]` });
-    const animeId = animeData["id"];
-    const animeName = animeData["name"];
-    const expectedEpisode: number = animeData["episode"];
+    const animeId = animeData.id;
+    const animeName = animeData.name;
+    const expectedEpisode: number = animeData.episode;
     if (isNone(animeId) || isNone(animeName)) {
         return { success: false, message: "missing `id` or `name` or `episode` key on `anime` object" };
     }
@@ -127,7 +128,7 @@ async function addNewProject(dataToAdd: any) {
             message: "Anime sudah terdaftar di daftar garapan, mohon gunakan mode edit!",
         };
     }
-    const addedRoles = dataToAdd["roles"];
+    const addedRoles = dataToAdd.roles;
     const validatedRoles = {
         TL: {
             id: null,
@@ -181,22 +182,22 @@ async function addNewProject(dataToAdd: any) {
                 try {
                     logger.info(`Requesting user info for role ${element.role} with ID ${element.id}`);
                     const userData = await emitSocketAndWait("get user", element.id);
-                    validatedRoles[element.role]["id"] = element.id;
+                    validatedRoles[element.role].id = element.id;
                     if (userData.name) {
-                        validatedRoles[element.role]["name"] = userData.name;
+                        validatedRoles[element.role].name = userData.name;
                         cachedUserID[element.id] = userData.name;
                     } else {
                         cachedUserID[element.id] = null;
                     }
                 } catch (e) {
                     logger.error(`Failed to fetch user ${element.id}, reason: ${e.toString()}`);
-                    validatedRoles[element.role]["id"] = element.id;
+                    validatedRoles[element.role].id = element.id;
                     cachedUserID[element.id] = null;
                 }
             } else {
                 logger.info(`Using cached data for ${element.role} with ID ${element.id}`);
-                validatedRoles[element.role]["id"] = element.id;
-                validatedRoles[element.role]["name"] = get(cachedUserID, element.id, null);
+                validatedRoles[element.role].id = element.id;
+                validatedRoles[element.role].name = get(cachedUserID, element.id, null);
             }
         }
     }
@@ -209,10 +210,10 @@ async function addNewProject(dataToAdd: any) {
         return { success: false, message: e.toString() };
     }
 
-    const roleId = generatedRole["id"];
+    const roleId = generatedRole.id;
     logger.info(`Fetching Anime information for ${animeId}`);
-    finalizedAnimeData["role_id"] = roleId;
-    finalizedAnimeData["assignments"] = validatedRoles;
+    finalizedAnimeData.role_id = roleId;
+    finalizedAnimeData.assignments = validatedRoles;
     logger.info("Updating by pushing the new finalized data to the database...");
     try {
         await ShowtimesModel.updateOne(

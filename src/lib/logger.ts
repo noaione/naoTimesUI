@@ -33,13 +33,13 @@ function wrapColor(text?: string, color?: string) {
 function stringify<T>(text: T): T | string {
     if (typeof text === "object") {
         return JSON.stringify(text);
-    } else if (typeof text === "number") {
+    } if (typeof text === "number") {
         return text.toString();
-    } else if (typeof text === "function") {
-        return "Function: " + text.name;
-    } else if (typeof text === "boolean") {
+    } if (typeof text === "function") {
+        return `Function: ${  text.name}`;
+    } if (typeof text === "boolean") {
         return text ? "true" : "false";
-    } else if (typeof text === "string") {
+    } if (typeof text === "string") {
         return text;
     }
     return text;
@@ -70,18 +70,18 @@ const sentryFormat = winston.format.combine(
             initformat += squareMode ? "[" : " ";
         }
         if (hasCls) {
-            initformat += info["cls"];
+            initformat += info.cls;
         }
         if (hasFn) {
             if (hasCls) {
                 initformat += ".";
             }
-            initformat += info["fn"];
+            initformat += info.fn;
         }
         if (hasCls || hasFn) {
             initformat += squareMode ? "]" : "()";
         }
-        return initformat + `: ${stringify(info.message)}`;
+        return `${initformat  }: ${stringify(info.message)}`;
     })
 );
 
@@ -91,7 +91,7 @@ export const logger = createLogger({
         winston.format.colorize({ level: true, message: false }),
         winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.printf((info: WinstonLogInfo) => {
-            let initformat = `[${wrapColor(info["timestamp"], GRAY)}][${info.level}]`;
+            let initformat = `[${wrapColor(info.timestamp, GRAY)}][${info.level}]`;
             const squareMode = _.get(info, "squared", false);
             const hasCls = _.has(info, "cls");
             const hasFn = _.has(info, "fn");
@@ -99,18 +99,18 @@ export const logger = createLogger({
                 initformat += squareMode ? "[" : " ";
             }
             if (hasCls) {
-                initformat += wrapColor(info["cls"], "\u001b[35m");
+                initformat += wrapColor(info.cls, "\u001b[35m");
             }
             if (hasFn) {
                 if (hasCls) {
                     initformat += ".";
                 }
-                initformat += wrapColor(info["fn"], "\u001b[36m");
+                initformat += wrapColor(info.fn, "\u001b[36m");
             }
             if (hasCls || hasFn) {
                 initformat += squareMode ? "]" : "()";
             }
-            return initformat + `: ${stringify(info.message)}`;
+            return `${initformat  }: ${stringify(info.message)}`;
         })
     ),
     transports: [new winston.transports.Console()],
@@ -134,12 +134,12 @@ export const expressLogger = WinstonLog({
         winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.ms(),
         winston.format.printf((info) => {
-            const method = info.meta.req.method;
+            const {method} = info.meta.req;
             const methodCol = _.get(reqTypeColor, method, "");
             const statCode = info.meta.res.statusCode;
             const HTTP_VER = info.meta.req.httpVersion || "1.1";
             // Base
-            let fmtRes = `[${wrapColor(info["timestamp"], GRAY)}][${info.level}]: `;
+            let fmtRes = `[${wrapColor(info.timestamp, GRAY)}][${info.level}]: `;
             fmtRes += `${wrapColor("HTTP", "\u001b[32m")} ${HTTP_VER}`;
             // Method
             fmtRes += ` ${methodCol}${method}${RESET} `;
@@ -148,14 +148,14 @@ export const expressLogger = WinstonLog({
             // Status Code
             let statCol = RESET;
             if (statCode >= 200 && statCode < 300) {
-                statCol = reqTypeColor["GET"];
+                statCol = reqTypeColor.GET;
             } else if (statCode >= 300 && statCode < 400) {
-                statCol = reqTypeColor["PATCH"];
+                statCol = reqTypeColor.PATCH;
             } else if (statCode >= 400) {
-                statCol = reqTypeColor["DELETE"];
+                statCol = reqTypeColor.DELETE;
             }
             fmtRes += `  ${statCol}${statCode}${RESET}`;
-            fmtRes += ` (${reqTypeColor["PATCH"]}${info["meta"]["responseTime"]}${RESET}ms)`;
+            fmtRes += ` (${reqTypeColor.PATCH}${info.meta.responseTime}${RESET}ms)`;
             return fmtRes;
         })
     ),
@@ -168,13 +168,13 @@ export const expressErrorLogger = WinstonErrorLog({
         winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         winston.format.ms(),
         winston.format.printf((info) => {
-            const method = info.meta.req.method;
+            const {method} = info.meta.req;
             const HTTP_VER = info.meta.req.httpVersion || "1.1";
             const methodCol = _.get(reqTypeColor, method, "");
             const statCode = 500;
             // Base
             // eslint-disable-next-line max-len
-            let fmtRes = `[${wrapColor(info["timestamp"], GRAY)}][${info.level}]: `;
+            let fmtRes = `[${wrapColor(info.timestamp, GRAY)}][${info.level}]: `;
             fmtRes += `${wrapColor("HTTP", "\u001b[32m")} ${HTTP_VER}`;
             // Method
             fmtRes += ` ${methodCol}${method}${RESET} `;
@@ -183,14 +183,14 @@ export const expressErrorLogger = WinstonErrorLog({
             // Status Code
             let statCol = RESET;
             if (statCode >= 200 && statCode < 300) {
-                statCol = reqTypeColor["GET"];
+                statCol = reqTypeColor.GET;
             } else if (statCode >= 300 && statCode < 400) {
-                statCol = reqTypeColor["PATCH"];
+                statCol = reqTypeColor.PATCH;
             } else if (statCode >= 400) {
-                statCol = reqTypeColor["DELETE"];
+                statCol = reqTypeColor.DELETE;
             }
             fmtRes += `  ${statCol}${statCode}${RESET}`;
-            return fmtRes + "\n" + info.meta.message;
+            return `${fmtRes  }\n${  info.meta.message}`;
         })
     ),
 });

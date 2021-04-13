@@ -23,9 +23,9 @@ APIGetRoutes.get("/", ensureLoggedIn("/"), async (req, res) => {
                 { _id: 0, konfirmasi: 0, serverowner: 0, "anime.status": 0 }
             );
             res.json({
-                anime: fetchServers["anime"],
-                id: fetchServers["id"],
-                announce_channel: fetchServers["announce_channel"],
+                anime: fetchServers.anime,
+                id: fetchServers.id,
+                announce_channel: fetchServers.announce_channel,
                 code: 200,
             });
         }
@@ -35,13 +35,7 @@ APIGetRoutes.get("/", ensureLoggedIn("/"), async (req, res) => {
 function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
-        const newData = {};
-        newData["id"] = anime_data.id;
-        newData["title"] = anime_data.title;
-        newData["start_time"] = anime_data.start_time;
-        newData["assignments"] = anime_data.assignments;
-        newData["poster"] = anime_data.poster_data.url;
-        let latestEpisode;
+        let latestEpisode: Nullable<any>;
         for (let ep = 0; ep < anime_data.status.length; ep++) {
             const status_ep = anime_data.status[ep];
             if (status_ep.is_done) {
@@ -55,7 +49,14 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
         if (isNone(latestEpisode)) {
             return;
         }
-        newData["status"] = latestEpisode;
+        const newData = {
+            id: anime_data.id,
+            title: anime_data.title,
+            start_time: anime_data.start_time,
+            assignments: anime_data.assignments,
+            poster: anime_data.poster_data.url,
+            status: latestEpisode,
+        };
         animeSets.push(newData);
     });
     return animeSets;
@@ -64,11 +65,6 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
 function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
-        const newData = {};
-        newData["id"] = anime_data.id;
-        newData["title"] = anime_data.title;
-        newData["assignments"] = anime_data.assignments;
-        newData["poster"] = anime_data.poster_data.url;
         let latestEpisode;
         for (let ep = 0; ep < anime_data.status.length; ep++) {
             const status_ep = anime_data.status[ep];
@@ -80,11 +76,17 @@ function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
                 break;
             }
         }
+        let isFinished = false;
         if (isNone(latestEpisode)) {
-            newData["is_finished"] = true;
-        } else {
-            newData["is_finished"] = false;
+            isFinished = true;
         }
+        const newData = {
+            id: anime_data.id,
+            title: anime_data.title,
+            assignments: anime_data.assignments,
+            poster: anime_data.poster_data.url,
+            is_finished: isFinished,
+        };
         animeSets.push(newData);
     });
     return animeSets;
@@ -155,15 +157,15 @@ APIGetRoutes.get("/stats", ensureLoggedIn("/"), async (req, res) => {
             const statsData = { finished: 0, unfinished: 0 };
             fetchServers.anime.forEach((anime) => {
                 let anyUndone = false;
-                anime.status.forEach((res) => {
-                    if (!res.is_done) {
+                anime.status.forEach((statusRes) => {
+                    if (!statusRes.is_done) {
                         anyUndone = true;
                     }
                 });
                 if (anyUndone) {
-                    statsData["unfinished"]++;
+                    statsData.unfinished++;
                 } else {
-                    statsData["finished"]++;
+                    statsData.finished++;
                 }
             });
             res.json({ data: statsData, code: 200 });
@@ -328,10 +330,12 @@ function parseStatusOldStyles(animeData: ShowAnimeProps[]): IResultOldSeasonKey 
                     };
                 }
                 const newStatus = {};
+                // eslint-disable-next-line no-restricted-syntax
                 for (const [key, val] of Object.entries(status.progress)) {
                     newStatus[keyNamingRole(key)] = val;
                 }
                 const staffAssigned = {};
+                // eslint-disable-next-line no-restricted-syntax
                 for (const [staff, staffData] of Object.entries(anime.assignments)) {
                     staffAssigned[keyNamingRole(staff)] = staffData.name || "Tidak diketahui";
                 }
@@ -345,8 +349,8 @@ function parseStatusOldStyles(animeData: ShowAnimeProps[]): IResultOldSeasonKey 
                     // @ts-ignore
                     staff: staffAssigned,
                 };
-                seasonKeys[ySeason]["data"].push(dataToAdd);
-                seasonKeys[ySeason]["total_data"]++;
+                seasonKeys[ySeason].data.push(dataToAdd);
+                seasonKeys[ySeason].total_data++;
             }
         });
     });
@@ -355,7 +359,7 @@ function parseStatusOldStyles(animeData: ShowAnimeProps[]): IResultOldSeasonKey 
 
 // Fallback for old utang.naoti.me URL.
 APIGetRoutes.get("/status/:server_id", async (req, res) => {
-    const server_id = req.params.server_id;
+    const { server_id } = req.params;
     try {
         let animeSets: Nullable<ShowAnimeProps>;
         try {

@@ -37,7 +37,7 @@ function createNewSocket() {
     }
     // @ts-ignore
     const PORTNUM = parseInt(PORT);
-    if (isNaN(PORTNUM)) {
+    if (Number.isNaN(PORTNUM)) {
         throw new Error(`createBotClient: Port is not a number`);
     }
     const client = new net.Socket();
@@ -51,9 +51,10 @@ function createNewSocket() {
 
 export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
+    // eslint-disable-next-line no-underscore-dangle
     const _logger = MainLoggger.child({ cls: "SocketConn", fn: "emitSocket" });
 
-    client.on("connect", function () {
+    client.on("connect", () => {
         const addr = client.address();
         _logger.info("Connectioon established!");
         _logger.info("Client Info:");
@@ -61,21 +62,22 @@ export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
         _logger.info(`Listening at port: ${addr.port}`);
         // @ts-ignore
         const ipaddr = addr.address;
-        _logger.info("Client IP:" + ipaddr);
+        _logger.info(`Client IP:${ipaddr}`);
 
-        client.write(JSON.stringify({ event: event, data: data }) + "\x04");
-        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event: event, data: data })}`);
+        client.write(`${JSON.stringify({ event, data })}\x04`);
+        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event, data })}`);
         client.end();
     });
 }
 
 export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
+    // eslint-disable-next-line no-underscore-dangle
     const _logger = MainLoggger.child({ cls: "SocketConn", fn: "emitSocket" });
 
     let isConnected = false;
     let queryResponse: Buffer;
-    client.on("connect", function () {
+    client.on("connect", () => {
         isConnected = true;
         const addr = client.address();
         _logger.info("Connectioon established!");
@@ -84,14 +86,14 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
         _logger.info(`Listening at port: ${addr.port}`);
         // @ts-ignore
         const ipaddr = addr.address;
-        _logger.info("Client IP:" + ipaddr);
+        _logger.info(`Client IP:${ipaddr}`);
 
-        client.write(JSON.stringify({ event: event, data: data }) + "\x04");
-        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event: event, data: data })}`);
+        client.write(`${JSON.stringify({ event, data })}\x04`);
+        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event, data })}`);
     });
 
-    client.on("data", function (data) {
-        queryResponse = data;
+    client.on("data", (sdata) => {
+        queryResponse = sdata;
         client.end();
     });
 

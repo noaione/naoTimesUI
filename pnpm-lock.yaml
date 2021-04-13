@@ -11,7 +11,7 @@ specifiers:
   '@types/compression': 1.7.0
   '@types/connect-ensure-login': 0.1.5
   '@types/connect-flash': 0.0.36
-  '@types/connect-livereload': ^0.5.31
+  '@types/connect-livereload': 0.5.31
   '@types/connect-redis': 0.0.16
   '@types/consolidate': 0.14.0
   '@types/cookie': 0.4.0
@@ -52,6 +52,7 @@ specifiers:
   ejs: ^3.1.6
   esbuild: 0.11.8
   eslint: 7.24.0
+  eslint-config-airbnb-base: 14.2.1
   eslint-config-prettier: 8.1.0
   eslint-import-resolver-typescript: 2.4.0
   eslint-plugin-import: 2.22.1
@@ -153,6 +154,7 @@ devDependencies:
   cssnano: 5.0.0_postcss@8.2.10
   esbuild: 0.11.8
   eslint: 7.24.0
+  eslint-config-airbnb-base: 14.2.1_dc9d9d711f9715ea38ced5881f20889e
   eslint-config-prettier: 8.1.0_eslint@7.24.0
   eslint-import-resolver-typescript: 2.4.0_dc9d9d711f9715ea38ced5881f20889e
   eslint-plugin-import: 2.22.1_eslint@7.24.0
@@ -1696,6 +1698,10 @@ packages:
       xdg-basedir: 4.0.0
     dev: true
 
+  /confusing-browser-globals/1.0.10:
+    resolution: {integrity: sha512-gNld/3lySHwuhaVluJUKLePYirM3QNCKzVxqAdhJII9/WXKVX5PURzMVJspS1jTslSqjeuG4KMVTSouit5YPHA==}
+    dev: true
+
   /connect-ensure-login/0.1.1:
     resolution: {integrity: sha1-F03MUSQ7nqwj+NmCFa62aU4uihI=}
     engines: {node: '>= 0.4.0'}
@@ -2381,6 +2387,20 @@ packages:
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=}
     engines: {node: '>=0.8.0'}
+
+  /eslint-config-airbnb-base/14.2.1_dc9d9d711f9715ea38ced5881f20889e:
+    resolution: {integrity: sha512-GOrQyDtVEc1Xy20U7vsB2yAoB4nBlfH5HZJeatRXHleO+OS5Ot+MWij4Dpltw4/DyIkqUfqz1epfhVR5XWWQPA==}
+    engines: {node: '>= 6'}
+    peerDependencies:
+      eslint: ^5.16.0 || ^6.8.0 || ^7.2.0
+      eslint-plugin-import: ^2.22.1
+    dependencies:
+      confusing-browser-globals: 1.0.10
+      eslint: 7.24.0
+      eslint-plugin-import: 2.22.1_eslint@7.24.0
+      object.assign: 4.1.2
+      object.entries: 1.1.3
+    dev: true
 
   /eslint-config-prettier/8.1.0_eslint@7.24.0:
     resolution: {integrity: sha512-oKMhGv3ihGbCIimCAjqkdzx2Q+jthoqnXSP+d86M9tptwugycmTFdVR4IpLgq2c4SHifbwO90z2fQ8/Aio73yw==}
@@ -4565,6 +4585,16 @@ packages:
       array-slice: 1.1.0
       for-own: 1.0.0
       isobject: 3.0.1
+    dev: true
+
+  /object.entries/1.1.3:
+    resolution: {integrity: sha512-ym7h7OZebNS96hn5IJeyUmaWhaSM4SVtAPPfNLQEI2MYWCO2egsITb9nab2+i/Pwibx+R0mtn+ltKJXRSeTMGg==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      define-properties: 1.1.3
+      es-abstract: 1.18.0
+      has: 1.0.3
     dev: true
 
   /object.map/1.0.1:
