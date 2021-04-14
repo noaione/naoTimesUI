@@ -64,6 +64,8 @@
     "mongoose": "^5.12.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "socket.io": "^4.0.1",
+    "socket.io-client": "^4.0.1",
     "ts-mongoose": "^0.0.24",
     "winston": "^3.3.3",
     "winston-transport-sentry-node": "^1.0.2"

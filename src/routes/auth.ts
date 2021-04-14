@@ -4,6 +4,7 @@ import express from "express";
 import { has } from "lodash";
 import { Types } from "mongoose";
 
+import { eventsEmit } from "../lib/events";
 import { logger as MainLogger } from "../lib/logger";
 import { passport } from "../lib/passport";
 import { emitSocket, emitSocketAndWait } from "../lib/socket";
@@ -29,7 +30,25 @@ AuthAPIRoutes.post(
 
 AuthAPIRoutes.get("/logout", (req, res) => {
     req.logout();
+    // @ts-ignore
+    const { socketId } = req.session;
+    if (socketId) {
+        eventsEmit.emit("forcenuke", socketId);
+    }
     res.redirect("/");
+});
+
+// TODO: Remove this later before production.
+AuthAPIRoutes.post("/samplenotif", (req, res) => {
+    eventsEmit.emit(
+        "notifforward",
+        JSON.stringify({
+            // @ts-ignore
+            id: req.user.id,
+            data: { id: "aaaaaaaa", msg: "bbbbbbbbbbbbb", read: false, ts: new Date().getTime() / 1000 },
+        })
+    );
+    res.send("OK");
 });
 
 function checkStringValid(data: any): boolean {
