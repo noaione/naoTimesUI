@@ -21,6 +21,20 @@ export function isNone(value: any): value is NoneType {
     return typeof value === "undefined" || value === null;
 }
 
+/**
+ * Convert a string/number to a number using fallback if it's NaN (Not a number).
+ * If fallback is not specified, it will return to_convert.
+ * @param cb parseFloat or parseInt function that will be run
+ * @param to_convert number or string to convert
+ * @param fallback fallback number
+ */
+export function fallbackNaN<F extends Function, T, S>(cb: F, to_convert: T, fallback?: S): T | S {
+    if (Number.isNaN(cb(to_convert))) {
+        return isNone(fallback) ? to_convert : fallback;
+    }
+    return cb(to_convert);
+}
+
 export function determineSeason(month: number): number {
     if (month >= 0 && month <= 2) {
         return 0;

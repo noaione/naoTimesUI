@@ -70,7 +70,7 @@ export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     });
 }
 
-export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any) {
+export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any): Promise<any> {
     const client = createNewSocket();
     // eslint-disable-next-line no-underscore-dangle
     const _logger = MainLoggger.child({ cls: "SocketConn", fn: "emitSocket" });
