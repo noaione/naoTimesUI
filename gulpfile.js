@@ -21,7 +21,7 @@ const loggerMain = winston.createLogger({
         winston.format.colorize({ level: true, message: false }),
         winston.format.timestamp(),
         winston.format.printf((info) => {
-            let initformat = `[${info["timestamp"]}][${info.level}]`;
+            let initformat = `[${info.timestamp}][${info.level}]`;
             const squareMode = _.get(info, "squared", false);
             if (_.has(info, "fn") && _.has(info, "cls")) {
                 if (squareMode) {
@@ -29,7 +29,7 @@ const loggerMain = winston.createLogger({
                 } else {
                     initformat += " ";
                 }
-                initformat += `\u001b[35m${info["cls"]}\u001b[39m.\u001b[36m${info["fn"]}\u001b[39m`;
+                initformat += `\u001b[35m${info.cls}\u001b[39m.\u001b[36m${info.fn}\u001b[39m`;
                 if (squareMode) {
                     initformat += "]";
                 } else {
@@ -41,7 +41,7 @@ const loggerMain = winston.createLogger({
                 } else {
                     initformat += " ";
                 }
-                initformat += `\u001b[35m${info["cls"]}\u001b[39m`;
+                initformat += `\u001b[35m${info.cls}\u001b[39m`;
                 if (squareMode) {
                     initformat += "]";
                 } else {
@@ -53,14 +53,14 @@ const loggerMain = winston.createLogger({
                 } else {
                     initformat += " ";
                 }
-                initformat += `\u001b[36m${info["fn"]}\u001b[39m`;
+                initformat += `\u001b[36m${info.fn}\u001b[39m`;
                 if (squareMode) {
                     initformat += "]";
                 } else {
                     initformat += "()";
                 }
             }
-            return initformat + `: ${info.message}`;
+            return `${initformat}: ${info.message}`;
         })
     ),
     transports: [new winston.transports.Console()],
@@ -98,20 +98,21 @@ function transpile(cb) {
             .src("src/**/*.ts")
             .pipe(swc(JSON.parse(config)))
             .pipe(gulp.dest("dist"));
-    } else {
-        logger.info("Running in non-production mode, not going to transpile ts files");
-        cb();
     }
+    logger.info("Running in non-production mode, not going to transpile ts files");
+    cb();
 }
 
 function css(cb, forceJIT = false) {
+    // eslint-disable-next-line no-nested-ternary
     const extraConf = { mode: forceJIT ? "jit" : isProd ? "jit" : "" };
+    // eslint-disable-next-line global-require
     const mainConf = require("./tailwind.config");
-    const mergedConf = Object.assign({}, mainConf, extraConf);
+    const mergedConf = { ...mainConf, ...extraConf };
     const logger = loggerMain.child({ fn: "css", cls: "GulpTasks" });
     const cssSources = fs.readFileSync("./src/styles/main.pcss", "utf-8");
     const rootPath = path.join(__dirname, "src", "styles");
-    let plugins = [
+    const plugins = [
         postcssImport({ root: rootPath }),
         tailwind(mergedConf),
         autoprefixer,
@@ -171,6 +172,36 @@ function bundle(cb, forceDev = false) {
         });
 }
 
+function bundleNotification(cb, forceDev = false) {
+    const logger = loggerMain.child({ fn: "bundleNotification", cls: "GulpTasks" });
+    let isDev = !isProd;
+    if (forceDev) {
+        isDev = true;
+    }
+    logger.info("Bundling notification.js!");
+    esbuild
+        .build({
+            entryPoints: ["lib/notification.js"],
+            bundle: true,
+            outfile: "public/assets/js/notification.bundle.js",
+            minify: !isDev,
+            platform: "browser",
+            sourcemap: true,
+            target: ["chrome58", "firefox57", "safari11", "edge79", "es2015"],
+            pure: ["console.log", "console.info"], // Strip any info log if minified
+        })
+        .then(() => {
+            logger.info(`Successfully bundled files.`);
+            cb();
+        })
+        .catch((err) => {
+            logger.error("An error occured while trying to bundle JS file");
+            console.error(err);
+            cb(new Error(err));
+        });
+}
+
 exports.bundle = bundle;
+exports.bundleNotification = bundleNotification;
 exports.css = css;
-exports.default = gulp.series(start, clean, transpile, gulp.parallel(css, bundle));
+exports.default = gulp.series(start, clean, transpile, gulp.parallel(css, bundle, bundleNotification));
