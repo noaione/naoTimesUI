@@ -21,5 +21,5 @@ function cssWatch(cb) {
 exports.default = () => {
     watch(["lib/pages/**/*.js", "lib/projects.js", "lib/utils.js"], jsWatch);
     watch(["lib/notification.js", "lib/utils.js"], jsNotifWatch);
-    watch(["src/**/*.css", "src/**/*.ts", "public/**/*.ejs", "lib/**/*.js"], cssWatch);
+    watch(["src/**/*.css", "src/**/*.ts", "public/**/*.ejs", "lib/**/*.js", "src/**/*.pcss"], cssWatch);
 };
