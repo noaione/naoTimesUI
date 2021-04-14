@@ -40,15 +40,16 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-1">
                         <button
                             class="flex text-gray-600 dark:text-gray-300 transition-colors duration-300 ease-in-out hover:text-gray-400 focus:outline-none"
                             onclick="toggleTheme();">
                             <span class="material-icons">mode_night</span>
                         </button>
+                        <%- include("../../_includes/notification", {...locals}) %>
                         <div x-data="{ dropdownOpen: false }" class="relative">
                             <button @click="dropdownOpen = ! dropdownOpen"
-                                class="flex items-center space-x-2 relative focus:outline-none">
+                                class="flex items-center space-x-1 relative focus:outline-none">
                                 <h2 class="text-gray-700 dark:text-gray-300 text-sm hidden sm:block"><%= username %>
                                 </h2>
                                 <span class="material-icons mt-3 h-9 w-9 object-cover dark:text-white">
