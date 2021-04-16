@@ -25,7 +25,7 @@ specifiers:
   '@types/livereload': ^0.9.0
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
-  '@types/mongoose': 5.10.4
+  '@types/mongoose': 5.10.5
   '@types/node': 14.14.37
   '@types/passport-local': 1.0.33
   '@types/select2': 4.0.53
@@ -113,7 +113,7 @@ dependencies:
   mongoose: 5.12.2
   passport: 0.4.1
   passport-local: 1.0.0
-  ts-mongoose: 0.0.24_aead86fe9c08252b38ad7894c500a86f
+  ts-mongoose: 0.0.24_e9a9cdfc549393ecbcc201c1427fc9f3
   winston: 3.3.3
   winston-transport-sentry-node: 1.0.2
 
@@ -140,7 +140,7 @@ devDependencies:
   '@types/livereload': 0.9.0
   '@types/lodash.get': 4.4.6
   '@types/lodash.has': 4.5.6
-  '@types/mongoose': 5.10.4
+  '@types/mongoose': 5.10.5
   '@types/node': 14.14.37
   '@types/passport-local': 1.0.33
   '@types/select2': 4.0.53
@@ -666,8 +666,8 @@ packages:
       '@types/bson': 4.0.3
       '@types/node': 14.14.37
 
-  /@types/mongoose/5.10.4:
-    resolution: {integrity: sha512-U7fNDcTcdaSGzQ3+mlSBeebiYr6eaacJi330LTLOEh8Sm6mXfuec70ag/UXkL+alFm7pfAjFqfc7jEaJEJvAHQ==}
+  /@types/mongoose/5.10.5:
+    resolution: {integrity: sha512-37QMIA954T3n+HSksSNLlxZsqF8fMJu5S4dyPBod6gRxGtsXlQ9jUtL8BE8Seimv99u79eLXI3bggoCnSQ/fxQ==}
     dependencies:
       '@types/mongodb': 3.6.10
       '@types/node': 14.14.37
@@ -6739,13 +6739,13 @@ packages:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
     dev: false
 
-  /ts-mongoose/0.0.24_aead86fe9c08252b38ad7894c500a86f:
+  /ts-mongoose/0.0.24_e9a9cdfc549393ecbcc201c1427fc9f3:
     resolution: {integrity: sha512-BaiyNFqieRqEBnvj2pgWB6/eQJRm7U18kAzDJ92/sfcFx1aQBZeZztzutxr49VVlUvPHxukleIoU/t3VMCBsSA==}
     peerDependencies:
       '@types/mongoose': ^5.10.1
       mongoose: ^5.10.1
     dependencies:
-      '@types/mongoose': 5.10.4
+      '@types/mongoose': 5.10.5
       mongoose: 5.12.2
     dev: false
 
