@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@sentry/node': ^6.2.5
   '@sentry/tracing': ^6.2.5
-  '@swc/cli': 0.1.36
+  '@swc/cli': 0.1.39
   '@swc/core': 1.2.52
   '@tailwindcss/custom-forms': 0.2.1
   '@tailwindcss/forms': 0.3.2
@@ -118,7 +118,7 @@ dependencies:
   winston-transport-sentry-node: 1.0.2
 
 devDependencies:
-  '@swc/cli': 0.1.36_@swc+core@1.2.52
+  '@swc/cli': 0.1.39_@swc+core@1.2.52
   '@swc/core': 1.2.52
   '@tailwindcss/custom-forms': 0.2.1_tailwindcss@2.1.1
   '@tailwindcss/forms': 0.3.2_tailwindcss@2.1.1
@@ -343,8 +343,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /@swc/cli/0.1.36_@swc+core@1.2.52:
-    resolution: {integrity: sha512-2tqcfBl0/vyQMN1tPGq/zSCGHkO1Oeds+O0F7ZKpQ+HUQD/OfHTHb/N874fW7nzeBQQ7BchjTvo5duEk18s4gw==}
+  /@swc/cli/0.1.39_@swc+core@1.2.52:
+    resolution: {integrity: sha512-qTI+HIjSgKUJUKZ3xGA6zAEkHryirmKrzj4zWrCg4FQnAEFGPOIx58/qRs3aURSOS3BnbVE33sqAxEN+v8qZpw==}
     engines: {node: '>= 12.13'}
     hasBin: true
     peerDependencies:
