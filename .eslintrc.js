@@ -3,32 +3,19 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     plugins: ["@typescript-eslint"],
     extends: [
-        "airbnb-base/legacy",
-        "eslint-config-airbnb-base/whitespace",
+        "eslint:recommended",
+        "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:import/errors",
-        "plugin:import/warnings",
-        "plugin:import/typescript",
         "prettier",
     ],
     env: {
         node: true,
         es6: true,
+        browser: true,
     },
     settings: {
         react: {
             version: "detect",
-        },
-        "import/parsers": {
-            "@typescript-eslint/parser": [".ts", ".tsx"],
-        },
-        "import/resolver": {
-            typescript: {
-                alwaysTryTypes: true,
-            },
-            node: {
-                extensions: [".ts", ".js"],
-            },
         },
     },
     rules: {
@@ -93,17 +80,6 @@ module.exports = {
                 argsIgnorePattern: "^_",
             },
         ],
-        "import/no-named-as-default-member": "off",
-        "import/order": [
-            "error",
-            {
-                alphabetize: { order: "asc", caseInsensitive: true },
-                "newlines-between": "always",
-                groups: ["builtin", "external", "internal", "sibling", "parent", "index", "object"],
-            },
-        ],
-        "import/extensions": "off",
-        "import/prefer-default-export": "off",
         radix: "off",
         "no-plusplus": "off",
         "no-await-in-loop": "off",
@@ -113,6 +89,9 @@ module.exports = {
         "no-continue": "off",
         "no-underscore-dangle": ["warn", { allowFunctionParams: true }],
         "dot-notation": ["warn", { allowPattern: "^[a-z]+(_[a-z]+)+$" }],
+        "react/react-in-jsx-scope": 0,
+        "react/display-name": 0,
+        "react/prop-types": 0,
     },
     overrides: [
         {

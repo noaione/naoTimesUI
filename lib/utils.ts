@@ -1,5 +1,5 @@
+import { DateTime } from "luxon";
 import { get, has } from "lodash";
-import moment from "moment-timezone";
 
 import { ShowAnimeProps, ShowtimesProps } from "../models/show";
 
@@ -21,6 +21,20 @@ export function isNone(value: any): value is NoneType {
     return typeof value === "undefined" || value === null;
 }
 
+/**
+ * Convert a string/number to a number using fallback if it's NaN (Not a number).
+ * If fallback is not specified, it will return to_convert.
+ * @param cb parseFloat or parseInt function that will be run
+ * @param to_convert number or string to convert
+ * @param fallback fallback number
+ */
+export function fallbackNaN<F extends Function, T, S>(cb: F, to_convert: T, fallback?: S): T | S {
+    if (Number.isNaN(cb(to_convert))) {
+        return isNone(fallback) ? to_convert : fallback;
+    }
+    return cb(to_convert);
+}
+
 export function determineSeason(month: number): number {
     if (month >= 0 && month <= 2) {
         return 0;
@@ -37,6 +51,7 @@ export function determineSeason(month: number): number {
     if (month >= 12) {
         return 0;
     }
+    return -1;
 }
 
 export function seasonNaming(season: 0 | 1 | 2 | 3): string {
@@ -116,6 +131,7 @@ export function romanizeNumber(number: number): string {
     let roman = "";
     let i = 3;
     while (i--) {
+        // @ts-ignore
         roman = (romankeys[+digits.pop() + i * 10] || "") + roman;
     }
     return Array(+digits.join("") + 1).join("M") + roman;
@@ -137,21 +153,21 @@ function parseAnilistDate(dateKey: { year?: number; month?: number; day?: number
     // Year
     const year = get(dateKey, "year", null);
     if (!isNone(year)) {
-        extensions.push("YYYY");
+        extensions.push("yyyy");
         dates.push(year.toString());
     }
 
     // Month
     const month = get(dateKey, "month", null);
-    if (!isNone(year)) {
+    if (!isNone(month)) {
         extensions.push("M");
         dates.push(month.toString());
     }
 
     // Day
     const day = get(dateKey, "day", null);
-    if (!isNone(year)) {
-        extensions.push("D");
+    if (!isNone(day)) {
+        extensions.push("d");
         dates.push(day.toString());
     }
 
@@ -159,8 +175,8 @@ function parseAnilistDate(dateKey: { year?: number; month?: number; day?: number
         // Not enough data
         return null;
     }
-    const parsed = moment(dates.join("-"), extensions.join("-"), true);
-    return parsed.unix();
+    const parsed = DateTime.fromFormat(dates.join("-"), extensions.join("-"), { zone: "UTC" });
+    return Math.floor(parsed.toSeconds());
 }
 
 function intToStr(numberino: any): string {
@@ -208,7 +224,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         status: [],
         aliases: [],
         kolaborasi: [],
-        last_update: moment.utc().unix(),
+        last_update: Math.floor(DateTime.utc().toSeconds()),
     };
 
     const airingSchedules: any[] = get(rawResults, "airingSchedule.nodes", []);

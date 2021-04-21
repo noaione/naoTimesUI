@@ -1,17 +1,10 @@
 import net from "net";
-import path from "path";
 import { promisify } from "util";
 
-import dotenv from "dotenv";
-
-import { logger as MainLoggger } from "./logger";
 import { isNone } from "./utils";
 
 const sleep = promisify(setTimeout);
 
-const logger = MainLoggger.child({ cls: "SocketConn" });
-dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
-logger.info(`Preparing a saved host:port at ${process.env.BOT_SOCKET_HOST}:${process.env.BOT_SOCKET_PORT}`);
 type SocketEvent =
     | "authenticate"
     | "pull data"
@@ -51,45 +44,30 @@ function createNewSocket() {
 
 export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
-    // eslint-disable-next-line no-underscore-dangle
-    const _logger = MainLoggger.child({ cls: "SocketConn", fn: "emitSocket" });
 
     client.on("connect", () => {
         const addr = client.address();
-        _logger.info("Connectioon established!");
-        _logger.info("Client Info:");
-        // @ts-ignore
-        _logger.info(`Listening at port: ${addr.port}`);
         // @ts-ignore
         const ipaddr = addr.address;
-        _logger.info(`Client IP:${ipaddr}`);
 
         client.write(`${JSON.stringify({ event, data })}\x04`);
-        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event, data })}`);
         client.end();
     });
 }
 
-export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any) {
+export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any): Promise<any> {
     const client = createNewSocket();
     // eslint-disable-next-line no-underscore-dangle
-    const _logger = MainLoggger.child({ cls: "SocketConn", fn: "emitSocket" });
 
     let isConnected = false;
     let queryResponse: Buffer;
     client.on("connect", () => {
         isConnected = true;
         const addr = client.address();
-        _logger.info("Connectioon established!");
-        _logger.info("Client Info:");
-        // @ts-ignore
-        _logger.info(`Listening at port: ${addr.port}`);
         // @ts-ignore
         const ipaddr = addr.address;
-        _logger.info(`Client IP:${ipaddr}`);
 
         client.write(`${JSON.stringify({ event, data })}\x04`);
-        _logger.info(`Sending event ${event} with data ${JSON.stringify({ event, data })}`);
     });
 
     client.on("data", (sdata) => {
@@ -100,10 +78,10 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     while (!isConnected) {
         await sleep(500);
     }
+    // @ts-ignore
     while (isNone(queryResponse)) {
         await sleep(500);
     }
-    _logger.info(`Received answer for event ${event}: ${queryResponse}`);
     let parsedData = queryResponse.toString();
     if (parsedData.endsWith("\x04")) {
         parsedData = parsedData.replace("\x04", "");
@@ -115,17 +93,14 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     if (JSONified.success === -1) {
         // Need auth, redo the whole thing.
         if (isNone(process.env.BOT_SOCKET_PASSWORD)) {
-            _logger.error("Server requested authentication but there's no password provided");
             throw new Error("Bot socket need authentication and there's no provided password in ENV file");
         }
         try {
-            _logger.info("Server requested authentication, authenticating with provided password");
             await emitSocketAndWait("authenticate", process.env.BOT_SOCKET_PASSWORD);
         } catch (e) {
             throw new Error("Wrong password for authenticating, cannot emit the original event");
         }
         try {
-            _logger.info("Authentication completed, emitting the original event again.");
             return await emitSocketAndWait(event, data);
         } catch (e) {
             throw new Error(e.toString().replace("Error: ", ""));
