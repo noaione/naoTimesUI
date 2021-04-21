@@ -121,7 +121,7 @@
     "prettier": "2.2.1",
     "shelljs": "0.8.4",
     "tailwindcss": "2.1.1",
-    "tom-select": "1.4.3",
+    "tom-select": "1.5.0",
     "ts-node": "9.1.1",
     "typescript": "4.2.4"
   }
