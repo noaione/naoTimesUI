@@ -215,7 +215,9 @@ async function deleteAndUnlinkEverything(serverId: string) {
     await UserModel.deleteOne({ id: { $eq: serverId } });
     logger.info("Cleaning up...");
     emitSocket("delete server", serverId);
-    emitSocket("delete roles", { id: serverId, roles: removeRoles });
+    if (removeRoles.length > 0) {
+        emitSocket("delete roles", { id: serverId, roles: removeRoles });
+    }
 }
 
 APIDeleteRoutes.delete("/server", ensureLoggedIn("/"), async (req, res) => {
