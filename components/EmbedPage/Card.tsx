@@ -168,7 +168,11 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                     <div>
                                         {reactStringReplace(lastUpdated, "{0}", () => {
                                             return (
-                                                <ReactTimeAgoLocale unix={last_update} locale={realLang} />
+                                                <ReactTimeAgoLocale
+                                                    key={`utang-${id}-ts-${last_update}`}
+                                                    unix={last_update}
+                                                    locale={realLang}
+                                                />
                                             );
                                         })}
                                     </div>
