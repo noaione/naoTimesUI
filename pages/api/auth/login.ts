@@ -16,6 +16,8 @@ export default withSession(async (req, res) => {
                 req.session.set("user", user);
                 await req.session.save();
                 res.json({ loggedIn: true, id, privilege, name });
+            } else {
+                res.status(401).json({ error: "Password salah" });
             }
         } else {
             res.status(401).jsoN({ error: "Tidak dapat menemukan ID tersebut!" });
