@@ -31,6 +31,10 @@ function getSeason(month: number, year: number, locale: Locale): string {
     }
 }
 
+const borderTop = {
+    borderTopWidth: "3px",
+};
+
 interface EmbedPageCardProps extends IEmbedParams {
     animeData: ShowAnimeProps;
 }
@@ -77,9 +81,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
         const next3Episode = unfinishedEpisode.slice(1, 4);
 
         const bordering =
-            realAccent === "none"
-                ? "border-none"
-                : `rounded-t-none border-t-3 border-${realAccent}-500 dark:border-${realAccent}-400`;
+            realAccent === "none" ? "border-none" : `rounded-t-none border-t-4 role-accent-${realAccent}`;
 
         const buttonColor = dropdownOpen
             ? "text-gray-500 hover:text-gray-400 dark:text-gray-300"
@@ -97,6 +99,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         "shadow-md rounded-md overflow-hidden flex flex-row items-start relative bg-white dark:bg-gray-800 " +
                         bordering
                     }
+                    style={realAccent === "nonde" ? {} : borderTop}
                 >
                     <div className="hidden sm:block w-24 mt-3 ml-3 mb-8 relative flex-none">
                         <img
@@ -131,14 +134,24 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                         );
                                     })}
                                 </div>
-                                <button className={"flex flex-row mt-2 transition-colors " + buttonColor}>
+                                <button
+                                    onClick={this.toggleDrop}
+                                    className={
+                                        "flex flex-row mt-2 items-center transition hover:opacity-80 focus:outline-none " +
+                                        buttonColor
+                                    }
+                                >
                                     <div className="h-5 w-5">
-                                        {dropdownOpen ? <ChevronUp /> : <ChevronDown />}
+                                        {dropdownOpen ? (
+                                            <ChevronUp className="-ml-1" />
+                                        ) : (
+                                            <ChevronDown className="-ml-1" />
+                                        )}
                                     </div>
                                     {dropdownOpen ? (
-                                        <div>{translate("DROPDOWN.RETRACT", realLang)}</div>
+                                        <div className="mt-1">{translate("DROPDOWN.RETRACT", realLang)}</div>
                                     ) : (
-                                        <div>
+                                        <div className="mt-1">
                                             {translate("DROPDOWN.EXPAND", realLang, [
                                                 next3Episode.length.toString(),
                                             ])}

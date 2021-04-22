@@ -95,7 +95,6 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     toggleDropdown() {
-        console.info(`toggle dropdown from ${this.state.dropdownOpen}`);
         this.setState({ dropdownOpen: !this.state.dropdownOpen });
     }
 

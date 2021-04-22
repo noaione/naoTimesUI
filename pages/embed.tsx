@@ -4,13 +4,14 @@ import { GetServerSidePropsContext } from "next";
 
 import _ from "lodash";
 
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../models/show";
+import { ShowAnimeProps, ShowtimesModel } from "../models/show";
 import { isNone, mapBoolean, Nullable } from "../lib/utils";
 import { IEmbedParams } from "../components/EmbedPage/Interface";
 import EmbedPageCard from "../components/EmbedPage/Card";
+import dbConnect from "../lib/dbConnect";
 
 interface EmbedUtangProps extends IEmbedParams {
-    data: ShowtimesProps;
+    projectList: ShowAnimeProps[];
 }
 
 interface EmbedUtangState {
@@ -65,9 +66,9 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     render() {
-        const { id, data, lang, dark, accent } = this.props;
+        const { id, projectList, lang, dark, accent } = this.props;
 
-        const animeData = filterAnimeData(data.anime);
+        const animeData = filterAnimeData(projectList);
         if (animeData.length < 1) {
             return (
                 <>
@@ -129,18 +130,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         };
     }
 
-    const serverRes = await ShowtimesModel.find({ id: { $eq: newParamsSets.id } });
+    await dbConnect();
+    const serverRes = await ShowtimesModel.find({ id: { $eq: newParamsSets.id } }).lean();
     if (serverRes.length < 1) {
         return {
             notFound: true,
         };
     }
 
-    const firstOccurences = serverRes[0];
+    const firstOccurences = serverRes;
 
     return {
         props: {
-            data: firstOccurences,
+            projectList: firstOccurences[0].anime,
             ...newParamsSets,
         },
     };

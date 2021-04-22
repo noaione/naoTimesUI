@@ -57,42 +57,53 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         </>
                     );
                     shouldRenderPill = true;
+                } else {
+                    content = (
+                        <>
+                            <div slot="2" className="flex gap-1 mt-1">
+                                <span className="text-lg font-light">
+                                    {translate("WAITING_RELEASE", realLang)}
+                                </span>
+                            </div>
+                        </>
+                    );
                 }
             } else {
-                content = (
-                    <>
-                        <div slot="2" className="flex gap-1 mt-1">
-                            <span className="text-lg font-light">
-                                {translate("WAITING_RELEASE", realLang)}
-                            </span>
-                        </div>
-                    </>
-                );
+                if (airingAt) {
+                    const isoDate = DateTime.fromSeconds(airingAt, { zone: "UTC" }).toISO();
+                    content = (
+                        <>
+                            <div>
+                                <time slot="1" dateTime={isoDate}>
+                                    {translate("AIRED", realLang, [timeAgoLocale(airingAt, realLang)])}
+                                </time>
+                            </div>
+                            <div>
+                                <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
+                            </div>
+                        </>
+                    );
+                } else {
+                    content = (
+                        <>
+                            <div>
+                                <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
+                            </div>
+                        </>
+                    );
+                }
             }
         } else {
-            if (airingAt) {
-                const isoDate = DateTime.fromSeconds(airingAt, { zone: "UTC" }).toISO();
-                content = (
-                    <>
-                        <div>
-                            <time slot="1" dateTime={isoDate}>
-                                {translate("AIRED", realLang, [timeAgoLocale(airingAt, realLang)])}
-                            </time>
-                        </div>
-                        <div>
-                            <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
-                        </div>
-                    </>
-                );
-            } else {
-                content = (
-                    <>
-                        <div>
-                            <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
-                        </div>
-                    </>
-                );
-            }
+            const isoDate = DateTime.fromSeconds(airingAt, { zone: "UTC" }).toISO();
+            content = (
+                <>
+                    <div>
+                        <time slot="1" dateTime={isoDate}>
+                            {translate("AIRED", realLang, [timeAgoLocale(airingAt, realLang)])}
+                        </time>
+                    </div>
+                </>
+            );
         }
 
         return (

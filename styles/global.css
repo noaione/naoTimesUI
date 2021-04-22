@@ -4,5 +4,6 @@
 @import "./components/fontstyle.css";
 @import "./components/stackshadow.css";
 @import "./components/bootstrap-modal.css";
+@import "./components/extras.css";
 
 @import "tailwindcss/utilities";
