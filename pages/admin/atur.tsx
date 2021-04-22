@@ -67,7 +67,6 @@ class SettingsHomepage extends React.Component<{}, SettingsHomepageState> {
                 <AdminLayout user={user} title="Pengaturan" active="settings">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Settings</h2>
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4"></div>
                     </div>
                 </AdminLayout>
             </>

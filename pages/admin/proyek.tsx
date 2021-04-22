@@ -67,7 +67,6 @@ class ProyekHomepage extends React.Component<{}, ProyekHomepageState> {
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Proyek</h2>
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4"></div>
                     </div>
                 </AdminLayout>
             </>
