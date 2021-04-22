@@ -1,6 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
+@import "./components/fontstyle.css";
 @import "./components/stackshadow.css";
 @import "./components/bootstrap-modal.css";
 
