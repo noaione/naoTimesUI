@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { createSchema, ExtractProps, Type, typedModel } from "ts-mongoose";
 
 export const UserPrivilege = ["server", "owner"] as const;
@@ -17,4 +18,6 @@ const UserSchemas = createSchema(
 );
 
 export type UserProps = ExtractProps<typeof UserSchemas>;
-export const UserModel = typedModel("showtimesuilogin", UserSchemas, "showtimesuilogin");
+export const UserModel =
+    mongoose.connection.models.showtimesuilogin ||
+    typedModel("showtimesuilogin", UserSchemas, "showtimesuilogin");

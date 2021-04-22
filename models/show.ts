@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { createSchema, ExtractProps, Type, typedModel } from "ts-mongoose";
 
 const ShowAnimeSchemas = createSchema(
@@ -102,5 +103,8 @@ const ShowAdminSchemas = createSchema(
 export type ShowAnimeProps = ExtractProps<typeof ShowAnimeSchemas>;
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
 export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
-export const ShowtimesModel = typedModel("showtimesdatas", ShowtimesSchemas);
-export const ShowAdminModel = typedModel("showtimesadmin", ShowAdminSchemas, "showtimesadmin");
+export const ShowtimesModel =
+    mongoose.connection.models.showtimesdatas || typedModel("showtimesdatas", ShowtimesSchemas);
+export const ShowAdminModel =
+    mongoose.connection.models.showtimesadmin ||
+    typedModel("showtimesadmin", ShowAdminSchemas, "showtimesadmin");

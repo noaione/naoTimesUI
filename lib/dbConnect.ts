@@ -7,31 +7,38 @@ if (!MONGODB_URI) {
 }
 
 // @ts-ignore
-let cached = global.mongoose;
-if (!cached) {
+if (!global.mongoose) {
     // @ts-ignore
-    cached = global.mongoose = { conn: null, promise: null };
+    global.mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect() {
-    if (cached.conn) {
-        return cached.conn;
+    // @ts-ignore
+    if (global.mongoose.conn) {
+        // @ts-ignore
+        return global.mongoose.conn;
     }
 
-    if (!cached.promise) {
+    // @ts-ignore
+    if (!global.mongoose.promise) {
         const opts = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+            bufferCommands: false,
+            bufferMaxEntries: 0,
             useFindAndModify: false,
             useCreateIndex: true,
         };
 
-        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+        // @ts-ignore
+        global.mongoose.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
             return mongoose;
         });
     }
-    cached.conn = await cached.promise;
-    return cached.conn;
+    // @ts-ignore
+    global.mongoose.conn = await global.mongoose.promise;
+    // @ts-ignore
+    return global.mongoose.conn;
 }
 
 export default dbConnect;
