@@ -11,7 +11,7 @@ class NotFoundPage extends React.Component {
                     <HeaderBase />
                     <title>404 :: naoTimesUI</title>
                 </Head>
-                <div className="bg-gray-800 text-white h-screen text-center w-screen flex flex-col items-center justify-center">
+                <div className="bg-gray-900 text-white h-screen text-center w-screen flex flex-col items-center justify-center">
                     <div>
                         <h1 className="inline-block border-r border-gray-300 m-0 mr-5 py-3 pr-6 pl-0 text-2xl font-semibold align-top">
                             404
