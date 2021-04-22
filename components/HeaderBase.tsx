@@ -8,6 +8,7 @@ export default function HeaderBase() {
             <link rel="icon" type="image/png" href="/assets/favicon.png" />
             <link rel="icon" href="/assets/favicon.ico" />
             <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <meta name="theme-color" content="#383838" />
             <link
                 href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
                 rel="stylesheet"
