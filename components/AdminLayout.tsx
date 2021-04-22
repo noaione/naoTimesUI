@@ -42,7 +42,9 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
         if (typeof overflowX === "boolean") {
             realOverflowX = overflowX;
         }
-        const appInfo = { semver: version };
+        const { VERCEL_GIT_COMMIT_SHA } = process.env;
+        const commit = VERCEL_GIT_COMMIT_SHA || "";
+        const appInfo = { semver: version, commit };
         return (
             <>
                 <div className="flex h-screen bg-gray-100 dark:bg-gray-800 font-roboto transition-colors duration-300">
