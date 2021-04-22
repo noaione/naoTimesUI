@@ -1,37 +1,38 @@
 import React from "react";
 import Head from "next/head";
-import Router from "next/router";
 
+import withSession from "../../lib/session";
 import { UserProps } from "../../models/user";
 import AdminLayout from "../../components/AdminLayout";
 import HeaderBase from "../../components/HeaderBase";
 
 interface ProyekHomepageState {
-    isAuthenticating: boolean;
     isLoading: boolean;
-    user?: UserProps & { loggedIn: boolean };
 
     animeData?: { [key: string]: any };
 }
 
-class ProyekHomepage extends React.Component<{}, ProyekHomepageState> {
-    constructor(props: {}) {
+interface ProyekHomepageProps {
+    user?: UserProps & { loggedIn: boolean };
+}
+
+class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepageState> {
+    constructor(props: ProyekHomepageProps) {
         super(props);
         this.state = {
-            isAuthenticating: true,
             isLoading: true,
         };
     }
 
     async componentDidMount() {
-        const userObj = await fetch("/api/auth/user");
-        const jsonResp = await userObj.json();
-        if (jsonResp.loggedIn) {
-            this.setState({ isAuthenticating: false, user: jsonResp });
-        } else {
-            this.setState({ isAuthenticating: false });
-            Router.push("/");
-        }
+        // const userObj = await fetch("/api/auth/user");
+        // const jsonResp = await userObj.json();
+        // if (jsonResp.loggedIn) {
+        //     this.setState({ isAuthenticating: false, user: jsonResp });
+        // } else {
+        //     this.setState({ isAuthenticating: false });
+        //     Router.push("/");
+        // }
     }
 
     componentDidUpdate() {
@@ -41,20 +42,7 @@ class ProyekHomepage extends React.Component<{}, ProyekHomepageState> {
     }
 
     render() {
-        if (this.state.isAuthenticating || !this.state.user) {
-            return (
-                <>
-                    <Head>
-                        <title>naoTimesUI</title>
-                        <meta name="description" content="Sebuah WebUI untuk naoTimes" />
-                        <HeaderBase />
-                    </Head>
-                    <main className="bg-white dark:bg-gray-900"></main>
-                </>
-            );
-        }
-
-        const { user } = this.state;
+        const { user } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
 
         return (
@@ -73,5 +61,20 @@ class ProyekHomepage extends React.Component<{}, ProyekHomepageState> {
         );
     }
 }
+
+export const getServerSideProps = withSession(async function ({ req, _s }) {
+    const user = req.session.get("user");
+
+    if (!user) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false,
+            },
+        };
+    }
+
+    return { props: { user: { loggedIn: true, ...user } } };
+});
 
 export default ProyekHomepage;

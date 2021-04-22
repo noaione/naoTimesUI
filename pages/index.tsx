@@ -1,9 +1,11 @@
 import React from "react";
+import Head from "next/head";
 import Router from "next/router";
 
 import LockOutlineIcon from "mdi-react/LockOutlineIcon";
 import ServerIcon from "mdi-react/ServerIcon";
-import Head from "next/head";
+
+import withSession from "../lib/session";
 import HeaderBase from "../components/HeaderBase";
 
 interface LoginState {
@@ -17,16 +19,6 @@ class LoginPage extends React.Component<{}, LoginState> {
         this.state = {
             errorMsg: "",
         };
-    }
-
-    async componentDidMount() {
-        const response = await fetch("/api/auth/user");
-        try {
-            const json = await response.json();
-            if (json.loggedIn) {
-                Router.push("/admin");
-            }
-        } catch (err) {}
     }
 
     async onSubmit(e: React.FormEvent<Element>) {
@@ -188,5 +180,20 @@ class LoginPage extends React.Component<{}, LoginState> {
         );
     }
 }
+
+export const getServerSideProps = withSession(async function ({ req, _s }) {
+    const user = req.session.get("user");
+
+    if (user) {
+        return {
+            redirect: {
+                destination: "/admin",
+                permanent: false,
+            },
+        };
+    }
+
+    return { props: {} };
+});
 
 export default LoginPage;
