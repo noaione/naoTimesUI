@@ -112,7 +112,7 @@ class LoginPage extends React.Component<{}, LoginState> {
                                 <div>
                                     <form onSubmit={this.onSubmit}>
                                         <div className="flex -mx-3">
-                                            <div className="w-full px-3 mb-12">
+                                            <div className="w-full px-3 mb-6">
                                                 <label className="text-xs font-semibold px-1">
                                                     Server ID
                                                 </label>
@@ -131,7 +131,7 @@ class LoginPage extends React.Component<{}, LoginState> {
                                             </div>
                                         </div>
                                         <div className="flex -mx-3">
-                                            <div className="w-full px-3 mb-12">
+                                            <div className="w-full px-3 mb-6">
                                                 <label className="text-xs font-semibold px-1">Password</label>
                                                 <div className="flex">
                                                     <div className="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">

@@ -1,10 +1,10 @@
 import React from "react";
 import Head from "next/head";
 
-import withSession from "../../lib/session";
-import { UserProps } from "../../models/user";
-import AdminLayout from "../../components/AdminLayout";
-import HeaderBase from "../../components/HeaderBase";
+import withSession from "../../../lib/session";
+import { UserProps } from "../../../models/user";
+import AdminLayout from "../../../components/AdminLayout";
+import HeaderBase from "../../../components/HeaderBase";
 
 interface ProyekHomepageState {
     isLoading: boolean;
