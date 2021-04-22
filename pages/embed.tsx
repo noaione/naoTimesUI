@@ -80,6 +80,8 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         const { id, name, projectList, lang, dark, accent } = this.props;
         const realName = name || id;
 
+        const prefixName = name ? "nama" : "ID";
+
         const encodedName = encodeURIComponent(realName);
 
         const animeData = filterAnimeData(projectList);
@@ -90,12 +92,12 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                         <title>Utang - {realName} :: naoTimes WebUI</title>
                         <meta
                             name="description"
-                            content={`Sebuah daftar utang untuk Fansub dengan ID/Nama ${realName}, tidak ada utang!`}
+                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
                         />
                         <meta property="og:title" content={"Utang " + realName} />
                         <meta
                             property="og:description"
-                            content={`Sebuah daftar utang untuk Fansub dengan ID/Nama ${realName}, tidak ada utang!`}
+                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
                         />
                         <meta
                             property="og:image"
@@ -103,6 +105,13 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                         />
                         <meta property="og:site_name" content="naoTimes WebUI" />
                         <meta property="og:type" content="website" />
+                        <meta name="twitter:card" content="summary_large_image" />
+                        <meta name="twitter:creator" content="@nao0809_" />
+                        <meta name="twitter:title" content={"Utang " + realName} />
+                        <meta
+                            property="twitter:description"
+                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
+                        />
                     </Head>
                     <div id="root">
                         <div className="text-center text-2xl font-light mt-4">Tidak ada utang garapan!</div>
@@ -119,12 +128,12 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     <title>Utang - {realName} :: naoTimes WebUI</title>
                     <meta
                         name="description"
-                        content={`Sebuah daftar utang untuk Fansub dengan ID/Nama ${realName}, terdapat ${projectData.length} utang!`}
+                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
                     />
                     <meta property="og:title" content={"Utang " + realName} />
                     <meta
                         property="og:description"
-                        content={`Sebuah daftar utang untuk Fansub dengan ID/Nama ${realName}, terdapat ${projectData.length} utang!`}
+                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
                     />
                     <meta
                         property="og:image"
@@ -132,6 +141,13 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     />
                     <meta property="og:site_name" content="naoTimes WebUI" />
                     <meta property="og:type" content="website" />
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="twitter:creator" content="@nao0809_" />
+                    <meta name="twitter:title" content={"Utang " + realName} />
+                    <meta
+                        property="twitter:description"
+                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
+                    />
                 </Head>
                 <div id="root">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
