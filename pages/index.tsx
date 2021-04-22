@@ -11,6 +11,7 @@ interface LoginState {
 class LoginPage extends React.Component<{}, LoginState> {
     constructor(props: any) {
         super(props);
+        this.onSubmit = this.onSubmit.bind(this);
         this.state = {
             errorMsg: "",
         };
