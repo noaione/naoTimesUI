@@ -6,6 +6,7 @@ specifiers:
   '@fortawesome/react-fontawesome': ^0.1.14
   '@headlessui/react': ^1.0.0
   '@tailwindcss/custom-forms': ^0.2.1
+  '@types/javascript-time-ago': ^2.0.2
   '@types/lodash': ^4.14.168
   '@types/luxon': ^1.26.4
   '@types/mongoose': ^5.10.5
@@ -21,6 +22,7 @@ specifiers:
   eslint-config-prettier: ^8.2.0
   eslint-plugin-import: ^2.22.1
   eslint-plugin-react: ^7.23.2
+  javascript-time-ago: ^2.3.4
   lodash: ^4.17.21
   luxon: ^1.26.0
   mdi-react: ^7.5.0
@@ -33,6 +35,7 @@ specifiers:
   prettier: ^2.2.1
   react: ^17.0.2
   react-dom: ^17.0.2
+  react-string-replace: ^0.4.4
   react-time-ago: ^6.2.2
   reactstrap: ^8.9.0
   tailwindcss: ^2.1.1
@@ -46,6 +49,7 @@ dependencies:
   '@headlessui/react': 1.0.0_react@17.0.2
   body-parser: 1.19.0
   bootstrap: 4.6.0
+  javascript-time-ago: 2.3.4
   lodash: 4.17.21
   luxon: 1.26.0
   mdi-react: 7.5.0_react@17.0.2
@@ -54,12 +58,14 @@ dependencies:
   next-iron-session: 4.1.13
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  react-string-replace: 0.4.4
   react-time-ago: 6.2.2_react-dom@17.0.2+react@17.0.2
   reactstrap: 8.9.0_react-dom@17.0.2+react@17.0.2
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
 
 devDependencies:
   '@tailwindcss/custom-forms': 0.2.1_tailwindcss@2.1.1
+  '@types/javascript-time-ago': 2.0.2
   '@types/lodash': 4.14.168
   '@types/luxon': 1.26.4
   '@types/mongoose': 5.10.5
@@ -347,6 +353,10 @@ packages:
   /@types/cookie/0.4.0:
     resolution: {integrity: sha512-y7mImlc/rNkvCRmg8gC3/lj87S7pTUIJ6QGjwHR9WQJcFs+ZMTOaoPrkdFA/YdbuqVEmEbb5RdhVxMkAcgOnpg==}
     dev: false
+
+  /@types/javascript-time-ago/2.0.2:
+    resolution: {integrity: sha512-uBUXwIG8YzPuWw5c6yV5RGvskkNOxnR+9hctOv8cptyMlB0IgfzeqFo0jkK+Ich8zGchvWghOT3Ryqr3bZmH3A==}
+    dev: true
 
   /@types/json-schema/7.0.7:
     resolution: {integrity: sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==}
@@ -3996,6 +4006,13 @@ packages:
   /react-refresh/0.8.3:
     resolution: {integrity: sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /react-string-replace/0.4.4:
+    resolution: {integrity: sha512-FAMkhxmDpCsGTwTZg7p/2v+/GTmxAp73so3fbSvlAcBBX36ujiGRNEaM/1u+jiYQrArhns+7eE92g2pi5E5FUA==}
+    engines: {node: '>=0.12.0'}
+    dependencies:
+      lodash: 4.17.21
     dev: false
 
   /react-time-ago/6.2.2_react-dom@17.0.2+react@17.0.2:

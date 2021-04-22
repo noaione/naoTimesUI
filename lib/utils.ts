@@ -35,6 +35,44 @@ export function fallbackNaN<F extends Function, T, S>(cb: F, to_convert: T, fall
     return cb(to_convert);
 }
 
+export function mapBoolean<T extends any>(input_data: T): boolean {
+    if (isNone(input_data)) {
+        return false;
+    }
+    let fstat = false;
+    let data: any;
+    if (typeof input_data === "string") {
+        data = input_data.toLowerCase() as string;
+    } else if (typeof input_data === "number") {
+        data = input_data.toString().toLowerCase() as string;
+    } else if (typeof input_data === "object") {
+        data = JSON.stringify(input_data);
+    } else {
+        // @ts-ignore
+        data = input_data.toString().toLowerCase();
+    }
+    switch (data) {
+        case "y":
+            fstat = true;
+            break;
+        case "enable":
+            fstat = true;
+            break;
+        case "true":
+            fstat = true;
+            break;
+        case "1":
+            fstat = true;
+            break;
+        case "yes":
+            fstat = true;
+            break;
+        default:
+            break;
+    }
+    return fstat;
+}
+
 export function determineSeason(month: number): number {
     if (month >= 0 && month <= 2) {
         return 0;
