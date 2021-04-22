@@ -52,6 +52,12 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
         };
     }
 
+    componentDidUpdate() {
+        const message = JSON.stringify({ action: "resize", height: window.document.body.scrollHeight });
+        // Broadcast resize action to everyone.
+        window.parent.postMessage(message, "*");
+    }
+
     toggleDrop() {
         const { dropdownOpen } = this.state;
         this.setState({ dropdownOpen: !dropdownOpen });

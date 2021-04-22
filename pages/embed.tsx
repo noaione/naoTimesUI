@@ -17,6 +17,7 @@ interface EmbedUtangProps extends IEmbedParams {
 
 interface EmbedUtangState {
     dropdownOpen: boolean;
+    dark: string;
 }
 
 function selectTime(statusSets: any[]) {
@@ -54,30 +55,56 @@ function filterAnimeData(animeData: ShowAnimeProps[]): ShowAnimeProps[] {
 class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     constructor(props: EmbedUtangProps) {
         super(props);
+        this.toggleDark = this.toggleDark.bind(this);
         this.state = {
             dropdownOpen: false,
+            dark: this.props.dark,
         };
     }
 
     componentDidMount() {
-        const { dark } = this.props;
-        const isDark = mapBoolean(dark);
+        console.info("broadcasting message... (onMount)");
+        const isDark = mapBoolean(this.state.dark);
         if (isDark) {
             window.document.documentElement.classList.add("dark");
         }
         const message = JSON.stringify({ action: "resize", height: window.document.body.scrollHeight });
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
+        // Watch for incoming message
+        console.info("watching for event from parent...");
+        window.addEventListener("message", this.toggleDark);
     }
 
     componentDidUpdate() {
+        console.info("broadcasting message... (onUpdate)");
         const message = JSON.stringify({ action: "resize", height: window.document.body.scrollHeight });
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
     }
 
+    toggleDark(event: MessageEvent<any>) {
+        console.info("got event request, ", event);
+        const data = JSON.parse(event.data);
+        const root = window.document.documentElement;
+        if (data.action === "setDark") {
+            const isDark = mapBoolean(data.target);
+            console.info("enable dark?", isDark);
+            if (isDark) {
+                if (!root.classList.contains("dark")) {
+                    root.classList.add("dark");
+                }
+            } else {
+                if (root.classList.contains("dark")) {
+                    root.classList.remove("dark");
+                }
+            }
+        }
+    }
+
     render() {
-        const { id, name, projectList, lang, dark, accent } = this.props;
+        const { id, name, projectList, lang, accent } = this.props;
+        const { dark } = this.state;
         const realName = name || id;
 
         const prefixName = name ? "nama" : "ID";
