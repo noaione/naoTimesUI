@@ -63,7 +63,6 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     componentDidMount() {
-        console.info("broadcasting message... (onMount)");
         const isDark = mapBoolean(this.state.dark);
         if (isDark) {
             window.document.documentElement.classList.add("dark");
@@ -72,24 +71,20 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
         // Watch for incoming message
-        console.info("watching for event from parent...");
         window.addEventListener("message", this.toggleDark);
     }
 
     componentDidUpdate() {
-        console.info("broadcasting message... (onUpdate)");
         const message = JSON.stringify({ action: "resize", height: window.document.body.scrollHeight });
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
     }
 
     toggleDark(event: MessageEvent<any>) {
-        console.info("got event request, ", event);
         const data = JSON.parse(event.data);
         const root = window.document.documentElement;
         if (data.action === "setDark") {
             const isDark = mapBoolean(data.target);
-            console.info("enable dark?", isDark);
             if (isDark) {
                 if (!root.classList.contains("dark")) {
                     root.classList.add("dark");
