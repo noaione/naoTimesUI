@@ -83,7 +83,6 @@ module.exports = {
         radix: "off",
         "no-plusplus": "off",
         "no-await-in-loop": "off",
-        "no-console": ["warn", { allow: ["warn", "error"] }],
         camelcase: "off",
         "consistent-return": "off",
         "no-continue": "off",
