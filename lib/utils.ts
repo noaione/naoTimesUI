@@ -315,3 +315,39 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
 
     return compiledData;
 }
+
+export function expandRoleName(role: string) {
+    const loweredRole = role.toLowerCase();
+    switch (loweredRole) {
+        case "enc":
+            return "Encode";
+        case "ed":
+            return "Edit";
+        case "tm":
+            return "Timing";
+        default:
+            return role.toUpperCase();
+    }
+}
+
+export function expandRoleLocalized(role: string) {
+    const roleCased = role.toLowerCase();
+    switch (roleCased) {
+        case "tl":
+            return "Penerjemah";
+        case "tlc":
+            return "Pemeriksa Terjemahan";
+        case "enc":
+            return "Peramu Video";
+        case "ed":
+            return "Penyunting";
+        case "ts":
+            return "Penata Rias";
+        case "tm":
+            return "Penyesuai Waktu";
+        case "qc":
+            return "Pemeriksa Akhir";
+        default:
+            return role;
+    }
+}

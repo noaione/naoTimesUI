@@ -6,16 +6,54 @@ import withSession from "../../lib/session";
 import { UserProps } from "../../models/user";
 import AdminLayout from "../../components/AdminLayout";
 import HeaderBase from "../../components/HeaderBase";
+import StatsCard, { IStatsType } from "../../components/StatsCard";
+import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
+import LoadingCircle from "../../components/LoadingCircle";
+
+interface StatsData {
+    key: IStatsType;
+    data: number;
+}
 
 interface AdminHomepageState {
     isLoading: boolean;
 
-    animeData?: { [key: string]: any };
-    statsData?: { [key: string]: any }[];
+    animeData?: { [key: string]: any }[];
+    statsData?: StatsData[];
+}
+
+interface AdminAnimeProps {
+    data?: { [key: string]: any }[];
 }
 
 interface AdminHomepageProps {
     user?: UserProps & { loggedIn: boolean };
+}
+
+class AdminAnimeSets extends React.Component<AdminAnimeProps> {
+    constructor(props: AdminAnimeProps) {
+        super(props);
+    }
+
+    render() {
+        const { data } = this.props;
+
+        return (
+            <>
+                {data.length > 0 ? (
+                    <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
+                        {data.map((res) => {
+                            return (
+                                <IkhtisarAnime key={`anime-card-${res.id}`} data={res as ProjectOverview} />
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="text-lg font-light mt-2">Sudah selesai semua!</div>
+                )}
+            </>
+        );
+    }
 }
 
 class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageState> {
@@ -27,25 +65,29 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
     }
 
     async componentDidMount() {
-        // const userObj = await fetch("/api/auth/user");
-        // const jsonResp = await userObj.json();
-        // if (jsonResp.loggedIn) {
-        //     this.setState({ isAuthenticating: false, user: jsonResp });
-        // } else {
-        //     this.setState({ isAuthenticating: false });
-        //     Router.push("/");
-        // }
-    }
-
-    componentDidUpdate() {
-        if (this.state.animeData && this.state.statsData) {
+        const userObj = await fetch("/api/showtimes/stats");
+        const jsonResp = await userObj.json();
+        const success = [];
+        if (jsonResp.code === 200) {
+            this.setState({ statsData: jsonResp.data });
+            success.push(1);
+        }
+        const animeObj = await fetch("/api/showtimes/latestanime");
+        const animeResp = await animeObj.json();
+        if (animeResp.code === 200) {
+            this.setState({ animeData: animeResp.data });
+            success.push(2);
+        }
+        if (success.length === 2) {
             this.setState({ isLoading: false });
         }
     }
 
     render() {
         const { user } = this.props;
+        const { isLoading, animeData, statsData } = this.state;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+        const fakeArray = [1, 2, 3, 4];
 
         return (
             <>
@@ -56,7 +98,34 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
                 <AdminLayout user={user}>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Statistik</h2>
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4"></div>
+                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                            {isLoading
+                                ? fakeArray.map((res) => {
+                                      return <StatsCard key={`skeleton-${res}`} type="skeleton" />;
+                                  })
+                                : statsData.map((res) => {
+                                      return (
+                                          <StatsCard
+                                              key={`stats-card-${res.key}`}
+                                              type={res.key as IStatsType}
+                                              amount={res.data}
+                                          />
+                                      );
+                                  })}
+                        </div>
+                    </div>
+                    <div className="container mx-auto px-6 py-8">
+                        <h2 className="font-light dark:text-gray-200 pb-4">Sedang digarap</h2>
+                        {isLoading ? (
+                            <>
+                                <div className="flex flex-row">
+                                    <LoadingCircle />
+                                    <p className="font-bold dark:text-gray-200 text-xl">Memuat data...</p>
+                                </div>
+                            </>
+                        ) : (
+                            <AdminAnimeSets data={animeData} />
+                        )}
                     </div>
                 </AdminLayout>
             </>
