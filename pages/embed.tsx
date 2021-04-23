@@ -1,5 +1,6 @@
 import _ from "lodash";
 import React from "react";
+import Head from "next/head";
 import { GetServerSidePropsContext } from "next";
 
 import MetadataHead from "../components/MetadataHead";
@@ -110,12 +111,18 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         if (animeData.length < 1) {
             return (
                 <>
-                    <MetadataHead
-                        title={`Utang - ${realName}`}
-                        description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
-                        image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
-                        urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
-                    />
+                    <Head>
+                        <MetadataHead.Base />
+                        <MetadataHead.Prefetch />
+                        <title>{`Utang - ${realName}`} :: naoTimesUI</title>
+                        <MetadataHead.SEO
+                            title={`Utang - ${realName}`}
+                            description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
+                            image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
+                            urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
+                        />
+                        <MetadataHead.CSSExtra />
+                    </Head>
                     <div id="root">
                         <div className="text-center text-2xl font-light mt-4">Tidak ada utang garapan!</div>
                     </div>
@@ -127,12 +134,18 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
 
         return (
             <>
-                <MetadataHead
-                    title={`Utang - ${realName}`}
-                    description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                    image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
-                    urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
-                />
+                <Head>
+                    <MetadataHead.Base />
+                    <MetadataHead.Prefetch />
+                    <title>{`Utang - ${realName}`} :: naoTimesUI</title>
+                    <MetadataHead.SEO
+                        title={`Utang - ${realName}`}
+                        description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
+                        image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=${projectData.length}`}
+                        urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
+                    />
+                    <MetadataHead.CSSExtra />
+                </Head>
                 <div id="root">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
                         {projectData.map((res) => {

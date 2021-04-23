@@ -1,15 +1,18 @@
-import { isString } from "lodash";
 import React from "react";
 
 import OpenGraphMeta from "./OpenGraph";
 import TwitterCardsMeta from "./TwitterCard";
 
+function isString(data: any): data is string {
+    return typeof data === "string";
+}
+
 export interface SEOMetaProps {
-    color?: string;
-    urlPath?: string;
+    title?: string;
+    description?: string;
     image?: string;
-    title: string;
-    description: string;
+    urlPath?: string;
+    color?: string;
 }
 
 class SEOMetaTags extends React.Component<SEOMetaProps> {
@@ -17,30 +20,44 @@ class SEOMetaTags extends React.Component<SEOMetaProps> {
         super(props);
     }
     render() {
-        const { description } = this.props;
+        const { title, description, image, urlPath, color } = this.props;
 
-        const { urlPath, image, color } = this.props;
-        let titleReal = this.props.title;
-        titleReal = titleReal || "Home";
-        let copyDesc = description;
-        const realColor = color || "#111827";
-        copyDesc = copyDesc || "A Frontend for ihateani.me VTuber API";
+        let realTitle = "naoTimesUI";
+        let realDescription = "Atur progress utang Fansub anda via WebUI naoTimes!";
+        let realImage = "/assets/img/ntui_splash.png";
+        let realUrl = null;
+        let realColor = "#111827";
+        if (isString(title)) {
+            realTitle = title;
+        }
+        if (isString(description)) {
+            realDescription = description;
+        }
+        if (isString(image)) {
+            realImage = image;
+        }
+        if (isString(urlPath)) {
+            realUrl = urlPath;
+        }
+        if (isString(color)) {
+            realColor = color;
+        }
+
         let url = "https://beta.panel.naoti.me";
         if (isString(urlPath)) {
             if (urlPath.startsWith("/")) {
-                url += urlPath;
+                url += realUrl;
             } else {
-                url += "/" + urlPath;
+                url += "/" + realUrl;
             }
         }
 
         return (
             <>
-                <title>{`${titleReal} :: naoTimesUI`}</title>
-                {copyDesc && <meta name="description" content={copyDesc} />}
+                {realTitle && <meta name="description" content={realTitle} />}
                 <meta name="theme-color" content={realColor} />
-                <OpenGraphMeta title={titleReal} description={copyDesc} url={url} image={image} />
-                <TwitterCardsMeta title={titleReal} description={copyDesc} image={image} />
+                <OpenGraphMeta title={realTitle} description={realDescription} url={url} image={realImage} />
+                <TwitterCardsMeta title={realTitle} description={realDescription} image={realImage} />
             </>
         );
     }

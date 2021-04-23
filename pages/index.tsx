@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import Router from "next/router";
 
 import LockOutlineIcon from "mdi-react/LockOutlineIcon";
@@ -51,7 +52,13 @@ class LoginPage extends React.Component<{}, LoginState> {
         const { errorMsg } = this.state;
         return (
             <>
-                <MetadataHead />
+                <Head>
+                    <MetadataHead.Base />
+                    <MetadataHead.Prefetch />
+                    <title>naoTimesUI</title>
+                    <MetadataHead.SEO />
+                    <MetadataHead.CSSExtra />
+                </Head>
                 <div className="min-w-screen min-h-screen bg-gray-900 flex items-center justify-center px-5 py-5 ">
                     <div
                         className="bg-gray-100 text-gray-500 rounded-3xl shadow-xl w-full overflow-hidden"

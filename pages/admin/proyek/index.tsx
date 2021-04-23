@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
@@ -48,7 +49,13 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
 
         return (
             <>
-                <MetadataHead title={`Proyek - ${pageTitle}`} urlPath="/admin/proyek" />
+                <Head>
+                    <MetadataHead.Base />
+                    <MetadataHead.Prefetch />
+                    <title>Proyek - {pageTitle} :: naoTimesUI</title>
+                    <MetadataHead.SEO title={"Proyek - " + pageTitle} urlPath="/admin/proyek" />
+                    <MetadataHead.CSSExtra />
+                </Head>
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Proyek</h2>

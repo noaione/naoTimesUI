@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
@@ -91,7 +92,13 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
 
         return (
             <>
-                <MetadataHead title={pageTitle} urlPath="/admin" />
+                <Head>
+                    <MetadataHead.Base />
+                    <MetadataHead.Prefetch />
+                    <title>{pageTitle} :: naoTimesUI</title>
+                    <MetadataHead.SEO title={pageTitle} urlPath="/admin" />
+                    <MetadataHead.CSSExtra />
+                </Head>
                 <AdminLayout user={user}>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Statistik</h2>

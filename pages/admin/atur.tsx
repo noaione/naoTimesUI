@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
@@ -47,7 +48,13 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
         return (
             <>
-                <MetadataHead title={`Pengaturan - ${pageTitle}`} urlPath="/admin/atur" />
+                <Head>
+                    <MetadataHead.Base />
+                    <MetadataHead.Prefetch />
+                    <title>Pengaturan - {pageTitle} :: naoTimesUI</title>
+                    <MetadataHead.SEO title={"Pengaturan - " + pageTitle} urlPath="/admin/atur" />
+                    <MetadataHead.CSSExtra />
+                </Head>
                 <AdminLayout user={user} title="Pengaturan" active="settings">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Settings</h2>
