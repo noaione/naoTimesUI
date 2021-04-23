@@ -68,6 +68,7 @@
     "next": "^10.1.3",
     "next-iron-session": "^4.1.13",
     "react": "^17.0.2",
+    "react-countup": "^4.3.3",
     "react-dom": "^17.0.2",
     "react-string-replace": "^0.4.4",
     "react-time-ago": "^6.2.2",
