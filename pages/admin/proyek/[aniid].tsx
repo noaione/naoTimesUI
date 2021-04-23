@@ -1,13 +1,14 @@
 import React from "react";
-import Head from "next/head";
 
-import withSession from "../../../lib/session";
-import { UserProps } from "../../../models/user";
 import AdminLayout from "../../../components/AdminLayout";
-import HeaderBase from "../../../components/HeaderBase";
+import MetadataHead from "../../../components/MetadataHead";
+
 import dbConnect from "../../../lib/dbConnect";
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../models/show";
+import withSession from "../../../lib/session";
 import { isNone, Nullable } from "../../../lib/utils";
+
+import { UserProps } from "../../../models/user";
+import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../models/show";
 
 interface ProyekPageProps {
     user?: UserProps & { loggedIn: boolean };
@@ -26,13 +27,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, {}> {
 
         return (
             <>
-                <Head>
-                    <title>
-                        {title} - {pageTitle} :: naoTimesUI
-                    </title>
-                    <meta name="description" content="Sebuah WebUI untuk naoTimes" />
-                    <HeaderBase />
-                </Head>
+                <MetadataHead title={`${title} - ${pageTitle}`} urlPath={"/admin/proyek/" + animeData.id} />
                 <AdminLayout user={user} title={title} active="project">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Proyek</h2>

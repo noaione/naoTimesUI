@@ -1,14 +1,14 @@
 import React from "react";
-import Head from "next/head";
+
+import AdminLayout from "../../components/AdminLayout";
+import MetadataHead from "../../components/MetadataHead";
+import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
+import LoadingCircle from "../../components/LoadingCircle";
+import StatsCard, { IStatsType } from "../../components/StatsCard";
 
 import withSession from "../../lib/session";
 
 import { UserProps } from "../../models/user";
-import AdminLayout from "../../components/AdminLayout";
-import HeaderBase from "../../components/HeaderBase";
-import StatsCard, { IStatsType } from "../../components/StatsCard";
-import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
-import LoadingCircle from "../../components/LoadingCircle";
 
 interface StatsData {
     key: IStatsType;
@@ -91,10 +91,7 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
 
         return (
             <>
-                <Head>
-                    <title>{pageTitle} :: naoTimesUI</title>
-                    <HeaderBase />
-                </Head>
+                <MetadataHead title={pageTitle} urlPath="/admin" />
                 <AdminLayout user={user}>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Statistik</h2>

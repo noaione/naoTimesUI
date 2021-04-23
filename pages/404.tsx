@@ -1,16 +1,12 @@
 import React from "react";
-import Head from "next/head";
 
-import HeaderBase from "../components/HeaderBase";
+import MetadataHead from "../components/MetadataHead";
 
 class NotFoundPage extends React.Component {
     render() {
         return (
             <>
-                <Head>
-                    <HeaderBase />
-                    <title>404 :: naoTimesUI</title>
-                </Head>
+                <MetadataHead title="404" description="Tidak dapat menemukan laman yang dimaksud" />
                 <div className="bg-gray-900 text-white h-screen text-center w-screen flex flex-col items-center justify-center">
                     <div>
                         <h1 className="inline-block border-r border-gray-300 m-0 mr-5 py-3 pr-6 pl-0 text-2xl font-semibold align-top">

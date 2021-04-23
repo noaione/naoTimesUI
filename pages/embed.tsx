@@ -1,15 +1,15 @@
+import _ from "lodash";
 import React from "react";
-import Head from "next/head";
 import { GetServerSidePropsContext } from "next";
 
-import _ from "lodash";
-
-import { ShowAnimeProps, ShowtimesModel } from "../models/show";
-import { isNone, mapBoolean, Nullable } from "../lib/utils";
+import MetadataHead from "../components/MetadataHead";
 import { IEmbedParams } from "../components/EmbedPage/Interface";
 import EmbedPageCard from "../components/EmbedPage/Card";
-import dbConnect from "../lib/dbConnect";
 
+import dbConnect from "../lib/dbConnect";
+import { isNone, mapBoolean, Nullable } from "../lib/utils";
+
+import { ShowAnimeProps, ShowtimesModel } from "../models/show";
 interface EmbedUtangProps extends IEmbedParams {
     name?: string;
     projectList: ShowAnimeProps[];
@@ -110,31 +110,12 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         if (animeData.length < 1) {
             return (
                 <>
-                    <Head>
-                        <title>Utang - {realName} :: naoTimes WebUI</title>
-                        <meta
-                            name="description"
-                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
-                        />
-                        <meta property="og:title" content={"Utang " + realName} />
-                        <meta
-                            property="og:description"
-                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
-                        />
-                        <meta
-                            property="og:image"
-                            content={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
-                        />
-                        <meta property="og:site_name" content="naoTimes WebUI" />
-                        <meta property="og:type" content="website" />
-                        <meta name="twitter:card" content="summary_large_image" />
-                        <meta name="twitter:creator" content="@nao0809_" />
-                        <meta name="twitter:title" content={"Utang " + realName} />
-                        <meta
-                            property="twitter:description"
-                            content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
-                        />
-                    </Head>
+                    <MetadataHead
+                        title={`Utang - ${realName}`}
+                        description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
+                        image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
+                        urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
+                    />
                     <div id="root">
                         <div className="text-center text-2xl font-light mt-4">Tidak ada utang garapan!</div>
                     </div>
@@ -146,31 +127,12 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
 
         return (
             <>
-                <Head>
-                    <title>Utang - {realName} :: naoTimes WebUI</title>
-                    <meta
-                        name="description"
-                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                    />
-                    <meta property="og:title" content={"Utang " + realName} />
-                    <meta
-                        property="og:description"
-                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                    />
-                    <meta
-                        property="og:image"
-                        content={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=${projectData.length}`}
-                    />
-                    <meta property="og:site_name" content="naoTimes WebUI" />
-                    <meta property="og:type" content="website" />
-                    <meta name="twitter:card" content="summary_large_image" />
-                    <meta name="twitter:creator" content="@nao0809_" />
-                    <meta name="twitter:title" content={"Utang " + realName} />
-                    <meta
-                        property="twitter:description"
-                        content={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                    />
-                </Head>
+                <MetadataHead
+                    title={`Utang - ${realName}`}
+                    description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
+                    image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
+                    urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
+                />
                 <div id="root">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
                         {projectData.map((res) => {

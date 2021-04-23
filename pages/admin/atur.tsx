@@ -1,10 +1,11 @@
 import React from "react";
-import Head from "next/head";
+
+import AdminLayout from "../../components/AdminLayout";
+import MetadataHead from "../../components/MetadataHead";
 
 import withSession from "../../lib/session";
+
 import { UserProps } from "../../models/user";
-import AdminLayout from "../../components/AdminLayout";
-import HeaderBase from "../../components/HeaderBase";
 
 interface SettingsHomepageState {
     isLoading: boolean;
@@ -46,11 +47,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
         return (
             <>
-                <Head>
-                    <title>Pengaturan - {pageTitle} :: naoTimesUI</title>
-                    <meta name="description" content="Sebuah WebUI untuk naoTimes" />
-                    <HeaderBase />
-                </Head>
+                <MetadataHead title={`Pengaturan - ${pageTitle}`} urlPath="/admin/atur" />
                 <AdminLayout user={user} title="Pengaturan" active="settings">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Settings</h2>

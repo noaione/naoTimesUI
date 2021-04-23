@@ -1,10 +1,11 @@
 import React from "react";
-import Head from "next/head";
+
+import AdminLayout from "../../../components/AdminLayout";
+import MetadataHead from "../../../components/MetadataHead";
 
 import withSession from "../../../lib/session";
+
 import { UserProps } from "../../../models/user";
-import AdminLayout from "../../../components/AdminLayout";
-import HeaderBase from "../../../components/HeaderBase";
 
 interface ProyekHomepageState {
     isLoading: boolean;
@@ -47,11 +48,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
 
         return (
             <>
-                <Head>
-                    <title>Proyek - {pageTitle} :: naoTimesUI</title>
-                    <meta name="description" content="Sebuah WebUI untuk naoTimes" />
-                    <HeaderBase />
-                </Head>
+                <MetadataHead title={`Proyek - ${pageTitle}`} urlPath="/admin/proyek" />
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Proyek</h2>
