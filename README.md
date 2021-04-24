@@ -8,6 +8,8 @@ npm install -g pnpm
 
 ## Deployment
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Ftree%2Fnext&env=TOKEN_SECRET,MONGODB_URI,BOT_SOCKET_HOST,BOT_SOCKET_PORT,BOT_SOCKET_PASSWORD&envDescription=All%20required%20Environment%20Variables%20for%20the%20Process%20to%20run&envLink=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Fblob%2Fnext%2F.env-example&demo-title=naoTimesUI&demo-description=Atur%20progress%20utang%20Fansub%20anda%20via%20WebUI%20naoTimes!&demo-url=https%3A%2F%2Fbeta.panel.naoti.me)
+
 ### Requirements
 - naoTimes Bot with `naotimesui` cogs enabled
 - Redis Server
@@ -28,14 +30,9 @@ Install everything first with
 pnpm install
 ```
 
-Then run the server with
+The run the server with
 ```bash
-pnpm run prod
-```
-
-If you don't want to rebuild everything, you could just execute:
-```bash
-pnpm run prod:start
+pnpm run start
 ```
 
 ## Development
@@ -44,13 +41,6 @@ pnpm run prod:start
 pnpm install
 pnpm run dev
 ```
-
-You can also just run this to build everything without running ts-node
-```bash
-pnpm run build:dev
-```
-
-This will generate a sourcemaps for the `lib` js, will not minify/uglify anything and the main css file will contains every tailwind css since it's needed for development.
 
 ## License
 This project is licensed with [MIT License](LICENSE)
@@ -61,4 +51,4 @@ The Embed design is adapted from [are-we-there-yet](https://github.com/GrygrFlzr
 The Login screen is adapted from [Simple Register/Sign Up Form](https://tailwindcomponents.com/component/simple-registersign-up-form) by [Scott Windon](https://tailwindcomponents.com/u/scott-windon)
 
 Credits originally to the Author.
-This project also heavily utilized TailwindCSS, cash-dom and EJS for it's website design.
+This project also heavily utilized TailwindCSS, and React (with Next.js as it's Framework)!
