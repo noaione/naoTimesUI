@@ -17,6 +17,11 @@ export type JSTypeof =
     | "symbol"
     | "array"; // Extra addition
 
+export interface AssignmentsData {
+    id: string;
+    name?: string;
+}
+
 export function isNone(value: any): value is NoneType {
     return typeof value === "undefined" || value === null;
 }
@@ -350,4 +355,16 @@ export function expandRoleLocalized(role: string) {
         default:
             return role;
     }
+}
+
+export function getAssigneeName(assignments: AssignmentsData) {
+    if (!assignments) {
+        return "Tidak diketahui";
+    }
+    if (!assignments.name) {
+        return "Tidak diketahui";
+    }
+    const getname = assignments.name;
+    const splitName = getname.split("#");
+    return splitName.slice(0, splitName.length === 1 ? 1 : splitName.length - 1).join("#");
 }

@@ -1,12 +1,7 @@
 import React from "react";
 import RolePopup from "./RolePopup";
 
-import { expandRoleLocalized, expandRoleName } from "../lib/utils";
-
-interface AssignmentsData {
-    id: string;
-    name?: string;
-}
+import { AssignmentsData, expandRoleLocalized, expandRoleName, getAssigneeName } from "../lib/utils";
 
 export interface ProjectOverview {
     id: string;
@@ -24,18 +19,6 @@ export interface ProjectOverview {
 
 interface IAnimeOverview {
     data: ProjectOverview;
-}
-
-function getAssigneeName(assignments: AssignmentsData) {
-    if (!assignments) {
-        return "Tidak diketahui";
-    }
-    if (!assignments.name) {
-        return "Tidak diketahui";
-    }
-    const getname = assignments.name;
-    const splitName = getname.split("#");
-    return splitName.slice(0, splitName.length === 1 ? 1 : splitName.length - 1);
 }
 
 class IkhtisarAnime extends React.Component<IAnimeOverview> {

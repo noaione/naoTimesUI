@@ -11,10 +11,10 @@ interface SessionClass {
     get<T extends any>(key: string): Nullable<T>;
 }
 
-function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
+function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
-        let latestEpisode: Nullable<any>;
+        let latestEpisode;
         for (let ep = 0; ep < anime_data.status.length; ep++) {
             const status_ep = anime_data.status[ep];
             if (status_ep.is_done) {
@@ -25,16 +25,16 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
                 break;
             }
         }
+        let isFinished = false;
         if (isNone(latestEpisode)) {
-            return;
+            isFinished = true;
         }
         const newData = {
             id: anime_data.id,
             title: anime_data.title,
-            start_time: anime_data.start_time,
             assignments: anime_data.assignments,
             poster: anime_data.poster_data.url,
-            status: latestEpisode,
+            is_finished: isFinished,
         };
         animeSets.push(newData);
     });
@@ -60,11 +60,10 @@ export default withSession(async (req: NextApiRequest & { session: SessionClass 
                     "anime.title": 1,
                     "anime.assignments": 1,
                     "anime.poster_data": 1,
-                    "anime.start_time": 1,
                     "anime.status": 1,
                 }
             );
-            res.json({ data: filterToNewestStatusOnly(fetchServers), code: 200 });
+            res.json({ data: projectOverviewKeyFilter(fetchServers), code: 200 });
         }
     }
 });

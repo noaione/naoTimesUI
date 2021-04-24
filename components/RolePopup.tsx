@@ -1,8 +1,10 @@
 import React from "react";
 import { RoleColorPalette } from "./ColorMap";
 
+export type RoleProject = "TL" | "TLC" | "ENC" | "ED" | "TM" | "TS" | "QC";
+
 interface RolePopupProps {
-    title: "TL" | "TLC" | "ENC" | "ED" | "TM" | "TS" | "QC";
+    title: RoleProject;
     popupText: string;
     overrideTitle?: string;
 }
