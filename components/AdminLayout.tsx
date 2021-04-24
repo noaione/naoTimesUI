@@ -42,8 +42,8 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
         if (typeof overflowX === "boolean") {
             realOverflowX = overflowX;
         }
-        const { VERCEL_GIT_COMMIT_SHA } = process.env;
-        const commit = VERCEL_GIT_COMMIT_SHA || "";
+        const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA } = process.env;
+        const commit = NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "";
         const appInfo = { semver: version, commit };
         return (
             <>
