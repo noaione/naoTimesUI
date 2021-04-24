@@ -127,7 +127,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                                 <div className="dark:text-gray-200 font-semibold">
                                     Commit:{" "}
                                     <a
-                                        className="text-gray-900 dark:text-gray-100 opacity-80 transition-opacity duration-300"
+                                        className="text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity duration-200"
                                         href={"https://github.com/noaione/naoTimesUI/commit/" + commit}
                                     >
                                         {commit.slice(0, 7)}
