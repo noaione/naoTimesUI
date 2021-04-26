@@ -58,9 +58,9 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
         const romanizedCC = romanizeNumber(currentCopyright);
 
         const NormanClass =
-            "py-2 pl-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 rounded flex flex-row items-center";
+            "py-2 pl-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-800 rounded flex flex-row items-end";
         const SelClass =
-            "py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row items-center";
+            "py-2 pl-2 text-sm text-gray-700 dark:text-gray-100 bg-gray-200 dark:bg-gray-800 rounded flex flex-row items-end";
 
         return (
             <>
@@ -94,7 +94,11 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                         </a>
                         <a
                             href={curActive === "project" ? "#" : adminPageUrl}
-                            className={curActive === "project" ? SelClass + " mt-3" : NormanClass + " mt-3"}
+                            className={
+                                ["project", "projectpage"].includes(curActive)
+                                    ? SelClass + " mt-3"
+                                    : NormanClass + " mt-3"
+                            }
                         >
                             {adminPageIcon}
                             <span className="ml-1">{isAdmin ? "Peladen" : "Proyek"}</span>
