@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import dbConnect from "../../../lib/dbConnect";
-import withSession from "../../../lib/session";
-import { isNone, Nullable } from "../../../lib/utils";
+import dbConnect from "../../../../lib/dbConnect";
+import withSession from "../../../../lib/session";
+import { isNone, Nullable } from "../../../../lib/utils";
 
-import { ShowtimesModel, ShowtimesProps } from "../../../models/show";
-import { UserProps } from "../../../models/user";
+import { ShowtimesModel, ShowtimesProps } from "../../../../models/show";
+import { UserProps } from "../../../../models/user";
 
 interface SessionClass {
     get<T extends any>(key: string): Nullable<T>;
