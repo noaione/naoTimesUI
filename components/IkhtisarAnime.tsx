@@ -42,7 +42,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
             <>
                 <div className="p-2 bg-white dark:bg-gray-700 rounded shadow-sm self-start">
                     <div className="flex pt-1">
-                        <a className="icon h-2/3 p-2 ml-1" href={"/admin/projek/" + data.id}>
+                        <a className="icon h-2/3 p-2 ml-1" href={"/admin/proyek/" + data.id}>
                             <img
                                 src={data.poster}
                                 className="transition duration-300 ease-out transform hover:-translate-y-1"
@@ -52,7 +52,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                         <div className="flex flex-col py-1">
                             <a
                                 className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
-                                href={"/admin/projek/" + data.id}
+                                href={"/admin/proyek/" + data.id}
                             >
                                 {data.title}
                             </a>
