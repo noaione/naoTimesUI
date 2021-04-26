@@ -9,6 +9,9 @@ const isNullified = function(data) {
     return typeof data === "undefined" || data === null;
 }
 
+// Ignore this page
+const isEmbedPage = location.pathname === "/embed";
+
 // Check for first user preferences.
 let userPreferDark;
 let systemPreferDark = false;
@@ -23,13 +26,13 @@ try {
 } catch (e) {};
 if (isNullified(userPreferDark)) {
     if (systemPreferDark) {
-        document.documentElement.classList.add("dark");
+        if (!isEmbedPage) document.documentElement.classList.add("dark");
         localStorage.setItem("ntui.theme", "dark");
     } else {
         localStorage.setItem("ntui.theme", "light");
     }
 } else {
-    if (userPreferDark) {
+    if (userPreferDark && !isEmbedPage) {
         document.documentElement.classList.add("dark");
     }
 }
@@ -37,8 +40,10 @@ if (isNullified(userPreferDark)) {
 // Theme toggler
 const toggleTheme = function() {
     try {
-        const isDark = document.documentElement.classList.contains("dark");
-        isDark ? document.documentElement.classList.remove("dark") : document.documentElement.classList.add("dark");
+        if (isEmbedPage) {
+            const isDark = document.documentElement.classList.contains("dark");
+            isDark ? document.documentElement.classList.remove("dark") : document.documentElement.classList.add("dark");
+        }
         localStorage.setItem("ntui.theme", isDark ? "light" : "dark");
     } catch (e) {};
 };
