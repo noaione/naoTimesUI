@@ -38,12 +38,29 @@ interface ProjectNewProps {
     user: UserProps & { loggedIn: boolean };
 }
 
+function matchFilterProper(data: any, inputValue: string) {
+    const matchRe = new RegExp(`(${inputValue})`, "i");
+    let titleUncased = (data.titlematch as string) || "";
+    let titleUncasedEN = (data.titlematchen as string) || "";
+    let titleUncasedOther = (data.titlematchother as string) || "";
+    titleUncased = titleUncased.toLowerCase();
+    titleUncasedEN = titleUncasedEN.toLowerCase();
+    titleUncasedOther = titleUncasedOther.toLowerCase();
+    return titleUncased.match(matchRe) || titleUncasedEN.match(matchRe) || titleUncasedOther.match(matchRe);
+}
+
 const searchAnime = (inputValue: string, callback: Function) => {
     axios
         .get("/api/anilist/find", { params: { q: inputValue }, responseType: "json" })
         .then((res) => {
             const results = res.data;
-            callback(results.results);
+            const parsedFiltered = results.results.filter((data) =>
+                matchFilterProper(data, inputValue)
+            ) as any[];
+            console.info(
+                `Found ${results.results.length} matches originally, filtered to ${parsedFiltered.length} matches`
+            );
+            callback(parsedFiltered);
         })
         .catch((err) => {
             console.error(err);
@@ -125,24 +142,35 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
     }
 
     onAnimeSelection(data: any, action: ActionMeta<any>) {
-        if (action.action !== "select-option") {
-            // Fuck other action
+        console.info(action);
+        if (!["select-option", "clear"].includes(action.action)) {
             return;
         }
-        const { id } = data;
-        const totalEpisode = data.episodes || 0;
-        const coverData = data.coverImage || {};
-        const posterUrl = coverData.extralarge || coverData.large || coverData.medium || null;
-        const title = data.title || {};
-        const selTitle = title.romaji || title.english || title.native;
-        this.setState({
-            aniId: _.toString(id),
-            episode: totalEpisode,
-            poster: posterUrl,
-            shouldShowEpisode: totalEpisode < 1,
-            animeSelected: true,
-            title: selTitle,
-        });
+        if (action.action === "select-option") {
+            const { id } = data;
+            const totalEpisode = data.episodes || 0;
+            const coverData = data.coverImage || {};
+            const posterUrl = coverData.extralarge || coverData.large || coverData.medium || null;
+            const title = data.title || {};
+            const selTitle = title.romaji || title.english || title.native;
+            this.setState({
+                aniId: _.toString(id),
+                episode: totalEpisode,
+                poster: posterUrl,
+                shouldShowEpisode: totalEpisode < 1,
+                animeSelected: true,
+                title: selTitle,
+            });
+        } else if (action.action === "clear") {
+            this.setState({
+                aniId: null,
+                episode: 0,
+                poster: null,
+                shouldShowEpisode: false,
+                animeSelected: false,
+                title: null,
+            });
+        }
     }
 
     triggerModal() {
@@ -193,6 +221,9 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                     loadOptions={searchAnime}
                                                     onChange={this.onAnimeSelection}
                                                     getOptionLabel={optionValueAnime}
+                                                    filterOption={() => true}
+                                                    placeholder="Cari Anime..."
+                                                    isClearable
                                                 />
                                             </div>
                                             <div className={`-mx-3 ${shouldShowEpisode ? "" : "hidden"}`}>
