@@ -99,7 +99,23 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     handleClickOutsideDropdown(event: MouseEvent) {
-        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target as Node)) {
+        if (!this.state.dropdownOpen) {
+            // Don't run if dropdown is hidden;
+            return;
+        }
+        // Extend the types
+        let target = event.target as EventTarget & {
+            nodeName: string;
+            id: string;
+            parentElement: HTMLElement;
+        };
+        if (target.nodeName.toLowerCase() === "path") {
+            // <path> tags mean there's <svg> tags wrapping it, go up by one.
+            target = target.parentElement;
+        }
+        const isToggler = target.id === "dropdown-toggler";
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target as Node) && !isToggler) {
+            console.info(event);
             this.setState({ dropdownOpen: false });
         }
     }
@@ -117,7 +133,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
         const opacity = this.state.dropdownOpen ? "opacity-100" : "opacity-0";
         return (
             <>
-                <header className="flex justify-between items-center p-6 bg-white dark:bg-gray-900">
+                <header className="flex justify-between items-center p-6 py-8 bg-white dark:bg-gray-900">
                     <div className="flex items-center space-x4 lg:space-x-0">
                         <button
                             onClick={this.onMenuOpen}
@@ -142,16 +158,18 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                         </button>
                         <div className="relative">
                             <button className="flex items-center space-x-2 relative focus:outline-none">
-                                <h2 className="text-gray-700 dark:text-gray-300 text-sm hidden sm:block">
+                                <h2 className="text-gray-700 dark:text-gray-300 text-sm cursor-text hidden sm:block select-text">
                                     {username}
                                 </h2>
                                 {isAdmin ? (
                                     <ShieldAccountIcon
+                                        id="dropdown-toggler"
                                         onClick={this.toggleDropdown}
                                         className="text-gray-700 dark:text-gray-300 object-cover transition-opacity duration-200 ease-in-out hover:opacity-70"
                                     />
                                 ) : (
                                     <AccountIcon
+                                        id="dropdown-toggler"
                                         onClick={this.toggleDropdown}
                                         className="text-gray-700 dark:text-gray-300 object-cover transition-opacity duration-200 ease-in-out hover:opacity-70"
                                     />
