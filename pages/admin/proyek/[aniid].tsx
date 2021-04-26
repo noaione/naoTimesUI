@@ -40,7 +40,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, {}> {
                     />
                     <MetadataHead.CSSExtra />
                 </Head>
-                <AdminLayout user={user} title={title} active="project">
+                <AdminLayout user={user} title={title} active="projectpage">
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Proyek</h2>
                     </div>
