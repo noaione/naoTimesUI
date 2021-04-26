@@ -1,21 +1,26 @@
 import axios from "axios";
 import _ from "lodash";
-import PlusIcon from "mdi-react/PlusIcon";
 import Head from "next/head";
+import Router from "next/router";
 import React from "react";
-import { ActionMeta } from "react-select";
 
 import AsyncSelect from "react-select/async";
+import { ActionMeta } from "react-select";
+import PlusIcon from "mdi-react/PlusIcon";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
+import { CallbackModal } from "../../../components/Modal";
+import ErrorModal from "../../../components/ErrorModal";
 
 import withSession from "../../../lib/session";
 
 import { UserProps } from "../../../models/user";
 
 interface ProjectNewState {
+    errTxt: string;
     aniId?: string;
+    title?: string;
     episode?: number;
     poster?: string;
     staffTL?: string;
@@ -30,7 +35,7 @@ interface ProjectNewState {
 }
 
 interface ProjectNewProps {
-    user?: UserProps & { loggedIn: boolean };
+    user: UserProps & { loggedIn: boolean };
 }
 
 const searchAnime = (inputValue: string, callback: Function) => {
@@ -56,11 +61,15 @@ function optionValueAnime(data: any) {
 }
 
 class ProjectAdditionComponents extends React.Component<ProjectNewProps, ProjectNewState> {
+    modalCb?: CallbackModal;
+
     constructor(props: ProjectNewProps) {
         super(props);
         this.submitNewProject = this.submitNewProject.bind(this);
         this.onAnimeSelection = this.onAnimeSelection.bind(this);
+        this.triggerModal = this.triggerModal.bind(this);
         this.state = {
+            errTxt: "",
             poster: null,
             episode: 0,
             animeSelected: false,
@@ -70,8 +79,49 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
 
     async submitNewProject(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.info(this.state);
-        // await fetch("/api/showtimes/projectadd");
+        const validRoles = [];
+        for (const [stateKey, stateValue] of Object.entries(this.state)) {
+            if (stateKey.startsWith("staff")) {
+                validRoles.push({
+                    role: stateKey.slice(5),
+                    id: stateValue,
+                });
+            }
+        }
+        if (!this.state.aniId && !this.state.title) {
+            this.setState({ errTxt: "Mohon pilih Anime terlebih dahulu" });
+            this.triggerModal();
+            return;
+        }
+        if (this.state.episode < 1) {
+            this.setState({ errTxt: "Mohon masukan jumlah episode!" });
+            this.triggerModal();
+            return;
+        }
+        const sendThisJSON = {
+            server: this.props.user.id,
+            anime: {
+                id: this.state.aniId,
+                name: this.state.title,
+                episode: this.state.episode,
+            },
+            roles: validRoles,
+        };
+        const res = await fetch("/api/showtimes/proyek/tambah", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(sendThisJSON),
+        });
+        const callbackAns = await res.json();
+        if (callbackAns.success) {
+            Router.push(`/admin/proyek/${this.state.aniId}`);
+        } else {
+            this.setState({ errTxt: callbackAns.message });
+            this.triggerModal();
+            return;
+        }
     }
 
     onAnimeSelection(data: any, action: ActionMeta<any>) {
@@ -83,13 +133,22 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
         const totalEpisode = data.episodes || 0;
         const coverData = data.coverImage || {};
         const posterUrl = coverData.extralarge || coverData.large || coverData.medium || null;
+        const title = data.title || {};
+        const selTitle = title.romaji || title.english || title.native;
         this.setState({
             aniId: _.toString(id),
             episode: totalEpisode,
             poster: posterUrl,
             shouldShowEpisode: totalEpisode < 1,
             animeSelected: true,
+            title: selTitle,
         });
+    }
+
+    triggerModal() {
+        if (this.modalCb) {
+            this.modalCb.showModal();
+        }
     }
 
     render() {
@@ -110,14 +169,14 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                         <div className="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
                             <div className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
                                 <div className="flex flex-col lg:flex-row py-1">
-                                    <div className="icon h-5/6 p-1 mr-3">
+                                    <div className="icon h-5/6 p-1 lg:mr-3">
                                         {poster ? (
                                             <img
                                                 className="transition duration-300 ease-out transform hover:-translate-y-1"
                                                 src={poster}
                                             />
                                         ) : (
-                                            <div className="px-32 py-44 animate-pulse bg-gray-400" />
+                                            <div className="px-32 py-56 self-center lg:py-44 animate-pulse bg-gray-400" />
                                         )}
                                     </div>
                                     <div className="flex flex-col pb-2">
@@ -154,14 +213,14 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="text-xs font-semibold text-red-400 mt-1">
+                                            <div className="text-xs tracking-wide font-semibold text-red-400 mt-1">
                                                 Role akan dibuat otomatis, cukup periksa Server anda untuk
                                                 Role baru
                                             </div>
                                             <div className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-2">
                                                 Staf
                                             </div>
-                                            <div className="text-xs font-semibold text-red-400">
+                                            <div className="text-xs tracking-wide font-semibold text-red-400">
                                                 Mohon masukan ID Discord user, bisa dikosongkan
                                             </div>
                                             <div className="grid gap-2 sm:grid-cols-1 lg:grid-cols-2">
@@ -335,6 +394,9 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                             </div>
                         </div>
                     </div>
+                    <ErrorModal onMounted={(callback) => (this.modalCb = callback)}>
+                        {this.state.errTxt}
+                    </ErrorModal>
                 </AdminLayout>
             </>
         );
