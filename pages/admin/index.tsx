@@ -7,7 +7,7 @@ import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
 import LoadingCircle from "../../components/LoadingCircle";
 import StatsCard, { IStatsType } from "../../components/StatsCard";
 
-import withSession from "../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
 
@@ -137,8 +137,8 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s }) {
-    const user = req.session.get("user");
+export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user");
 
     if (!user) {
         return {

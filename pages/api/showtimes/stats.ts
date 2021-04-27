@@ -1,15 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 
 import dbConnect from "../../../lib/dbConnect";
-import withSession from "../../../lib/session";
-import { Nullable } from "../../../lib/utils";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../lib/session";
 
 import { ShowtimesModel, ShowtimesProps } from "../../../models/show";
-import { UserProps } from "../../../models/user";
-
-interface SessionClass {
-    get<T extends any>(key: string): Nullable<T>;
-}
 
 function countAdminStats(servers_data: ShowtimesProps[]) {
     let adminCount = 0;
@@ -41,8 +35,8 @@ function countAnimeStats(servers_data: ShowtimesProps[]) {
     return [animeCount, rawProjectCount];
 }
 
-export default withSession(async (req: NextApiRequest & { session: SessionClass }, res: NextApiResponse) => {
-    const user = req.session.get<UserProps>("user");
+export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+    const user = req.session.get<IUserAuth>("user");
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {

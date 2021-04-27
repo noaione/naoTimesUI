@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import Head from "next/head";
-import { GetServerSidePropsContext } from "next";
 
 import MetadataHead from "../components/MetadataHead";
 import { IEmbedParams } from "../components/EmbedPage/Interface";
@@ -9,6 +8,7 @@ import EmbedPageCard from "../components/EmbedPage/Card";
 
 import dbConnect from "../lib/dbConnect";
 import { isNone, mapBoolean, Nullable } from "../lib/utils";
+import { NextServerSideContextWithSession } from "../lib/session";
 
 import { ShowAnimeProps, ShowtimesModel } from "../models/show";
 interface EmbedUtangProps extends IEmbedParams {
@@ -166,7 +166,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(context: NextServerSideContextWithSession) {
     const defaultParams: IEmbedParams = {
         lang: "id",
         accent: "green",

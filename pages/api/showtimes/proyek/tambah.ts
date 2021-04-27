@@ -1,18 +1,13 @@
 import axios from "axios";
 import { get, has } from "lodash";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 
 import dbConnect from "../../../../lib/dbConnect";
-import withSession from "../../../../lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
 import { emitSocket, emitSocketAndWait } from "../../../../lib/socket";
 import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "../../../../lib/utils";
 
 import { ShowtimesModel } from "../../../../models/show";
-import { UserProps } from "../../../../models/user";
-
-interface SessionClass {
-    get<T extends any>(key: string): Nullable<T>;
-}
 
 const AnimeInfoQuery = `
 query ($id:Int!) {
@@ -192,8 +187,8 @@ async function addNewProject(dataToAdd: any) {
     return { success: true, message: "success" };
 }
 
-export default withSession(async (req: NextApiRequest & { session: SessionClass }, res: NextApiResponse) => {
-    const user = req.session.get<UserProps>("user");
+export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+    const user = req.session.get<IUserAuth>("user");
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {

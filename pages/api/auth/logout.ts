@@ -1,6 +1,9 @@
-import withSession from "../../../lib/session";
+import { NextApiResponse } from "next";
 
-export default withSession(async (req, res) => {
-    req.session.destroy();
+import withSession, { NextApiRequestWithSession } from "../../../lib/session";
+
+export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+    await req.session.destroy();
+    res.setHeader("cache-control", "no-store, max-age=0");
     res.redirect("/");
 });

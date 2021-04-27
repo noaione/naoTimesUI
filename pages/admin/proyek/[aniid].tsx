@@ -5,7 +5,7 @@ import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
 
 import dbConnect from "../../../lib/dbConnect";
-import withSession from "../../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
@@ -50,8 +50,11 @@ class ProyekHomepage extends React.Component<ProyekPageProps, {}> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s, params }) {
-    const user = req.session.get("user") as UserProps;
+export const getServerSideProps = withSession(async function ({
+    req,
+    params,
+}: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user") as UserProps;
     const { aniid } = params;
 
     if (!user) {

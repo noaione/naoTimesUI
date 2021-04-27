@@ -4,7 +4,7 @@ import Head from "next/head";
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
 
-import withSession from "../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
 
@@ -65,8 +65,8 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s }) {
-    const user = req.session.get("user");
+export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user");
 
     if (!user) {
         return {

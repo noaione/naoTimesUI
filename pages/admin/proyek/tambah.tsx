@@ -13,7 +13,7 @@ import MetadataHead from "../../../components/MetadataHead";
 import { CallbackModal } from "../../../components/Modal";
 import ErrorModal from "../../../components/ErrorModal";
 
-import withSession from "../../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 
 import { UserProps } from "../../../models/user";
 
@@ -434,8 +434,8 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s }) {
-    const user = req.session.get("user");
+export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user");
 
     if (!user) {
         return {

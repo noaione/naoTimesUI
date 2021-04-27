@@ -6,7 +6,7 @@ import PlusIcon from "mdi-react/PlusIcon";
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
 
-import withSession from "../../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 
 import { UserProps } from "../../../models/user";
 import LoadingCircle from "../../../components/LoadingCircle";
@@ -159,8 +159,8 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s }) {
-    const user = req.session.get("user");
+export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user");
 
     if (!user) {
         return {
