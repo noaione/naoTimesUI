@@ -129,7 +129,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                                             <div className="w-full px-3 mb-5 text-center">
                                                 <button
                                                     type="submit"
-                                                    id="sign-in-btn"
+                                                    id="register-btn"
                                                     className={`inline-flex items-center w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out ${
                                                         submitting
                                                             ? "bg-yellow-500"
