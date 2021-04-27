@@ -6,9 +6,10 @@ import LockOutlineIcon from "mdi-react/LockOutlineIcon";
 import ServerIcon from "mdi-react/ServerIcon";
 
 import MetadataHead from "../components/MetadataHead";
+import LoginSidebar from "../components/LoginSidebar";
+import LoadingCircle from "../components/LoadingCircle";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../lib/session";
-import LoginSidebar from "../components/LoginSidebar";
 
 interface LoginRegistredProps {
     isRegistered?: boolean;
@@ -16,6 +17,7 @@ interface LoginRegistredProps {
 
 interface LoginState {
     errorMsg: string;
+    submitting: boolean;
 }
 
 class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
@@ -24,11 +26,13 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
         this.onSubmit = this.onSubmit.bind(this);
         this.state = {
             errorMsg: "",
+            submitting: false,
         };
     }
 
     async onSubmit(e: React.FormEvent<Element>) {
         e.preventDefault();
+        this.setState({ submitting: true });
 
         const body = {
             // @ts-ignore
@@ -49,12 +53,12 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
         if (userObj.loggedIn) {
             Router.push("/admin");
         } else {
-            this.setState({ errorMsg: userObj.error });
+            this.setState({ errorMsg: userObj.error, submitting: false });
         }
     }
 
     render() {
-        const { errorMsg } = this.state;
+        const { errorMsg, submitting } = this.state;
         return (
             <>
                 <Head>
@@ -136,9 +140,17 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                                 <button
                                                     type="submit"
                                                     id="sign-in-btn"
-                                                    className="block w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700 text-white rounded-lg px-3 py-3 font-semibold"
+                                                    className={`inline-flex items-center w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out ${
+                                                        submitting
+                                                            ? "bg-yellow-500"
+                                                            : "bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700"
+                                                    } text-white rounded-lg px-3 py-3 font-semibold justify-center ${
+                                                        submitting ? "cursor-not-allowed" : ""
+                                                    }`}
+                                                    disabled={submitting}
                                                 >
-                                                    Masuk
+                                                    {submitting && <LoadingCircle className="mt-0" />}
+                                                    Daftar
                                                 </button>
                                                 <a
                                                     href="/registrasi"
