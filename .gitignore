@@ -412,3 +412,6 @@ public/assets/js/*.js.map
 # Allow some css.
 
 # Allow some js.
+
+# Dont commit testing page and stuff
+pages/testing/**
