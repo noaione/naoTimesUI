@@ -46,10 +46,6 @@ export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
 
     client.on("connect", () => {
-        const addr = client.address();
-        // @ts-ignore
-        const ipaddr = addr.address;
-
         client.write(`${JSON.stringify({ event, data })}\x04`);
         client.end();
     });
@@ -63,10 +59,6 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     let queryResponse: Buffer;
     client.on("connect", () => {
         isConnected = true;
-        const addr = client.address();
-        // @ts-ignore
-        const ipaddr = addr.address;
-
         client.write(`${JSON.stringify({ event, data })}\x04`);
     });
 
