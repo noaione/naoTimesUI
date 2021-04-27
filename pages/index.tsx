@@ -7,13 +7,18 @@ import ServerIcon from "mdi-react/ServerIcon";
 
 import MetadataHead from "../components/MetadataHead";
 
-import withSession from "../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "../lib/session";
+import LoginSidebar from "../components/LoginSidebar";
+
+interface LoginRegistredProps {
+    isRegistered?: boolean;
+}
 
 interface LoginState {
     errorMsg: string;
 }
 
-class LoginPage extends React.Component<{}, LoginState> {
+class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
     constructor(props: any) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
@@ -65,41 +70,12 @@ class LoginPage extends React.Component<{}, LoginState> {
                         style={{ maxWidth: "1000px" }}
                     >
                         <div className="relative md:flex w-full">
-                            <div className="hidden md:block w-1/2 bg-gradient-to-br from-indigo-500 to-pink-300 p-10">
-                                <img
-                                    className="icon h-1/3 mb-2 ring-offset-indigo-800 transition-shadow duration-500 ease-in-out stack-shadow-6 hover:stack-shadow-3"
-                                    src="/assets/img/nt192.png"
-                                />
-                                <div className="font-extrabold text-white text-3xl mb-3 mt-5">
-                                    <span className="bg-gradient-to-br from-indigo-800 to-indigo-600 transition-shadow duration-500 ease-in-out rounded-none px-2 py-1 stack-shadow-3 hover:stack-shadow-5 ring-offset-gray-800">
-                                        naoTimes
-                                    </span>
-                                </div>
-                                <div className="font-semibold text-lg text-gray-100 mb-4">
-                                    <p>Sebuah Bot Multifungsi dengan fitur utam tracking garapan Fansub</p>
-                                </div>
-                                <a
-                                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-1"
-                                    href="https://naoti.me/invite"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    Invite!
-                                </a>
-                                <a
-                                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
-                                    href="https://discord.gg/7KyYecn"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    Support Server
-                                </a>
-                            </div>
+                            <LoginSidebar />
 
                             <div className="w-full md:w-1/2 py-10 px-5 md:px-10">
-                                <div className="text-center mb-10">
+                                <div className="text-center mb-5">
                                     <h1 className="font-bold text-3xl text-gray-900">Masuk</h1>
-                                    <p>Password didapatkan melalui Bot</p>
+                                    <p className="mt-2">Password didapatkan melalui Bot</p>
                                     <p>
                                         Ketik <code className="text-red-500">!showui</code> di server discord
                                         anda
@@ -110,6 +86,11 @@ class LoginPage extends React.Component<{}, LoginState> {
                                     </p>
                                     {errorMsg && (
                                         <p className="text-sm text-red-400 mt-2">Error: {errorMsg}</p>
+                                    )}
+                                    {this.props.isRegistered && (
+                                        <p className="text-sm text-blue-500 mt-2">
+                                            Sukses, silakan jalankan !tagih di server anda
+                                        </p>
                                     )}
                                 </div>
                                 <div>
@@ -127,7 +108,7 @@ class LoginPage extends React.Component<{}, LoginState> {
                                                         required
                                                         type="text"
                                                         name="server"
-                                                        className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
                                                         placeholder="xxxxxxxxxxxxxxxxxx"
                                                     />
                                                 </div>
@@ -144,7 +125,7 @@ class LoginPage extends React.Component<{}, LoginState> {
                                                         required
                                                         type="password"
                                                         name="password"
-                                                        className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
                                                         placeholder="**************"
                                                     />
                                                 </div>
@@ -184,10 +165,15 @@ class LoginPage extends React.Component<{}, LoginState> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req, _s }) {
-    const user = req.session.get("user");
+export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
+    const user = req.session.get<IUserAuth>("user");
+    // Catch the Next.js Router push event with query mask
+    // eslint-disable-next-line no-underscore-dangle
+    const NEXTJS_RouterQuery = req.__NEXT_INIT_QUERY || {};
 
-    if (user) {
+    const { registered } = NEXTJS_RouterQuery;
+
+    if (user && !registered) {
         return {
             redirect: {
                 destination: "/admin",
@@ -195,8 +181,20 @@ export const getServerSideProps = withSession(async function ({ req, _s }) {
             },
         };
     }
+    if (typeof registered === "string") {
+        if (user.id === registered) {
+            return {
+                redirect: {
+                    destination: "/admin",
+                    permanent: false,
+                },
+            };
+        }
+    }
 
-    return { props: {} };
+    const justRegistered = typeof registered === "string";
+
+    return { props: { isRegistered: justRegistered } };
 });
 
 export default LoginPage;
