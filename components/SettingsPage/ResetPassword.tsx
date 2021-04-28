@@ -39,7 +39,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                 <div className="flex flex-col py-1">
                     <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Password</h3>
                     <div className="flex flex-row pb-2">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
                             <div className="w-full mt-2 mb-1 flex flex-col">
                                 <label className="text-sm font-medium dark:text-white mb-1">
                                     Password Lama
@@ -47,7 +47,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                 <input
                                     value={this.state.oldValue}
                                     type="password"
-                                    className="form-input w-96 py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
                                     placeholder="************"
                                     onChange={(ev) => this.setState({ oldValue: toString(ev.target.value) })}
                                 />
@@ -59,7 +59,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                 <input
                                     type="password"
                                     value={this.state.newValue}
-                                    className="form-input w-96 py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
                                     placeholder="************"
                                     onChange={(ev) => this.setState({ newValue: toString(ev.target.value) })}
                                 />

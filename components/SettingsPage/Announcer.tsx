@@ -70,11 +70,11 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
                         <span className="dark:text-white">{IDTextData}</span>
                     </div>
                     <div className="flex flex-row pb-2">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
                             <div className="w-full mt-2 mb-1">
                                 <input
                                     type="number"
-                                    className="form-input w-96 py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
                                     placeholder="xxxxxxxxxxxxxx"
                                     onChange={(ev) =>
                                         this.setState({ announcerId: toString(ev.target.value) })
