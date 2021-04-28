@@ -16,6 +16,7 @@ import ErrorModal from "../../../components/ErrorModal";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 
 import { UserProps } from "../../../models/user";
+import LoadingCircle from "../../../components/LoadingCircle";
 
 interface ProjectNewState {
     errTxt: string;
@@ -32,6 +33,7 @@ interface ProjectNewState {
     staffQC?: string;
     animeSelected: boolean;
     shouldShowEpisode: boolean;
+    isSubmitting: boolean;
 }
 
 interface ProjectNewProps {
@@ -91,11 +93,16 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
             episode: 0,
             animeSelected: false,
             shouldShowEpisode: false,
+            isSubmitting: false,
         };
     }
 
     async submitNewProject(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if (this.state.isSubmitting) {
+            return;
+        }
+        this.setState({ isSubmitting: true });
         const validRoles = [];
         for (const [stateKey, stateValue] of Object.entries(this.state)) {
             if (stateKey.startsWith("staff")) {
@@ -135,7 +142,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
         if (callbackAns.success) {
             Router.push(`/admin/proyek/${this.state.aniId}`);
         } else {
-            this.setState({ errTxt: callbackAns.message });
+            this.setState({ errTxt: callbackAns.message, isSubmitting: false });
             this.triggerModal();
             return;
         }
@@ -413,10 +420,27 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                             <div className="flex mt-2">
                                                 <button
                                                     type="submit"
-                                                    className="rounded px-3 py-2 bg-green-600 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center flex flex-row"
+                                                    className={`rounded px-3 py-2 text-white transition ${
+                                                        this.state.isSubmitting
+                                                            ? "bg-green-500 cursor-not-allowed"
+                                                            : "bg-green-600 hover:bg-green-700"
+                                                    } duration-200 ease-in-out items-center flex flex-row focus:outline-none`}
                                                 >
-                                                    <PlusIcon className="font-bold" />
-                                                    <span className="font-semibold mt-0.5">Tambah</span>
+                                                    {this.state.isSubmitting ? (
+                                                        <>
+                                                            <LoadingCircle className="mt-0 ml-0" />
+                                                            <span className="font-semibold mt-0.5 -ml-1">
+                                                                Tambah
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <PlusIcon className="font-bold" />
+                                                            <span className="font-semibold mt-0.5">
+                                                                Tambah
+                                                            </span>
+                                                        </>
+                                                    )}
                                                 </button>
                                             </div>
                                         </form>
