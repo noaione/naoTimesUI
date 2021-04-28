@@ -16,6 +16,7 @@ export type JSTypeof =
     | "object"
     | "symbol"
     | "array"; // Extra addition
+export type StaffRoles = "TL" | "TLC" | "ENC" | "ED" | "TM" | "TS" | "QC";
 
 export interface AssignmentsData {
     id: string;
