@@ -63,7 +63,7 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
         return (
             <>
                 <div className="flex flex-col py-1">
-                    <h3 className="font-semibold dark:text-white mb-2">Ubah Kanal #announcer</h3>
+                    <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Kanal #announcer</h3>
                     <div className="flex flex-col">
                         <span className="dark:text-white">{IDTextData}</span>
                     </div>

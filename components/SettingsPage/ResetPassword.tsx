@@ -35,7 +35,7 @@ class ResetPasswordComponent extends React.Component<{}, RPassState> {
         return (
             <>
                 <div className="flex flex-col py-1">
-                    <h3 className="font-semibold dark:text-white mb-2">Ubah Password</h3>
+                    <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Password</h3>
                     <div className="flex flex-row pb-2">
                         <div className="flex flex-col">
                             <div className="w-full mt-2 mb-1 flex flex-col">
