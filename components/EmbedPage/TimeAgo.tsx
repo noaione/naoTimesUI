@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { timeAgoLocale, TimeAgoLocale } from "../../i18n";
+import { timeAgoLocale, TimeAgoLocale, ValidLocale } from "../../i18n";
 
 interface RTALocaleProps {
     unix: number;
@@ -8,7 +8,7 @@ interface RTALocaleProps {
 
 export default function ReactTimeAgoLocale(props: RTALocaleProps) {
     let realLocale = "id";
-    if (props.locale) {
+    if (props.locale && ValidLocale.includes(props.locale)) {
         realLocale = props.locale;
     }
 
