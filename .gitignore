@@ -415,3 +415,7 @@ public/assets/js/*.js.map
 
 # Dont commit testing page and stuff
 pages/testing/**
+
+# VSCode stuff
+*.cpuprofile
+.vscode/launch*
