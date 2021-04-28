@@ -1,10 +1,12 @@
 import { toString } from "lodash";
 import React from "react";
+
+import { SettingsProps } from "./base";
+
 import LoadingCircle from "../LoadingCircle";
 
-interface AnnouncerProps {
+interface AnnouncerProps extends SettingsProps {
     announcerId?: string;
-    onErrorModal(errString: string): void;
 }
 
 interface AnnouncerState {

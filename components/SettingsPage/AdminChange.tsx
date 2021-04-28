@@ -1,7 +1,11 @@
 import { cloneDeep, toString, uniqueId } from "lodash";
 import React from "react";
-import { Nullable } from "../../lib/utils";
+
+import { SettingsProps } from "./base";
+
 import LoadingCircle from "../LoadingCircle";
+
+import { Nullable } from "../../lib/utils";
 
 interface AdminTextBoxProps {
     index: number;
@@ -82,9 +86,8 @@ function isDifferent(array1: string[], array2: string[]) {
     return unmatching;
 }
 
-interface AdminChangeProps {
+interface AdminChangeProps extends SettingsProps {
     serverOwner: string[];
-    onErrorModal(errString: string): void;
 }
 
 interface AdminData {

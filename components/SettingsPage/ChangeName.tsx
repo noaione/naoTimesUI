@@ -1,5 +1,8 @@
 import { toString } from "lodash";
 import React from "react";
+
+import { SettingsProps } from "./base";
+
 import LoadingCircle from "../LoadingCircle";
 
 interface NamingState {
@@ -7,7 +10,7 @@ interface NamingState {
     isSubmitting: boolean;
 }
 
-class ChangeNameComponent extends React.Component<{}, NamingState> {
+class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
     constructor(props) {
         super(props);
 

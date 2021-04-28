@@ -70,9 +70,12 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                     serverOwner={serverProps.serverowner}
                                     onErrorModal={this.showErrorCallback}
                                 />
-                                <SettingsComponent.ResetPass />
-                                <SettingsComponent.NameChange />
-                                <SettingsComponent.EmbedGen id={user.id} />
+                                <SettingsComponent.ResetPass onErrorModal={this.showErrorCallback} />
+                                <SettingsComponent.NameChange onErrorModal={this.showErrorCallback} />
+                                <SettingsComponent.EmbedGen
+                                    id={user.id}
+                                    onErrorModal={this.showErrorCallback}
+                                />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>

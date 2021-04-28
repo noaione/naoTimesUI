@@ -1,5 +1,7 @@
 import { toString } from "lodash";
 import React from "react";
+
+import { SettingsProps } from "./base";
 import LoadingCircle from "../LoadingCircle";
 
 interface RPassState {
@@ -8,7 +10,7 @@ interface RPassState {
     isSubmitting: boolean;
 }
 
-class ResetPasswordComponent extends React.Component<{}, RPassState> {
+class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> {
     constructor(props) {
         super(props);
 
