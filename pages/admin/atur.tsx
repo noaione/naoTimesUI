@@ -69,6 +69,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                     serverOwner={serverProps.serverowner}
                                     onErrorModal={this.showErrorCallback}
                                 />
+                                <SettingsComponent.ResetPass />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
