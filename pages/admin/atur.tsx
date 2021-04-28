@@ -65,10 +65,10 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                     announcerId={serverProps.announce_channel}
                                     onErrorModal={this.showErrorCallback}
                                 />
-                                {/* <SettingsComponent.Admin
+                                <SettingsComponent.Admin
                                     serverOwner={serverProps.serverowner}
                                     onErrorModal={this.showErrorCallback}
-                                /> */}
+                                />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
