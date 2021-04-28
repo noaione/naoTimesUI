@@ -76,6 +76,10 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                     id={user.id}
                                     onErrorModal={this.showErrorCallback}
                                 />
+                                <SettingsComponent.DeleteServer
+                                    id={user.id}
+                                    onErrorModal={this.showErrorCallback}
+                                />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
