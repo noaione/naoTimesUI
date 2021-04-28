@@ -419,3 +419,7 @@ pages/testing/**
 # VSCode stuff
 *.cpuprofile
 .vscode/launch*
+
+# Something else
+lib/*.py
+lib/*.txt
