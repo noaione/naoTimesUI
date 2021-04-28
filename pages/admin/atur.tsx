@@ -7,6 +7,7 @@ import MetadataHead from "../../components/MetadataHead";
 // Import all Settings Component
 import SettingsComponent from "../../components/SettingsPage";
 
+import dbConnect from "../../lib/dbConnect";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
@@ -94,6 +95,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
+    await dbConnect();
     let serverRes: ShowtimesProps;
     if (user.privilege === "server") {
         serverRes = (await ShowtimesModel.findOne(
