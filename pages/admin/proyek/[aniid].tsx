@@ -1,8 +1,14 @@
+import { cloneDeep, difference, toString } from "lodash";
 import React from "react";
 import Head from "next/head";
 
+import CheckAllIcon from "mdi-react/CheckAllIcon";
+import PencilIcon from "mdi-react/PencilIcon";
+
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
+import RolePopup from "../../../components/RolePopup";
+import { RoleColorPalette } from "../../../components/ColorMap";
 
 import dbConnect from "../../../lib/dbConnect";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
@@ -17,11 +23,6 @@ import {
 
 import { UserProps } from "../../../models/user";
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../models/show";
-import { RoleColorPalette } from "../../../components/ColorMap";
-import PencilIcon from "mdi-react/PencilIcon";
-import { cloneDeep, difference, toString } from "lodash";
-import CheckAllIcon from "mdi-react/CheckAllIcon";
-import RolePopup from "../../../components/RolePopup";
 
 interface ProyekPageProps {
     user?: UserProps & { loggedIn: boolean };
