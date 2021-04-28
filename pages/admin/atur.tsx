@@ -71,6 +71,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                 />
                                 <SettingsComponent.ResetPass />
                                 <SettingsComponent.NameChange />
+                                <SettingsComponent.EmbedGen id={user.id} />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
