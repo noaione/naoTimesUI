@@ -149,7 +149,6 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
     }
 
     onAnimeSelection(data: any, action: ActionMeta<any>) {
-        console.info(action);
         if (!["select-option", "clear"].includes(action.action)) {
             return;
         }

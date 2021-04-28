@@ -178,9 +178,7 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
 
     remove(idx: number) {
         let { serverOwner } = this.state;
-        console.info(serverOwner, idx, "old");
         serverOwner = serverOwner.filter((_v, idxIn) => idx !== idxIn);
-        console.info(serverOwner, idx, "new");
         this.setState({ serverOwner });
     }
 
@@ -188,7 +186,6 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
         const { serverOwner } = this.state;
         const { id } = serverOwner[idx];
         serverOwner[idx] = { id, value: data };
-        console.info(serverOwner);
         this.setState({ serverOwner });
     }
 

@@ -247,7 +247,6 @@ function isStatusDifferent(status: EpisodeStatuses, oldStatus: EpisodeStatuses) 
         return `${name}-${stat ? "true" : "false"}`;
     });
     const diffs = difference(redoneStatus, redoneOldStatus);
-    console.info(redoneStatus, redoneOldStatus, diffs);
     return diffs.length > 0;
 }
 

@@ -115,7 +115,6 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
         }
         const isToggler = target.id === "dropdown-toggler";
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target as Node) && !isToggler) {
-            console.info(event);
             this.setState({ dropdownOpen: false });
         }
     }
