@@ -57,7 +57,8 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                                 {data.title}
                             </a>
                             <div className="text-base text-gray-400">
-                                Episode {status.episode.toString()} sisa
+                                Episode {status.episode.toString()}
+                                {unfinishedProgress.length > 0 && " sisa"}
                             </div>
                             <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
                                 {unfinishedProgress.length > 0 ? (
@@ -75,7 +76,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                                         );
                                     })
                                 ) : (
-                                    <div className="text-lg font-light text-gray-800 dark:text-gray-200">
+                                    <div className="text-lg font-light text-gray-800 dark:text-gray-300">
                                         Menunggu rilis...
                                     </div>
                                 )}
