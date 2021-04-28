@@ -33,7 +33,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
 
         const unfinishedProgress = [];
         for (const [role, isDone] of Object.entries(progress)) {
-            if (isDone) {
+            if (!isDone) {
                 unfinishedProgress.push(role);
             }
         }
