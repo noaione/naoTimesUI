@@ -1,13 +1,13 @@
 import React from "react";
 import { UserProps } from "../models/user";
 import AdminHeader from "./AdminHeader";
-import AdminSidenav from "./AdminSidenav";
+import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
 
 import packageJSON from "../package.json";
 
 interface AdminLayoutProps {
     user: UserProps;
-    active?: "home" | "project" | "projectpage" | "settings";
+    active?: SidenavActiveState;
     title?: string;
     overflowX?: boolean;
 }

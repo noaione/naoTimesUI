@@ -2,19 +2,22 @@ import React from "react";
 
 import CogIcon from "mdi-react/CogIcon";
 import HomeIcon from "mdi-react/HomeIcon";
-import PencilIcon from "mdi-react/PencilIcon";
+import NewspaperVariantIcon from "mdi-react/NewspaperVariantIcon";
 import ServerIcon from "mdi-react/ServerIcon";
+import YoutubeTvIcon from "mdi-react/YoutubeTvIcon";
 
 import GitHubIcon from "./Icons/GitHub";
 
 import { romanizeNumber } from "../lib/utils";
+
+export type SidenavActiveState = "home" | "project" | "projectpage" | "fsrss" | "fsrsspage" | "settings";
 
 interface SidenavProps {
     id: string;
     name?: string;
     privilige: "owner" | "server";
     show: boolean;
-    active?: "home" | "project" | "projectpage" | "settings";
+    active?: SidenavActiveState;
     appInfo?: {
         semver?: string;
         commit?: string;
@@ -51,7 +54,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
         const adminPageIcon = isAdmin ? (
             <ServerIcon className="text-sm" />
         ) : (
-            <PencilIcon className="text-sm" />
+            <YoutubeTvIcon className="text-sm" />
         );
 
         const currentCopyright = new Date().getUTCFullYear();
@@ -103,6 +106,19 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                             {adminPageIcon}
                             <span className="ml-1">{isAdmin ? "Peladen" : "Proyek"}</span>
                         </a>
+                        {!isAdmin && (
+                            <a
+                                href={curActive === "fsrss" ? "#" : "/admin/fansubrss"}
+                                className={
+                                    ["fsrss", "fsrsspage"].includes(curActive)
+                                        ? SelClass + " mt-3"
+                                        : NormanClass + " mt-3"
+                                }
+                            >
+                                <NewspaperVariantIcon className="text-sm" />
+                                <span className="ml-1">FansubRSS</span>
+                            </a>
+                        )}
                         <a
                             href={curActive === "settings" ? "#" : "/admin/atur"}
                             className={curActive === "settings" ? SelClass + " mt-3" : NormanClass + " mt-3"}
