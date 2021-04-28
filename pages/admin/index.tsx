@@ -50,7 +50,7 @@ class AdminAnimeSets extends React.Component<AdminAnimeProps> {
                         })}
                     </div>
                 ) : (
-                    <div className="text-lg font-light mt-2">Sudah selesai semua!</div>
+                    <div className="text-lg font-light mt-2 dark:text-white">Sudah selesai semua!</div>
                 )}
             </>
         );

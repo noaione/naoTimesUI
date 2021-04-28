@@ -136,19 +136,25 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                         {isLoading ? (
                             <div className="flex flex-row mt-4">
                                 <LoadingCircle />
-                                <p className="font-bold dark:text-gray-200 text-xl"></p>
+                                <p className="font-bold dark:text-gray-200 text-xl">Memuat...</p>
                             </div>
                         ) : (
                             <>
                                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
-                                    {animeData.map((anime) => {
-                                        return (
-                                            <ProyekSimpleCard
-                                                anime={anime}
-                                                key={`anime-proyek-${anime.id}`}
-                                            />
-                                        );
-                                    })}
+                                    {animeData.length > 0 ? (
+                                        animeData.map((anime) => {
+                                            return (
+                                                <ProyekSimpleCard
+                                                    anime={anime}
+                                                    key={`anime-proyek-${anime.id}`}
+                                                />
+                                            );
+                                        })
+                                    ) : (
+                                        <span className="font-bold dark:text-gray-200 text-xl">
+                                            Tidak ada proyek yang terdaftar
+                                        </span>
+                                    )}
                                 </div>
                             </>
                         )}
