@@ -70,6 +70,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                     onErrorModal={this.showErrorCallback}
                                 />
                                 <SettingsComponent.ResetPass />
+                                <SettingsComponent.NameChange />
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
