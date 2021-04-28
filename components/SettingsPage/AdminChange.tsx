@@ -209,7 +209,7 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
                                 );
                             })}
                         </div>
-                        <div className="flex mt-2">
+                        <div className="flex mt-2 pb-2">
                             <button
                                 onClick={() => this.setState({ isEdit: true })}
                                 className={`rounded text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors duration-200 flex flex-row items-center focus:outline-none`}
@@ -246,7 +246,7 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
                             <span className="dark:text-gray-200">Tidak ada admin</span>
                         )}
                     </div>
-                    <div className="flex flex-row gap-2 mt-2">
+                    <div className="flex flex-row gap-2 mt-2 pb-2">
                         <button
                             onClick={this.addNew}
                             className={`rounded text-white px-4 py-2 bg-green-600 hover:bg-green-700 transition-colors duration-200 flex flex-row items-center focus:outline-none`}
