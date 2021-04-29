@@ -1,4 +1,5 @@
 import React from "react";
+
 import Modal, { CallbackModal } from "./Modal";
 
 interface ErrState {
@@ -11,7 +12,6 @@ interface ErrProps {
 }
 
 class ErrorModal extends React.Component<ErrProps, ErrState> {
-    divRef?: HTMLDivElement;
     modalCb?: CallbackModal;
 
     constructor(props: ErrProps) {
