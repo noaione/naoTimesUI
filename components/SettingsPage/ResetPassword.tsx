@@ -63,7 +63,6 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
             body: JSON.stringify(bodyBag),
         });
         const res = await apiRes.json();
-        console.info(res);
         if (res.code === 200) {
             // Refresh
             Router.reload();
