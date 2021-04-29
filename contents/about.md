@@ -46,4 +46,4 @@ Makasih juga untuk manusia-manusia berikut:
 - *Anon* 2 (Bantuan translasi untuk Embed versi Sunda)
 - Semua orang yang 
 
-:heart: MMXXI - naoTimesDev a.k.a N4O
+:heart: {{currentYear}} - naoTimesDev a.k.a N4O

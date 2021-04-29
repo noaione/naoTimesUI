@@ -12,6 +12,7 @@ import gfm from "remark-gfm";
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
 
+import { romanizeNumber } from "../../lib/utils";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
@@ -30,6 +31,12 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
     render() {
         const { user, aboutPage, changelogPage } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+
+        const currentYear = new Date().getFullYear();
+        const genMarkdownURL = `[${romanizeNumber(
+            currentYear
+        )}](https://id.wikipedia.org/wiki/${currentYear})`;
+        const aboutPageWithYear = aboutPage.replace("{{currentYear}}", genMarkdownURL);
 
         return (
             <>
@@ -55,7 +62,7 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                                 }}
                                 remarkPlugins={[gfm, gemoji, breaks]}
                             >
-                                {aboutPage}
+                                {aboutPageWithYear}
                             </ReactMarkdown>
                         </div>
                     </div>
