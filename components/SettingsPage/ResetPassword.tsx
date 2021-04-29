@@ -1,5 +1,6 @@
 import { toString } from "lodash";
 import React from "react";
+import Router from "next/router";
 
 import { SettingsProps } from "./base";
 import LoadingCircle from "../LoadingCircle";
@@ -43,12 +44,33 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
         if (this.state.isSubmitting || !this.state.isValid) {
             return;
         }
+        if (this.state.oldValue.length < 1) {
+            this.props.onErrorModal("Mohon masukan password lama terlebih dahulu!");
+            return;
+        }
         this.setState({ isSubmitting: true });
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => {
-            outerThis.setState({ isSubmitting: false });
-        }, 2000);
+
+        const bodyBag = {
+            new: this.state.newValue,
+            old: this.state.oldValue,
+        };
+
+        const apiRes = await fetch("/api/auth/reset", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bodyBag),
+        });
+        const res = await apiRes.json();
+        console.info(res);
+        if (res.code === 200) {
+            // Refresh
+            Router.reload();
+        } else {
+            this.setState({ isSubmitting: false, oldValue: "" });
+            this.props.onErrorModal((res.message as string) || "Terjadi kesalahan internal!");
+        }
     }
 
     passwordVerify(passwd: string) {
