@@ -10,13 +10,13 @@ import PlusIcon from "mdi-react/PlusIcon";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
+import LoadingCircle from "../../../components/LoadingCircle";
 import { CallbackModal } from "../../../components/Modal";
 import ErrorModal from "../../../components/ErrorModal";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 
 import { UserProps } from "../../../models/user";
-import LoadingCircle from "../../../components/LoadingCircle";
 
 interface ProjectNewState {
     errTxt: string;
