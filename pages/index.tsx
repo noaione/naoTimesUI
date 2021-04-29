@@ -150,7 +150,7 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                                     disabled={submitting}
                                                 >
                                                     {submitting && <LoadingCircle className="mt-0" />}
-                                                    Daftar
+                                                    Masuk
                                                 </button>
                                                 <a
                                                     href="/registrasi"
