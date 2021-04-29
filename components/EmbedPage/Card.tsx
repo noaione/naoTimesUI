@@ -8,7 +8,7 @@ import { ValidAccent } from "../ColorMap";
 import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
 import { ShowAnimeProps } from "../../models/show";
 import reactStringReplace from "react-string-replace";
-import ReactTimeAgoLocale from "./TimeAgo";
+import ReactTimeAgoLocale from "../TimeAgo";
 import { DateTime } from "luxon";
 import EpisodeCard from "./Episode";
 

@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { timeAgoLocale, TimeAgoLocale, ValidLocale } from "../../i18n";
+import { timeAgoLocale, TimeAgoLocale, ValidLocale } from "../i18n";
 
 interface RTALocaleProps {
     unix: number;
