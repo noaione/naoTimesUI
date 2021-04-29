@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React from "react";
+import Router from "next/router";
 
 import AccountIcon from "mdi-react/AccountIcon";
 import ShieldAccountIcon from "mdi-react/ShieldAccountIcon";
@@ -183,6 +184,11 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                             >
                                 <a
                                     href="/api/auth/logout"
+                                    onClick={async (ev) => {
+                                        ev.preventDefault();
+                                        await fetch("/api/auth/logout");
+                                        Router.push("/");
+                                    }}
                                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white"
                                 >
                                     Keluar
