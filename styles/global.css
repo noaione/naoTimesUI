@@ -6,5 +6,6 @@
 @import "./components/stackshadow.css";
 @import "./components/bootstrap-modal.css";
 @import "./components/extras.css";
+@import "./components/react-md.css";
 
 @import "tailwindcss/utilities";
