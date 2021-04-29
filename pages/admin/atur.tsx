@@ -32,6 +32,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
     constructor(props: SettingsHomepageProps) {
         super(props);
+        this.showErrorCallback = this.showErrorCallback.bind(this);
         this.state = {
             isLoading: true,
             showModal: false,
