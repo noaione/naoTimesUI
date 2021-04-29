@@ -15,7 +15,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     } else {
         await dbConnect();
         const oldUserData = (await UserModel.findOne({ id: { $eq: user.id } })) as UserProps;
-        if (oldUserData.secret === reqData.old) {
+        if (oldUserData.secret !== reqData.old) {
             res.status(400).json({ message: "Password lama salah!", code: 400 });
         } else {
             await UserModel.updateOne({ id: { $eq: user.id } }, { $set: { secret: reqData.new } });
