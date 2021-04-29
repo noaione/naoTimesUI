@@ -2,6 +2,7 @@ import React from "react";
 
 import CogIcon from "mdi-react/CogIcon";
 import HomeIcon from "mdi-react/HomeIcon";
+import InformationIcon from "mdi-react/InformationIcon";
 import NewspaperVariantIcon from "mdi-react/NewspaperVariantIcon";
 import ServerIcon from "mdi-react/ServerIcon";
 import YoutubeTvIcon from "mdi-react/YoutubeTvIcon";
@@ -10,7 +11,14 @@ import GitHubIcon from "./Icons/GitHub";
 
 import { romanizeNumber } from "../lib/utils";
 
-export type SidenavActiveState = "home" | "project" | "projectpage" | "fsrss" | "fsrsspage" | "settings";
+export type SidenavActiveState =
+    | "home"
+    | "project"
+    | "projectpage"
+    | "fsrss"
+    | "fsrsspage"
+    | "settings"
+    | "about";
 
 interface SidenavProps {
     id: string;
@@ -125,6 +133,13 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                         >
                             <CogIcon className="text-sm" />
                             <span className="ml-1">Pengaturan</span>
+                        </a>
+                        <a
+                            href={curActive === "about" ? "#" : "/admin/tentang"}
+                            className={curActive === "about" ? SelClass + " mt-3" : NormanClass + " mt-3"}
+                        >
+                            <InformationIcon className="text-sm" />
+                            <span className="ml-1">Tentang</span>
                         </a>
                     </nav>
 
