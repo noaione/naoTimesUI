@@ -1,5 +1,6 @@
 import { toString } from "lodash";
 import React from "react";
+import Router from "next/router";
 
 import { SettingsProps } from "./base";
 
@@ -14,7 +15,7 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
     constructor(props) {
         super(props);
 
-        this.submitPassword = this.submitPassword.bind(this);
+        this.submitNewName = this.submitNewName.bind(this);
 
         this.state = {
             newValue: "",
@@ -22,13 +23,30 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
         };
     }
 
-    async submitPassword() {
+    async submitNewName() {
+        const { newValue } = this.state;
+        if (newValue.length < 1) {
+            this.props.onErrorModal("Mohon masukan nama baru!");
+            return;
+        }
         this.setState({ isSubmitting: true });
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => {
-            outerThis.setState({ isSubmitting: false });
-        }, 2000);
+        const bodyBag = {
+            newname: newValue,
+        };
+        const apiRes = await fetch("/api/showtimes/settings/name", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bodyBag),
+        });
+        const res = await apiRes.json();
+        if (res.code === 200) {
+            // Refresh
+            Router.reload();
+        } else {
+            this.props.onErrorModal((res.message as string) || "Terjadi kesalahan internal!");
+        }
     }
 
     render() {
@@ -51,7 +69,7 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
                             </div>
                             <div className="flex mt-2">
                                 <button
-                                    onClick={this.submitPassword}
+                                    onClick={this.submitNewName}
                                     className={`rounded text-white px-4 py-2 ${
                                         isSubmitting
                                             ? "bg-blue-500 cursor-not-allowed"
