@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+
 import { timeAgoLocale, TimeAgoLocale, ValidLocale } from "../i18n";
 
 interface RTALocaleProps {
@@ -14,9 +15,5 @@ export default function ReactTimeAgoLocale(props: RTALocaleProps) {
 
     const localized = timeAgoLocale(props.unix, realLocale as TimeAgoLocale);
     const dtTime = DateTime.fromSeconds(props.unix, { zone: "UTC" }).toISO();
-    return (
-        <time slot="2" dateTime={dtTime}>
-            {localized}
-        </time>
-    );
+    return <time dateTime={dtTime}>{localized}</time>;
 }

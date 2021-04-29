@@ -1,7 +1,9 @@
 import React from "react";
-import { UserProps } from "../models/user";
+
 import AdminHeader from "./AdminHeader";
 import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
+
+import { UserProps } from "../models/user";
 
 import packageJSON from "../package.json";
 

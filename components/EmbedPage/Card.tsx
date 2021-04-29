@@ -1,16 +1,19 @@
 import React from "react";
+import { DateTime } from "luxon";
 
 import ChevronUp from "mdi-react/ChevronUpIcon";
 import ChevronDown from "mdi-react/ChevronDownIcon";
+import reactStringReplace from "react-string-replace";
 
 import { IEmbedParams } from "./Interface";
-import { ValidAccent } from "../ColorMap";
-import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
-import { ShowAnimeProps } from "../../models/show";
-import reactStringReplace from "react-string-replace";
-import ReactTimeAgoLocale from "../TimeAgo";
-import { DateTime } from "luxon";
+
 import EpisodeCard from "./Episode";
+import { ValidAccent } from "../ColorMap";
+import ReactTimeAgoLocale from "../TimeAgo";
+
+import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
+
+import { ShowAnimeProps } from "../../models/show";
 
 function getSeason(month: number, year: number, locale: Locale): string {
     const yearS = year.toString();

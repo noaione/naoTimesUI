@@ -1,4 +1,5 @@
 import React from "react";
+
 import { RoleColorPalette } from "./ColorMap";
 
 import { RoleProject } from "../lib/utils";

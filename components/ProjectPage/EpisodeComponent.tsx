@@ -3,9 +3,9 @@ import React from "react";
 
 import LoadingCircle from "../LoadingCircle";
 import RolePopup from "../RolePopup";
+import { SettingsProps } from "../SettingsPage/base";
 
 import { expandRoleLocalized, expandRoleName, RoleProject } from "../../lib/utils";
-import { SettingsProps } from "../SettingsPage/base";
 
 function FinishedPopper() {
     return <span className="text-green-500">✔</span>;

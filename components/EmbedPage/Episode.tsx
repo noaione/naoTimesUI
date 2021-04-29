@@ -1,7 +1,9 @@
-import { DateTime } from "luxon";
 import React from "react";
-import { Locale, timeAgoLocale, translate, ValidLocale } from "../../i18n";
+import { DateTime } from "luxon";
+
 import RolePopup from "../RolePopup";
+
+import { Locale, timeAgoLocale, translate, ValidLocale } from "../../i18n";
 
 interface IEpisodeProps {
     airingAt?: number;
