@@ -45,7 +45,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
         const appInfo = this.props.appInfo || {};
         const { semver, commit } = appInfo;
         const isAdmin = privilige === "owner";
-        const curActive = active || "home";
+        const curActive = active ?? "home";
 
         const blackLucent = show ? "block" : "hidden";
         const sidebarTransition = show ? "translate-x-0 ease-out" : "-translate-x-full ease-in";

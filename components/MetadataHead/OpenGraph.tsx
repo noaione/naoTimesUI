@@ -14,7 +14,7 @@ class OpenGraphMeta extends React.Component<OpenGraphProps> {
     render() {
         const { title, description, url, image } = this.props;
 
-        const realImage = image || "/assets/img/ntui_splash.png";
+        const realImage = image ?? "/assets/img/ntui_splash.png";
 
         return (
             <>

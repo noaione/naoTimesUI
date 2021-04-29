@@ -23,8 +23,8 @@ type SocketEvent =
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
-    const HOST = process.env.BOT_SOCKET_HOST || "127.0.0.1";
-    const PORT = process.env.BOT_SOCKET_PORT || 25670;
+    const HOST = process.env.BOT_SOCKET_HOST ?? "127.0.0.1";
+    const PORT = process.env.BOT_SOCKET_PORT ?? 25670;
     if (!HOST || !PORT) {
         throw new Error(`emitSocket: Invalid configuration for BotSocket\nClient: ${HOST}:${PORT}`);
     }

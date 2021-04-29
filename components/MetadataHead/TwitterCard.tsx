@@ -13,7 +13,7 @@ class TwitterCardsMeta extends React.Component<TwitterCardProps> {
     render() {
         const { title, description, image } = this.props;
 
-        const realImage = image || "/assets/img/ntui_splash.png";
+        const realImage = image ?? "/assets/img/ntui_splash.png";
 
         return (
             <>

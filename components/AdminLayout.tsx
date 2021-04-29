@@ -37,13 +37,13 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
     render() {
         const { version } = packageJSON;
         const { user, active, title, overflowX } = this.props;
-        const realTitle = title || "Ikhtisar";
+        const realTitle = title ?? "Ikhtisar";
         let realOverflowX = false;
         if (typeof overflowX === "boolean") {
             realOverflowX = overflowX;
         }
         const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA } = process.env;
-        const commit = NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "";
+        const commit = NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "";
         const appInfo = { semver: version, commit };
         return (
             <>

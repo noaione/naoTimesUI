@@ -42,9 +42,9 @@ interface ProjectNewProps {
 
 function matchFilterProper(data: any, inputValue: string) {
     const matchRe = new RegExp(`(${inputValue})`, "i");
-    let titleUncased = (data.titlematch as string) || "";
-    let titleUncasedEN = (data.titlematchen as string) || "";
-    let titleUncasedOther = (data.titlematchother as string) || "";
+    let titleUncased = (data.titlematch as string) ?? "";
+    let titleUncasedEN = (data.titlematchen as string) ?? "";
+    let titleUncasedOther = (data.titlematchother as string) ?? "";
     titleUncased = titleUncased.toLowerCase();
     titleUncasedEN = titleUncasedEN.toLowerCase();
     titleUncasedOther = titleUncasedOther.toLowerCase();

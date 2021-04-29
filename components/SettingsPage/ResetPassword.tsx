@@ -69,7 +69,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
             Router.reload();
         } else {
             this.setState({ isSubmitting: false, oldValue: "" });
-            this.props.onErrorModal((res.message as string) || "Terjadi kesalahan internal!");
+            this.props.onErrorModal((res.message as string) ?? "Terjadi kesalahan internal!");
         }
     }
 

@@ -144,7 +144,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
 
                         <div>
                             <h1 className="text-2xl ml-2 font-medium text-gray-800 dark:text-white">
-                                {title || "Ikhtisar"}
+                                {title ?? "Ikhtisar"}
                             </h1>
                         </div>
                     </div>

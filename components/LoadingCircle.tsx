@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function LoadingCircle(props: React.SVGProps<any>) {
-    const extendedProps = props.className || "";
+    const extendedProps = props.className ?? "";
     return (
         <>
             <svg
