@@ -12,5 +12,6 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require("@tailwindcss/custom-forms")],
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    plugins: [require("@tailwindcss/forms")({ strategy: "class" })],
 };

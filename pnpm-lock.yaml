@@ -5,7 +5,7 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^5.15.3
   '@fortawesome/react-fontawesome': ^0.1.14
   '@kachkaev/react-inline-js': ^0.2.0
-  '@tailwindcss/custom-forms': ^0.2.1
+  '@tailwindcss/forms': ^0.3.2
   '@types/javascript-time-ago': ^2.0.2
   '@types/lodash': ^4.14.168
   '@types/luxon': ^1.26.4
@@ -54,6 +54,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 5.15.3
   '@fortawesome/react-fontawesome': 0.1.14_ec0af2bc0907a851e3e0afc4708fd0f0
   '@kachkaev/react-inline-js': 0.2.0
+  '@tailwindcss/forms': 0.3.2_tailwindcss@2.1.1
   axios: 0.21.1
   body-parser: 1.19.0
   javascript-time-ago: 2.3.4
@@ -76,7 +77,6 @@ dependencies:
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
 
 devDependencies:
-  '@tailwindcss/custom-forms': 0.2.1_tailwindcss@2.1.1
   '@types/javascript-time-ago': 2.0.2
   '@types/lodash': 4.14.168
   '@types/luxon': 1.26.4
@@ -391,16 +391,14 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: false
 
-  /@tailwindcss/custom-forms/0.2.1_tailwindcss@2.1.1:
-    resolution: {integrity: sha512-XdP5XY6kxo3x5o50mWUyoYWxOPV16baagLoZ5uM41gh6IhXzhz/vJYzqrTb/lN58maGIKlpkxgVsQUNSsbAS3Q==}
+  /@tailwindcss/forms/0.3.2_tailwindcss@2.1.1:
+    resolution: {integrity: sha512-aj2/rJsGb2whAZ/BQWHWWQRSbhH0r/l1ozOByiv+ZNjBD84GMvb5dhAyfpeasFky+EJrAwX5eaqft8NQMZFWvA==}
     peerDependencies:
-      tailwindcss: ^1.0
+      tailwindcss: '>=2.0.0'
     dependencies:
-      lodash: 4.17.21
       mini-svg-data-uri: 1.2.3
       tailwindcss: 2.1.1_02ae6d0a5709fa7b5d38be2fad8eebc6
-      traverse: 0.6.6
-    dev: true
+    dev: false
 
   /@trysound/sax/0.1.1:
     resolution: {integrity: sha512-Z6DoceYb/1xSg5+e+ZlPZ9v0N16ZvZ+wYMraFue4HYrE4ttONKtsvruIRf6t9TBR0YvSOfi1hUU0fJfBLCDYow==}
@@ -2950,7 +2948,7 @@ packages:
 
   /mini-svg-data-uri/1.2.3:
     resolution: {integrity: sha512-zd6KCAyXgmq6FV1mR10oKXYtvmA9vRoB6xPSTUJTbFApCtkefDnYueVR1gkof3KcdLZo1Y8mjF2DFmQMIxsHNQ==}
-    dev: true
+    dev: false
 
   /minimalistic-assert/1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
@@ -5155,10 +5153,6 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: false
-
-  /traverse/0.6.6:
-    resolution: {integrity: sha1-y99WD9e5r2MlAv7UD5GMFX6pcTc=}
-    dev: true
 
   /trough/1.0.5:
     resolution: {integrity: sha512-rvuRbTarPXmMb79SmzEp8aqXNKcK+y0XaB298IXueQ8I2PsrATcPBCSPyK/dDNa2iWOhKlfNnOjdAOTBU/nkFA==}
