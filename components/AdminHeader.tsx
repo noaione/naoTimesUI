@@ -143,7 +143,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                         </button>
 
                         <div>
-                            <h1 className="text-2xl ml-2 font-medium text-gray-800 dark:text-white">
+                            <h1 className="text-2xl mx-4 lg:mx-2 font-medium text-gray-800 dark:text-white">
                                 {title ?? "Ikhtisar"}
                             </h1>
                         </div>

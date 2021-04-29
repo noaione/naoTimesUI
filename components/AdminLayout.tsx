@@ -49,7 +49,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
         const appInfo = { semver: version, commit };
         return (
             <>
-                <div className="flex h-screen bg-gray-100 dark:bg-gray-800 font-roboto transition-colors duration-300">
+                <div className="flex h-screen bg-gray-100 dark:bg-gray-800 font-inter transition-colors duration-300">
                     <AdminSidenav
                         id={user.id}
                         name={user.name}

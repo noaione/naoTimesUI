@@ -37,13 +37,14 @@ interface EpisodeStatuses {
 }
 
 interface EpisodeBoxProps extends SettingsProps {
+    animeId: string;
     episode: number;
     airTime?: number;
     status: EpisodeStatuses;
     isReleased: boolean;
 }
 
-interface EpisodeBoxHeaderProps extends Omit<EpisodeBoxProps, "status" | "onErrorModal"> {
+interface EpisodeBoxHeaderProps extends Omit<EpisodeBoxProps, "status" | "onErrorModal" | "animeId"> {
     isEdit: boolean;
     isSubmit: boolean;
     onClick(): void;
@@ -154,11 +155,44 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
             return;
         }
         this.setState({ isSubmit: true });
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => {
-            outerThis.setState({ isSubmit: false });
-        }, 3000);
+
+        const buildStatus = Object.keys(this.state.status).map((role) => {
+            return {
+                tick: this.state.status[role] as boolean,
+                role,
+            };
+        });
+
+        const bodyBag = {
+            event: "status",
+            changes: {
+                roles: buildStatus,
+                anime_id: this.props.animeId,
+                episode: this.props.episode,
+            },
+        };
+
+        const apiRes = await fetch("/api/showtimes/proyek/ubah", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bodyBag),
+        });
+
+        const jsonRes = await apiRes.json();
+        if (jsonRes.success) {
+            const results = jsonRes.results;
+            this.setState({
+                status: cloneDeep(results.progress),
+                oldStatus: cloneDeep(results.progress),
+                isEdit: false,
+                isSubmit: false,
+            });
+        } else {
+            this.setState({ isEdit: false, isSubmit: false });
+            this.props.onErrorModal(jsonRes.message);
+        }
     }
 
     toggleStatusCheck(statusKey: keyof EpisodeStatuses, checked: boolean) {

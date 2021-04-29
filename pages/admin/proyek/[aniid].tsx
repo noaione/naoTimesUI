@@ -111,6 +111,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                     <ProjectPageComponent.Episode
                                         key={`anime-${id}-episode-${res.episode}`}
                                         onErrorModal={outerThis.showErrorCallback}
+                                        animeId={id}
                                         episode={res.episode}
                                         airTime={res.airtime}
                                         status={res.progress}
