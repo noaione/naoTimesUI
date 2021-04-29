@@ -45,6 +45,7 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
             // Refresh
             Router.reload();
         } else {
+            this.setState({ isSubmitting: false, newValue: "" });
             this.props.onErrorModal((res.message as string) || "Terjadi kesalahan internal!");
         }
     }
