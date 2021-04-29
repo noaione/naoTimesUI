@@ -1,6 +1,10 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
+/* Import fonts */
+@import "./fonts/Inter.css";
+
+/* Import components */
 @import "./components/animation.css";
 @import "./components/fontstyle.css";
 @import "./components/stackshadow.css";
