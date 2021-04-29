@@ -1,7 +1,7 @@
 import React from "react";
 import { RoleColorPalette } from "./ColorMap";
 
-export type RoleProject = "TL" | "TLC" | "ENC" | "ED" | "TM" | "TS" | "QC";
+import { RoleProject } from "../lib/utils";
 
 interface RolePopupProps {
     title: RoleProject;
