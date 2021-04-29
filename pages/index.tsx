@@ -8,6 +8,7 @@ import ServerIcon from "mdi-react/ServerIcon";
 import MetadataHead from "../components/MetadataHead";
 import LoginSidebar from "../components/LoginSidebar";
 import LoadingCircle from "../components/LoadingCircle";
+import TrakteerButton from "../components/TrakteerButton";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../lib/session";
 
@@ -172,6 +173,7 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                         </div>
                     </div>
                 </div>
+                <TrakteerButton />
             </>
         );
     }

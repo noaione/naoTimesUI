@@ -8,6 +8,7 @@ import ServerIcon from "mdi-react/ServerIcon";
 import MetadataHead from "../components/MetadataHead";
 import LoginSidebar from "../components/LoginSidebar";
 import LoadingCircle from "../components/LoadingCircle";
+import TrakteerButton from "../components/TrakteerButton";
 
 interface RegistrationState {
     errorMsg: string;
@@ -162,6 +163,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                         </div>
                     </div>
                 </div>
+                <TrakteerButton />
             </>
         );
     }
