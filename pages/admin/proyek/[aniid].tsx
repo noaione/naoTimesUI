@@ -123,7 +123,7 @@ class StaffList extends React.Component<StaffProps, StaffState> {
                         <CheckAllIcon className="text-gray-800" />
                     </button>
                     <input
-                        className="form-input bg-gray-200 dark:bg-gray-500 w-full py-1 border-2 border-gray-200 dark:border-gray-500 dark:text-gray-200 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
+                        className="form-input bg-gray-200 dark:bg-gray-500 w-full py-1 border-2 border-gray-200 dark:placeholder-gray-200 dark:border-gray-500 dark:text-gray-200 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
                         type="number"
                         placeholder="xxxxxxxxxxxxxx"
                         value={this.state.userId}
@@ -268,6 +268,7 @@ class EpisodeBox extends React.Component<EpisodeBoxProps, EpisodeBoxState> {
             this.setState({ isEdit: false });
             return;
         }
+        this.setState({ isEdit: false });
     }
 
     toggleStatusCheck(statusKey: keyof EpisodeStatuses, checked: boolean) {
