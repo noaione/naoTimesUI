@@ -24,7 +24,7 @@ interface StaffState {
     oldId: string | number;
 }
 
-class StaffList extends React.Component<StaffProps, StaffState> {
+class StaffComponent extends React.Component<StaffProps, StaffState> {
     constructor(props: StaffProps) {
         super(props);
         this.submitEditing = this.submitEditing.bind(this);
@@ -135,4 +135,4 @@ class StaffList extends React.Component<StaffProps, StaffState> {
     }
 }
 
-export default StaffList;
+export default StaffComponent;

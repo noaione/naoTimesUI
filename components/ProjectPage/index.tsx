@@ -1,9 +1,9 @@
 import EpisodeComponent from "./EpisodeComponent";
-import StaffList from "./StaffComponent";
+import StaffComponent from "./StaffComponent";
 
 const ProjectPageComponent = {
     Episode: EpisodeComponent,
-    Staff: StaffList,
+    Staff: StaffComponent,
 };
 
 export default ProjectPageComponent;
