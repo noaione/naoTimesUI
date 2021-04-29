@@ -15,23 +15,16 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     } else if (typeof reqData.newname !== "string") {
         res.status(400).json({ message: "Mohon masukan nama baru", code: 400 });
     } else {
-        console.info(reqData);
-        console.info("connecting to database...");
         await dbConnect();
-        console.info("updating...");
         await UserModel.updateOne({ id: { $eq: user.id } }, { $set: { name: reqData.newname } });
-        user.name = reqData.name;
         const newSession: IUserAuth = {
             id: user.id,
-            name: reqData.name,
+            name: reqData.newname,
             privilege: user.privilege,
         };
-        console.info("updating session...");
         req.session.unset("user");
         req.session.set("user", newSession);
-        console.info("updating save data....");
         await req.session.save();
-        console.info("returning");
         res.json({ message: "success", code: 200 });
     }
 });
