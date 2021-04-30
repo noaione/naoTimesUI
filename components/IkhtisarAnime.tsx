@@ -1,4 +1,6 @@
 import React from "react";
+import Router from "next/router";
+
 import RolePopup from "./RolePopup";
 
 import { AssignmentsData, expandRoleLocalized, expandRoleName, getAssigneeName } from "../lib/utils";
@@ -40,27 +42,28 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
 
         return (
             <>
-                <div className="p-2 bg-white dark:bg-gray-700 rounded shadow-sm self-start">
-                    <div className="flex pt-1">
-                        <a className="icon h-2/3 p-2 ml-1" href={"/admin/proyek/" + data.id}>
-                            <img
-                                src={data.poster}
-                                className="transition duration-300 ease-out transform hover:-translate-y-1"
-                                alt={"Poster for " + data.title}
-                            />
-                        </a>
-                        <div className="flex flex-col py-1">
-                            <a
-                                className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
-                                href={"/admin/proyek/" + data.id}
-                            >
-                                {data.title}
-                            </a>
-                            <div className="text-base text-gray-400">
+                <div className="w-full lg:max-w-full lg:flex dark:bg-gray-700 dark:text-white shadow-lg rounded-lg break-all">
+                    <div
+                        onClick={() => Router.push("/admin/proyek" + data.id)}
+                        className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
+                        style={{ backgroundImage: `url(${data.poster})` }}
+                        title="Cover Art"
+                    />
+                    <div className="bg-white dark:bg-gray-700 p-4 flex flex-col justify-between leading-normal">
+                        <div className="mb-8">
+                            <div className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-1">
+                                <a
+                                    href={"/admin/proyek" + data.id}
+                                    className="no-underline hover:underline cursor-pointer"
+                                >
+                                    {data.title}
+                                </a>
+                            </div>
+                            <p className="text-gray-700 dark:text-gray-300 text-base mb-0.5">
                                 Episode {status.episode.toString()}
                                 {unfinishedProgress.length > 0 && " sisa"}
-                            </div>
-                            <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
+                            </p>
+                            <div className="flex flex-row flex-wrap gap-1 text-center">
                                 {unfinishedProgress.length > 0 ? (
                                     unfinishedProgress.map((role) => {
                                         const name = getAssigneeName(assignments[role]);

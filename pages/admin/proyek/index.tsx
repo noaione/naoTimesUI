@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Router from "next/router";
 
 import PlusIcon from "mdi-react/PlusIcon";
 
@@ -49,14 +50,14 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
 
         return (
             <>
-                <div className="p-2 bg-white dark:bg-gray-700 rounded shadow-start">
-                    <div className="flex py-1">
-                        <a className="icon h-2/3 w-9/10 p-2" href={"/admin/proyek/" + id}>
-                            <img
-                                className="transition duration-300 ease-out transform hover:-translate-y-1"
-                                src={poster}
-                            />
-                        </a>
+                <div className="w-full lg:max-w-full lg:flex bg-white dark:bg-gray-700 rounded shadow-start break-all">
+                    <div
+                        onClick={() => Router.push("/admin/proyek" + id)}
+                        className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
+                        style={{ backgroundImage: `url(${poster})` }}
+                        title="Cover Art"
+                    />
+                    <div className="p-4 flex flex-col justify-between leading-normal">
                         <div className="flex flex-col py-1">
                             <a
                                 className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"

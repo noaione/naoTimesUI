@@ -100,7 +100,9 @@ class StatsCard extends React.Component<IStatsProps> {
                                             end={realAmount}
                                         />
                                     </div>
-                                    <div className="text-base text-gray-400">{typeToName(type)}</div>
+                                    <div className="text-base text-gray-400 break-all">
+                                        {typeToName(type)}
+                                    </div>
                                 </>
                             )}
                         </div>
