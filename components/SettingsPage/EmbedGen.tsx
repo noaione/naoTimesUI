@@ -137,12 +137,22 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                     <div className="text-sm font-semibold text-blue-400">
                         Buat URL untuk embed daftar utang di Website anda!
                     </div>
+                    <div className="text-sm font-semibold text-blue-400">
+                        Info lebih lanjut:{" "}
+                        <a
+                            className="text-yellow-500 no-underline hover:underline hover:opacity-70"
+                            href="https://naoti.me/docs/integrasi/website/#mengatur-ukuran-iframe"
+                        >
+                            Dokumentasi
+                        </a>
+                    </div>
                     <div className="flex flex-col md:flex-row pb-2 gap-2">
                         <div className="flex flex-col w-full md:w-1/2">
                             <div className="flex flex-col mt-2">
                                 <input
                                     value={this.state.genUrl}
-                                    className="form-input block w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
+                                    onFocus={(ev) => ev.target.select()}
+                                    className="form-input block w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200 overflow-ellipsis"
                                     readOnly
                                 />
                             </div>
