@@ -57,18 +57,12 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                     </header>
                     <div className="container mx-auto justify-center items-center">
                         <div className="container mx-auto px-6 py-8">
-                            <div
-                                id="about"
-                                className="p-3 bg-white dark:bg-gray-700 rounded shadow-lg dark:text-gray-200"
-                            >
+                            <div id="about" className="p-3 bg-gray-700 rounded shadow-lg text-gray-200">
                                 <Markdown>{aboutPageWithYear}</Markdown>
                             </div>
                         </div>
                         <div className="container mx-auto px-6 py-8">
-                            <div
-                                id="changelog"
-                                className="p-3 bg-white dark:bg-gray-700 rounded shadow-lg dark:text-gray-200"
-                            >
+                            <div id="changelog" className="p-3 bg-gray-700 rounded shadow-lg text-gray-200">
                                 <Markdown>{changelogPage}</Markdown>
                             </div>
                         </div>
