@@ -1,7 +1,9 @@
 import React from "react";
 
 import { SettingsProps } from "./base";
+
 import { ValidAccent } from "../ColorMap";
+
 import { LocaleMap } from "../../i18n";
 
 interface EmbedGenProps extends SettingsProps {

@@ -3,6 +3,7 @@ import React from "react";
 import Router from "next/router";
 
 import { SettingsProps } from "./base";
+
 import LoadingCircle from "../LoadingCircle";
 
 interface RPassState {
