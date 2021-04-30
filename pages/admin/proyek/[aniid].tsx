@@ -44,7 +44,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
     render() {
         const { user, animeData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const { id, title, poster_data, assignments, status } = animeData;
+        const { id, title, poster_data, assignments, status, aliases } = animeData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
@@ -75,9 +75,14 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                         />
                                     </div>
                                     <div className="flex flex-col pb-2 md:w-1/2">
-                                        <div className="text-2xl font-bold text-gray-900 dark:text-gray-200">
+                                        <div className="text-xl font-bold text-gray-900 dark:text-gray-200">
                                             {title}
                                         </div>
+                                        <ProjectPageComponent.Aliases
+                                            onErrorModal={this.showErrorCallback}
+                                            aniId={id}
+                                            aliases={aliases}
+                                        />
                                         <div className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1">
                                             Staf
                                         </div>
