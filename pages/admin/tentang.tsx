@@ -78,7 +78,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
-    const contentDir = path.join(process.cwd(), "contents");
+    const contentDir = path.join(process.cwd(), "pages", "contents");
     const aboutPage = fs.readFileSync(path.join(contentDir, "about.md")).toString();
     const changelogPage = fs.readFileSync(path.join(contentDir, "changelog.md")).toString();
 
