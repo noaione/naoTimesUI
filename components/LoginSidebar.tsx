@@ -17,7 +17,7 @@ export default function LoginSidebar() {
                     <p>Sebuah Bot Multifungsi dengan fitur utama tracking garapan Fansub</p>
                 </div>
                 <a
-                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-1"
+                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-2"
                     href="https://naoti.me/invite"
                     target="_blank"
                     rel="noreferrer"
@@ -32,6 +32,14 @@ export default function LoginSidebar() {
                 >
                     Support Server
                 </a>
+                <div className="mt-3">
+                    <a
+                        href="/tentang"
+                        className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
+                    >
+                        Tentang
+                    </a>
+                </div>
             </div>
         </>
     );

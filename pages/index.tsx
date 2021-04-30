@@ -163,12 +163,25 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                     >
                                         Registrasi
                                     </a>
-                                    <a
-                                        href="https://naoti.me/invite"
-                                        className="block md:hidden mt-2 text-sm text-center text-blue-500 hover:text-blue-400 transition-colors duration-100"
-                                    >
-                                        Invite Bot
-                                    </a>
+                                    <div className="flex flex-row justify-center gap-2">
+                                        <a
+                                            href="https://naoti.me/invite"
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                            className="block md:hidden mt-2 text-sm text-center text-blue-500 hover:text-blue-400 transition-colors duration-100"
+                                        >
+                                            Invite Bot
+                                        </a>
+                                        <span className="mt-1 font-light text-gray-400 block md:hidden">
+                                            |
+                                        </span>
+                                        <a
+                                            href="/tentang"
+                                            className="block md:hidden mt-2 text-sm text-center text-indigo-500 hover:text-indigo-400 transition-colors duration-100"
+                                        >
+                                            Tentang
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </form>

@@ -3,14 +3,10 @@ import path from "path";
 
 import Head from "next/head";
 import React from "react";
-import ReactMarkdown from "react-markdown";
-
-import breaks from "remark-breaks";
-import gemoji from "remark-gemoji";
-import gfm from "remark-gfm";
 
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
+import Markdown from "../../components/Markdown";
 
 import { romanizeNumber } from "../../lib/utils";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
@@ -43,8 +39,8 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{pageTitle} :: naoTimesUI</title>
-                    <MetadataHead.SEO title={pageTitle} urlPath="/admin" />
+                    <title>Tentang - {pageTitle} :: naoTimesUI</title>
+                    <MetadataHead.SEO title={"Tentang - " + pageTitle} urlPath="/admin/tentang" />
                     <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} active="about" title="Tentang">
@@ -53,17 +49,7 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                             id="about"
                             className="p-3 bg-white dark:bg-gray-700 rounded shadow-md dark:text-gray-200"
                         >
-                            <ReactMarkdown
-                                className="react-md"
-                                components={{
-                                    a: ({ ...props }) => (
-                                        <a {...props} rel="noopener noreferer" target="_blank" />
-                                    ),
-                                }}
-                                remarkPlugins={[gfm, gemoji, breaks]}
-                            >
-                                {aboutPageWithYear}
-                            </ReactMarkdown>
+                            <Markdown>{aboutPageWithYear}</Markdown>
                         </div>
                     </div>
                     <div className="container mx-auto px-6 py-8">
@@ -71,17 +57,7 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                             id="changelog"
                             className="p-3 bg-white dark:bg-gray-700 rounded shadow-md dark:text-gray-200"
                         >
-                            <ReactMarkdown
-                                className="react-md"
-                                components={{
-                                    a: ({ ...props }) => (
-                                        <a {...props} rel="noopener noreferer" target="_blank" />
-                                    ),
-                                }}
-                                remarkPlugins={[gfm, gemoji, breaks]}
-                            >
-                                {changelogPage}
-                            </ReactMarkdown>
+                            <Markdown>{changelogPage}</Markdown>
                         </div>
                     </div>
                 </AdminLayout>
