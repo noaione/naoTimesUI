@@ -31,6 +31,14 @@ jobs:
     - name: Install PNPM on ${{ matrix.node-version }}
       run: |
         npm install -g pnpm
+    - name: Create a mock .env file on ${{ matrix.node-version }}
+      run: |
+        echo "TOKEN_SECRET=$(openssl rand -hex 32)" > .env.local
+        echo "MONGODB_URI=mongodb://localhost:27017/naotimesdb" >> .env.local
+        echo "BOT_SOCKET_HOST=127.0.0.1" >> .env.local
+        echo "BOT_SOCKET_PORT=25670" >> .env.lcoal
+        echo "BOT_SOCKET_PORT=25670" >> .env.local
+        echo "BOT_SOCKET_PASSWORD=$(openssl rand -hex 16)" >> .env.local
     - name: Clean Install and Build on ${{ matrix.node-version }}
       run: |
         pnpm install
