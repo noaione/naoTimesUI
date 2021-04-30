@@ -137,7 +137,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                     <div className="flex items-center space-x4 lg:space-x-0">
                         <button
                             onClick={this.onMenuOpen}
-                            className="text-gray-500 dark:text-gray-300 focus:outline-none lg:hidden"
+                            className="text-gray-500 dark:text-gray-300 lg:hidden hover:opacity-70 duration-200 focus:outline-none"
                         >
                             <MenuIcon />
                         </button>
