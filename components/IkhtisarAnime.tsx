@@ -49,7 +49,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                         style={{ backgroundImage: `url(${data.poster})` }}
                         title="Cover Art"
                     />
-                    <div className="bg-white dark:bg-gray-700 p-4 flex flex-col justify-between leading-normal">
+                    <div className="bg-white dark:bg-gray-700 p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="mb-8">
                             <div className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-1">
                                 <a

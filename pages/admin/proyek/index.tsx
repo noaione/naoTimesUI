@@ -50,14 +50,14 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
 
         return (
             <>
-                <div className="w-full lg:max-w-full lg:flex bg-white dark:bg-gray-700 rounded shadow-start break-all">
+                <div className="w-full lg:max-w-full lg:flex bg-white dark:bg-gray-700 rounded-lg shadow-start break-all">
                     <div
                         onClick={() => Router.push("/admin/proyek" + id)}
                         className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
                         style={{ backgroundImage: `url(${poster})` }}
                         title="Cover Art"
                     />
-                    <div className="p-4 flex flex-col justify-between leading-normal">
+                    <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
                             <a
                                 className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
