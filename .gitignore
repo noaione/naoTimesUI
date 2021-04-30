@@ -412,3 +412,14 @@ public/assets/js/*.js.map
 # Allow some css.
 
 # Allow some js.
+
+# Dont commit testing page and stuff
+pages/testing/**
+
+# VSCode stuff
+*.cpuprofile
+.vscode/launch*
+
+# Something else
+lib/*.py
+lib/*.txt
