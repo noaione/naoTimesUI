@@ -5,7 +5,7 @@ import { SettingsProps } from "./base";
 
 import LoadingCircle from "../LoadingCircle";
 
-import { Nullable } from "../../lib/utils";
+import { isDifferent, Nullable } from "../../lib/utils";
 
 interface AdminTextBoxProps {
     index: number;
@@ -53,37 +53,6 @@ class AdminChangeTextBox extends React.Component<AdminTextBoxProps, AdminTextBox
             </>
         );
     }
-}
-
-/**
- * Check if two string array is different or not.
- *
- * It first check if there's any length difference, if there's just say yes
- * since it's already different.
- *
- * If the length is same, sort both of them, and create a simple for-loop
- * which will check if the same index of array1 and array2 is different or not.
- * If different, break the loop and return as true, otherwise false.
- *
- * Can be bad if the array is big, but who cares.
- * @param array1 First string array collection
- * @param array2 Second string array collection
- * @returns is the array different or not?
- */
-function isDifferent(array1: string[], array2: string[]) {
-    if (array1.length !== array2.length) {
-        return true;
-    }
-    let unmatching = false;
-    array1.sort();
-    array2.sort();
-    for (let i = 0; i < array1.length; i++) {
-        if (array1[i] !== array2[i]) {
-            unmatching = true;
-            break;
-        }
-    }
-    return unmatching;
 }
 
 interface AdminChangeProps extends SettingsProps {
