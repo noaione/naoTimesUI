@@ -63,7 +63,7 @@ class MyDocument extends Document {
                     <script
                         async
                         defer
-                        data-domain="beta.panel.naoti.me"
+                        data-domain={process.env.PLAUSIBLE_DOMAIN_TRACK}
                         src="https://tr.n4o.xyz/js/plausible.js"
                     />
                 </Head>

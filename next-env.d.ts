@@ -21,6 +21,7 @@ declare global {
             BOT_SOCKET_HOST?: string;
             BOT_SOCKET_PORT?: string;
             BOT_SOCKET_PASSWORD?: string;
+            PLAUSIBLE_DOMAIN_TRACK?: string;
         }
     }
 }
