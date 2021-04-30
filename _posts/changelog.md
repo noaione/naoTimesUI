@@ -22,9 +22,9 @@ Kodenama: /shrug
 
 ## Versi 1.0.0
 
-Kodenama: TBD
+Kodenama: [To the Moon](https://en.wikipedia.org/wiki/GameStop_short_squeeze)
 
-- Migrasi ke [Next.js](https://nextjs.org/)
+- 🚀 Migrasi ke [Next.js](https://nextjs.org/)
 - 📰 Penambahan laman FansubRSS **[Akan datang]**
 - 🔃 *Loading indicator* ketika mengsubmit sesuatu
 - 🚫 Menulis parafrasa tambahan sebelum menghapus server
