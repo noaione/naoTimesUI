@@ -8,7 +8,7 @@ npm install -g pnpm
 
 ## Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Ftree%2Fnext&env=TOKEN_SECRET,MONGODB_URI,BOT_SOCKET_HOST,BOT_SOCKET_PORT,BOT_SOCKET_PASSWORD&envDescription=All%20required%20Environment%20Variables%20for%20the%20Process%20to%20run&envLink=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Fblob%2Fnext%2F.env-example&demo-title=naoTimesUI&demo-description=Atur%20progress%20utang%20Fansub%20anda%20via%20WebUI%20naoTimes!&demo-url=https%3A%2F%2Fbeta.panel.naoti.me)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Ftree%2Fnext&env=TOKEN_SECRET,MONGODB_URI,BOT_SOCKET_HOST,BOT_SOCKET_PORT,BOT_SOCKET_PASSWORD&envDescription=All%20required%20Environment%20Variables%20for%20the%20Process%20to%20run&envLink=https%3A%2F%2Fgithub.com%2Fnoaione%2FnaoTimesUI%2Fblob%2Fnext%2F.env-example&demo-title=naoTimesUI&demo-description=Atur%20progress%20utang%20Fansub%20anda%20via%20WebUI%20naoTimes!&demo-url=https%3A%2F%2Fpanel.naoti.me)
 
 ### Requirements
 - naoTimes Bot with `naotimesui` cogs enabled

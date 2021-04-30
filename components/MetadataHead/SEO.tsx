@@ -43,7 +43,7 @@ class SEOMetaTags extends React.Component<SEOMetaProps> {
             realColor = color;
         }
 
-        let url = "https://beta.panel.naoti.me";
+        let url = "https://panel.naoti.me";
         if (isString(urlPath)) {
             if (urlPath.startsWith("/")) {
                 url += realUrl;
