@@ -1,8 +1,11 @@
 import React from "react";
+import Router from "next/router";
 
 import { SettingsProps } from "./base";
+
 import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
+
 import { generateWordSets } from "../../lib/words";
 
 interface ExtendedDeleteProps extends SettingsProps {
@@ -45,11 +48,17 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
             targetCheck: generateWordSets(3),
             correctPassword: false,
         });
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => {
-            outerThis.setState({ isSubmitting: false });
-        }, 2000);
+
+        const results = await fetch("/api/showtimes/nuke", {
+            method: "POST",
+        });
+        const jsonRes = await results.json();
+        if (jsonRes.success) {
+            Router.push("/");
+        } else {
+            this.props.onErrorModal(jsonRes.message);
+            this.setState({ isSubmitting: false });
+        }
     }
 
     handleHide() {
