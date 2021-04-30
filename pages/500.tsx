@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
-
 import Image from "next/image";
+
 import MetadataHead from "../components/MetadataHead";
 
 class ServerErrorPage extends React.Component {
