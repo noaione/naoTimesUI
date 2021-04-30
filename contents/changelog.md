@@ -25,7 +25,7 @@ Kodenama: /shrug
 Kodenama: TBD
 
 - Migrasi ke [Next.js](https://nextjs.org/)
-- 📰 Penambahan laman FansubRSS
+- 📰 Penambahan laman FansubRSS **[Akan datang]**
 - 🔃 *Loading indicator* ketika mengsubmit sesuatu
 - 🚫 Menulis parafrasa tambahan sebelum menghapus server
 - 🕶 Dark mode segalanya, hampir semua komponen memiliki versi "gelap"-nya
