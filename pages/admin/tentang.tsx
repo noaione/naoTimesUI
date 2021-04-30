@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 import Head from "next/head";
 import React from "react";
 
@@ -9,6 +6,7 @@ import MetadataHead from "../../components/MetadataHead";
 import Markdown from "../../components/Markdown";
 
 import { romanizeNumber } from "../../lib/utils";
+import { getAboutContent, getChangelogContent } from "../../lib/postshelper";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
@@ -78,9 +76,8 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
-    const contentDir = path.join(process.cwd(), "pages", "contents");
-    const aboutPage = fs.readFileSync(path.join(contentDir, "about.md")).toString();
-    const changelogPage = fs.readFileSync(path.join(contentDir, "changelog.md")).toString();
+    const changelogPage = getChangelogContent();
+    const aboutPage = getAboutContent();
 
     return { props: { user: { loggedIn: true, ...user }, aboutPage, changelogPage } };
 });

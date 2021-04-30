@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 import Head from "next/head";
 import React from "react";
 
@@ -11,6 +8,7 @@ import Markdown from "../components/Markdown";
 import TrakteerButton from "../components/TrakteerButton";
 
 import { romanizeNumber } from "../lib/utils";
+import { getAboutContent, getChangelogContent } from "../lib/postshelper";
 
 interface AboutPageProps {
     aboutPage: string;
@@ -83,9 +81,8 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
 }
 
 export async function getStaticProps() {
-    const contentDir = path.join(process.cwd(), "pages", "contents");
-    const aboutPage = fs.readFileSync(path.join(contentDir, "about.md")).toString();
-    const changelogPage = fs.readFileSync(path.join(contentDir, "changelog.md")).toString();
+    const aboutPage = getAboutContent();
+    const changelogPage = getChangelogContent();
 
     return {
         props: {
