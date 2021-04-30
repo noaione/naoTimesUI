@@ -44,16 +44,16 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
             <>
                 <div className="w-full lg:max-w-full lg:flex dark:bg-gray-700 dark:text-white shadow-lg rounded-lg break-all">
                     <div
-                        onClick={() => Router.push("/admin/proyek" + data.id)}
+                        onClick={() => Router.push("/admin/proyek/" + data.id)}
                         className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
                         style={{ backgroundImage: `url(${data.poster})` }}
-                        title="Cover Art"
+                        title={data.title}
                     />
                     <div className="bg-white dark:bg-gray-700 p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="mb-8">
                             <div className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-1">
                                 <a
-                                    href={"/admin/proyek" + data.id}
+                                    href={"/admin/proyek/" + data.id}
                                     className="no-underline hover:underline cursor-pointer"
                                 >
                                     {data.title}
