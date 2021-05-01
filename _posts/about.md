@@ -44,6 +44,6 @@ Makasih juga untuk manusia-manusia berikut:
 - Kresendo (Bantuan pemilihan kata, ide, dan lain-lain)
 - *Anon* 1 (Bantuan translasi untuk Embed versi Jawa)
 - *Anon* 2 (Bantuan translasi untuk Embed versi Sunda)
-- Semua orang yang 
+- Semua orang yang mencoba dan menyebarkan naoTimes :heart:
 
 :heart: {{currentYear}} - naoTimesDev a.k.a N4O
