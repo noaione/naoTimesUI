@@ -74,7 +74,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                             src={poster_data.url}
                                         />
                                     </div>
-                                    <div className="flex flex-col pb-2 md:w-1/2">
+                                    <div className="flex flex-col md:w-1/2">
                                         <div className="text-xl font-bold text-gray-900 dark:text-gray-200">
                                             {title}
                                         </div>
