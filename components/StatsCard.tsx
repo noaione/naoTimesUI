@@ -68,7 +68,7 @@ class StatsCard extends React.Component<IStatsProps> {
 
         return (
             <>
-                <div className="p-5 bg-white dark:bg-gray-700 rounded shadow-sm">
+                <div className="p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                     <div className="flex items-center pt-1">
                         <div
                             className={
