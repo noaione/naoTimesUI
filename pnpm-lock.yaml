@@ -48,7 +48,7 @@ specifiers:
   tailwindcss: 2.1.2
   ts-mongoose: ^0.0.24
   typescript: 4.2.4
-  unist-util-visit: 2.0.0
+  unist-util-visit: 2.0.3
 
 dependencies:
   '@fortawesome/fontawesome-svg-core': 1.2.35
@@ -76,7 +76,7 @@ dependencies:
   remark-gemoji: 6.0.0
   remark-gfm: 1.0.0
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
-  unist-util-visit: 2.0.0
+  unist-util-visit: 2.0.3
 
 devDependencies:
   '@types/javascript-time-ago': 2.0.2
@@ -5303,14 +5303,6 @@ packages:
     dependencies:
       '@types/unist': 2.0.3
       unist-util-is: 4.1.0
-    dev: false
-
-  /unist-util-visit/2.0.0:
-    resolution: {integrity: sha512-kiTpWKsF54u/78L/UU/i7lxrnqGiEWBgqCpaIZBYP0gwUC+Akq0Ajm4U8JiNIoQNfAioBdsyarnOcTEAb9mLeQ==}
-    dependencies:
-      '@types/unist': 2.0.3
-      unist-util-is: 4.1.0
-      unist-util-visit-parents: 3.1.1
     dev: false
 
   /unist-util-visit/2.0.3:
