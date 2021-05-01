@@ -3,6 +3,7 @@ import { has } from "lodash";
 import { DateTime } from "luxon";
 import { NextApiRequest, NextApiResponse } from "next";
 
+import dbConnect from "../../../../lib/dbConnect";
 import { determineSeason, isNone, Nullable, seasonNaming } from "../../../../lib/utils";
 
 import { ShowAnimeProps, ShowtimesModel } from "../../../../models/show";
@@ -130,6 +131,7 @@ export default async function serverStatusHandler(req: NextApiRequest, res: Next
     try {
         let animeSets: Nullable<ShowAnimeProps[]>;
         try {
+            await dbConnect();
             const serverRes = await ShowtimesModel.findOne({ id: { $eq: selectServerID(serverid) } });
             // @ts-ignore
             animeSets = serverRes.anime;
