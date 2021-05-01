@@ -103,6 +103,10 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                 );
                                             })}
                                         </div>
+                                        <ProjectPageComponent.Deletion
+                                            onErrorModal={this.showErrorCallback}
+                                            id={id}
+                                        />
                                     </div>
                                 </div>
                             </div>
