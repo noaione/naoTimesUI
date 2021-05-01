@@ -80,6 +80,6 @@
     "remark-gemoji": "^6.0.0",
     "remark-gfm": "^1.0.0",
     "ts-mongoose": "^0.0.24",
-    "unist-util-visit": "2.0.0"
+    "unist-util-visit": "3.0.0"
   }
 }

@@ -48,7 +48,7 @@ specifiers:
   tailwindcss: 2.1.2
   ts-mongoose: ^0.0.24
   typescript: 4.2.4
-  unist-util-visit: 2.0.0
+  unist-util-visit: 3.0.0
 
 dependencies:
   '@fortawesome/fontawesome-svg-core': 1.2.35
@@ -76,7 +76,7 @@ dependencies:
   remark-gemoji: 6.0.0
   remark-gfm: 1.0.0
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
-  unist-util-visit: 2.0.0
+  unist-util-visit: 3.0.0
 
 devDependencies:
   '@types/javascript-time-ago': 2.0.2
@@ -5288,6 +5288,10 @@ packages:
     resolution: {integrity: sha512-ZOQSsnce92GrxSqlnEEseX0gi7GH9zTJZ0p9dtu87WRb/37mMPO2Ilx1s/t9vBHrFhbgweUwb+t7cIn5dxPhZg==}
     dev: false
 
+  /unist-util-is/5.0.0:
+    resolution: {integrity: sha512-G4p13DhfdUNmlnJxd0uy5Skx1FG58LSDhX8h1xgpeSq0omOQ4ZN5BO54ToFlNX55NDTbRHMdwTOJXqAieInSEA==}
+    dev: false
+
   /unist-util-position/3.1.0:
     resolution: {integrity: sha512-w+PkwCbYSFw8vpgWD0v7zRCl1FpY3fjDSQ3/N/wNd9Ffa4gPi8+4keqt99N3XW6F99t/mUzp2xAhNmfKWp95QA==}
     dev: false
@@ -5305,12 +5309,11 @@ packages:
       unist-util-is: 4.1.0
     dev: false
 
-  /unist-util-visit/2.0.0:
-    resolution: {integrity: sha512-kiTpWKsF54u/78L/UU/i7lxrnqGiEWBgqCpaIZBYP0gwUC+Akq0Ajm4U8JiNIoQNfAioBdsyarnOcTEAb9mLeQ==}
+  /unist-util-visit-parents/4.0.0:
+    resolution: {integrity: sha512-QyATSx30wHguIzI82+GVeuXGnFlh3AUVcyeZPOo5Paz2Z52zfRe3/0WLlBv6XlMWcr5xEdFqox6PteUL6hzEFA==}
     dependencies:
       '@types/unist': 2.0.3
-      unist-util-is: 4.1.0
-      unist-util-visit-parents: 3.1.1
+      unist-util-is: 5.0.0
     dev: false
 
   /unist-util-visit/2.0.3:
@@ -5319,6 +5322,14 @@ packages:
       '@types/unist': 2.0.3
       unist-util-is: 4.1.0
       unist-util-visit-parents: 3.1.1
+    dev: false
+
+  /unist-util-visit/3.0.0:
+    resolution: {integrity: sha512-RbFwAZhMekKPZxlAhUIiBwim8NogwUtwLbIjvZehaGORYRDWcApsnGI1VDUHr/Jo6yW1u8VOqO/djbd7Hpz88A==}
+    dependencies:
+      '@types/unist': 2.0.3
+      unist-util-is: 5.0.0
+      unist-util-visit-parents: 4.0.0
     dev: false
 
   /universalify/2.0.0:
