@@ -48,20 +48,20 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
             correctPassword: false,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => outerThis.setState({ isSubmitting: false }), 3000);
-
-        // const results = await fetch("/api/showtimes/nuke", {
-        //     method: "POST",
-        // });
-        // const jsonRes = await results.json();
-        // if (jsonRes.success) {
-        //     Router.push("/");
-        // } else {
-        //     this.props.onErrorModal(jsonRes.message);
-        //     this.setState({ isSubmitting: false });
-        // }
+        const results = await fetch("/api/showtimes/proyek/nuke", {
+            method: "POST",
+            body: JSON.stringify({ animeId: this.props.id }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const jsonRes = await results.json();
+        if (jsonRes.success) {
+            Router.push("/admin/proyek");
+        } else {
+            this.props.onErrorModal(jsonRes.message);
+            this.setState({ isSubmitting: false });
+        }
     }
 
     handleHide() {

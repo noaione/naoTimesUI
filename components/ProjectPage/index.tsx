@@ -1,6 +1,6 @@
 import AliasComponent from "./AliasComponent";
 import EpisodeComponent from "./EpisodeComponent";
-import NukeProjectComponent from "./NukeComponenet";
+import NukeProjectComponent from "./NukeComponent";
 import StaffComponent from "./StaffComponent";
 
 const ProjectPageComponent = {
