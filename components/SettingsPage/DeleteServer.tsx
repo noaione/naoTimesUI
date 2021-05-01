@@ -41,6 +41,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
         if (!this.state.correctPassword) {
             return;
         }
+        if (this.state.isSubmitting) return;
         this.handleHide();
         this.setState({
             isSubmitting: true,
@@ -77,7 +78,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
     }
 
     handleShow() {
-        if (this.modalCb) {
+        if (this.modalCb && !this.state.isSubmitting) {
             this.modalCb.showModal();
         }
     }
@@ -135,7 +136,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
                                     : "bg-red-400 cursor-not-allowed"
                             }`}
                         >
-                            Ya
+                            Hapus
                         </button>
                         <button
                             onClick={this.handleHide}
