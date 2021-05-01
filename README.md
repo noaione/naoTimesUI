@@ -1,6 +1,6 @@
 # naoTimes Web Panel
 
-[![CI](https://github.com/noaione/naoTimesUI/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/noaione/naoTimesUI/actions/workflows/ci.yml) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/noaione/naoTimesUI.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/noaione/naoTimesUI/context:javascript) [![Vercel Deploy Status](https://img.shields.io/endpoint?url=https://naotimes-og.glitch.me/deploy-status)](https://panel.naoti.me/tentang)
+[![CI](https://github.com/noaione/naoTimesUI/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/noaione/naoTimesUI/actions/workflows/ci.yml) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/noaione/naoTimesUI.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/noaione/naoTimesUI/context:javascript) [![Vercel Deploy Status](https://naotimes-og.glitch.me/deploy-status)](https://panel.naoti.me/tentang)
 
 A web panel for naoTimes Showtimes Module
 
