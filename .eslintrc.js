@@ -103,20 +103,11 @@ module.exports = {
         },
         {
             files: ["src/**/*.ts"],
-            rules: {
-                "import/default": "off",
-                "import/no-named-as-default": "off",
-            },
+            rules: {},
         },
         {
             files: ["lib/**/*.js"],
             rules: {
-                "import/no-extraneous-dependencies": [
-                    "warn",
-                    {
-                        devDependencies: true,
-                    },
-                ],
                 "no-console": ["warn", { allow: ["warn", "error", "info"] }],
             },
         },
