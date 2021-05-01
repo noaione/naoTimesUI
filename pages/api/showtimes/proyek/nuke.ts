@@ -6,7 +6,7 @@ import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../l
 import { isNone, Nullable } from "../../../../lib/utils";
 import { emitSocket } from "../../../../lib/socket";
 
-import { ShowtimesModel } from "../../../../models/show";
+import { ShowAnimeProps, ShowtimesModel } from "../../../../models/show";
 
 async function checkAndRemoveCollabID(target_server: string, source_srv: string, anime_id: string) {
     const fetchServer = await ShowtimesModel.findOne({ id: { $eq: target_server } });
@@ -48,7 +48,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     if (matchingAnime.length < 1) {
         return { message: "Tidak dapat menemukan Anime tersebut di database!", code: 400, success: false };
     }
-    const matched = matchingAnime[0];
+    const matched = matchingAnime[0] as ShowAnimeProps;
     let anyDone = false;
     let allDone = true;
     for (let i = 0; i < matched.status.length; i++) {
@@ -66,6 +66,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     } else if (!anyDone) {
         shouldAnnounce = false;
     }
+    const removeRoles = [matched.role_id];
     if (matched.kolaborasi.length > 0) {
         const deletionRequest = matched.kolaborasi.map((osrv_id) =>
             checkAndRemoveCollabID(osrv_id, server_id, matched.id)
@@ -99,6 +100,9 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
         });
     }
     emitSocket("pull data", server_id);
+    if (removeRoles.length > 0) {
+        emitSocket("delete roles", { id: server_id, roles: removeRoles });
+    }
     return { message: "Sukses", code: 200, success: true };
 }
 
