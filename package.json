@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/naoTimesdev/webpanel#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.10",
     "@types/javascript-time-ago": "2.0.2",
     "@types/lodash": "4.14.168",
     "@types/luxon": "1.26.5",
@@ -62,6 +63,7 @@
     "@tailwindcss/forms": "^0.3.2",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "javascript-time-ago": "^2.3.4",
     "lodash": "^4.17.21",
     "luxon": "^1.26.0",
@@ -79,7 +81,6 @@
     "remark-breaks": "^2.0.2",
     "remark-gemoji": "^6.0.0",
     "remark-gfm": "^1.0.0",
-    "ts-mongoose": "^0.0.24",
-    "unist-util-visit": "2.0.0"
+    "ts-mongoose": "^0.0.24"
   }
 }

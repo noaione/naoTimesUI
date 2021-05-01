@@ -6,6 +6,7 @@ specifiers:
   '@fortawesome/react-fontawesome': ^0.1.14
   '@kachkaev/react-inline-js': ^0.2.0
   '@tailwindcss/forms': ^0.3.2
+  '@types/cors': ^2.8.10
   '@types/javascript-time-ago': 2.0.2
   '@types/lodash': 4.14.168
   '@types/luxon': 1.26.5
@@ -18,6 +19,7 @@ specifiers:
   autoprefixer: 10.2.5
   axios: ^0.21.1
   body-parser: ^1.19.0
+  cors: ^2.8.5
   cssnano: 5.0.2
   eslint: 7.25.0
   eslint-config-prettier: 8.3.0
@@ -48,7 +50,6 @@ specifiers:
   tailwindcss: 2.1.2
   ts-mongoose: ^0.0.24
   typescript: 4.2.4
-  unist-util-visit: 2.0.0
 
 dependencies:
   '@fortawesome/fontawesome-svg-core': 1.2.35
@@ -58,6 +59,7 @@ dependencies:
   '@tailwindcss/forms': 0.3.2_tailwindcss@2.1.2
   axios: 0.21.1
   body-parser: 1.19.0
+  cors: 2.8.5
   javascript-time-ago: 2.3.4
   lodash: 4.17.21
   luxon: 1.26.0
@@ -76,9 +78,9 @@ dependencies:
   remark-gemoji: 6.0.0
   remark-gfm: 1.0.0
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
-  unist-util-visit: 2.0.0
 
 devDependencies:
+  '@types/cors': 2.8.10
   '@types/javascript-time-ago': 2.0.2
   '@types/lodash': 4.14.168
   '@types/luxon': 1.26.5
@@ -415,6 +417,10 @@ packages:
   /@types/cookie/0.4.0:
     resolution: {integrity: sha512-y7mImlc/rNkvCRmg8gC3/lj87S7pTUIJ6QGjwHR9WQJcFs+ZMTOaoPrkdFA/YdbuqVEmEbb5RdhVxMkAcgOnpg==}
     dev: false
+
+  /@types/cors/2.8.10:
+    resolution: {integrity: sha512-C7srjHiVG3Ey1nR6d511dtDkCEjxuN9W1HWAEjGq8kpcwmNM6JJkpC0xvabM7BXTG2wDq8Eu33iH9aQKa7IvLQ==}
+    dev: true
 
   /@types/hast/2.3.1:
     resolution: {integrity: sha512-viwwrB+6xGzw+G1eWpF9geV3fnsDgXqHG+cqgiHrvQfDUW5hzhCyV7Sy3UJxhfRFBsgky2SSW33qi/YrIkjX5Q==}
@@ -1212,6 +1218,14 @@ packages:
 
   /core-util-is/1.0.2:
     resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
+    dev: false
+
+  /cors/2.8.5:
+    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
     dev: false
 
   /cosmiconfig/7.0.0:
@@ -5305,14 +5319,6 @@ packages:
       unist-util-is: 4.1.0
     dev: false
 
-  /unist-util-visit/2.0.0:
-    resolution: {integrity: sha512-kiTpWKsF54u/78L/UU/i7lxrnqGiEWBgqCpaIZBYP0gwUC+Akq0Ajm4U8JiNIoQNfAioBdsyarnOcTEAb9mLeQ==}
-    dependencies:
-      '@types/unist': 2.0.3
-      unist-util-is: 4.1.0
-      unist-util-visit-parents: 3.1.1
-    dev: false
-
   /unist-util-visit/2.0.3:
     resolution: {integrity: sha512-iJ4/RczbJMkD0712mGktuGpm/U4By4FfDonL7N/9tATGIF4imikjOuagyMY53tnZq3NP6BcmlrHhEKAfGWjh7Q==}
     dependencies:
@@ -5389,6 +5395,11 @@ packages:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
     dev: true
+
+  /vary/1.1.2:
+    resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
+    engines: {node: '>= 0.8'}
+    dev: false
 
   /vendors/1.0.4:
     resolution: {integrity: sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w==}
