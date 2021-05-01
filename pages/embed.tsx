@@ -17,7 +17,6 @@ interface EmbedUtangProps extends IEmbedParams {
 }
 
 interface EmbedUtangState {
-    dropdownOpen: boolean;
     dark: string;
 }
 
@@ -58,7 +57,6 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         super(props);
         this.toggleDark = this.toggleDark.bind(this);
         this.state = {
-            dropdownOpen: false,
             dark: this.props.dark,
         };
     }

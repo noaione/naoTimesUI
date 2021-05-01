@@ -2,16 +2,11 @@ import React from "react";
 
 import Modal, { CallbackModal } from "./Modal";
 
-interface ErrState {
-    show: boolean;
-    currentFade?: "show" | "hide" | null;
-}
-
 interface ErrProps {
     onMounted?: (callbacks: CallbackModal) => void;
 }
 
-class ErrorModal extends React.Component<ErrProps, ErrState> {
+class ErrorModal extends React.Component<ErrProps> {
     modalCb?: CallbackModal;
 
     constructor(props: ErrProps) {
@@ -19,10 +14,6 @@ class ErrorModal extends React.Component<ErrProps, ErrState> {
         this.handleHide = this.handleHide.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        this.state = {
-            show: false,
-            currentFade: null,
-        };
     }
 
     componentDidMount() {

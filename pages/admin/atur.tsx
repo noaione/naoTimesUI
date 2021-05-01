@@ -16,7 +16,6 @@ import { CallbackModal } from "../../components/Modal";
 import { ShowtimesModel, ShowtimesProps } from "../../models/show";
 
 interface SettingsHomepageState {
-    isLoading: boolean;
     errText: string;
     serverData?: { [key: string]: any };
 }
@@ -33,7 +32,6 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
         super(props);
         this.showErrorCallback = this.showErrorCallback.bind(this);
         this.state = {
-            isLoading: true,
             errText: "",
         };
     }
