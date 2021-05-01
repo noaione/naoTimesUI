@@ -5,6 +5,9 @@ import breaks from "remark-breaks";
 import gemoji from "remark-gemoji";
 import gfm from "remark-gfm";
 
+import disemote from "../lib/remark-disemote";
+
+// A wrapper around ReactMarkdown :)
 export default class Markdown extends React.Component {
     constructor(props) {
         super(props);
@@ -17,7 +20,7 @@ export default class Markdown extends React.Component {
                 components={{
                     a: ({ ...props }) => <a {...props} rel="noopener noreferer" target="_blank" />,
                 }}
-                remarkPlugins={[gfm, gemoji, breaks]}
+                remarkPlugins={[gemoji, disemote, gfm, breaks]}
             >
                 {this.props.children as string}
             </ReactMarkdown>

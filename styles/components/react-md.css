@@ -44,3 +44,8 @@
 .react-md a {
     @apply text-yellow-600 hover:opacity-70 duration-200;
 }
+
+/* This is probably a bad idea */
+.react-md > p > img {
+    @apply inline-flex relative w-7 h-7 mx-1;
+}
