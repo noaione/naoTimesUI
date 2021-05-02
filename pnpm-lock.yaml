@@ -14,6 +14,7 @@ specifiers:
   '@types/node': 14.14.43
   '@types/react': 17.0.4
   '@types/react-select': 4.0.15
+  '@types/twemoji': ^12.1.1
   '@typescript-eslint/eslint-plugin': 4.22.0
   '@typescript-eslint/parser': 4.22.0
   autoprefixer: 10.2.5
@@ -25,6 +26,7 @@ specifiers:
   eslint-config-prettier: 8.3.0
   eslint-plugin-import: 2.22.1
   eslint-plugin-react: 7.23.2
+  highlight.js: ^10.7.2
   javascript-time-ago: ^2.3.4
   lodash: ^4.17.21
   luxon: ^1.26.0
@@ -47,8 +49,10 @@ specifiers:
   remark-breaks: ^2.0.2
   remark-gemoji: ^6.0.0
   remark-gfm: ^1.0.0
+  simple-markdown: ^0.7.3
   tailwindcss: 2.1.2
   ts-mongoose: ^0.0.24
+  twemoji: ^13.0.2
   typescript: 4.2.4
 
 dependencies:
@@ -60,6 +64,7 @@ dependencies:
   axios: 0.21.1
   body-parser: 1.19.0
   cors: 2.8.5
+  highlight.js: 10.7.2
   javascript-time-ago: 2.3.4
   lodash: 4.17.21
   luxon: 1.26.0
@@ -77,7 +82,9 @@ dependencies:
   remark-breaks: 2.0.2
   remark-gemoji: 6.0.0
   remark-gfm: 1.0.0
+  simple-markdown: 0.7.3
   ts-mongoose: 0.0.24_da1d977a19fd91581fae5ee94bdfb985
+  twemoji: 13.0.2
 
 devDependencies:
   '@types/cors': 2.8.10
@@ -88,6 +95,7 @@ devDependencies:
   '@types/node': 14.14.43
   '@types/react': 17.0.4
   '@types/react-select': 4.0.15
+  '@types/twemoji': 12.1.1
   '@typescript-eslint/eslint-plugin': 4.22.0_e3b52a83531895e7febd6ecd5ba813eb
   '@typescript-eslint/parser': 4.22.0_eslint@7.25.0+typescript@4.2.4
   autoprefixer: 10.2.5_postcss@8.2.13
@@ -480,7 +488,6 @@ packages:
 
   /@types/prop-types/15.7.3:
     resolution: {integrity: sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==}
-    dev: true
 
   /@types/react-dom/17.0.3:
     resolution: {integrity: sha512-4NnJbCeWE+8YBzupn/YrJxZ8VnjcJq5iR1laqQ1vkpQgBiA7bwk0Rp24fxsdNinzJY2U+HHS4dJJDPdoMjdJ7w==}
@@ -509,10 +516,12 @@ packages:
       '@types/prop-types': 15.7.3
       '@types/scheduler': 0.16.1
       csstype: 3.0.8
-    dev: true
 
   /@types/scheduler/0.16.1:
     resolution: {integrity: sha512-EaCxbanVeyxDRTQBkdLb3Bvl/HK7PBK6UJjsSixB0iHKoWxE5uu2Q/DgtpOhPIojN0Zl1whvOd7PoHs2P0s5eA==}
+
+  /@types/twemoji/12.1.1:
+    resolution: {integrity: sha512-dW1B1WHTfrWmEzXb/tp8xsZqQHAyMB9JwLwbBqkIQVzmNUI02R7lJqxUpKFM114ygNZHKA1r74oPugCAiYHt1A==}
     dev: true
 
   /@types/unist/2.0.3:
@@ -2033,6 +2042,15 @@ packages:
     resolution: {integrity: sha512-E1fz2Xs9ltlUp+qbiyx9wmt2n9dRzPsS11Jtdb8D2o+cC7wr9xkkKsVKJuBX0ST+LVS+LhLO+SbLJNtfWcJvXA==}
     dev: true
 
+  /fs-extra/8.1.0:
+    resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
+    engines: {node: '>=6 <7 || >=8'}
+    dependencies:
+      graceful-fs: 4.2.6
+      jsonfile: 4.0.0
+      universalify: 0.1.2
+    dev: false
+
   /fs-extra/9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
     engines: {node: '>=10'}
@@ -2186,6 +2204,10 @@ packages:
   /hex-color-regex/1.1.0:
     resolution: {integrity: sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==}
     dev: true
+
+  /highlight.js/10.7.2:
+    resolution: {integrity: sha512-oFLl873u4usRM9K63j4ME9u3etNF0PLiJhSQ8rdfuL51Wn3zkD6drf9ZW0dOzjnZI22YYG24z30JcmfCZjMgYg==}
+    dev: false
 
   /hmac-drbg/1.0.1:
     resolution: {integrity: sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=}
@@ -2571,6 +2593,20 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.5
+
+  /jsonfile/4.0.0:
+    resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
+    optionalDependencies:
+      graceful-fs: 4.2.6
+    dev: false
+
+  /jsonfile/5.0.0:
+    resolution: {integrity: sha512-NQRZ5CRo74MhMMC3/3r5g2k4fjodJ/wh8MxjFbCViWKFjxrnudWSY5vomh+23ZaXzAS7J3fBZIR2dV6WbmfM0w==}
+    dependencies:
+      universalify: 0.1.2
+    optionalDependencies:
+      graceful-fs: 4.2.6
+    dev: false
 
   /jsonfile/6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
@@ -4773,6 +4809,12 @@ packages:
     resolution: {integrity: sha512-oqD7PMJ+uO6jV9EQCl0LrRw1OwsiPsiFQR5AR30heR+4Dl7jBBbDLnNvWiak20tzZlSE1H7RB30SX/1j/YYT7g==}
     dev: false
 
+  /simple-markdown/0.7.3:
+    resolution: {integrity: sha512-uGXIc13NGpqfPeFJIt/7SHHxd6HekEJYtsdoCM06mEBPL9fQH/pSD7LRM6PZ7CKchpSvxKL4tvwMamqAaNDAyg==}
+    dependencies:
+      '@types/react': 17.0.4
+    dev: false
+
   /simple-swizzle/0.2.2:
     resolution: {integrity: sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=}
     dependencies:
@@ -5227,6 +5269,19 @@ packages:
     resolution: {integrity: sha512-C3TaO7K81YvjCgQH9Q1S3R3P3BtN3RIM8n+OvX4il1K1zgE8ZhI0op7kClgkxtutIE8hQrcrHBXvIheqKUUCxw==}
     dev: false
 
+  /twemoji-parser/13.0.0:
+    resolution: {integrity: sha512-zMaGdskpH8yKjT2RSE/HwE340R4Fm+fbie4AaqjDa4H/l07YUmAvxkSfNl6awVWNRRQ0zdzLQ8SAJZuY5MgstQ==}
+    dev: false
+
+  /twemoji/13.0.2:
+    resolution: {integrity: sha512-R9tDS4pEVczjVYM5SvoAJ0AcZ4EgG1h3yw1oi1m/yrXOH17OOjaaRxZU4r5TIHEy3xYbuZQLB/tJZyC6rpQVmA==}
+    dependencies:
+      fs-extra: 8.1.0
+      jsonfile: 5.0.0
+      twemoji-parser: 13.0.0
+      universalify: 0.1.2
+    dev: false
+
   /type-check/0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -5325,6 +5380,11 @@ packages:
       '@types/unist': 2.0.3
       unist-util-is: 4.1.0
       unist-util-visit-parents: 3.1.1
+    dev: false
+
+  /universalify/0.1.2:
+    resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
+    engines: {node: '>= 4.0.0'}
     dev: false
 
   /universalify/2.0.0:
