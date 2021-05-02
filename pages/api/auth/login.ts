@@ -26,6 +26,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             res.status(401).json({ error: "Tidak dapat menemukan ID tersebut!" });
         }
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Terjadi kesalahan internal, mohon coba lagi!" });
     }
 });
