@@ -3,11 +3,11 @@ import { DateTime } from "luxon";
 import React from "react";
 import Router from "next/router";
 
-import { SketchPicker } from "react-color";
+import { RGBColor, SketchPicker } from "react-color";
 
 import LoadingCircle from "../LoadingCircle";
 import PreviewGen from "./PreviewGenerator";
-import { combineRGB } from "./PreviewGenerator/color";
+import { combineRGB, extractRGB } from "./PreviewGenerator/color";
 import { IEmbed } from "./PreviewGenerator/embed";
 
 import { FansubRSSEmbed, FansubRSSFeeds } from "../../lib/fsrss";
@@ -144,7 +144,7 @@ interface TemplateEngineState {
     darkMode: boolean;
     compactMode: boolean;
     showColPick: boolean;
-    rawCol: string;
+    rawCol: RGBColor;
     isSubmit: boolean;
 }
 
@@ -181,7 +181,7 @@ function verifyEmbed(embedObject?: FansubRSSEmbed) {
             if (msgParsed !== null) {
                 realValid.push(keys[i]);
             }
-        } else if (typeof elem === "number" && typeof elem === "boolean") {
+        } else if (typeof elem === "number" || typeof elem === "boolean") {
             realValid.push(keys[i]);
         }
     }
@@ -203,16 +203,19 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
         super(props);
         this.updateEmbed = this.updateEmbed.bind(this);
         this.submitNewTemplate = this.submitNewTemplate.bind(this);
+        const realEmbed = isNone(this.props.settings.embed)
+            ? cloneDeep(defaultEmbedData)
+            : cloneDeep(this.props.settings.embed);
+        const defaultColor: RGBColor = { r: 79, g: 84, b: 92 };
+        const realColor = typeof realEmbed.color === "number" ? extractRGB(realEmbed.color) : defaultColor;
         this.state = {
             darkMode: true,
             compactMode: false,
             showColPick: false,
-            rawCol: "#4F545C",
+            rawCol: realColor,
             message: this.props.settings.message,
             isSubmit: false,
-            embed: isNone(this.props.settings.embed)
-                ? cloneDeep(defaultEmbedData)
-                : cloneDeep(this.props.settings.embed),
+            embed: realEmbed,
         };
     }
 
@@ -229,6 +232,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                 embed: verifyEmbed(this.state.embed),
             },
         };
+        console.info(JSON.stringify(bodyBag.changes.embed, undefined, 4));
 
         const apiRes = await fetch("/api/fsrss/update", {
             headers: {
@@ -251,6 +255,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
         const newAAA = {};
         newAAA[key] = value;
         const updatedEmbed = Object.assign({}, embed, newAAA);
+        console.info(JSON.stringify(updatedEmbed, undefined, 4));
         this.setState({ embed: updatedEmbed });
     }
 
@@ -357,7 +362,11 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             <div className="flex flex-row gap-2">
                                 <input
                                     className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100 w-full"
-                                    value={this.state.embed.color}
+                                    value={combineRGB(
+                                        this.state.rawCol.r,
+                                        this.state.rawCol.g,
+                                        this.state.rawCol.b
+                                    ).toString()}
                                     readOnly
                                 />
                                 <button
@@ -380,7 +389,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                                                 "color",
                                                 combineRGB(col.rgb.r, col.rgb.g, col.rgb.b)
                                             );
-                                            outerThis.setState({ rawCol: col.hex });
+                                            outerThis.setState({ rawCol: col.rgb });
                                         }}
                                     />
                                 )}
