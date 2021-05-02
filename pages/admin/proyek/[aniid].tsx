@@ -152,6 +152,11 @@ export const getServerSideProps = withSession(async function ({
             },
         };
     }
+    if (user.privilege === "owner") {
+        return {
+            notFound: true,
+        };
+    }
 
     await dbConnect();
     const serverRes = (await ShowtimesModel.findOne({ id: { $eq: user.id } }).lean()) as ShowtimesProps;

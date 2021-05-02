@@ -468,6 +468,11 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
             },
         };
     }
+    if (user.privilege === "owner") {
+        return {
+            notFound: true,
+        };
+    }
 
     return { props: { user: { loggedIn: true, ...user } } };
 });
