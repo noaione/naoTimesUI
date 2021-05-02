@@ -18,10 +18,10 @@ function flattenAst(node: SimpleMarkdown.ASTNode, parent?: SimpleMarkdown.Single
         return node;
     }
 
-    if (node.content !== null) {
+    if (node && node.content) {
         node.content = flattenAst(node.content, node);
     }
-    if (parent !== null && node.type === parent.type) {
+    if (parent && node.type === parent.type) {
         return node.content;
     }
     return node;
