@@ -185,9 +185,9 @@ interface IDiscordViewData {
 }
 
 interface IDiscordView extends BasePreviewProps {
-    darkTheme: boolean;
-    username: string;
-    avatar_url: string;
+    darkTheme?: boolean;
+    username?: string;
+    avatar_url?: string;
     error?: string;
     data: IDiscordViewData;
 }
@@ -220,7 +220,7 @@ class DiscordPreview extends React.Component<IDiscordView> {
         return (
             <>
                 <div
-                    className={`w-full h-full flex flex-col text-white overflow-hidden ${bgColor}`}
+                    className={`w-full h-full flex flex-col text-white overflow-hidden rounded-lg ${bgColor}`}
                     style={{ borderRadius: ".25rem" }}
                 >
                     <ErrorHeader error={error} />
