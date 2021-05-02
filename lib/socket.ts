@@ -5,21 +5,21 @@ import { isNone } from "./utils";
 
 const sleep = promisify(setTimeout);
 
+type CheckMethodEvent = "authenticate" | "ping";
+type GetMethodEvent = "get server" | "get channel" | "get user" | "get user perms" | "get server channel";
+type UpdateMethodEvent = "pull data" | "pull admin";
+type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "delete roles" | "announce drop";
+type CreateMethodEvent = "create role";
+
+type FansubRSSEvent = "fsrss get" | "fsrss update" | "fsrss create" | "fsrss delete";
+
 type SocketEvent =
-    | "authenticate"
-    | "pull data"
-    | "pull admin"
-    | "get server"
-    | "get channel"
-    | "get user"
-    | "get user perms"
-    | "delete server"
-    | "delete admin"
-    | "delete role"
-    | "delete roles"
-    | "create role"
-    | "announce drop"
-    | "ping";
+    | CheckMethodEvent
+    | GetMethodEvent
+    | UpdateMethodEvent
+    | DeleteMethodEvent
+    | CreateMethodEvent
+    | FansubRSSEvent;
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
