@@ -52,9 +52,9 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                     />
                     <MetadataHead.CSSExtra />
                 </Head>
-                <AdminLayout user={user} title="Tambah - FansubRSS" active="fsrsspage">
+                <AdminLayout user={user} title="Tambah RSS" active="fsrsspage">
                     <div className="container mx-auto px-6 py-8 justify-center">
-                        <p>Rebuilding</p>
+                        <p className="dark:text-white font-light text-center text-2xl">Akan datang!</p>
                     </div>
                 </AdminLayout>
             </>
