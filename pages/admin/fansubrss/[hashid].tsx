@@ -8,6 +8,7 @@ import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
 import ErrorModal from "../../../components/ErrorModal";
 import TemplateEngine from "../../../components/FansubRSS/TemplateEditor";
+import SampleViewer from "../../../components/FansubRSS/SampleViewer";
 import { CallbackModal } from "../../../components/Modal";
 
 import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
@@ -95,18 +96,25 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                                         </p>
                                     </div>
                                     <div className="flex">
-                                        <button className="px-3 py-1 bg-blue-500 hover:bg-blue-600 duration-200 transition text-gray-100 text-sm">
+                                        <button className="px-3 py-1 bg-blue-500 hover:bg-blue-600 duration-200 transition text-gray-100 text-sm rounded">
                                             Edit
                                         </button>
                                     </div>
                                 </div>
+                                {this.state.isLoading ? (
+                                    <span className="font-bold text-lg dark:text-white animate-pulse mt-2">
+                                        Memuat sample...
+                                    </span>
+                                ) : (
+                                    <SampleViewer sample={this.state.sampleData} />
+                                )}
                             </div>
                         </div>
                         <div className="grid gap-2 grid-cols-1 mt-4">
                             <div className="flex flex-col p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                                 {this.state.isLoading ? (
                                     <span className="font-bold text-lg dark:text-white animate-pulse">
-                                        Memuat sample...
+                                        Memuat editor...
                                     </span>
                                 ) : (
                                     <TemplateEngine
