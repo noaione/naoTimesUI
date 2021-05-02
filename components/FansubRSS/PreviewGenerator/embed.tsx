@@ -69,7 +69,7 @@ class EmbedTitle extends React.Component<IEmbedTitle> {
 
         if (url) {
             return (
-                <Link href={url} className="embed-color-pill">
+                <Link href={url} className="embed-title">
                     {titleParsed}
                 </Link>
             );
@@ -223,7 +223,7 @@ class EmbedImage extends React.Component<IEmbedImage> {
 
 interface IEmbedFooter {
     text?: string;
-    timestamp: number;
+    timestamp?: number;
     icon_url?: string;
 }
 
@@ -258,7 +258,7 @@ class EmbedFooter extends React.Component<IEmbedFooter> {
             ) : null;
 
         return (
-            <div>
+            <div className="items-center flex flex-row">
                 {footerIcon}
                 <span className="embed-footer">{footerText}</span>
             </div>
@@ -277,6 +277,9 @@ class EmbedFields extends React.Component<IEmbedFields> {
 
     render() {
         const { fields } = this.props;
+        if (!fields) {
+            return null;
+        }
         return (
             <div className="embed-fields">
                 {fields.map((f, i) => (
