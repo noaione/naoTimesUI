@@ -410,7 +410,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                         </div>
                     </div>
                     <div className="flex flex-col w-full lg:w-1/2">
-                        <label className="text-lg font-semibold dark:text-white mb-2">Preview</label>
+                        <label className="text-lg font-semibold dark:text-white mb-2">Pratinjau</label>
                         <PreviewGen
                             data={contentData}
                             darkTheme={this.state.darkMode}
