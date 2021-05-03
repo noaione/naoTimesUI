@@ -11,34 +11,43 @@ import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
 
-interface FansubrssIndexState {
-    isLoading: boolean;
-    serverData?: { [key: string]: any };
+interface FansubRSSTambahState {
+    isSubmit: boolean;
 }
 
-interface FansubrssIndexProps {
+interface FansubRSSTambahProps {
     user?: UserProps & { loggedIn: boolean };
     totalData: number;
     isPremium: boolean;
 }
 
-class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndexState> {
-    constructor(props: FansubrssIndexProps) {
+class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTambahState> {
+    constructor(props: FansubRSSTambahProps) {
         super(props);
         this.state = {
-            isLoading: true,
+            isSubmit: false,
         };
     }
 
-    componentDidUpdate() {
-        if (this.state.serverData) {
-            this.setState({ isLoading: false });
+    async submitNewRSS() {
+        if (this.state.isSubmit) {
+            return;
         }
+
+        this.setState({ isSubmit: true });
     }
 
     render() {
-        const { user } = this.props;
+        const { user, isPremium, totalData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+
+        const limit = isPremium ? 5 : 1;
+        let canAddNew = false;
+        if (!isPremium && totalData < limit) {
+            canAddNew = true;
+        } else if (isPremium && totalData < limit) {
+            canAddNew = true;
+        }
 
         return (
             <>
@@ -53,8 +62,47 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                     <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} title="Tambah RSS" active="fsrsspage">
-                    <div className="container mx-auto px-6 py-8 justify-center">
-                        <p className="dark:text-white font-light text-center text-2xl">Akan datang!</p>
+                    <div
+                        className={`container mx-auto px-6 py-8 justify-center ${
+                            !canAddNew && "text-center flex flex-col"
+                        }`}
+                    >
+                        {!canAddNew ? (
+                            <>
+                                <p className="dark:text-white font-light text-center text-2xl">Maaf!</p>
+                                <p className="dark:text-white font-semibold text-center text-lg">
+                                    Anda telah menyampai batas untuk total RSS!
+                                </p>
+                                <code className="dark:text-blue-400 text-blue-500">{`Batas: ${limit}`}</code>
+                                {!isPremium && (
+                                    <div className="mt-2 flex flex-col dark:text-white">
+                                        <p>Silakan donasi untuk mendapatkan akses RSS lebih banyak!</p>
+                                        <p>
+                                            Setelah donasi, mohon kontak{" "}
+                                            <strong className="underline">N4O#8868</strong>
+                                        </p>
+                                    </div>
+                                )}
+                                <div className="flex flex-row text-center gap-2 justify-center">
+                                    {!isPremium && (
+                                        <a
+                                            href="https://trakteer.id/noaione"
+                                            className="text-pink-500 hover:text-pink-600 duration-200 transition mt-2"
+                                        >
+                                            Trakteer/Donasi
+                                        </a>
+                                    )}
+                                    <a
+                                        href="/admin/fansubrss"
+                                        className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2"
+                                    >
+                                        Kembali
+                                    </a>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="dark:text-white font-light text-center text-2xl">Akan datang!</p>
+                        )}
                     </div>
                 </AdminLayout>
             </>
