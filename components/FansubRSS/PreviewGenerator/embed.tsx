@@ -115,16 +115,13 @@ class EmbedAuthor extends React.Component<IEmbedAuthor> {
             return null;
         }
 
-        let authorName;
-        if (name) {
-            authorName = <span className="embed-author-name">{name}</span>;
-            if (url) {
-                authorName = (
-                    <Link href={url} className="embed-author-name">
-                        {name}
-                    </Link>
-                );
-            }
+        let authorName = <span className="embed-author-name">{name}</span>;
+        if (url) {
+            authorName = (
+                <Link href={url} className="embed-author-name">
+                    {name}
+                </Link>
+            );
         }
 
         const authorIcon = icon_url ? (
