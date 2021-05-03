@@ -6,7 +6,7 @@ import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../l
 
 import { ShowtimesModel } from "../../../../models/show";
 
-async function changeChannelId(serverId: string, channelId: string) {
+async function changeChannelId(serverId: string, channelId: string): Promise<[boolean, string]> {
     let channelInfo;
     try {
         channelInfo = await emitSocketAndWait("get channel", { id: channelId, server: serverId });
@@ -42,6 +42,17 @@ async function changeChannelId(serverId: string, channelId: string) {
     return [true, channelName];
 }
 
+async function removeChannelAnnouncer(serverId: string): Promise<[boolean, string]> {
+    try {
+        // @ts-ignore
+        await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: { announce_channel: "" } });
+    } catch (e) {
+        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
+    }
+    emitSocket("pull data", serverId);
+    return [true, "Terhapus"];
+}
+
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
     const user = req.session.get<IUserAuth>("user");
@@ -59,7 +70,13 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 code: 501,
             });
         } else {
-            const [result, msg] = await changeChannelId(user.id, reqData.channelid);
+            let result: boolean;
+            let msg: string;
+            if (reqData.toRemove) {
+                [result, msg] = await removeChannelAnnouncer(user.id);
+            } else {
+                [result, msg] = await changeChannelId(user.id, reqData.channelid);
+            }
             if (!result) {
                 res.status(500).json({
                     message: msg,
