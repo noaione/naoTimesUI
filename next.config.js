@@ -2,6 +2,14 @@
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const GITHUB_CI = process.env.GITHUB_WORKFLOW;
+const SKIP_SENTRY = process.env.SKIP_SENTRY;
+let skipSentry = false;
+if (SKIP_SENTRY === "1") {
+    skipSentry = true;
+}
+if (typeof GITHUB_CI === "string" && GITHUB_CI.length > 0) {
+    skipSentry = true;
+}
 
 const moduleExports = {
     future: {
@@ -20,7 +28,4 @@ const SentryWebpackPluginOptions = {
     // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-module.exports =
-    typeof GITHUB_CI === "string"
-        ? moduleExports
-        : withSentryConfig(moduleExports, SentryWebpackPluginOptions);
+module.exports = skipSentry ? moduleExports : withSentryConfig(moduleExports, SentryWebpackPluginOptions);

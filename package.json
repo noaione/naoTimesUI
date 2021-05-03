@@ -10,8 +10,8 @@
   "scripts": {
     "build": "next build",
     "start": "next start",
-    "dev": "next dev -p 6700",
-    "devdebug": "cross-env NODE_OPTIONS='--inspect' next dev -p 6700",
+    "dev": "cross-env SKIP_SENTRY=1 next dev -p 6700",
+    "devdebug": "cross-env NODE_OPTIONS='--inspect' SKIP_SENTRY=1 next dev -p 6700",
     "type-check": "tsc --pretty --noEmit",
     "format": "prettier --write .",
     "lint": "eslint --ext ts --ext tsx --ext js pages/ lib/ components/",
