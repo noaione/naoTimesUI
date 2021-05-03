@@ -2,6 +2,8 @@ import React from "react";
 import Head from "next/head";
 
 import axios from "axios";
+import SelectAsync from "react-select/async";
+import { ActionMeta } from "react-select";
 import { Dictionary } from "lodash";
 
 import AdminLayout from "../../../components/AdminLayout";
@@ -21,8 +23,9 @@ import { UserProps } from "../../../models/user";
 interface FansubrssIndexState {
     isLoading: boolean;
     errorText: string;
-    serverData?: { [key: string]: any };
     sampleData?: Dictionary<any>[];
+    feedUrl: string;
+    feedChannel: string;
 }
 
 interface FansubrssIndexProps {
@@ -49,15 +52,60 @@ async function parseFeed(url: string) {
     return axiosResp.data;
 }
 
+function matchFilterProper(data: any, inputValue: string) {
+    const matchRe = new RegExp(`(${inputValue})`, "i");
+    const dataID = data.id;
+    const dataName = data.name;
+    return Boolean(dataID.match(matchRe)) || Boolean(dataName.match(matchRe));
+}
+
+const loadChannel = (inputValue: string, callback: Function) => {
+    axios
+        .get("/api/fsrss/channelfind", { responseType: "json" })
+        .then((res) => {
+            const results = res.data;
+            const properResults = results.results.filter((e: any) => matchFilterProper(e, inputValue));
+            callback(properResults);
+        })
+        .catch((err) => {
+            console.error(err);
+            callback([]);
+        });
+};
+
+function optionValueChannel(data: any) {
+    const { id, name } = data;
+    return `#${name} (${id})`;
+}
+
 class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndexState> {
     modalCb: CallbackModal;
     constructor(props: FansubrssIndexProps) {
         super(props);
         this.showErrorCallback = this.showErrorCallback.bind(this);
+        this.onChannelSelection = this.onChannelSelection.bind(this);
         this.state = {
             errorText: "",
             isLoading: true,
+            feedUrl: this.props.feed.feedUrl,
+            feedChannel: this.props.feed.channel,
         };
+    }
+
+    onChannelSelection(data: any, action: ActionMeta<any>) {
+        if (!["select-option", "clear"].includes(action.action)) {
+            return;
+        }
+        if (action.action === "select-option") {
+            const { id } = data;
+            this.setState({
+                feedChannel: id,
+            });
+        } else if (action.action === "clear") {
+            this.setState({
+                feedChannel: null,
+            });
+        }
     }
 
     showErrorCallback(errorText: string) {
@@ -91,8 +139,8 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                             <div className="flex flex-col p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                                 <div className="flex flex-row justify-between items-center">
                                     <div className="flex">
-                                        <p className="text-lg font-semibold dark:text-white">
-                                            {feed.feedUrl}
+                                        <p className="text-lg font-semibold dark:text-white break-all">
+                                            Feed ID: {feed.id}
                                         </p>
                                     </div>
                                     <div className="flex">
@@ -100,6 +148,32 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                                             Edit
                                         </button>
                                     </div>
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <label className="font-semibold dark:text-white text-sm">RSS URI</label>
+                                    <input
+                                        className="form-input w-full lg:w-1/2 mt-1 rounded-lg dark:bg-gray-800 dark:text-gray-200"
+                                        value={this.state.feedUrl}
+                                        onChange={(ev) => this.setState({ feedUrl: ev.target.value })}
+                                    />
+                                </div>
+                                <div className="flex flex-col mt-2">
+                                    <label className="font-semibold dark:text-white text-sm">#kanal</label>
+                                    <label className="font-semibold dark:text-white text-sm">
+                                        ID: {this.state.feedChannel}
+                                    </label>
+                                    <SelectAsync
+                                        className="w-full lg:w-1/2 mt-1 dark:bg-gray-800"
+                                        cacheOptions
+                                        loadOptions={loadChannel}
+                                        defaultOptions
+                                        defaultValue={this.props.feed.channel}
+                                        getOptionLabel={optionValueChannel}
+                                        filterOption={() => true}
+                                        onChange={this.onChannelSelection}
+                                        placeholder="Ubah #kanal..."
+                                        isClearable
+                                    />
                                 </div>
                                 {this.state.isLoading ? (
                                     <span className="font-bold text-lg dark:text-white animate-pulse mt-2">
