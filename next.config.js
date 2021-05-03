@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
 
+const GITHUB_CI = process.env.GITHUB_WORKFLOW;
+
 const moduleExports = {
     future: {
         webpack5: true,
@@ -18,4 +20,7 @@ const SentryWebpackPluginOptions = {
     // https://github.com/getsentry/sentry-webpack-plugin#options.
 };
 
-module.exports = withSentryConfig(moduleExports, SentryWebpackPluginOptions);
+module.exports =
+    typeof GITHUB_CI === "string"
+        ? moduleExports
+        : withSentryConfig(moduleExports, SentryWebpackPluginOptions);
