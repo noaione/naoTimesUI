@@ -145,7 +145,7 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                                     </div>
                                     <div className="flex">
                                         <button className="px-3 py-1 bg-blue-500 hover:bg-blue-600 duration-200 transition text-gray-100 text-sm rounded">
-                                            Edit
+                                            Ubah
                                         </button>
                                     </div>
                                 </div>
