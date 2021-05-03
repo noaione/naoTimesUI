@@ -20,7 +20,7 @@ import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
 
-interface FansubrssIndexState {
+interface FansubRSSPageState {
     isLoading: boolean;
     errorText: string;
     sampleData?: Dictionary<any>[];
@@ -28,7 +28,7 @@ interface FansubrssIndexState {
     feedChannel: string;
 }
 
-interface FansubrssIndexProps {
+interface FansubRSSPageProps {
     user?: UserProps & { loggedIn: boolean };
     feed: FansubRSSFeeds;
 }
@@ -78,9 +78,9 @@ function optionValueChannel(data: any) {
     return `#${name} (${id})`;
 }
 
-class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndexState> {
+class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageState> {
     modalCb: CallbackModal;
-    constructor(props: FansubrssIndexProps) {
+    constructor(props: FansubRSSPageProps) {
         super(props);
         this.showErrorCallback = this.showErrorCallback.bind(this);
         this.onChannelSelection = this.onChannelSelection.bind(this);
@@ -253,4 +253,4 @@ export const getServerSideProps = withSession(async function ({
     return { props: { user: { loggedIn: true, ...user }, isPremium, feed } };
 });
 
-export default FansubrssIndex;
+export default FansubRSSPage;

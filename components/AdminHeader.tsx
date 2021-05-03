@@ -96,7 +96,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     toggleDropdown() {
-        this.setState({ dropdownOpen: !this.state.dropdownOpen });
+        this.setState((prevState) => ({ dropdownOpen: !prevState.dropdownOpen }));
     }
 
     handleClickOutsideDropdown(event: MouseEvent) {
@@ -121,7 +121,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     toggleDarkMode() {
-        this.setState({ isDarkMode: !this.state.isDarkMode });
+        this.setState((prevState) => ({ isDarkMode: !prevState.isDarkMode }));
     }
 
     render() {

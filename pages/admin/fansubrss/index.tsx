@@ -12,29 +12,15 @@ import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
 
-interface FansubrssIndexState {
-    isLoading: boolean;
-    serverData?: { [key: string]: any };
-}
-
 interface FansubrssIndexProps {
     user?: UserProps & { loggedIn: boolean };
     fansubRss: FansubRSSFeeds[];
     isPremium: boolean;
 }
 
-class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndexState> {
+class FansubrssIndex extends React.Component<FansubrssIndexProps> {
     constructor(props: FansubrssIndexProps) {
         super(props);
-        this.state = {
-            isLoading: true,
-        };
-    }
-
-    componentDidUpdate() {
-        if (this.state.serverData) {
-            this.setState({ isLoading: false });
-        }
     }
 
     render() {

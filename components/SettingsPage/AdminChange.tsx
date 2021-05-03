@@ -101,7 +101,7 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
             .filter((e) => typeof e === "string" && e.length > 0);
         const oldServerOwner = this.state.oldServerOwner.map((res) => res.value);
         if (!isDifferent(serverOwner, oldServerOwner)) {
-            this.setState({ isEdit: false, serverOwner: this.state.oldServerOwner });
+            this.setState((prevState) => ({ isEdit: false, serverOwner: prevState.serverOwner }));
             return;
         }
         const actualNewServerOwner = this.state.serverOwner.filter(
