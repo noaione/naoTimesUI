@@ -16,6 +16,19 @@ const moduleExports = {
         webpack5: true,
     },
     productionBrowserSourceMaps: true,
+    async headers() {
+        return [
+            {
+                source: "/:path*",
+                headers: [
+                    {
+                        key: "Permissions-Policy",
+                        value: "interest-cohort=()",
+                    },
+                ],
+            },
+        ];
+    },
 };
 
 const SentryWebpackPluginOptions = {
