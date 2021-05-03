@@ -423,3 +423,6 @@ pages/testing/**
 # Something else
 lib/*.py
 lib/*.txt
+
+# Sentry
+sentry.properties

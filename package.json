@@ -64,6 +64,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@kachkaev/react-inline-js": "^0.2.0",
+    "@sentry/nextjs": "^6.3.5",
     "@tailwindcss/forms": "^0.3.2",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
