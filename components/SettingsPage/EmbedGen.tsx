@@ -47,21 +47,20 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
 
     componentDidMount() {
         const windowURL = window.location.origin;
-        this.setState({
-            genUrl: generateEmbedUrl(
-                windowURL,
-                this.props.id,
-                this.state.accent,
-                this.state.lang,
-                this.state.isDark
-            ),
-        });
+        const generatedNewURL = generateEmbedUrl(
+            windowURL,
+            this.props.id,
+            this.state.accent,
+            this.state.lang,
+            this.state.isDark
+        );
+        this.setState({ genUrl: generatedNewURL });
     }
 
     setAccentColor(aksen: string) {
         const { genUrl } = this.state;
         const windowURL = window.location.origin;
-        const generateNewURL = generateEmbedUrl(
+        const generatedNewURL = generateEmbedUrl(
             windowURL,
             this.props.id,
             aksen,
@@ -70,8 +69,8 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
         );
 
         this.setState({ accent: aksen as typeof ValidAccent[number] });
-        if (genUrl !== generateNewURL) {
-            this.setState({ genUrl: generateNewURL });
+        if (genUrl !== generatedNewURL) {
+            this.setState({ genUrl: generatedNewURL });
         }
     }
 

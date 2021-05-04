@@ -48,12 +48,6 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
         }
 
         this.setState({ isSubmitting: true });
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-        setTimeout(() => {
-            outerThis.setState({ isEdit: false, oldId: this.state.userId });
-        }, 2000);
-
         const sendData = {
             event: "staff",
             changes: {

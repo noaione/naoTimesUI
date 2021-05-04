@@ -5,21 +5,21 @@ import { isNone } from "./utils";
 
 const sleep = promisify(setTimeout);
 
+type CheckMethodEvent = "authenticate" | "ping";
+type GetMethodEvent = "get server" | "get channel" | "get user" | "get user perms" | "get server channel";
+type UpdateMethodEvent = "pull data" | "pull admin";
+type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "delete roles" | "announce drop";
+type CreateMethodEvent = "create role";
+
+type FansubRSSEvent = "fsrss get" | "fsrss parse" | "fsrss update" | "fsrss create" | "fsrss delete";
+
 type SocketEvent =
-    | "authenticate"
-    | "pull data"
-    | "pull admin"
-    | "get server"
-    | "get channel"
-    | "get user"
-    | "get user perms"
-    | "delete server"
-    | "delete admin"
-    | "delete role"
-    | "delete roles"
-    | "create role"
-    | "announce drop"
-    | "ping";
+    | CheckMethodEvent
+    | GetMethodEvent
+    | UpdateMethodEvent
+    | DeleteMethodEvent
+    | CreateMethodEvent
+    | FansubRSSEvent;
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
@@ -56,25 +56,33 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     // eslint-disable-next-line no-underscore-dangle
 
     let isConnected = false;
-    let queryResponse: Buffer;
+    let parsedData = "";
+    let isDone = false;
     client.on("connect", () => {
         isConnected = true;
         client.write(`${JSON.stringify({ event, data })}\x04`);
     });
 
     client.on("data", (sdata) => {
-        queryResponse = sdata;
-        client.end();
+        const parseWhile = sdata.toString();
+        parsedData += parseWhile;
+        if (parseWhile.endsWith("\x04")) {
+            isDone = true;
+            client.end();
+        }
+    });
+
+    client.on("end", () => {
+        isDone = true;
     });
 
     while (!isConnected) {
         await sleep(500);
     }
     // @ts-ignore
-    while (isNone(queryResponse)) {
+    while (!isDone) {
         await sleep(500);
     }
-    let parsedData = queryResponse.toString();
     if (parsedData.endsWith("\x04")) {
         parsedData = parsedData.replace("\x04", "");
     }

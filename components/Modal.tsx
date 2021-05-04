@@ -118,6 +118,9 @@ class Modal extends React.Component<ModalProps, ModalState> {
     }
 
     render() {
+        if (!this.state.show) {
+            return null;
+        }
         const fadeInTransition = "fade-in-modal";
         const fadeOutTransition = "transition ease-out duration-300 opacity-0 transform scale-90";
 
@@ -130,28 +133,26 @@ class Modal extends React.Component<ModalProps, ModalState> {
 
         return (
             <>
-                <div className="mt-6">
+                <div
+                    ref={(ref) => (this.divRef = ref)}
+                    className={`absolute top-0 left-0 ${
+                        this.state.show ? "flex" : "hidden"
+                    } items-center justify-center w-full h-full z-40`}
+                    onClick={(ev) => {
+                        if (ev.target === this.divRef) {
+                            // Only handle if clicked outside the main div
+                            this.handleHide();
+                        }
+                    }}
+                    style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                >
                     <div
-                        ref={(ref) => (this.divRef = ref)}
-                        className={`absolute top-0 left-0 ${
-                            this.state.show ? "flex" : "hidden"
-                        } items-center justify-center w-full h-full z-40`}
-                        onClick={(ev) => {
-                            if (ev.target === this.divRef) {
-                                // Only handle if clicked outside the main div
-                                this.handleHide();
-                            }
-                        }}
-                        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                        className={
+                            "h-auto p-4 mx-6 text-left bg-white dark:bg-gray-700 rounded shadow-xl md:max-w-xl md:p-6 lg:p-8 md:mx-0 " +
+                            extraClasses
+                        }
                     >
-                        <div
-                            className={
-                                "h-auto p-4 mx-6 text-left bg-white dark:bg-gray-700 rounded shadow-xl md:max-w-xl md:p-6 lg:p-8 md:mx-0 " +
-                                extraClasses
-                            }
-                        >
-                            {this.props.children}
-                        </div>
+                        {this.props.children}
                     </div>
                 </div>
             </>

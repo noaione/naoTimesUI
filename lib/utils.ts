@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import { DateTime } from "luxon";
 import { get, has } from "lodash";
 
@@ -399,4 +400,23 @@ export function getAssigneeName(assignments: AssignmentsData) {
     const getname = assignments.name;
     const splitName = getname.split("#");
     return splitName.slice(0, splitName.length === 1 ? 1 : splitName.length - 1).join("#");
+}
+
+export async function parseFeed(url: string) {
+    let axiosResp: AxiosResponse<any>;
+    try {
+        axiosResp = await axios.get("/api/feedcors", {
+            headers: {
+                "User-Agent": "naoTimesUI/1.1.0 (+https://github.com/noaione/naoTimesUI)",
+            },
+            responseType: "json",
+            params: {
+                url,
+            },
+        });
+    } catch (e) {
+        return [false, "Gagal mengambil RSS!"];
+    }
+
+    return [true, axiosResp.data];
 }

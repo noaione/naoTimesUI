@@ -3,48 +3,28 @@ import Head from "next/head";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
+import FansubRSSOverview from "../../../components/FansubRSS/Overview";
 
+import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
+import { emitSocketAndWait } from "../../../lib/socket";
+import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
-import Image from "next/image";
-
-interface FansubrssIndexState {
-    isLoading: boolean;
-    serverData?: { [key: string]: any };
-}
 
 interface FansubrssIndexProps {
     user?: UserProps & { loggedIn: boolean };
+    fansubRss: FansubRSSFeeds[];
+    isPremium: boolean;
 }
 
-class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndexState> {
+class FansubrssIndex extends React.Component<FansubrssIndexProps> {
     constructor(props: FansubrssIndexProps) {
         super(props);
-        this.state = {
-            isLoading: true,
-        };
-    }
-
-    async componentDidMount() {
-        // const userObj = await fetch("/api/auth/user");
-        // const jsonResp = await userObj.json();
-        // if (jsonResp.loggedIn) {
-        //     this.setState({ isAuthenticating: false, user: jsonResp });
-        // } else {
-        //     this.setState({ isAuthenticating: false });
-        //     Router.push("/");
-        // }
-    }
-
-    componentDidUpdate() {
-        if (this.state.serverData) {
-            this.setState({ isLoading: false });
-        }
     }
 
     render() {
-        const { user } = this.props;
+        const { user, fansubRss } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
 
         return (
@@ -58,37 +38,39 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps, FansubrssIndex
                 </Head>
                 <AdminLayout user={user} title="FansubRSS" active="fsrss">
                     <div className="container mx-auto px-6 py-8 justify-center">
-                        <div
-                            className="rounded-lg"
-                            style={{ boxShadow: "rgb(0 0 0 / 35%) 0px 0px 20px 0px" }}
-                        >
-                            <a
-                                href="https://github.com/noaione/naoTimesUI"
-                                className="cursor-pointer bg-none"
-                                target="_blank"
-                                rel="noreferrer noopener"
-                            >
-                                <Image
-                                    width={1270}
-                                    height={714}
-                                    src="/assets/img/ogeyy.jpg"
-                                    layout="responsive"
-                                    className="rounded-lg"
-                                    title="Bantu kontribusi untuk mempercepat proses!"
-                                />
-                            </a>
-                        </div>
-                        <div className="mt-2 text-center">
-                            <p className="font-light dark:text-gray-200 text-2xl">Akan datang!</p>
-                            <a
-                                className="text-yellow-500 hover:text-yellow-600 transition-colors duration-150 focus:outline-none"
-                                href="https://github.com/noaione/naoTimesUI/issues/53"
-                                target="_blank"
-                                rel="noreferrer noopener"
-                            >
-                                Info lebih lanjut
-                            </a>
-                        </div>
+                        {fansubRss.length > 0 ? (
+                            <>
+                                <div className="flex flex-col">
+                                    <div className="flex">
+                                        <a
+                                            href="/admin/fansubrss/tambah"
+                                            className="px-3 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200"
+                                        >
+                                            Tambah
+                                        </a>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
+                                        {fansubRss.map((feed) => {
+                                            return <FansubRSSOverview key={`feed-${feed.id}`} feed={feed} />;
+                                        })}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex flex-col justify-center">
+                                    <div className="text-xl font-bold text-center dark:text-gray-200">
+                                        Tidak ada RSS yang terdaftar
+                                    </div>
+                                    <a
+                                        href="/admin/fansubrss/tambah"
+                                        className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2"
+                                    >
+                                        Tambah Baru
+                                    </a>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </AdminLayout>
             </>
@@ -107,8 +89,23 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
             },
         };
     }
+    if (user.privilege === "owner") {
+        return {
+            notFound: true,
+        };
+    }
 
-    return { props: { user: { loggedIn: true, ...user } } };
+    const rssSchemas: Nullable<FansubRSSSchemas> = await emitSocketAndWait("fsrss get", { id: user.id });
+    let fansubRSSFeeds: FansubRSSFeeds[];
+    let isPremium = false;
+    if (isNone(rssSchemas)) {
+        fansubRSSFeeds = [];
+    } else {
+        fansubRSSFeeds = rssSchemas.feeds;
+        isPremium = rssSchemas?.premium ?? false;
+    }
+
+    return { props: { user: { loggedIn: true, ...user }, fansubRss: fansubRSSFeeds, isPremium } };
 });
 
 export default FansubrssIndex;
