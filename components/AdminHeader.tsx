@@ -175,25 +175,27 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                     />
                                 )}
                             </button>
-                            <div
-                                ref={this.wrapperRef}
-                                className={
-                                    "absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10 transition ease-in-out duration-100 " +
-                                    opacity
-                                }
-                            >
-                                <a
-                                    href="/api/auth/logout"
-                                    onClick={async (ev) => {
-                                        ev.preventDefault();
-                                        await fetch("/api/auth/logout");
-                                        Router.push("/");
-                                    }}
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white"
+                            {this.state.dropdownOpen && (
+                                <div
+                                    ref={this.wrapperRef}
+                                    className={
+                                        "absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10 transition ease-in-out duration-100 " +
+                                        opacity
+                                    }
                                 >
-                                    Keluar
-                                </a>
-                            </div>
+                                    <a
+                                        href="/api/auth/logout"
+                                        onClick={async (ev) => {
+                                            ev.preventDefault();
+                                            await fetch("/api/auth/logout");
+                                            Router.push("/");
+                                        }}
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white"
+                                    >
+                                        Keluar
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
