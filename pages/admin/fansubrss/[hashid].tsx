@@ -16,7 +16,7 @@ import { CallbackModal } from "../../../components/Modal";
 import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
 import { emitSocketAndWait } from "../../../lib/socket";
-import { isNone, Nullable } from "../../../lib/utils";
+import { isNone, Nullable, parseFeed } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
 
@@ -31,25 +31,6 @@ interface FansubRSSPageState {
 interface FansubRSSPageProps {
     user?: UserProps & { loggedIn: boolean };
     feed: FansubRSSFeeds;
-}
-
-async function parseFeed(url: string) {
-    let axiosResp;
-    try {
-        axiosResp = await axios.get("/api/feedcors", {
-            headers: {
-                "User-Agent": "naoTimesUI/1.1.0 (+https://github.com/noaione/naoTimesUI)",
-            },
-            responseType: "json",
-            params: {
-                url,
-            },
-        });
-    } catch (e) {
-        return [false, "Gagal mengambil RSS!"];
-    }
-
-    return axiosResp.data;
 }
 
 function matchFilterProper(data: any, inputValue: string) {
@@ -116,8 +97,12 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
     }
 
     async componentDidMount() {
-        const sampleData = await parseFeed(this.props.feed.feedUrl);
-        this.setState({ sampleData: sampleData.results[0], isLoading: false });
+        const [isSuccess, sampleData] = await parseFeed(this.props.feed.feedUrl);
+        if (!isSuccess) {
+            this.showErrorCallback("Maaf, terjadi kesalahan ketika memproses sample mohon coba sesaat lagi");
+        } else {
+            this.setState({ sampleData: sampleData.results[0], isLoading: false });
+        }
     }
 
     render() {
