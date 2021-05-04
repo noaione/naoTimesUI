@@ -49,7 +49,7 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
                                             Tambah
                                         </a>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
                                         {fansubRss.map((feed) => {
                                             return <FansubRSSOverview key={`feed-${feed.id}`} feed={feed} />;
                                         })}
