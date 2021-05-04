@@ -3,6 +3,9 @@ import Head from "next/head";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
+import ErrorModal from "../../../components/ErrorModal";
+import FansubRSSCreateNew from "../../../components/FansubRSS/CreateNew";
+import { CallbackModal } from "../../../components/Modal";
 
 import { FansubRSSSchemas } from "../../../lib/fsrss";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
@@ -11,30 +14,33 @@ import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
 
-interface FansubRSSTambahState {
-    isSubmit: boolean;
-}
-
 interface FansubRSSTambahProps {
     user?: UserProps & { loggedIn: boolean };
     totalData: number;
     isPremium: boolean;
 }
 
+interface FansubRSSTambahState {
+    errorText: string;
+}
+
 class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTambahState> {
+    modalCb: CallbackModal;
+
     constructor(props: FansubRSSTambahProps) {
         super(props);
+        this.showErrorCallback = this.showErrorCallback.bind(this);
+
         this.state = {
-            isSubmit: false,
+            errorText: "",
         };
     }
 
-    async submitNewRSS() {
-        if (this.state.isSubmit) {
-            return;
+    showErrorCallback(errorText: string) {
+        this.setState({ errorText });
+        if (this.modalCb) {
+            this.modalCb.showModal();
         }
-
-        this.setState({ isSubmit: true });
     }
 
     render() {
@@ -101,9 +107,13 @@ class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTamb
                                 </div>
                             </>
                         ) : (
-                            <p className="dark:text-white font-light text-center text-2xl">Akan datang!</p>
+                            <FansubRSSCreateNew
+                                id={this.props.user.id}
+                                onErrorModal={this.showErrorCallback}
+                            />
                         )}
                     </div>
+                    <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errorText}</ErrorModal>
                 </AdminLayout>
             </>
         );
