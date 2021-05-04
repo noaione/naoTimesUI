@@ -1,5 +1,6 @@
 import React from "react";
 
+import AdminBanner from "./AdminBanner";
 import AdminHeader from "./AdminHeader";
 import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
 
@@ -60,6 +61,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         appInfo={appInfo}
                     />
                     <div className="flex-1 flex flex-col overflow-hidden">
+                        <AdminBanner />
                         <AdminHeader
                             id={user.id}
                             name={user.name}
