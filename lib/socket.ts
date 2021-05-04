@@ -75,13 +75,31 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     client.on("end", () => {
         isDone = true;
     });
-
+    let isTimeout = false;
+    const TIMEOUT_LIMIT = 10 * 1000;
+    let CURRENT_TIMEOUT = 0;
     while (!isConnected) {
         await sleep(500);
+        CURRENT_TIMEOUT += 500;
+        if (CURRENT_TIMEOUT >= TIMEOUT_LIMIT) {
+            isTimeout = true;
+            break;
+        }
     }
-    // @ts-ignore
+    if (isTimeout) {
+        throw new Error("Timeout error after 10 seconds of waiting for connection!");
+    }
+    CURRENT_TIMEOUT = 0;
     while (!isDone) {
         await sleep(500);
+        CURRENT_TIMEOUT += 500;
+        if (CURRENT_TIMEOUT >= TIMEOUT_LIMIT) {
+            isTimeout = true;
+            break;
+        }
+    }
+    if (isTimeout) {
+        throw new Error("Timeout error after 10 seconds of waiting for answer!");
     }
     if (parsedData.endsWith("\x04")) {
         parsedData = parsedData.replace("\x04", "");
