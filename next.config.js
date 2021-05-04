@@ -3,11 +3,15 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const GITHUB_CI = process.env.GITHUB_WORKFLOW;
 const SKIP_SENTRY = process.env.SKIP_SENTRY;
+const IS_PREVIEW = process.env.VERCEL_ENV === "preview";
 let skipSentry = false;
 if (SKIP_SENTRY === "1") {
     skipSentry = true;
 }
 if (typeof GITHUB_CI === "string" && GITHUB_CI.length > 0) {
+    skipSentry = true;
+}
+if (IS_PREVIEW) {
     skipSentry = true;
 }
 
