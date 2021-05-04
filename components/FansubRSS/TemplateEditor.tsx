@@ -232,7 +232,6 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                 embed: verifyEmbed(this.state.embed),
             },
         };
-        console.info(JSON.stringify(bodyBag.changes.embed, undefined, 4));
 
         const apiRes = await fetch("/api/fsrss/update", {
             headers: {
@@ -255,7 +254,6 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
         const newAAA = {};
         newAAA[key] = value;
         const updatedEmbed = Object.assign({}, embed, newAAA);
-        console.info(JSON.stringify(updatedEmbed, undefined, 4));
         this.setState({ embed: updatedEmbed });
     }
 
