@@ -1,5 +1,21 @@
 {
     "github": {
         "silent": true
-    }
+    },
+    "cleanUrls": true,
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Git-Source",
+                    "value": "https://github.com/noaione/naoTimesUI"
+                },
+                {
+                    "key": "Permissions-Policy",
+                    "value": "interest-cohort=()"
+                }
+            ]
+        }
+    ]
 }
