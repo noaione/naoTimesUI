@@ -29,3 +29,11 @@ Kodenama: [To the Moon](https://en.wikipedia.org/wiki/GameStop_short_squeeze)
 - 🔃 *Loading indicator* ketika mengsubmit sesuatu
 - 🚫 Menulis parafrasa tambahan sebelum menghapus server
 - 🕶 Dark mode segalanya, hampir semua komponen memiliki versi "gelap"-nya
+
+## Versi 1.1.0
+
+Kodenama: *Tidak ada*
+
+- 📰 Penambahan FansubRSS di Website
+- 🔍 Penambahan tooling untuk memeriksa error lebih cepat.
+- 🐛 Memperbaiki beberapa bugs

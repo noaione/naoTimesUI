@@ -43,6 +43,7 @@ Website ini menggunakan teknologi berikut:
 - [TypeScript](https://www.typescriptlang.org/) oleh Microsoft, sebagai bahasa yang tak pakai untuk nulis website ini
 - [Webpack](https://webpack.js.org/), sebagai bundler untuk website ini
 - [ReactMarkdown](https://github.com/remarkjs/react-markdown) oleh Remark, sebagai Markdown engine yang tak pakai untuk render teks ini
+- [Embed Visualizer](https://github.com/leovoel/embed-visualizer) oleh leovoel, digunakan sebagai basis untuk Pratinjau pesan/embed di FansubRSS
 - [Vercel](https://vercel.com), sebagai tempat hosting web ini :heart:
 
 Makasih juga untuk manusia-manusia berikut:
@@ -84,7 +85,16 @@ Kodenama: [To the Moon](https://en.wikipedia.org/wiki/GameStop_short_squeeze)
 - 📰 Penambahan laman FansubRSS **[Akan datang]**
 - 🔃 *Loading indicator* ketika mengsubmit sesuatu
 - 🚫 Menulis parafrasa tambahan sebelum menghapus server
-- 🕶 Dark mode segalanya, hampir semua komponen memiliki versi "gelap"-nya`;
+- 🕶 Dark mode segalanya, hampir semua komponen memiliki versi "gelap"-nya
+
+## Versi 1.1.0
+
+Kodenama: *Tidak ada*
+
+- 📰 Penambahan FansubRSS di Website
+- 🔍 Penambahan tooling untuk memeriksa error lebih cepat.
+- 🐛 Memperbaiki beberapa bugs
+`;
 
 export function getAboutContent() {
     const fullPath = join(postsDirectory, "about.md");
