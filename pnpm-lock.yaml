@@ -13,7 +13,7 @@ specifiers:
   '@types/luxon': 1.26.5
   '@types/mongoose': 5.10.5
   '@types/node': 14.14.43
-  '@types/react': 17.0.4
+  '@types/react': 17.0.5
   '@types/react-color': ^3.0.4
   '@types/react-select': 4.0.15
   '@types/twemoji': ^12.1.1
@@ -81,8 +81,8 @@ dependencies:
   react-color: 2.19.3_react@17.0.2
   react-countup: 4.3.3_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-markdown: 6.0.1_@types+react@17.0.4+react@17.0.2
-  react-select: 4.3.0_66bdaeef25d361b247c0275abcb49c54
+  react-markdown: 6.0.1_@types+react@17.0.5+react@17.0.2
+  react-select: 4.3.0_c9b97d0291e0c7f7ae91672f3bb47b49
   react-string-replace: 0.4.4
   react-time-ago: 6.2.2_react-dom@17.0.2+react@17.0.2
   remark-breaks: 2.0.2
@@ -99,7 +99,7 @@ devDependencies:
   '@types/luxon': 1.26.5
   '@types/mongoose': 5.10.5
   '@types/node': 14.14.43
-  '@types/react': 17.0.4
+  '@types/react': 17.0.5
   '@types/react-color': 3.0.4
   '@types/react-select': 4.0.15
   '@types/twemoji': 12.1.1
@@ -184,7 +184,7 @@ packages:
   /@emotion/memoize/0.7.5:
     resolution: {integrity: sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==}
 
-  /@emotion/react/11.1.5_@types+react@17.0.4+react@17.0.2:
+  /@emotion/react/11.1.5_@types+react@17.0.5+react@17.0.2:
     resolution: {integrity: sha512-xfnZ9NJEv9SU9K2sxXM06lzjK245xSeHRpUh67eARBm3PBHjjKIZlfWZ7UQvD0Obvw6ZKjlC79uHrlzFYpOB/Q==}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -202,7 +202,7 @@ packages:
       '@emotion/sheet': 1.0.1
       '@emotion/utils': 1.0.0
       '@emotion/weak-memoize': 0.2.5
-      '@types/react': 17.0.4
+      '@types/react': 17.0.5
       hoist-non-react-statics: 3.3.2
       react: 17.0.2
     dev: false
@@ -685,6 +685,14 @@ packages:
       '@types/prop-types': 15.7.3
       '@types/scheduler': 0.16.1
       csstype: 3.0.8
+
+  /@types/react/17.0.5:
+    resolution: {integrity: sha512-bj4biDB9ZJmGAYTWSKJly6bMr4BLUiBrx9ujiJEoP9XIDY9CTaPGxE5QWN/1WjpPLzYF7/jRNnV2nNxNe970sw==}
+    dependencies:
+      '@types/prop-types': 15.7.3
+      '@types/scheduler': 0.16.1
+      csstype: 3.0.8
+    dev: true
 
   /@types/reactcss/1.2.3:
     resolution: {integrity: sha512-d2gQQ0IL6hXLnoRfVYZukQNWHuVsE75DzFTLPUuyyEhJS8G2VvlE+qfQQ91SJjaMqlURRCNIsX7Jcsw6cEuJlA==}
@@ -4771,14 +4779,14 @@ packages:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
     dev: false
 
-  /react-markdown/6.0.1_@types+react@17.0.4+react@17.0.2:
+  /react-markdown/6.0.1_@types+react@17.0.5+react@17.0.2:
     resolution: {integrity: sha512-JNOIU+6xrG+eOwZu9UNZxDAc1bNBCpI8mueQNx5NwZWRbSrcD25FllhKHxyUkXhpdu3r/eg1hrLKCtCq9/uIrw==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
     dependencies:
       '@types/hast': 2.3.1
-      '@types/react': 17.0.4
+      '@types/react': 17.0.5
       '@types/unist': 2.0.3
       comma-separated-tokens: 1.0.8
       prop-types: 15.7.2
@@ -4800,7 +4808,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-select/4.3.0_66bdaeef25d361b247c0275abcb49c54:
+  /react-select/4.3.0_c9b97d0291e0c7f7ae91672f3bb47b49:
     resolution: {integrity: sha512-SBPD1a3TJqE9zoI/jfOLCAoLr/neluaeokjOixr3zZ1vHezkom8K0A9J4QG9IWDqIDE9K/Mv+0y1GjidC2PDtQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0
@@ -4808,7 +4816,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.13.17
       '@emotion/cache': 11.1.3
-      '@emotion/react': 11.1.5_@types+react@17.0.4+react@17.0.2
+      '@emotion/react': 11.1.5_@types+react@17.0.5+react@17.0.2
       memoize-one: 5.2.1
       prop-types: 15.7.2
       react: 17.0.2
