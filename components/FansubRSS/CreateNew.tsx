@@ -112,7 +112,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
 
         this.setState({ validating: true });
         const [success, result] = await parseFeed(this.state.url);
-        if (!success) {
+        if (!success || !result) {
             this.props.onErrorModal("Gagal memvalidasi URL, mohon coba lagi");
             this.setState({ validating: false });
             return;

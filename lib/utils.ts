@@ -418,5 +418,9 @@ export async function parseFeed(url: string) {
         return [false, "Gagal mengambil RSS!"];
     }
 
+    if (axiosResp.status !== 200) {
+        return [false, `Terjadi kesalahan, ${axiosResp.statusText}`];
+    }
+
     return [true, axiosResp.data];
 }
