@@ -18,6 +18,12 @@ const BannerSets: BannerData[] = [
         shortMessage: "FansubRSS dapat dipakai!",
         link: "/admin/fansubrss",
     },
+    {
+        id: "20210505-1745",
+        message: "Penambah Kebijakan Privasi dan Syarat dan Ketentuan",
+        shortMessage: "Penambah Kebijakan Privasi dan TOS",
+        link: "https://naoti.me/legal",
+    },
 ];
 
 export default BannerSets;
