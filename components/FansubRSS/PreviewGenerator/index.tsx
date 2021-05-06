@@ -12,6 +12,21 @@ interface BasePreviewProps {
     compactMode?: boolean;
 }
 
+function formatTimestamp(c: DateTime, compactMode: boolean = false) {
+    if (compactMode) {
+        return c.toLocaleString(DateTime.TIME_SIMPLE);
+    }
+
+    const current = c.toRelativeCalendar();
+    if (current === "today") {
+        return `Today at ${c.toLocaleString(DateTime.TIME_SIMPLE)}`;
+    } else if (current === "yesterday") {
+        return `Yesterday at ${c.toLocaleString(DateTime.TIME_SIMPLE)}`;
+    }
+
+    return c.toLocaleString(DateTime.DATE_SHORT);
+}
+
 class MessageTimestamp extends React.Component<BasePreviewProps> {
     timer?: NodeJS.Timeout;
 
@@ -37,9 +52,8 @@ class MessageTimestamp extends React.Component<BasePreviewProps> {
     render() {
         const { compactMode } = this.props;
         const c = DateTime.now();
-        const computed = compactMode ? c.toLocaleString(DateTime.TIME_SIMPLE) : c.toRelativeCalendar();
 
-        return <span className="timestamp">{computed}</span>;
+        return <span className="timestamp">{formatTimestamp(c, compactMode)}</span>;
     }
 }
 
@@ -60,8 +74,17 @@ class MessageBody extends React.Component<IMsgBodyProps> {
                 <div className="markup">
                     <MessageTimestamp compactMode={compactMode} />
                     <span className="username-wrapper align-bottom">
-                        <strong className="user-name">{username}</strong>
-                        <span className="bot-tag">BOT</span>
+                        {compactMode ? (
+                            <>
+                                <span className="bot-tag">BOT</span>
+                                <strong className="user-name">{username}</strong>
+                            </>
+                        ) : (
+                            <>
+                                <strong className="user-name">{username}</strong>
+                                <span className="bot-tag">BOT</span>
+                            </>
+                        )}
                     </span>
                     <span className="highlight-separator"> - </span>
                     <span className="message-content">{content && parse(content, true, {}, jumboify)}</span>
