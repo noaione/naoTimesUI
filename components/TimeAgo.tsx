@@ -1,3 +1,4 @@
+import React from "react";
 import { DateTime } from "luxon";
 
 import { timeAgoLocale, TimeAgoLocale, ValidLocale } from "../i18n";
