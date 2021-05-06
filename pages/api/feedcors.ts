@@ -23,6 +23,10 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         res.json({ results: parsedEntries });
     } catch (e) {
         console.error(e);
-        res.send("an error occured");
+        if (e.response) {
+            res.status(e.status).send(e.statusText);
+        } else {
+            res.status(500).send(e.toString());
+        }
     }
 });
