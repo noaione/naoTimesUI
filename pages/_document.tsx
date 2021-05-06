@@ -3,6 +3,8 @@ import Document, { DocumentContext, Head, Html, Main, NextScript } from "next/do
 
 import { InlineJs } from "@kachkaev/react-inline-js";
 
+import { isNone } from "../lib/utils";
+
 const THEME_CHECKER_JS = `
 // Helper
 const isNullified = function(data) {
@@ -56,16 +58,24 @@ class MyDocument extends Document {
     }
 
     render() {
+        const { PLAUSIBLE_DOMAIN_TRACK } = process.env;
+        // Add Plausible
+        let addTracking = false;
+        if (!isNone(PLAUSIBLE_DOMAIN_TRACK) && PLAUSIBLE_DOMAIN_TRACK.trim().length > 0) {
+            addTracking = true;
+        }
         return (
             <Html>
                 <Head>
                     <InlineJs code={THEME_CHECKER_JS} />
-                    <script
-                        async
-                        defer
-                        data-domain={process.env.PLAUSIBLE_DOMAIN_TRACK}
-                        src="https://tr.n4o.xyz/js/plausible.js"
-                    />
+                    {addTracking && (
+                        <script
+                            async
+                            defer
+                            data-domain={PLAUSIBLE_DOMAIN_TRACK}
+                            src="https://tr.n4o.xyz/js/plausible.js"
+                        />
+                    )}
                 </Head>
                 <body>
                     <Main />
