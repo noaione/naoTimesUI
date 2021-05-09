@@ -25,11 +25,13 @@ async function dbConnect() {
             useCreateIndex: true,
         };
 
-        global.mongoose.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-            return mongoose;
-        });
+        console.info("Connecting to Mongoose...");
+        const promised = await mongoose.connect(MONGODB_URI, opts);
+        // @ts-ignore
+        global.mongoose.promise = true;
+        console.info("Connected!");
+        global.mongoose.conn = promised;
     }
-    global.mongoose.conn = await global.mongoose.promise;
     return global.mongoose.conn;
 }
 
