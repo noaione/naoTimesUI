@@ -40,7 +40,7 @@ specifiers:
   postcss: 8.2.13
   postcss-extend: ^1.0.5
   postcss-flexbugs-fixes: ^5.0.2
-  postcss-import: 14.0.1
+  postcss-import: 14.0.2
   postcss-nested: 5.0.5
   postcss-preset-env: 6.7.0
   prettier: 2.2.1
@@ -117,7 +117,7 @@ devDependencies:
   postcss: 8.2.13
   postcss-extend: 1.0.5
   postcss-flexbugs-fixes: 5.0.2_postcss@8.2.13
-  postcss-import: 14.0.1_postcss@8.2.13
+  postcss-import: 14.0.2_postcss@8.2.13
   postcss-nested: 5.0.5_postcss@8.2.13
   postcss-preset-env: 6.7.0
   prettier: 2.2.1
@@ -4191,8 +4191,8 @@ packages:
       postcss-values-parser: 2.0.1
     dev: true
 
-  /postcss-import/14.0.1_postcss@8.2.13:
-    resolution: {integrity: sha512-Xn2+z++vWObbEPhiiKO1a78JiyhqipyrXHBb3AHpv0ks7Cdg+GxQQJ24ODNMTanldf7197gSP3axppO9yaG0lA==}
+  /postcss-import/14.0.2_postcss@8.2.13:
+    resolution: {integrity: sha512-BJ2pVK4KhUyMcqjuKs9RijV5tatNzNa73e/32aBVE/ejYPe37iH+6vAu9WvqUkB5OAYgLHzbSvzHnorybJCm9g==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       postcss: ^8.0.0
