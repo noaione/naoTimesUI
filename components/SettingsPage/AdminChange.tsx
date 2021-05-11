@@ -107,39 +107,29 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
         const actualNewServerOwner = this.state.serverOwner.filter(
             (e) => typeof e.value === "string" && e.value.length > 0
         );
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
         this.setState({ isSubmitting: true });
-        setTimeout(
-            () =>
-                outerThis.setState({
-                    isEdit: false,
-                    isSubmitting: false,
-                    oldServerOwner: actualNewServerOwner,
-                }),
-            3000
-        );
-        // this.setState({ isSubmitting: true });
-        // const stringfied = toString(this.state.announcerId);
-
-        // const bodyBag = {
-        //     channelid: toString(this.state.announcerId),
-        // };
-        // const apiRes = await fetch("/api/showtimes/settings/announcer", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(bodyBag),
-        // });
-
-        // const jsonRes = await apiRes.json();
-        // if (jsonRes.code === 200) {
-        //     this.setState({ oldAnnouncer: stringfied, announcerId: stringfied, isSubmitting: false });
-        // } else {
-        //     this.setState({ isSubmitting: false });
-        //     this.props.onErrorModal(jsonRes.message as string);
-        // }
+        const bodyBag = {
+            adminIds: actualNewServerOwner,
+        };
+        const apiRes = await fetch("/api/showtimes/settings/admin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bodyBag),
+        });
+        const jsonRes = await apiRes.json();
+        if (jsonRes.code === 200) {
+            this.setState({
+                isEdit: false,
+                isSubmitting: false,
+                oldServerOwner: actualNewServerOwner,
+                serverOwner: actualNewServerOwner,
+            });
+        } else {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(jsonRes.message as string);
+        }
     }
 
     addNew() {
