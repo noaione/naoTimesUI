@@ -46,7 +46,7 @@ export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     const client = createNewSocket();
 
     client.on("connect", () => {
-        client.write(`${JSON.stringify({ event, data })}\x04`);
+        client.write(`${JSON.stringify({ event, data, auth: process.env.BOT_SOCKET_PASSWORD ?? "" })}\x04`);
         client.end();
     });
 }
