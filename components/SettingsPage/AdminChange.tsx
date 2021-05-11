@@ -27,7 +27,7 @@ class AdminChangeTextBox extends React.Component<AdminTextBoxProps, AdminTextBox
         };
     }
 
-    internalOnChange(value: number) {
+    internalOnChange(value: string) {
         this.setState({ value: toString(value) });
         this.props.onAdjust(toString(value), this.props.index);
     }
@@ -37,10 +37,10 @@ class AdminChangeTextBox extends React.Component<AdminTextBoxProps, AdminTextBox
             <>
                 <div className="w-full px-3 mb-1 flex flex-row">
                     <input
-                        type="number"
+                        type="text"
                         className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
                         value={this.state.value}
-                        onChange={(ev) => this.internalOnChange(ev.target.valueAsNumber)}
+                        onChange={(ev) => this.internalOnChange(ev.target.value)}
                         placeholder="xxxxxxxxxxxxxx"
                     />
                     <button
@@ -107,9 +107,10 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
         const actualNewServerOwner = this.state.serverOwner.filter(
             (e) => typeof e.value === "string" && e.value.length > 0
         );
+        const justTheAdminIdsString = actualNewServerOwner.map((r) => r.value);
         this.setState({ isSubmitting: true });
         const bodyBag = {
-            adminIds: actualNewServerOwner,
+            adminIds: justTheAdminIdsString,
         };
         const apiRes = await fetch("/api/showtimes/settings/admin", {
             method: "POST",
