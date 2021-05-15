@@ -23,14 +23,27 @@ jobs:
         node-version: [12.x, 14.x]
 
     steps:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - name: Cache pnpm modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-pnpm-modules
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install PNPM on ${{ matrix.node-version }}
-      run: |
-        npm install -g pnpm
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+    - uses: pnpm/action-setup@v1.2.1
+      with:
+        version: 6.2.5
+        run_install: true
     - name: Create a mock .env file on ${{ matrix.node-version }}
       run: |
         echo "TOKEN_SECRET=$(openssl rand -hex 32)" > .env.local
@@ -39,9 +52,8 @@ jobs:
         echo "BOT_SOCKET_PORT=25670" >> .env.lcoal
         echo "BOT_SOCKET_PORT=25670" >> .env.local
         echo "BOT_SOCKET_PASSWORD=$(openssl rand -hex 16)" >> .env.local
-    - name: Clean Install and Build on ${{ matrix.node-version }}
+    - name: Build for ${{ matrix.node-version }}
       run: |
-        pnpm install
         pnpm run build
 
   lint:
@@ -53,15 +65,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - name: Cache pnpm modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-pnpm-modules
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: Install PNPM on ${{ matrix.node-version }}
-      run: |
-        npm install -g pnpm
-    - name: Clean Install on ${{ matrix.node-version }}
-      run: pnpm install
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+    - uses: pnpm/action-setup@v1.2.1
+      with:
+        version: 6.2.5
+        run_install: true
     - name: Lint
       run: |
         pnpm run lint
