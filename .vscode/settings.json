@@ -20,5 +20,5 @@
         "typescriptreact",
         "javascript"
     ],
-    "npm.packageManager": "pnpm"
+    "npm.packageManager": "yarn"
 }

@@ -24,19 +24,30 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Cache pnpm modules
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - name: Cache yarn cache
       uses: actions/cache@v2
-      env:
-        cache-name: cache-pnpm-modules
+      id: cache-yarn-cache
       with:
-        path: ~/.pnpm-store
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-    - uses: pnpm/action-setup@v2.0.1
+          ${{ runner.os }}-yarn-
+    - name: Cache node_modules
+      id: cache-node-modules
+      uses: actions/cache@v2
       with:
-        version: 6.2.5
-        run_install: true
+        path: node_modules
+        key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+    - name: Install Dependencies
+      run: yarn
+      if: |
+        steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
+        steps.cache-node-modules.outputs.cache-hit != 'true'
     - name: Create a mock .env file on ${{ matrix.node-version }}
       run: |
         echo "TOKEN_SECRET=$(openssl rand -hex 32)" > .env.local
@@ -47,7 +58,7 @@ jobs:
         echo "BOT_SOCKET_PASSWORD=$(openssl rand -hex 16)" >> .env.local
     - name: Build for ${{ matrix.node-version }}
       run: |
-        pnpm run build
+        yarn run build
 
   lint:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -58,23 +69,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Cache pnpm modules
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - name: Cache yarn cache
       uses: actions/cache@v2
-      env:
-        cache-name: cache-pnpm-modules
+      id: cache-yarn-cache
       with:
-        path: ~/.pnpm-store
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-    - uses: pnpm/action-setup@v2.0.1
+          ${{ runner.os }}-yarn-
+    - name: Cache node_modules
+      id: cache-node-modules
+      uses: actions/cache@v2
       with:
-        version: 6.2.5
-        run_install: true
+        path: node_modules
+        key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+    - name: Install Dependencies
+      run: yarn
+      if: |
+        steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
+        steps.cache-node-modules.outputs.cache-hit != 'true'
     - name: Lint
       run: |
-        pnpm run lint
-        pnpm run type-check
+        yarn run lint
+        yarn run type-check
 
   # Trigger bors manually
   end-success:
