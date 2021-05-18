@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ConnectionStates } from "mongoose";
 
 const { MONGODB_URI } = process.env;
 
@@ -10,21 +10,29 @@ if (!global.mongoose) {
     global.mongoose = { conn: null, promise: null };
 }
 
+const DEFAULT_OPTS = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+};
+
 async function dbConnect() {
     if (global.mongoose.conn) {
+        if (
+            global.mongoose.conn.connection.readyState === 0 ||
+            global.mongoose.conn.connection.readyState === 3
+        ) {
+            console.info("Connection to MongoDB dropped, trying to reconnect...");
+            const promised = await mongoose.connect(MONGODB_URI, DEFAULT_OPTS);
+            global.mongoose.conn = promised;
+        }
         return global.mongoose.conn;
     }
 
     if (!global.mongoose.promise) {
-        const opts = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true,
-        };
-
         console.info("Connecting to Mongoose...");
-        const promised = await mongoose.connect(MONGODB_URI, opts);
+        const promised = await mongoose.connect(MONGODB_URI, DEFAULT_OPTS);
         // @ts-ignore
         global.mongoose.promise = true;
         console.info("Connected!");
