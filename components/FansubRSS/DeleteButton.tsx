@@ -1,6 +1,8 @@
 import React from "react";
 import Router from "next/router";
 
+import { motion } from "framer-motion";
+
 import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
 import { SettingsProps } from "../SettingsPage/base";
@@ -91,19 +93,24 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
 
         return (
             <>
-                <div className="flex">
+                <motion.div
+                    className="flex"
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                >
                     <button
                         onClick={this.handleShow}
                         className={`flex flex-row px-3 py-1 ${
                             this.state.isSubmitting
                                 ? "bg-red-400 cursor-not-allowed"
                                 : "bg-red-500 hover:bg-red-600"
-                        } duration-200 transition text-gray-100 text-sm rounded items-center`}
+                        } duration-200 transition text-gray-100 text-sm rounded items-center focus:outline-none`}
                     >
                         {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
                         <span className={isSubmitting ? "-ml-1 font-semibold" : "font-semibold"}>Hapus</span>
                     </button>
-                </div>
+                </motion.div>
 
                 <Modal onMounted={(cb) => (this.modalCb = cb)}>
                     <Modal.Head>Apakah anda yakin?</Modal.Head>
@@ -115,7 +122,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                         </div>
                         <div className="mt-2">
                             <input
-                                className="form-input rounded-lg w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
+                                className="form-darkable w-full"
                                 value={this.state.passwordCheck}
                                 placeholder="Masukan parafrasa"
                                 onChange={(ev) => {
