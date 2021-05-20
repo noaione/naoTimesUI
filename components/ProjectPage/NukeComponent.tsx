@@ -1,6 +1,8 @@
 import React from "react";
 import Router from "next/router";
 
+import { motion } from "framer-motion";
+
 import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
 import { SettingsProps } from "../SettingsPage/base";
@@ -91,7 +93,12 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
         return (
             <>
                 <div className="flex row mt-4">
-                    <div className="flex flex-col">
+                    <motion.div
+                        className="flex flex-col"
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 1.05 }}
+                    >
                         <button
                             onClick={this.handleShow}
                             className={`rounded text-white px-4 py-2 ${
@@ -103,7 +110,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
                                 Hapus Proyek
                             </span>
                         </button>
-                    </div>
+                    </motion.div>
                 </div>
                 <Modal onMounted={(cb) => (this.modalCb = cb)}>
                     <Modal.Head>Apakah anda yakin?</Modal.Head>
@@ -115,7 +122,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
                         </div>
                         <div className="mt-2">
                             <input
-                                className="form-input rounded-lg w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
+                                className="form-darkable w-full"
                                 value={this.state.passwordCheck}
                                 placeholder="Masukan parafrasa"
                                 onChange={(ev) => {
