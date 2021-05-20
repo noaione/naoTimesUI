@@ -17,6 +17,7 @@ interface AliasProps extends SettingsProps {
 
 interface AliasState {
     isEdit: boolean;
+    isFirst: boolean;
     isSubmit: boolean;
     oldAlias: string[];
     aliases: string[];
@@ -36,6 +37,7 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
         const arrayOfAlias = verifyExist(props, "aliases", "array") ? cloneDeep(props.aliases) : [];
         this.state = {
             isEdit: false,
+            isFirst: true,
             isSubmit: false,
             oldAlias: arrayOfAlias,
             aliases: arrayOfAlias,
@@ -86,7 +88,7 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
     }
 
     render() {
-        const { isEdit, isSubmit, oldAlias } = this.state;
+        const { isEdit, isFirst, isSubmit, oldAlias } = this.state;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
@@ -97,11 +99,11 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                     className="text-sm text-gray-600 dark:text-gray-300"
                     initial={{ x: -35, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: isFirst ? 0.2 : 0 }}
                 >
                     <span>{oldAlias.length > 0 ? `Alias: ${oldAlias.join(", ")}` : "Tidak ada alias"}</span>
                     <button
-                        onClick={() => outerThis.setState({ isEdit: true })}
+                        onClick={() => outerThis.setState({ isEdit: true, isFirst: false })}
                         className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
                     >{`[Edit]`}</button>
                 </motion.div>

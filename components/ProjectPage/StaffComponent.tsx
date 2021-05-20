@@ -20,6 +20,7 @@ interface StaffProps extends SettingsProps {
 
 interface StaffState {
     isEdit: boolean;
+    isFirst: boolean;
     isSubmitting: boolean;
     userId?: Nullable<string | number>;
     name?: string;
@@ -32,6 +33,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
         this.submitEditing = this.submitEditing.bind(this);
         this.state = {
             isEdit: false,
+            isFirst: true,
             isSubmitting: false,
             userId: this.props.userId,
             name: this.props.name,
@@ -84,23 +86,24 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
 
     render() {
         const { id, animateDelay } = this.props;
-        const { userId, name, isEdit } = this.state;
+        const { userId, name, isEdit, isFirst } = this.state;
         const roleColors = RoleColorPalette[id];
         const realName = typeof name === "string" ? name : "Tidak Diketahui";
 
         const assigneeName = getAssigneeName({ name: realName, id: toString(userId) });
 
         if (!isEdit) {
+            const aniDelay = animateDelay || 0.25;
             return (
                 <motion.div
                     className="text-base text-gray-900 items-center flex flex-row"
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: animateDelay || 0.25 }}
+                    transition={{ delay: isFirst ? aniDelay : 0 }}
                 >
                     <PencilIcon
                         className="text-gray-800 dark:text-gray-200 mr-1 hover:opacity-70 transition-opacity duration-200 ease-out"
-                        onClick={() => this.setState({ isEdit: true })}
+                        onClick={() => this.setState({ isEdit: true, isFirst: false })}
                     />
                     <span className={"px-2 rounded font-semibold " + roleColors}>
                         {expandRoleLocalized(id) + ": " + assigneeName}

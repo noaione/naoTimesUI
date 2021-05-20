@@ -58,6 +58,7 @@ interface EpisodeBoxState {
     oldStatus: EpisodeStatuses;
     isEdit: boolean;
     isSubmit: boolean;
+    isFirst: boolean;
 }
 
 function EpisodeBoxHeader(props: EpisodeBoxHeaderProps) {
@@ -135,6 +136,28 @@ function EpisodeBoxChecker(props: IEpisodeBoxChecker) {
     );
 }
 
+interface AniContainer {
+    animate?: boolean;
+    animateDelay?: number;
+}
+
+function SimpleEpisodeViewContainer(props: AniContainer & { children?: React.ReactNode }) {
+    if (props.animate) {
+        return (
+            <motion.div
+                className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm"
+                initial={{ y: 75, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: props.animateDelay || 0.25 }}
+            >
+                {props.children}
+            </motion.div>
+        );
+    }
+
+    return <div className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">{props.children}</div>;
+}
+
 class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState> {
     constructor(props: EpisodeBoxProps) {
         super(props);
@@ -145,6 +168,7 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
             oldStatus: cloneDeep(this.props.status),
             isEdit: false,
             isSubmit: false,
+            isFirst: true,
         };
     }
 
@@ -206,7 +230,7 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
 
     render() {
         const { episode, airTime, isReleased, animateDelay } = this.props;
-        const { status, isEdit } = this.state;
+        const { status, isEdit, isFirst } = this.state;
 
         if (!isEdit) {
             const unfinishedRoles = [];
@@ -218,17 +242,13 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                     unfinishedRoles.push(roleName);
                 }
             }
+            const aniDelay = animateDelay || 0.25;
 
             return (
-                <motion.div
-                    className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm"
-                    initial={{ y: 75, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: animateDelay || 0.25 }}
-                >
+                <SimpleEpisodeViewContainer animate={isFirst} animateDelay={aniDelay}>
                     <div className="flex flex-col py-1">
                         <EpisodeBoxHeader
-                            onClick={() => this.setState({ isEdit: true })}
+                            onClick={() => this.setState({ isEdit: true, isFirst: false })}
                             episode={episode}
                             airTime={airTime}
                             isEdit={this.state.isEdit}
@@ -274,7 +294,7 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                             )}
                         </div>
                     </div>
-                </motion.div>
+                </SimpleEpisodeViewContainer>
             );
         }
 
