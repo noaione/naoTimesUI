@@ -37,3 +37,12 @@ Kodenama: *Tidak ada*
 - 📰 Penambahan FansubRSS di Website
 - 🔍 Penambahan tooling untuk memeriksa error lebih cepat.
 - 🐛 Memperbaiki beberapa bugs
+
+## Versi 1.1.1
+
+Kodenama: *Tidak ada*
+
+- 📽 Animasi antar Views
+- 📽 Animasi beberapa komponen biar lebih menarik :D
+- 👓 Dark mode sekarang lebih dark (untuk input dan sebagainya)
+- 🐛 Perbaikan bugs dan kebodohan dev.
