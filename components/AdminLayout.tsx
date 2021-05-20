@@ -1,5 +1,7 @@
 import React from "react";
 
+import { motion } from "framer-motion";
+
 import AdminBanner from "./AdminBanner";
 import AdminHeader from "./AdminHeader";
 import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
@@ -45,6 +47,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
         if (typeof overflowX === "boolean") {
             realOverflowX = overflowX;
         }
+
         const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA } = process.env;
         const commit = NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "";
         const appInfo = { semver: version, commit };
@@ -69,16 +72,20 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                             title={realTitle}
                             onOpen={this.openSidebar}
                         />
-                        <main
+                        <motion.main
                             id="root"
-                            className={
-                                realOverflowX
-                                    ? "flex-1 overflow-x-auto overflow-y-auto"
-                                    : "flex-1 overflow-x-hidden overflow-y-auto"
-                            }
+                            layoutId="adminviewsection"
+                            key={`${active ?? "home"}-${realTitle}`}
+                            className={`flex-1 overflow-y-auto ${
+                                realOverflowX ? "overflow-x-auto" : "overflow-x-hidden"
+                            }`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25 }}
                         >
                             {this.props.children}
-                        </main>
+                        </motion.main>
                     </div>
                 </div>
             </>
