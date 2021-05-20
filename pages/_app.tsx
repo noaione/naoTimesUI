@@ -1,4 +1,5 @@
 import React from "react";
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 
 import "../styles/global.css";
 import type { AppProps } from "next/app";
@@ -18,8 +19,14 @@ console.warn = (message?: any, ...optionalParams: any[]) => {
     originalWarn(message, ...optionalParams);
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
-    return <Component {...pageProps} />;
+function MyApp({ Component, pageProps, router }: AppProps) {
+    return (
+        <AnimateSharedLayout>
+            <AnimatePresence exitBeforeEnter key={router.route}>
+                <Component {...pageProps} />
+            </AnimatePresence>
+        </AnimateSharedLayout>
+    );
 }
 
 export default MyApp;
