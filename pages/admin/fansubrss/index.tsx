@@ -1,6 +1,8 @@
 import React from "react";
 import Head from "next/head";
 
+import { motion } from "framer-motion";
+
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
 import FansubRSSOverview from "../../../components/FansubRSS/Overview";
@@ -41,17 +43,32 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
                         {fansubRss.length > 0 ? (
                             <>
                                 <div className="flex flex-col">
-                                    <div className="flex">
+                                    <motion.div
+                                        className="flex"
+                                        initial={{ x: -50, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: 0.2 }}
+                                    >
                                         <a
                                             href="/admin/fansubrss/tambah"
-                                            className="px-3 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200"
+                                            className="px-3 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200 font-bold"
                                         >
                                             Tambah
                                         </a>
-                                    </div>
+                                    </motion.div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
-                                        {fansubRss.map((feed) => {
-                                            return <FansubRSSOverview key={`feed-${feed.id}`} feed={feed} />;
+                                        {fansubRss.map((feed, idx) => {
+                                            let delay = 0.25;
+                                            if (idx > 0) {
+                                                delay = 0.25 + 0.1 * (idx + 1);
+                                            }
+                                            return (
+                                                <FansubRSSOverview
+                                                    key={`feed-${feed.id}`}
+                                                    feed={feed}
+                                                    animateDelay={delay}
+                                                />
+                                            );
                                         })}
                                     </div>
                                 </div>
