@@ -1,4 +1,4 @@
-import mongoose, { ConnectionStates } from "mongoose";
+import mongoose from "mongoose";
 
 const { MONGODB_URI } = process.env;
 
