@@ -6,6 +6,7 @@ import axios from "axios";
 import SelectAsync from "react-select/async";
 import { ActionMeta } from "react-select";
 import { Dictionary } from "lodash";
+import { motion } from "framer-motion";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
@@ -14,6 +15,7 @@ import LoadingCircle from "../../../components/LoadingCircle";
 import TemplateEngine from "../../../components/FansubRSS/TemplateEditor";
 import FansubRSSDeleteButton from "../../../components/FansubRSS/DeleteButton";
 import SampleViewer from "../../../components/FansubRSS/SampleViewer";
+import SkeletonLoader from "../../../components/Skeleton";
 import { CallbackModal } from "../../../components/Modal";
 
 import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
@@ -134,12 +136,12 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
     }
 
     async componentDidMount() {
-        const [isSuccess, sampleData] = await parseFeed(this.props.feed.feedUrl);
-        if (!isSuccess) {
-            this.showErrorCallback("Maaf, terjadi kesalahan ketika memproses sample mohon coba sesaat lagi");
-        } else {
-            this.setState({ sampleData: sampleData.results[0], isLoading: false });
-        }
+        // const [isSuccess, sampleData] = await parseFeed(this.props.feed.feedUrl);
+        // if (!isSuccess) {
+        //     this.showErrorCallback("Maaf, terjadi kesalahan ketika memproses sample mohon coba sesaat lagi");
+        // } else {
+        //     this.setState({ sampleData: sampleData.results[0], isLoading: false });
+        // }
     }
 
     render() {
@@ -161,30 +163,46 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                             <div className="flex flex-col p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                                 <div className="flex flex-col gap-2 lg:gap-0 lg:flex-row lg:justify-between lg:items-center">
                                     <div className="flex">
-                                        <p className="text-lg font-semibold dark:text-white break-all">
+                                        <motion.p
+                                            className="text-lg font-semibold dark:text-white break-all"
+                                            initial={{ x: -35, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.3 }}
+                                        >
                                             Feed ID: {feed.id}
-                                        </p>
+                                        </motion.p>
                                     </div>
                                     <FansubRSSDeleteButton
                                         id={feed.id}
                                         onErrorModal={this.showErrorCallback}
                                     />
                                 </div>
-                                <div className="flex flex-col mt-2">
+                                <motion.div
+                                    className="flex flex-col mt-2"
+                                    initial={{ y: 50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                >
                                     <label className="font-semibold dark:text-white text-sm">RSS URI</label>
                                     <input
-                                        className="form-input w-full lg:w-1/2 mt-1 rounded-lg dark:bg-gray-800 dark:text-gray-200"
+                                        className="form-darkable w-full lg:w-1/2 mt-1"
+                                        onFocus={(ev) => ev.target.select()}
                                         value={feed.feedUrl}
                                         readOnly
                                     />
-                                </div>
-                                <div className="flex flex-col mt-2">
+                                </motion.div>
+                                <motion.div
+                                    className="flex flex-col mt-2"
+                                    initial={{ y: 50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.4 }}
+                                >
                                     <label className="font-semibold dark:text-white text-sm">#kanal</label>
                                     <label className="font-semibold dark:text-white text-sm">
                                         ID: {this.state.feedChannel}
                                     </label>
                                     <SelectAsync
-                                        className="w-full lg:w-1/2 mt-1 dark:bg-gray-800"
+                                        className="w-full lg:w-1/2 mt-1 rounded-lg"
                                         cacheOptions
                                         loadOptions={loadChannel}
                                         defaultOptions
@@ -193,24 +211,26 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                                         filterOption={() => true}
                                         onChange={this.onChannelSelection}
                                         placeholder="Ubah #kanal..."
+                                        classNamePrefix="rselect"
                                         isClearable
                                     />
-                                    <button
+                                    <motion.button
                                         className={`flex flex-row w-full lg:w-1/2 mt-2 px-3 py-2 rounded-lg ${
                                             this.state.isSubmit
                                                 ? "bg-blue-400 cursor-not-allowed"
                                                 : "bg-blue-500 hover:bg-blue-600"
                                         } transition duration-200 text-white justify-center items-center`}
                                         onClick={this.changeKanal}
+                                        initial={{ y: 35, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ delay: 0.2 }}
                                     >
                                         {this.state.isSubmit && <LoadingCircle className="mt-0 ml-0 mr-2" />}
                                         <span className="font-semibold">Ubah</span>
-                                    </button>
-                                </div>
+                                    </motion.button>
+                                </motion.div>
                                 {this.state.isLoading ? (
-                                    <span className="font-bold text-lg dark:text-white animate-pulse mt-2">
-                                        Memuat sample...
-                                    </span>
+                                    <SkeletonLoader.RSSSample />
                                 ) : (
                                     <SampleViewer sample={this.state.sampleData} />
                                 )}
@@ -219,9 +239,7 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                         <div className="grid gap-2 grid-cols-1 mt-4">
                             <div className="flex flex-col p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                                 {this.state.isLoading ? (
-                                    <span className="font-bold text-lg dark:text-white animate-pulse">
-                                        Memuat editor...
-                                    </span>
+                                    <SkeletonLoader.RSSEditor />
                                 ) : (
                                     <TemplateEngine
                                         settings={feed}
