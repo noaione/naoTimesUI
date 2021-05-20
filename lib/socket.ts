@@ -33,13 +33,17 @@ function createNewSocket() {
     if (Number.isNaN(PORTNUM)) {
         throw new Error(`createBotClient: Port is not a number`);
     }
-    const client = new net.Socket();
-    client.connect({
-        host: HOST,
-        port: PORTNUM,
-    });
-    client.setEncoding("utf-8");
-    return client;
+    try {
+        const client = new net.Socket();
+        client.connect({
+            host: HOST,
+            port: PORTNUM,
+        });
+        client.setEncoding("utf-8");
+        return client;
+    } catch (e) {
+        throw new Error("Connection error occured!");
+    }
 }
 
 export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
