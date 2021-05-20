@@ -4,7 +4,7 @@ import Head from "next/head";
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
 import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
-import LoadingCircle from "../../components/LoadingCircle";
+import SkeletonLoader from "../../components/Skeleton";
 import StatsCard, { IStatsType } from "../../components/StatsCard";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
@@ -88,7 +88,6 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
         const { user } = this.props;
         const { isLoading, animeData, statsData } = this.state;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const fakeArray = [1, 2, 3, 4];
 
         return (
             <>
@@ -103,33 +102,24 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Statistik</h2>
                         <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-                            {isLoading
-                                ? fakeArray.map((res) => {
-                                      return <StatsCard key={`skeleton-${res}`} type="skeleton" />;
-                                  })
-                                : statsData.map((res) => {
-                                      return (
-                                          <StatsCard
-                                              key={`stats-card-${res.key}`}
-                                              type={res.key as IStatsType}
-                                              amount={res.data}
-                                          />
-                                      );
-                                  })}
+                            {isLoading ? (
+                                <SkeletonLoader.StatsCard />
+                            ) : (
+                                statsData.map((res) => {
+                                    return (
+                                        <StatsCard
+                                            key={`stats-card-${res.key}`}
+                                            type={res.key as IStatsType}
+                                            amount={res.data}
+                                        />
+                                    );
+                                })
+                            )}
                         </div>
                     </div>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Sedang digarap</h2>
-                        {isLoading ? (
-                            <>
-                                <div className="flex flex-row">
-                                    <LoadingCircle />
-                                    <p className="font-bold dark:text-gray-200 text-xl">Memuat data...</p>
-                                </div>
-                            </>
-                        ) : (
-                            <AdminAnimeSets data={animeData} />
-                        )}
+                        {isLoading ? <SkeletonLoader.AdminOverview /> : <AdminAnimeSets data={animeData} />}
                     </div>
                 </AdminLayout>
             </>
