@@ -895,7 +895,7 @@
 }
 
 .discord-view {
-    @apply border-2 border-gray-800;
+    @apply border-[1px] border-[#5d6575];
 
     & body,
     & button,

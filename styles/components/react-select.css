@@ -1,0 +1,70 @@
+
+
+.dark {
+    & .rselect__control {
+        @apply rounded-lg border-[#6B7280] bg-gray-800;
+
+        &:active,
+        &:hover {
+            @apply border-yellow-500;
+        }
+    }
+
+    & .rselect__control--is-focused {
+        box-shadow: 0 0 0 1px rgb(245, 158, 11) !important;
+    }
+
+    & .rselect__option {
+        @apply bg-gray-800 text-white ;
+
+        &:hover {
+            background-color: #1E90FF;
+        }
+
+        &:active {
+            background-color: #1E90FF;
+        }
+    }
+
+    & .rselect__menu {
+        @apply bg-gray-800;
+    }
+
+    & .rselect__input {
+        @apply text-white border-0;
+    }
+
+    & .rselect__single-value {
+        @apply text-gray-200;
+    }
+
+    & .rselect__placeholder {
+        @apply text-gray-500;
+    }
+
+    & .rselect__indicator {
+        &:hover {
+            @apply text-gray-400;
+        }
+
+        &:focus {
+            @apply text-gray-500;
+        }
+    }
+
+    & .rselect__multi-value {
+        @apply bg-gray-500;
+    }
+
+    & .rselect__multi-value__label {
+        @apply text-white;
+    }
+
+    & .rselect__multi-value__remove {
+        @apply text-gray-200 bg-gray-500;
+        
+        &:hover {
+            @apply bg-gray-600 text-gray-200;
+        }
+    }
+}

@@ -9,5 +9,6 @@
 @import "./components/stackshadow.css";
 @import "./components/extras.css";
 @import "./components/react-md.css";
+@import "./components/react-select.css";
 
 @import "tailwindcss/utilities";
