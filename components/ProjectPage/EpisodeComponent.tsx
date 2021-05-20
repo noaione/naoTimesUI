@@ -1,6 +1,8 @@
 import { cloneDeep, difference } from "lodash";
 import React from "react";
 
+import { motion } from "framer-motion";
+
 import LoadingCircle from "../LoadingCircle";
 import RolePopup from "../RolePopup";
 import { SettingsProps } from "../SettingsPage/base";
@@ -42,6 +44,7 @@ interface EpisodeBoxProps extends SettingsProps {
     airTime?: number;
     status: EpisodeStatuses;
     isReleased: boolean;
+    animateDelay?: number;
 }
 
 interface EpisodeBoxHeaderProps extends Omit<EpisodeBoxProps, "status" | "onErrorModal" | "animeId"> {
@@ -202,7 +205,7 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
     }
 
     render() {
-        const { episode, airTime, isReleased } = this.props;
+        const { episode, airTime, isReleased, animateDelay } = this.props;
         const { status, isEdit } = this.state;
 
         if (!isEdit) {
@@ -217,60 +220,61 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
             }
 
             return (
-                <>
-                    <div className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm">
-                        <div className="flex flex-col py-1">
-                            <EpisodeBoxHeader
-                                onClick={() => this.setState({ isEdit: true })}
-                                episode={episode}
-                                airTime={airTime}
-                                isEdit={this.state.isEdit}
-                                isSubmit={this.state.isSubmit}
-                                isReleased={isReleased}
-                            />
-                            <div className="flex flex-col">
-                                {unfinishedRoles.length > 0 && (
-                                    <>
-                                        <span className="font-semibold mt-2 dark:text-gray-100">
-                                            ⏰ Proses
-                                        </span>
-                                        <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
-                                            {unfinishedRoles.map((roleName) => {
-                                                const expanded = expandRoleLocalized(roleName);
-                                                return (
-                                                    <RolePopup
-                                                        key={roleName + "-unfinished"}
-                                                        title={roleName}
-                                                        popupText={expanded}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </>
-                                )}
-                                {finishedRoles.length > 0 && (
-                                    <>
-                                        <span className="font-semibold mt-2 dark:text-gray-100">✔ Beres</span>
-                                        <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
-                                            {finishedRoles.map((roleName) => {
-                                                const expandedPop = expandRoleLocalized(roleName);
-                                                const expanded = expandRoleName(roleName);
-                                                return (
-                                                    <RolePopup
-                                                        key={roleName + "-finished"}
-                                                        title={roleName}
-                                                        popupText={expandedPop}
-                                                        overrideTitle={expanded}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
+                <motion.div
+                    className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm"
+                    initial={{ y: 75, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: animateDelay || 0.25 }}
+                >
+                    <div className="flex flex-col py-1">
+                        <EpisodeBoxHeader
+                            onClick={() => this.setState({ isEdit: true })}
+                            episode={episode}
+                            airTime={airTime}
+                            isEdit={this.state.isEdit}
+                            isSubmit={this.state.isSubmit}
+                            isReleased={isReleased}
+                        />
+                        <div className="flex flex-col">
+                            {unfinishedRoles.length > 0 && (
+                                <>
+                                    <span className="font-semibold mt-2 dark:text-gray-100">⏰ Proses</span>
+                                    <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        {unfinishedRoles.map((roleName) => {
+                                            const expanded = expandRoleLocalized(roleName);
+                                            return (
+                                                <RolePopup
+                                                    key={roleName + "-unfinished"}
+                                                    title={roleName}
+                                                    popupText={expanded}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
+                            {finishedRoles.length > 0 && (
+                                <>
+                                    <span className="font-semibold mt-2 dark:text-gray-100">✔ Beres</span>
+                                    <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
+                                        {finishedRoles.map((roleName) => {
+                                            const expandedPop = expandRoleLocalized(roleName);
+                                            const expanded = expandRoleName(roleName);
+                                            return (
+                                                <RolePopup
+                                                    key={roleName + "-finished"}
+                                                    title={roleName}
+                                                    popupText={expandedPop}
+                                                    overrideTitle={expanded}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
-                </>
+                </motion.div>
             );
         }
 
