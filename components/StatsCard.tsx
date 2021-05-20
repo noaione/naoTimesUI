@@ -58,53 +58,30 @@ class StatsCard extends React.Component<IStatsProps> {
         };
 
         const coloredBG = _.get(TYPE_MAP, this.props.type, "bg-gray-300 dark:bg-gray-600");
-        const extraClass = type === "skeleton" ? "animate-pulse" : "";
         let realAmount = 0;
         if (typeof amount === "number") {
             realAmount = amount;
         }
 
-        const remAmount = type === "skeleton" ? "p-8" : "p-4";
-
         return (
             <>
                 <div className="p-5 bg-white dark:bg-gray-700 rounded shadow-md">
                     <div className="flex items-center pt-1">
-                        <div
-                            className={
-                                "icon w-14 " +
-                                remAmount +
-                                " " +
-                                coloredBG +
-                                " text-white rounded-full mr-3 " +
-                                extraClass
-                            }
-                        >
-                            {type !== "skeleton" ? getIcon(type) : ""}
+                        <div className={"icon w-14 p-4 " + coloredBG + " text-white rounded-full mr-3 "}>
+                            {getIcon(type)}
                         </div>
                         <div className="flex flex-col justify-center">
-                            {type === "skeleton" ? (
-                                <>
-                                    <div className="font-bold px-20 py-3 rounded-md bg-gray-500 my-1 animate-pulse"></div>
-                                    <div className="font-bold px-20 py-3 rounded-md bg-gray-500 my-1 animate-pulse"></div>
-                                </>
-                            ) : (
-                                <>
-                                    <div>
-                                        <CountUp
-                                            className="text-2xl font-bold text-gray-900 dark:text-gray-200"
-                                            duration={2}
-                                            useEasing
-                                            start={0}
-                                            formattingFn={(val) => val.toLocaleString()}
-                                            end={realAmount}
-                                        />
-                                    </div>
-                                    <div className="text-base text-gray-400 break-all">
-                                        {typeToName(type)}
-                                    </div>
-                                </>
-                            )}
+                            <div>
+                                <CountUp
+                                    className="text-2xl font-bold text-gray-900 dark:text-gray-200"
+                                    duration={2}
+                                    useEasing
+                                    start={0}
+                                    formattingFn={(val) => val.toLocaleString()}
+                                    end={realAmount}
+                                />
+                            </div>
+                            <div className="text-base text-gray-400 break-all">{typeToName(type)}</div>
                         </div>
                     </div>
                 </div>
