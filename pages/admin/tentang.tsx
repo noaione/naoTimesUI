@@ -1,6 +1,8 @@
 import Head from "next/head";
 import React from "react";
 
+import { motion } from "framer-motion";
+
 import AdminLayout from "../../components/AdminLayout";
 import MetadataHead from "../../components/MetadataHead";
 import Markdown from "../../components/Markdown";
@@ -43,20 +45,26 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                 </Head>
                 <AdminLayout user={user} active="about" title="Tentang">
                     <div className="container mx-auto px-6 py-8">
-                        <div
+                        <motion.div
                             id="about"
                             className="p-3 bg-white dark:bg-gray-700 rounded shadow-md dark:text-gray-200"
+                            initial={{ y: 50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.5 }}
                         >
                             <Markdown>{aboutPageWithYear}</Markdown>
-                        </div>
+                        </motion.div>
                     </div>
                     <div className="container mx-auto px-6 py-8">
-                        <div
+                        <motion.div
                             id="changelog"
                             className="p-3 bg-white dark:bg-gray-700 rounded shadow-md dark:text-gray-200"
+                            initial={{ y: 75, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.25 }}
                         >
                             <Markdown>{changelogPage}</Markdown>
-                        </div>
+                        </motion.div>
                     </div>
                 </AdminLayout>
             </>

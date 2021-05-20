@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React from "react";
 
+import { motion } from "framer-motion";
 import LoginIcon from "mdi-react/LoginIcon";
 
 import MetadataHead from "../components/MetadataHead";
@@ -39,7 +40,12 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                     <MetadataHead.CSSExtra />
                 </Head>
                 <main className="bg-gray-900 font-inter">
-                    <header className="flex justify-between items-center p-4 py-6 bg-gray-800">
+                    <motion.header
+                        className="flex justify-between items-center p-4 py-6 bg-gray-800"
+                        initial={{ y: -50 }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <div className="flex items-center space-x4 lg:space-x-0">
                             <div>
                                 <h1 className="text-2xl mx-4 lg:mx-2 font-medium text-white">Tentang</h1>
@@ -54,17 +60,29 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                                 <LoginIcon />
                             </a>
                         </div>
-                    </header>
+                    </motion.header>
                     <div className="container mx-auto justify-center items-center">
                         <div className="container mx-auto px-6 py-8">
-                            <div id="about" className="p-3 bg-gray-700 rounded shadow-lg text-gray-200">
+                            <motion.div
+                                id="about"
+                                className="bg-gray-700 rounded shadow-lg text-gray-200"
+                                initial={{ y: 50, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                            >
                                 <Markdown>{aboutPageWithYear}</Markdown>
-                            </div>
+                            </motion.div>
                         </div>
                         <div className="container mx-auto px-6 py-8">
-                            <div id="changelog" className="p-3 bg-gray-700 rounded shadow-lg text-gray-200">
+                            <motion.div
+                                id="changelog"
+                                className="p-3 bg-gray-700 rounded shadow-lg text-gray-200"
+                                initial={{ y: 75, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.5, delay: 0.25 }}
+                            >
                                 <Markdown>{changelogPage}</Markdown>
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </main>
