@@ -3,23 +3,25 @@ import React from "react";
 
 import CheckAllIcon from "mdi-react/CheckAllIcon";
 import PencilIcon from "mdi-react/PencilIcon";
+import { motion } from "framer-motion";
 
 import { RoleColorPalette } from "../ColorMap";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { expandRoleLocalized, getAssigneeName, RoleProject } from "../../lib/utils";
+import { expandRoleLocalized, getAssigneeName, Nullable, RoleProject } from "../../lib/utils";
 
 interface StaffProps extends SettingsProps {
     id: RoleProject;
     animeId: string;
-    userId: string;
+    userId?: Nullable<string | number>;
+    animateDelay?: number;
     name?: string;
 }
 
 interface StaffState {
     isEdit: boolean;
     isSubmitting: boolean;
-    userId: string | number;
+    userId?: Nullable<string | number>;
     name?: string;
     oldId: string | number;
 }
@@ -81,7 +83,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
     }
 
     render() {
-        const { id } = this.props;
+        const { id, animateDelay } = this.props;
         const { userId, name, isEdit } = this.state;
         const roleColors = RoleColorPalette[id];
         const realName = typeof name === "string" ? name : "Tidak Diketahui";
@@ -90,19 +92,23 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
 
         if (!isEdit) {
             return (
-                <>
-                    <div className="text-base text-gray-900 items-center flex flex-row">
-                        <PencilIcon
-                            className="text-gray-800 dark:text-gray-200 mr-1 hover:opacity-70 transition-opacity duration-200 ease-out"
-                            onClick={() => this.setState({ isEdit: true })}
-                        />
-                        <span className={"px-2 rounded font-semibold " + roleColors}>
-                            {expandRoleLocalized(id) + ": " + assigneeName}
-                        </span>
-                    </div>
-                </>
+                <motion.div
+                    className="text-base text-gray-900 items-center flex flex-row"
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: animateDelay || 0.25 }}
+                >
+                    <PencilIcon
+                        className="text-gray-800 dark:text-gray-200 mr-1 hover:opacity-70 transition-opacity duration-200 ease-out"
+                        onClick={() => this.setState({ isEdit: true })}
+                    />
+                    <span className={"px-2 rounded font-semibold " + roleColors}>
+                        {expandRoleLocalized(id) + ": " + assigneeName}
+                    </span>
+                </motion.div>
             );
         }
+
         return (
             <>
                 <div className="text-base text-gray-900 items-center flex flex-row">
@@ -117,8 +123,8 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
                         <CheckAllIcon className="text-gray-800" />
                     </button>
                     <input
-                        className="form-input bg-gray-200 dark:bg-gray-500 w-full py-1 border-2 border-gray-200 dark:placeholder-gray-200 dark:border-gray-500 dark:text-gray-200 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
-                        type="number"
+                        className="form-darkable w-full py-1"
+                        type="text"
                         placeholder="xxxxxxxxxxxxxx"
                         value={this.state.userId}
                         onChange={(ev) => this.setState({ userId: ev.target.value })}
