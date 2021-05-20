@@ -159,19 +159,40 @@ export default function RSSEmbedEditorSkeleton() {
                 </motion.div>
             </div>
             <div className="flex flex-col w-full lg:w-1/2 h-full">
-                <Skeleton className="skeleton-loader h-6 !w-[5.5rem]" />
-                <div className="w-full h-full flex flex-col overflow-hidden mt-2">
+                <motion.div
+                    initial={{ x: -25, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                >
+                    <Skeleton className="skeleton-loader h-6 !w-[5.5rem]" />
+                </motion.div>
+                <motion.div
+                    className="w-full h-full flex flex-col overflow-hidden mt-2"
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                >
                     <Skeleton className="skeleton-loader h-[10rem] lg:h-[40.75rem]" />
-                </div>
+                </motion.div>
                 <div className="flex flex-row mt-2 gap-2">
-                    <div className="flex flex-row items-center gap-1">
+                    <motion.div
+                        className="flex flex-row items-center gap-1"
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.9 }}
+                    >
                         <Skeleton className="skeleton-loader !w-5 h-5" />
                         <Skeleton className="skeleton-loader !w-24 h-4 mt-2" />
-                    </div>
-                    <div className="flex flex-row items-center gap-1">
+                    </motion.div>
+                    <motion.div
+                        className="flex flex-row items-center gap-1"
+                        initial={{ y: 30, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 1 }}
+                    >
                         <Skeleton className="skeleton-loader !w-5 h-5" />
                         <Skeleton className="skeleton-loader !w-20 h-4 mt-2" />
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </div>
