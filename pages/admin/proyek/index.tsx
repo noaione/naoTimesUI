@@ -6,7 +6,7 @@ import PlusIcon from "mdi-react/PlusIcon";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
-import LoadingCircle from "../../../components/LoadingCircle";
+import SkeletonLoader from "../../../components/Skeleton";
 import RolePopup from "../../../components/RolePopup";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
@@ -141,10 +141,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                             </a>
                         </div>
                         {isLoading ? (
-                            <div className="flex flex-row mt-4">
-                                <LoadingCircle />
-                                <p className="font-bold dark:text-gray-200 text-xl">Memuat...</p>
-                            </div>
+                            <SkeletonLoader.ProjectOverview />
                         ) : (
                             <>
                                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
