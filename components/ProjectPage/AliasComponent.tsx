@@ -2,11 +2,13 @@ import { cloneDeep } from "lodash";
 import React from "react";
 
 import CreatableSelect from "react-select/creatable";
+import { ActionMeta } from "react-select";
+import { motion } from "framer-motion";
+
 import LoadingCircle from "../LoadingCircle";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { isDifferent, verifyExist } from "../../lib/utils";
-import { ActionMeta } from "react-select";
 
 interface AliasProps extends SettingsProps {
     aniId: string;
@@ -91,17 +93,18 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
 
         if (!isEdit) {
             return (
-                <>
-                    <div className="text-sm text-gray-600 dark:text-gray-300">
-                        <span>
-                            {oldAlias.length > 0 ? `Alias: ${oldAlias.join(", ")}` : "Tidak ada alias"}
-                        </span>
-                        <button
-                            onClick={() => outerThis.setState({ isEdit: true })}
-                            className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
-                        >{`[Edit]`}</button>
-                    </div>
-                </>
+                <motion.div
+                    className="text-sm text-gray-600 dark:text-gray-300"
+                    initial={{ x: -35, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    <span>{oldAlias.length > 0 ? `Alias: ${oldAlias.join(", ")}` : "Tidak ada alias"}</span>
+                    <button
+                        onClick={() => outerThis.setState({ isEdit: true })}
+                        className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
+                    >{`[Edit]`}</button>
+                </motion.div>
             );
         }
 
@@ -122,8 +125,8 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                         isClearable
                         name="aliases-selected"
                         onChange={this.onChangeEvent}
-                        classNamePrefix="select"
-                        className="basic-multi-select w-full"
+                        classNamePrefix="rselect"
+                        className="basic-multi-select w-full rounded-lg"
                         placeholder="Masukan alias..."
                     />
                     <div className="mt-2">
