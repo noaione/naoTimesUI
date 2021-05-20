@@ -1,6 +1,8 @@
 import React from "react";
 import Head from "next/head";
 
+import { motion } from "framer-motion";
+
 import AdminLayout from "../../../components/AdminLayout";
 import ErrorModal from "../../../components/ErrorModal";
 import MetadataHead from "../../../components/MetadataHead";
@@ -68,28 +70,45 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                         <div id="project-data" className="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
                             <div className="p-3 bg-white dark:bg-gray-700 rounded shadow-md">
                                 <div className="flex flex-col md:flex-row py-1">
-                                    <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0">
-                                        <img
+                                    <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
+                                        <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
                                             src={poster_data.url}
+                                            initial={{ y: 50, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            transition={{ delay: 0.2 }}
                                         />
                                     </div>
                                     <div className="flex flex-col md:w-1/2">
-                                        <div className="text-xl font-bold text-gray-900 dark:text-gray-200">
+                                        <motion.div
+                                            className="text-xl font-bold text-gray-900 dark:text-gray-200"
+                                            initial={{ x: -25, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.1 }}
+                                        >
                                             {title}
-                                        </div>
+                                        </motion.div>
                                         <ProjectPageComponent.Aliases
                                             onErrorModal={this.showErrorCallback}
                                             aniId={id}
                                             aliases={aliases}
                                         />
-                                        <div className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1">
+                                        <motion.div
+                                            className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
+                                            initial={{ x: -30, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.2 }}
+                                        >
                                             Staf
-                                        </div>
+                                        </motion.div>
                                         <div className="flex flex-col gap-2 mt-2">
-                                            {Object.keys(assignments).map((rrr) => {
+                                            {Object.keys(assignments).map((rrr, idx) => {
                                                 const name = assignments[rrr].name || null;
                                                 const userId = assignments[rrr].id as string;
+                                                let delayAni = 0.25;
+                                                if (idx > 0) {
+                                                    delayAni = 0.25 + 0.1 * (idx + 1);
+                                                }
 
                                                 return (
                                                     <ProjectPageComponent.Staff
@@ -99,6 +118,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                         name={name}
                                                         userId={userId}
                                                         animeId={id}
+                                                        animateDelay={delayAni}
                                                     />
                                                 );
                                             })}
@@ -113,9 +133,20 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                         </div>
                     </div>
                     <div className="container mx-auto px-6 py-4">
-                        <h2 className="font-extrabold pb-3 dark:text-white">Episode</h2>
+                        <motion.h2
+                            className="font-extrabold pb-3 dark:text-white"
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            Episode
+                        </motion.h2>
                         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                            {status.map((res) => {
+                            {status.map((res, idx) => {
+                                let delayAni = 0.25;
+                                if (idx > 0) {
+                                    delayAni = 0.25 + 0.1 * (idx + 1);
+                                }
                                 return (
                                     <ProjectPageComponent.Episode
                                         key={`anime-${id}-episode-${res.episode}`}
@@ -125,6 +156,7 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                         airTime={res.airtime}
                                         status={res.progress}
                                         isReleased={res.is_done}
+                                        animateDelay={delayAni}
                                     />
                                 );
                             })}
