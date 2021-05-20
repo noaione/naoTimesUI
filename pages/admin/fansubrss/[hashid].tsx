@@ -136,12 +136,12 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
     }
 
     async componentDidMount() {
-        // const [isSuccess, sampleData] = await parseFeed(this.props.feed.feedUrl);
-        // if (!isSuccess) {
-        //     this.showErrorCallback("Maaf, terjadi kesalahan ketika memproses sample mohon coba sesaat lagi");
-        // } else {
-        //     this.setState({ sampleData: sampleData.results[0], isLoading: false });
-        // }
+        const [isSuccess, sampleData] = await parseFeed(this.props.feed.feedUrl);
+        if (!isSuccess) {
+            this.showErrorCallback("Maaf, terjadi kesalahan ketika memproses sample mohon coba sesaat lagi");
+        } else {
+            this.setState({ sampleData: sampleData.results[0], isLoading: false });
+        }
     }
 
     render() {
