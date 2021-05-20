@@ -7,6 +7,7 @@ import ShieldAccountIcon from "mdi-react/ShieldAccountIcon";
 import MenuIcon from "mdi-react/MenuIcon";
 import LightModeIcon from "mdi-react/LightbulbOnIcon";
 import DarkModeIcon from "mdi-react/LightbulbOutlineIcon";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
     id: string;
@@ -143,9 +144,13 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                         </button>
 
                         <div>
-                            <h1 className="text-2xl mx-4 lg:mx-2 font-semibold text-gray-800 dark:text-white">
+                            <motion.h1
+                                className="text-2xl mx-4 lg:mx-2 font-semibold text-gray-800 dark:text-white"
+                                initial={{ x: -50 }}
+                                animate={{ x: 0 }}
+                            >
                                 {title ?? "Ikhtisar"}
-                            </h1>
+                            </motion.h1>
                         </div>
                     </div>
 
