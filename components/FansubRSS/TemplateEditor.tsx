@@ -276,7 +276,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                         <div className="flex flex-col">
                             <label className="text-lg font-semibold dark:text-white mb-2">Pesan</label>
                             <input
-                                className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                className="form-darkable"
                                 value={this.state.message}
                                 onChange={(ev) => this.setState({ message: ev.target.value })}
                             />
@@ -285,7 +285,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                         <div className="flex flex-col -mt-2">
                             <label className="text-sm font-semibold dark:text-white mb-2">Judul</label>
                             <input
-                                className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                className="form-darkable"
                                 value={this.state.embed.title}
                                 onChange={(ev) => outerThis.updateEmbed("title", ev.target.value)}
                             />
@@ -293,7 +293,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                         <div className="flex flex-col">
                             <label className="text-sm font-semibold dark:text-white mb-2">Deskripsi</label>
                             <textarea
-                                className="form-textarea rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                className="form-textarea-darkable"
                                 value={this.state.embed.description}
                                 onChange={(ev) => outerThis.updateEmbed("description", ev.target.value)}
                             />
@@ -301,7 +301,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                         <div className="flex flex-col -mt-2">
                             <label className="text-sm font-semibold dark:text-white mb-2">URL</label>
                             <input
-                                className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                className="form-darkable"
                                 value={this.state.embed.url}
                                 onChange={(ev) => outerThis.updateEmbed("url", ev.target.value)}
                             />
@@ -311,7 +311,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             <div className="flex flex-col w-full">
                                 <label className="text-sm font-semibold dark:text-white mb-2">Gambar</label>
                                 <input
-                                    className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                    className="form-darkable"
                                     value={this.state.embed.image}
                                     onChange={(ev) => outerThis.updateEmbed("image", ev.target.value)}
                                 />
@@ -321,7 +321,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                                     Thumbnail
                                 </label>
                                 <input
-                                    className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                    className="form-darkable"
                                     value={this.state.embed.thumbnail}
                                     onChange={(ev) => outerThis.updateEmbed("thumbnail", ev.target.value)}
                                 />
@@ -332,7 +332,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             <div className="flex flex-col w-full">
                                 <label className="text-sm font-semibold dark:text-white mb-2">Teks</label>
                                 <input
-                                    className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                    className="form-darkable"
                                     value={this.state.embed.footer}
                                     onChange={(ev) => outerThis.updateEmbed("footer", ev.target.value)}
                                 />
@@ -340,7 +340,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             <div className="flex flex-col w-full">
                                 <label className="text-sm font-semibold dark:text-white mb-2">Ikon</label>
                                 <input
-                                    className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100"
+                                    className="form-darkable"
                                     value={this.state.embed.footer_img}
                                     onChange={(ev) => outerThis.updateEmbed("footer_img", ev.target.value)}
                                 />
@@ -359,7 +359,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             <label className="text-sm font-semibold dark:text-white mb-2">Aksen Warna</label>
                             <div className="flex flex-row gap-2">
                                 <input
-                                    className="form-input rounded-lg dark:bg-gray-800 dark:text-gray-100 w-full"
+                                    className="form-darkable w-full"
                                     value={combineRGB(
                                         this.state.rawCol.r,
                                         this.state.rawCol.g,

@@ -158,7 +158,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                             <div className="flex flex-col">
                                 <label className="font-semibold dark:text-white text-sm">RSS URI</label>
                                 <input
-                                    className="form-input w-full lg:w-1/2 mt-1 rounded-lg dark:bg-gray-800 dark:text-gray-200"
+                                    className="form-darkable w-full lg:w-1/2 mt-1"
                                     value={this.state.url}
                                     onChange={(ev) => this.setState({ url: ev.target.value, isValid: false })}
                                 />
@@ -167,13 +167,14 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                         <div className="flex flex-col mt-2">
                             <label className="font-semibold dark:text-white text-sm">#kanal</label>
                             <SelectAsync
-                                className="w-full lg:w-1/2 mt-1 dark:bg-gray-800"
+                                className="w-full lg:w-1/2 mt-1 rounded-lg"
                                 cacheOptions
                                 defaultOptions
                                 loadOptions={loadChannel}
                                 getOptionLabel={optionValueChannel}
                                 filterOption={() => true}
                                 onChange={this.onChannelSelection}
+                                classNamePrefix="rselect"
                                 placeholder="Pilih #kanal..."
                                 isClearable
                             />
@@ -184,7 +185,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                                     this.state.validating
                                         ? "bg-blue-400 cursor-not-allowed"
                                         : "bg-blue-500 hover:bg-blue-600"
-                                } transition duration-200 text-white justify-center items-center`}
+                                } transition duration-200 text-white justify-center items-center focus:outline-none`}
                                 onClick={this.validateRSS}
                             >
                                 {this.state.validating && <LoadingCircle className="mt-0 ml-0 mr-2" />}
@@ -195,7 +196,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                                     !canSubmit
                                         ? "bg-green-400 cursor-not-allowed"
                                         : "bg-green-500 hover:bg-green-600"
-                                } transition duration-200 text-white justify-center items-center`}
+                                } transition duration-200 text-white justify-center items-center focus:outline-none`}
                                 onClick={this.submitNewRSS}
                             >
                                 {this.state.isSubmit && <LoadingCircle className="mt-0 ml-0 mr-2" />}
@@ -204,7 +205,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                         </div>
                         {this.state.sample.length > 0 && (
                             <div className="flex flex-col mt-4">
-                                <SampleViewer sample={this.state.sample[0]} />
+                                <SampleViewer sample={this.state.sample[0]} animate={true} />
                             </div>
                         )}
                     </div>

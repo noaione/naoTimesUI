@@ -38,7 +38,7 @@ class AdminChangeTextBox extends React.Component<AdminTextBoxProps, AdminTextBox
                 <div className="w-full px-3 mb-1 flex flex-row">
                     <input
                         type="text"
-                        className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                        className="form-darkable w-full py-1"
                         value={this.state.value}
                         onChange={(ev) => this.internalOnChange(ev.target.value)}
                         placeholder="xxxxxxxxxxxxxx"

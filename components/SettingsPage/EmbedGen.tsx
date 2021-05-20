@@ -153,14 +153,14 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                                 <input
                                     value={this.state.genUrl}
                                     onFocus={(ev) => ev.target.select()}
-                                    className="form-input block w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200 overflow-ellipsis"
+                                    className="form-darkable block w-full overflow-ellipsis"
                                     readOnly
                                 />
                             </div>
                             <div className="flex flex-col mt-4">
                                 <label className="text-sm font-medium dark:text-white">Aksen Warna</label>
                                 <select
-                                    className="form-select mt-1 block w-full bg-gray-200"
+                                    className="form-select-darkable mt-1 block w-full"
                                     value={this.state.accent}
                                     onChange={(ev) => outerThis.setAccentColor(ev.target.value)}
                                 >
@@ -176,7 +176,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                             <div className="flex flex-col mt-4">
                                 <label className="text-sm font-medium dark:text-white">Bahasa</label>
                                 <select
-                                    className="form-select mt-1 block w-full bg-gray-200"
+                                    className="form-select-darkable mt-1 block w-full"
                                     value={this.state.lang}
                                     onChange={(ev) => outerThis.setEmbedLang(ev.target.value)}
                                 >

@@ -117,7 +117,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
                         </div>
                         <div className="mt-2">
                             <input
-                                className="form-input rounded-lg w-full bg-gray-200 dark:bg-gray-800 dark:text-gray-300 border-2 dark:border-gray-800 focus:border-yellow-500 dark:focus:border-yellow-500 transition duration-200"
+                                className="form-darkable w-full"
                                 value={this.state.passwordCheck}
                                 placeholder="Masukan parafrasa"
                                 onChange={(ev) => {

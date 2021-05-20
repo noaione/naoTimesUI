@@ -150,7 +150,7 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
                         <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
                             <div className="w-full mt-2 mb-1">
                                 <SelectAsync
-                                    className="w-full mt-1 dark:bg-gray-800"
+                                    className="w-full mt-1 rounded-lg"
                                     cacheOptions
                                     loadOptions={loadChannel}
                                     defaultOptions
@@ -159,6 +159,7 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
                                     filterOption={() => true}
                                     onChange={this.onChannelSelection}
                                     placeholder="Ubah #kanal..."
+                                    classNamePrefix="rselect"
                                     isClearable
                                 />
                             </div>

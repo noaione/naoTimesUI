@@ -107,7 +107,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                 <input
                                     value={this.state.oldValue}
                                     type="password"
-                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-darkable w-full py-1"
                                     placeholder="************"
                                     onChange={(ev) =>
                                         outerThis.setState({ oldValue: toString(ev.target.value) })
@@ -121,7 +121,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                 <input
                                     type="password"
                                     value={this.state.newValue}
-                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-darkable w-full py-1"
                                     placeholder="************"
                                     onChange={(ev) => outerThis.passwordVerify(toString(ev.target.value))}
                                 />

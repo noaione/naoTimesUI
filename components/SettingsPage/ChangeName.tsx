@@ -63,7 +63,7 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
                                 <input
                                     type="text"
                                     value={this.state.newValue}
-                                    className="form-input w-full py-1 rounded-lg border-2 transition-colors duration-200 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                    className="form-darkable w-full py-1"
                                     placeholder="Nama Fansub"
                                     onChange={(ev) => this.setState({ newValue: toString(ev.target.value) })}
                                 />

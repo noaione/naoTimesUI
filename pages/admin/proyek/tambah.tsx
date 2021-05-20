@@ -221,7 +221,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                 </label>
                                                 <AsyncSelect
                                                     id="anime-selector-reactive"
-                                                    className="w-full"
+                                                    className="w-full rounded-lg"
                                                     cacheOptions
                                                     defaultOptions={false}
                                                     loadOptions={searchAnime}
@@ -229,6 +229,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                     getOptionLabel={optionValueAnime}
                                                     filterOption={() => true}
                                                     placeholder="Cari Anime..."
+                                                    classNamePrefix="rselect"
                                                     isClearable
                                                 />
                                             </div>
@@ -246,7 +247,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                                 episode: parseInt(val.target.value),
                                                             })
                                                         }
-                                                        className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                        className="form-darkable w-full py-1"
                                                     />
                                                 </div>
                                             </div>
@@ -278,7 +279,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="tlor-id"
                                                             data-role="TL"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -300,7 +301,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="tlcer-id"
                                                             data-role="TLC"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -322,7 +323,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="enc-id"
                                                             data-role="ENC"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -344,7 +345,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="editor-id"
                                                             data-role="ED"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -366,7 +367,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="tser-id"
                                                             data-role="TS"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -388,7 +389,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="timer-id"
                                                             data-role="TM"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
@@ -410,7 +411,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                             type="text"
                                                             name="qcer-id"
                                                             data-role="QC"
-                                                            className="form-input w-full py-1 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 outline-nones focus:border-yellow-600"
+                                                            className="form-darkable w-full py-1"
                                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                                         />
                                                     </div>
