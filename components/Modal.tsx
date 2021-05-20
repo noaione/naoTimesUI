@@ -137,14 +137,13 @@ class Modal extends React.Component<ModalProps, ModalState> {
                     ref={(ref) => (this.divRef = ref)}
                     className={`absolute top-0 left-0 ${
                         this.state.show ? "flex" : "hidden"
-                    } items-center justify-center w-full h-full z-40`}
+                    } items-center justify-center w-full h-full transition-all duration-200 backdrop-filter backdrop-blur bg-[rgba(0,0,0,0.5)] z-40`}
                     onClick={(ev) => {
-                        if (ev.target === this.divRef) {
+                        if (this.divRef && ev.target === this.divRef) {
                             // Only handle if clicked outside the main div
                             this.handleHide();
                         }
                     }}
-                    style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
                 >
                     <div
                         className={
