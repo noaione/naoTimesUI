@@ -72,6 +72,7 @@
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "framer-motion": "^4.1.17",
     "highlight.js": "^10.7.2",
     "javascript-time-ago": "^2.3.5",
     "lodash": "^4.17.21",
