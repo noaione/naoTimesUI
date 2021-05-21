@@ -35,7 +35,7 @@ check_vercel_skip () {
 # Check if should be skipped
 check_vercel_skip
 
-if [[ "$VERCEL_GIT_COMMIT_REF" == "staging" || "$VERCEL_GIT_COMMIT_REF" == "staging.tmp" ]]; then
+if [[ "$VERCEL_GIT_COMMIT_REF" == "staging" || "$VERCEL_GIT_COMMIT_REF" == "staging.tmp" || "$VERCEL_GIT_COMMIT_REF" == "renovate-devdeps/pin-dependencies" ]]; then
     echo "🛑 - Ignoring build step for this ref..."
     exit 0;
 else
