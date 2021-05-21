@@ -3,9 +3,9 @@ import React from "react";
 
 import CreatableSelect from "react-select/creatable";
 import { ActionMeta } from "react-select";
-import { motion } from "framer-motion";
 
 import LoadingCircle from "../LoadingCircle";
+import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { isDifferent, verifyExist } from "../../lib/utils";
@@ -95,7 +95,7 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
 
         if (!isEdit) {
             return (
-                <motion.div
+                <MotionInView.div
                     className="text-sm text-gray-600 dark:text-gray-300"
                     initial={{ x: -35, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -106,7 +106,7 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                         onClick={() => outerThis.setState({ isEdit: true, isFirst: false })}
                         className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
                     >{`[Edit]`}</button>
-                </motion.div>
+                </MotionInView.div>
             );
         }
 
@@ -122,6 +122,7 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                 <div className="flex flex-col w-full mt-2">
                     <CreatableSelect
                         id="alias-selector-reactive"
+                        inputId="alias-selector-reactive-input"
                         defaultValue={defaultValue}
                         isMulti
                         isClearable

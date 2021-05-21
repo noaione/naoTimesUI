@@ -221,6 +221,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                 </label>
                                                 <AsyncSelect
                                                     id="anime-selector-reactive"
+                                                    inputId="anime-selector-reactive-input"
                                                     className="w-full rounded-lg"
                                                     cacheOptions
                                                     defaultOptions={false}

@@ -1,7 +1,7 @@
 import React from "react";
-import { motion } from "framer-motion";
 
 import { FansubRSSFeeds } from "../../lib/fsrss";
+import MotionInView from "../MotionInView";
 
 interface FSRSSProps {
     feed: FansubRSSFeeds;
@@ -18,7 +18,7 @@ class FansubRSSOverview extends React.Component<FSRSSProps> {
         const { id, channel, feedUrl } = feed;
 
         return (
-            <motion.div
+            <MotionInView.div
                 className="p-5 bg-white dark:bg-gray-700 rounded shadow-md"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -34,7 +34,7 @@ class FansubRSSOverview extends React.Component<FSRSSProps> {
                 </div>
                 <div className="text-base text-gray-400 break-all">ID: {id}</div>
                 <div className="text-base text-gray-400 break-all">Channel ID: {channel}</div>
-            </motion.div>
+            </MotionInView.div>
         );
     }
 }

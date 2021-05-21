@@ -1,10 +1,9 @@
 import React from "react";
 import Router from "next/router";
 
-import { motion } from "framer-motion";
-
 import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
+import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { generateWordSets } from "../../lib/words";
@@ -93,7 +92,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
 
         return (
             <>
-                <motion.div
+                <MotionInView.div
                     className="flex"
                     initial={{ x: 50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -110,7 +109,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                         {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
                         <span className={isSubmitting ? "-ml-1 font-semibold" : "font-semibold"}>Hapus</span>
                     </button>
-                </motion.div>
+                </MotionInView.div>
 
                 <Modal onMounted={(cb) => (this.modalCb = cb)}>
                     <Modal.Head>Apakah anda yakin?</Modal.Head>

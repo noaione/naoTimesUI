@@ -211,6 +211,7 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                                         filterOption={() => true}
                                         onChange={this.onChannelSelection}
                                         placeholder="Ubah #kanal..."
+                                        inputId="discord-channel-selector-input"
                                         classNamePrefix="rselect"
                                         isClearable
                                     />

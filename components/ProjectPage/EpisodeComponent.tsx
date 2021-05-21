@@ -1,9 +1,8 @@
 import { cloneDeep, difference } from "lodash";
 import React from "react";
 
-import { motion } from "framer-motion";
-
 import LoadingCircle from "../LoadingCircle";
+import MotionInView from "../MotionInView";
 import RolePopup from "../RolePopup";
 import { SettingsProps } from "../SettingsPage/base";
 
@@ -144,14 +143,14 @@ interface AniContainer {
 function SimpleEpisodeViewContainer(props: AniContainer & { children?: React.ReactNode }) {
     if (props.animate) {
         return (
-            <motion.div
+            <MotionInView.div
                 className="p-3 bg-white dark:bg-gray-700 rounded shadow-sm"
                 initial={{ y: 75, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: props.animateDelay || 0.25 }}
+                transition={{ delay: 0.25 }}
             >
                 {props.children}
-            </motion.div>
+            </MotionInView.div>
         );
     }
 

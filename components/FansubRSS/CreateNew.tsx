@@ -168,6 +168,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                             <label className="font-semibold dark:text-white text-sm">#kanal</label>
                             <SelectAsync
                                 className="w-full lg:w-1/2 mt-1 rounded-lg"
+                                inputId="discord-channel-selector-input"
                                 cacheOptions
                                 defaultOptions
                                 loadOptions={loadChannel}

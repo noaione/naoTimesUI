@@ -6,6 +6,7 @@ import LoginIcon from "mdi-react/LoginIcon";
 
 import MetadataHead from "../components/MetadataHead";
 import Markdown from "../components/Markdown";
+import MotionInView from "../components/MotionInView";
 import TrakteerButton from "../components/TrakteerButton";
 
 import { romanizeNumber } from "../lib/utils";
@@ -63,7 +64,7 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                     </motion.header>
                     <div className="container mx-auto justify-center items-center">
                         <div className="container mx-auto px-6 py-8">
-                            <motion.div
+                            <MotionInView.div
                                 id="about"
                                 className="bg-gray-700 rounded shadow-lg text-gray-200"
                                 initial={{ y: 50, opacity: 0 }}
@@ -71,10 +72,10 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                                 transition={{ duration: 0.5 }}
                             >
                                 <Markdown>{aboutPageWithYear}</Markdown>
-                            </motion.div>
+                            </MotionInView.div>
                         </div>
                         <div className="container mx-auto px-6 py-8">
-                            <motion.div
+                            <MotionInView.div
                                 id="changelog"
                                 className="p-3 bg-gray-700 rounded shadow-lg text-gray-200"
                                 initial={{ y: 75, opacity: 0 }}
@@ -82,7 +83,7 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                                 transition={{ duration: 0.5, delay: 0.25 }}
                             >
                                 <Markdown>{changelogPage}</Markdown>
-                            </motion.div>
+                            </MotionInView.div>
                         </div>
                     </div>
                 </main>

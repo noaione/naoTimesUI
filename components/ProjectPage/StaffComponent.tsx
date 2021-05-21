@@ -3,9 +3,9 @@ import React from "react";
 
 import CheckAllIcon from "mdi-react/CheckAllIcon";
 import PencilIcon from "mdi-react/PencilIcon";
-import { motion } from "framer-motion";
 
 import { RoleColorPalette } from "../ColorMap";
+import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { expandRoleLocalized, getAssigneeName, Nullable, RoleProject } from "../../lib/utils";
@@ -95,7 +95,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
         if (!isEdit) {
             const aniDelay = animateDelay || 0.25;
             return (
-                <motion.div
+                <MotionInView.div
                     className="text-base text-gray-900 items-center flex flex-row"
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -108,7 +108,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
                     <span className={"px-2 rounded font-semibold " + roleColors}>
                         {expandRoleLocalized(id) + ": " + assigneeName}
                     </span>
-                </motion.div>
+                </MotionInView.div>
             );
         }
 

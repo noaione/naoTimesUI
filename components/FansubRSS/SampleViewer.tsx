@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
 import React from "react";
+
+import MotionInView from "../MotionInView";
 
 interface AniContainer {
     animate?: boolean;
@@ -13,14 +14,14 @@ interface SampleViewerDataProps extends AniContainer {
 function ViewerContainer(props: AniContainer & { children?: React.ReactNode }) {
     if (props.animate) {
         return (
-            <motion.div
+            <MotionInView.div
                 className="flex flex-col"
                 initial={{ y: 35, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: props.animateDelay || 0.2 }}
             >
                 {props.children}
-            </motion.div>
+            </MotionInView.div>
         );
     }
 
