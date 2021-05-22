@@ -95,9 +95,9 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
                                 onClick={this.handleShow}
                                 className={`rounded text-white px-4 py-2 ${
                                     isSubmitting
-                                        ? "bg-red-500 cursor-not-allowed"
-                                        : "bg-red-600 hover:bg-red-700"
-                                } transition-colors duration-200 flex flex-row items-center focus:outline-none`}
+                                        ? "bg-red-500 cursor-not-allowed opacity-60"
+                                        : "bg-red-600 hover:bg-red-700 opacity-100"
+                                } transition duration-200 flex flex-row items-center focus:outline-none`}
                             >
                                 {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
                                 <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>
@@ -130,17 +130,17 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
                     <Modal.Footer innerClassName="gap-2">
                         <button
                             onClick={this.deleteServerForReal}
-                            className={`inline-flex justify-center font-semibold w-full px-4 py-2 text-white rounded focus:outline-none ${
+                            className={`inline-flex justify-center font-semibold w-full px-4 py-2 transition duration-200 text-white rounded focus:outline-none ${
                                 this.state.correctPassword
-                                    ? "bg-red-600 hover:bg-red-700"
-                                    : "bg-red-400 cursor-not-allowed"
+                                    ? "bg-red-600 hover:bg-red-700 opacity-100"
+                                    : "bg-red-400 cursor-not-allowed opacity-60"
                             }`}
                         >
                             Hapus
                         </button>
                         <button
                             onClick={this.handleHide}
-                            className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+                            className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none"
                         >
                             Tidak
                         </button>

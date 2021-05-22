@@ -145,12 +145,12 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                     <button
                                         type="submit"
                                         id="sign-in-btn"
-                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out ${
+                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition duraion-200 ease-in-out ${
                                             submitting
                                                 ? "bg-yellow-500"
                                                 : "bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700"
                                         } text-white rounded-lg px-3 py-3 font-semibold justify-center ${
-                                            submitting ? "cursor-not-allowed" : ""
+                                            submitting ? "cursor-not-allowed opacity-60" : "opacity-100"
                                         }`}
                                         disabled={submitting}
                                     >

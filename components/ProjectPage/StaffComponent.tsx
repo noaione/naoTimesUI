@@ -119,9 +119,9 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
                         onClick={this.submitEditing}
                         className={`px-2 py-1 mr-2 ${
                             this.state.isSubmitting
-                                ? "bg-green-400 cursor-not-allowed"
-                                : "bg-green-500 hover:bg-green-600"
-                        } transition-colors duration-200 focus:outline-none`}
+                                ? "bg-green-400 cursor-not-allowed opacity-60"
+                                : "bg-green-500 hover:bg-green-600 opacity-100"
+                        } transition duration-200 focus:outline-none`}
                     >
                         <CheckAllIcon className="text-gray-800" />
                     </button>

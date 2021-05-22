@@ -139,9 +139,9 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                     onClick={this.submitPassword}
                                     className={`rounded text-white px-4 py-2 ${
                                         disableButton
-                                            ? "bg-blue-500 cursor-not-allowed"
-                                            : "bg-blue-600 hover:bg-blue-700"
-                                    } transition-colors duration-200 flex flex-row items-center focus:outline-none`}
+                                            ? "bg-blue-500 cursor-not-allowed opacity-60"
+                                            : "bg-blue-600 hover:bg-blue-700 opacity-100"
+                                    } transition duration-200 flex flex-row items-center focus:outline-none`}
                                 >
                                     {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
                                     <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>

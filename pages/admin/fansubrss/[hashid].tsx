@@ -218,8 +218,8 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                                     <motion.button
                                         className={`flex flex-row w-full lg:w-1/2 mt-2 px-3 py-2 rounded-lg ${
                                             this.state.isSubmit
-                                                ? "bg-blue-400 cursor-not-allowed"
-                                                : "bg-blue-500 hover:bg-blue-600"
+                                                ? "bg-blue-400 cursor-not-allowed opacity-60"
+                                                : "bg-blue-500 hover:bg-blue-600 opacity-100"
                                         } transition duration-200 text-white justify-center items-center`}
                                         onClick={this.changeKanal}
                                         initial={{ y: 35, opacity: 0 }}

@@ -102,8 +102,8 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                         onClick={this.handleShow}
                         className={`flex flex-row px-3 py-1 ${
                             this.state.isSubmitting
-                                ? "bg-red-400 cursor-not-allowed"
-                                : "bg-red-500 hover:bg-red-600"
+                                ? "bg-red-400 cursor-not-allowed opacity-60"
+                                : "bg-red-500 hover:bg-red-600 opacity-100"
                         } duration-200 transition text-gray-100 text-sm rounded items-center focus:outline-none`}
                     >
                         {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
@@ -134,10 +134,10 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                     <Modal.Footer innerClassName="gap-2">
                         <button
                             onClick={this.deleteRSSForReal}
-                            className={`inline-flex justify-center font-semibold w-full px-4 py-2 text-white rounded focus:outline-none ${
+                            className={`inline-flex justify-center font-semibold w-full px-4 py-2 transition duration-200 text-white rounded focus:outline-none ${
                                 this.state.correctPassword
-                                    ? "bg-red-600 hover:bg-red-700"
-                                    : "bg-red-400 cursor-not-allowed"
+                                    ? "bg-red-600 hover:bg-red-700 opacity-60"
+                                    : "bg-red-400 cursor-not-allowed opacity-100"
                             }`}
                         >
                             Hapus

@@ -75,7 +75,7 @@ function EpisodeBoxHeader(props: EpisodeBoxHeaderProps) {
                 <div className="flex items-center">
                     <button
                         onClick={props.onClick}
-                        className={`flex flex-row focus:outline-none text-white text-sm py-1 px-3 rounded-md ${
+                        className={`flex flex-row focus:outline-none transition duration-200 text-white text-sm py-1 px-3 rounded-md ${
                             isEdit
                                 ? isSubmit
                                     ? "bg-blue-400"
@@ -83,7 +83,7 @@ function EpisodeBoxHeader(props: EpisodeBoxHeaderProps) {
                                 : isSubmit
                                 ? "bg-red-400"
                                 : "bg-red-500 hover:bg-red-600"
-                        } hover:shadow-lg ${isSubmit ? "cursor-not-allowed" : ""}`}
+                        } hover:shadow-lg ${isSubmit ? "cursor-not-allowed opacity-60" : "opacity-100"}`}
                     >
                         {isSubmit && <LoadingCircle className="mt-0 ml-0 mr-2" />}
                         {isEdit ? "Beres" : "Edit"}

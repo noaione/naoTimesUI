@@ -423,8 +423,8 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                                     type="submit"
                                                     className={`rounded px-3 py-2 text-white transition ${
                                                         this.state.isSubmitting
-                                                            ? "bg-green-500 cursor-not-allowed"
-                                                            : "bg-green-600 hover:bg-green-700"
+                                                            ? "bg-green-500 cursor-not-allowed opacity-60"
+                                                            : "bg-green-600 hover:bg-green-700 opacity-100"
                                                     } duration-200 ease-in-out items-center flex flex-row focus:outline-none`}
                                                 >
                                                     {this.state.isSubmitting ? (

@@ -137,9 +137,9 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                             onClick={this.submitNewAliases}
                             className={`rounded text-white px-4 py-2 ${
                                 isSubmit
-                                    ? "bg-green-500 cursor-not-allowed"
-                                    : "bg-green-600 hover:bg-green-700"
-                            } transition-colors duration-200 flex flex-row items-center focus:outline-none`}
+                                    ? "bg-green-500 cursor-not-allowed opacity-60"
+                                    : "bg-green-600 hover:bg-green-700 opacity-100"
+                            } transition duration-200 flex flex-row items-center focus:outline-none`}
                         >
                             {isSubmit && <LoadingCircle className="ml-0 mt-0" />}
                             <span className={isSubmit ? "mt-0.5 font-semibold" : "font-semibold"}>Ubah</span>

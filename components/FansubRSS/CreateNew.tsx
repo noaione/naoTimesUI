@@ -184,8 +184,8 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                             <button
                                 className={`flex flex-row px-3 py-2 rounded-lg ${
                                     this.state.validating
-                                        ? "bg-blue-400 cursor-not-allowed"
-                                        : "bg-blue-500 hover:bg-blue-600"
+                                        ? "bg-blue-400 cursor-not-allowed opacity-60"
+                                        : "bg-blue-500 hover:bg-blue-600 opacity-100"
                                 } transition duration-200 text-white justify-center items-center focus:outline-none`}
                                 onClick={this.validateRSS}
                             >
@@ -195,8 +195,8 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
                             <button
                                 className={`flex flex-row px-3 py-2 rounded-lg ${
                                     !canSubmit
-                                        ? "bg-green-400 cursor-not-allowed"
-                                        : "bg-green-500 hover:bg-green-600"
+                                        ? "bg-green-400 cursor-not-allowed opacity-60"
+                                        : "bg-green-500 hover:bg-green-600 opacity-100"
                                 } transition duration-200 text-white justify-center items-center focus:outline-none`}
                                 onClick={this.submitNewRSS}
                             >

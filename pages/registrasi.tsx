@@ -90,7 +90,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                                             required
                                             type="text"
                                             name="server"
-                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
+                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duration-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                         />
                                     </div>
@@ -107,7 +107,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                                             required
                                             type="text"
                                             name="admin"
-                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
+                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duration-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                         />
                                     </div>
@@ -118,12 +118,12 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                                     <button
                                         type="submit"
                                         id="register-btn"
-                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition-colors duraion-200 ease-in-out ${
+                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition duration-200 ease-in-out ${
                                             submitting
                                                 ? "bg-yellow-500"
                                                 : "bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700"
                                         } text-white rounded-lg px-3 py-3 font-semibold justify-center ${
-                                            submitting ? "cursor-not-allowed" : ""
+                                            submitting ? "cursor-not-allowed opacity-60" : "opacity-100"
                                         }`}
                                         disabled={submitting}
                                     >
