@@ -80,7 +80,7 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                                 className="p-3 bg-gray-700 rounded shadow-lg text-gray-200"
                                 initial={{ y: 75, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
-                                transition={{ duration: 0.5, delay: 0.25 }}
+                                transition={{ duration: 0.5 }}
                             >
                                 <Markdown>{changelogPage}</Markdown>
                             </MotionInView.div>
