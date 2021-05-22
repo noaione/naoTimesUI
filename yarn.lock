@@ -21,7 +21,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.14.0.tgz#a901128bce2ad02565df95e6ecbf195cf9465919"
   integrity sha512-vu9V3uMM/1o5Hl5OekMUowo3FqXLJSw+s+66nt0fSWVWTtmosdzn45JHOB3cPtZoe6CTBDzvSw0RdOY85Q37+Q==
 
-"@babel/core@^7.14.3":
+"@babel/core@7.14.3":
   version "7.14.3"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.14.3.tgz#5395e30405f0776067fbd9cf0884f15bfb770a38"
   integrity sha512-jB5AmTKOCSJIZ72sd78ECEhuPiDMKlQdDI/4QRI6lzYATx5SSogS1oQA2AoPecRCknm30gHi2l+QVvNUu3wZAg==
@@ -656,7 +656,7 @@
   dependencies:
     "@sentry/cli" "^1.63.1"
 
-"@tailwindcss/aspect-ratio@^0.2.0":
+"@tailwindcss/aspect-ratio@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@tailwindcss/aspect-ratio/-/aspect-ratio-0.2.0.tgz#bebd32b7d0756b695294d4db1ae658796ff72a2c"
   integrity sha512-v5LyHkwXj/4lI74B06zUrmWEdmSqS43+jw717pkt3fAXqb7ALwu77A8t7j+Bej+ZbdlIIqNMYheGN7wSGV1A6w==
@@ -760,7 +760,7 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
-"@types/prop-types@*", "@types/prop-types@^15.7.3":
+"@types/prop-types@*", "@types/prop-types@15.7.3":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
@@ -1178,7 +1178,7 @@ babel-plugin-syntax-jsx@6.18.0, babel-plugin-syntax-jsx@^6.18.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
   integrity sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
 
-babel-plugin-typescript-to-proptypes@^1.4.2:
+babel-plugin-typescript-to-proptypes@1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-typescript-to-proptypes/-/babel-plugin-typescript-to-proptypes-1.4.2.tgz#627a08ddc6a22d1d4d2da3bbba54d6004f7a243b"
   integrity sha512-mcDkmEwxQ0HivEAMZ82HidppYQGiISp3bcgjtRWFFG0WzwVsJ3eQCgAoD3mSXDc9ehU8xZ7ItxCo9XRgeYQ5bQ==
