@@ -20,7 +20,6 @@ import { CallbackModal } from "../../../components/Modal";
 
 import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
 import { isNone, Nullable, parseFeed } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
@@ -263,6 +262,7 @@ export const getServerSideProps = withSession(async function ({
     params,
 }: NextServerSideContextWithSession) {
     const user = req.session.get<IUserAuth>("user");
+    const socketLib = await import("../../../lib/socket");
     const { hashid } = params;
 
     if (!user) {
@@ -289,7 +289,7 @@ export const getServerSideProps = withSession(async function ({
         };
     }
 
-    const rssSchemas: Nullable<FansubRSSSchemas> = await emitSocketAndWait("fsrss get", {
+    const rssSchemas: Nullable<FansubRSSSchemas> = await socketLib.emitSocketAndWait("fsrss get", {
         id: user.id,
         hash: hashid,
     });

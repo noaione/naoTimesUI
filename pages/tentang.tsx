@@ -10,7 +10,6 @@ import MotionInView from "../components/MotionInView";
 import TrakteerButton from "../components/TrakteerButton";
 
 import { romanizeNumber } from "../lib/utils";
-import { getAboutContent, getChangelogContent } from "../lib/postshelper";
 
 interface AboutPageProps {
     aboutPage: string;
@@ -94,8 +93,9 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
 }
 
 export async function getStaticProps() {
-    const aboutPage = getAboutContent();
-    const changelogPage = getChangelogContent();
+    const pagesProps = await import("../lib/postshelper");
+    const aboutPage = pagesProps.getAboutContent();
+    const changelogPage = pagesProps.getChangelogContent();
 
     return {
         props: {

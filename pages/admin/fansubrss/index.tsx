@@ -9,7 +9,6 @@ import FansubRSSOverview from "../../../components/FansubRSS/Overview";
 
 import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
 import { isNone, Nullable } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
@@ -97,6 +96,7 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
 
 export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
     const user = req.session.get<IUserAuth>("user");
+    const socketLib = await import("../../../lib/socket");
 
     if (!user) {
         return {
@@ -112,7 +112,9 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
-    const rssSchemas: Nullable<FansubRSSSchemas> = await emitSocketAndWait("fsrss get", { id: user.id });
+    const rssSchemas: Nullable<FansubRSSSchemas> = await socketLib.emitSocketAndWait("fsrss get", {
+        id: user.id,
+    });
     let fansubRSSFeeds: FansubRSSFeeds[];
     let isPremium = false;
     if (isNone(rssSchemas)) {

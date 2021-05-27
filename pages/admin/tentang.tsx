@@ -7,7 +7,6 @@ import Markdown from "../../components/Markdown";
 import MotionInView from "../../components/MotionInView";
 
 import { romanizeNumber } from "../../lib/utils";
-import { getAboutContent, getChangelogContent } from "../../lib/postshelper";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
 
 import { UserProps } from "../../models/user";
@@ -73,6 +72,7 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
 
 export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
     const user = req.session.get<IUserAuth>("user");
+    const pagesProps = await import("../../lib/postshelper");
 
     if (!user) {
         return {
@@ -83,8 +83,8 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
-    const changelogPage = getChangelogContent();
-    const aboutPage = getAboutContent();
+    const changelogPage = pagesProps.getChangelogContent();
+    const aboutPage = pagesProps.getAboutContent();
 
     return { props: { user: { loggedIn: true, ...user }, aboutPage, changelogPage } };
 });
