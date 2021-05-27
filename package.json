@@ -9,6 +9,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "next build",
+    "build-no-sentry": "cross-env SKIP_SENTRY=1 next build",
     "start": "next start",
     "dev": "cross-env SKIP_SENTRY=1 next dev -p 6700",
     "devdebug": "cross-env NODE_OPTIONS='--inspect' SKIP_SENTRY=1 next dev -p 6700",
@@ -51,6 +52,7 @@
     "babel-plugin-typescript-to-proptypes": "^1.4.2",
     "cross-env": "7.0.3",
     "cssnano": "5.0.2",
+    "esbuild-loader": "^2.13.1",
     "eslint": "7.26.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.22.1",
