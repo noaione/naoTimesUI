@@ -5,6 +5,7 @@
         "group:postcss",
         "group:typescript-eslintMonorepo",
         ":pinAllExceptPeerDependencies",
+        ":semanticCommitTypeAll(chore)",
         "helpers:disableTypesNodeMajor",
         "helpers:followTypescriptNext"
     ],
