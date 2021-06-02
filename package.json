@@ -74,7 +74,7 @@
     "cors": "2.8.5",
     "framer-motion": "4.1.17",
     "highlight.js": "11.0.0",
-    "javascript-time-ago": "2.3.5",
+    "javascript-time-ago": "^2.3.6",
     "lodash": "4.17.21",
     "luxon": "1.27.0",
     "mdi-react": "7.5.0",
