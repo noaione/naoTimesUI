@@ -364,8 +364,11 @@ function createRules(r: typeof baseRules): SimpleMarkdown.ParserRules {
             ...codeBlock,
             // @ts-ignore
             react(node: SimpleMarkdown.SingleASTNode, recurseOutput, state) {
-                if (node.lang && hljs.getLanguage(node.lang) != null) {
-                    const highlightedBlock = hljs.highlight(node.lang, node.content, true);
+                if (node.lang && hljs.getLanguage(node.lang) !== null) {
+                    const highlightedBlock = hljs.highlight(node.content, {
+                        language: node.lang,
+                        ignoreIllegals: true,
+                    });
 
                     return (
                         <pre key={state.key}>
