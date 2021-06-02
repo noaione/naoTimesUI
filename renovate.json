@@ -6,8 +6,7 @@
         "group:typescript-eslintMonorepo",
         ":pinAllExceptPeerDependencies",
         ":semanticCommitTypeAll(chore)",
-        "helpers:disableTypesNodeMajor",
-        "helpers:followTypescriptNext"
+        "helpers:disableTypesNodeMajor"
     ],
     "dependencyDashboard": true,
     "labels": ["type: dependency"],
