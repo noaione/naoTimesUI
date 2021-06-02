@@ -1,6 +1,12 @@
 {
     "extends": [
-        "config:base"
+        "config:base",
+        "group:definitelyTyped",
+        "group:postcss",
+        "group:typescript-eslintMonorepo",
+        ":pinAllExceptPeerDependencies",
+        "helpers:disableTypesNodeMajor",
+        "helpers:followTypescriptNext"
     ],
     "dependencyDashboard": true,
     "labels": ["type: dependency"],
