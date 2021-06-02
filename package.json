@@ -97,6 +97,6 @@
     "remark-gfm": "1.0.0",
     "simple-markdown": "0.7.3",
     "ts-mongoose": "0.0.24",
-    "twemoji": "13.0.2"
+    "twemoji": "13.1.0"
   }
 }
