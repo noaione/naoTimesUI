@@ -46,3 +46,11 @@ Kodenama: *Tidak ada*
 - 📽 Animasi beberapa komponen biar lebih menarik :D
 - 👓 Dark mode sekarang lebih dark (untuk input dan sebagainya)
 - 🐛 Perbaikan bugs dan kebodohan dev.
+
+## Versi 1.1.2
+
+Kodenama: *Tidak ada*
+
+- 🎇 Indikator loading ketika loading antar laman
+- 🏎 Menggunakan [`Preact`](https://preactjs.com/) di Production build, alternatif lebih cepat dan ringan.
+- 🐛 Bugs squashing bonanza.

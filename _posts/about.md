@@ -30,7 +30,8 @@ Awalnya pengen nyoba Vue.js sih, tapi kurang cocok dengan use-case yang tak ingi
 ### Kredit
 Website ini menggunakan teknologi berikut:
 - [Next.js](https://nextjs.org/) oleh Vercel, sebagai Framework utama
-- [ReactJS](https://reactjs.org/) oleh Facebook, sebagai library utama untuk buat website ini
+- [ReactJS](https://reactjs.org/) oleh Facebook, sebagai library utama untuk buat website ini (untuk Development)
+- [Preact](https://preactjs.com/) oleh developit, digunakan dalam production build (fast af boi)
 - [TailwindCSS](https://tailwindcss.com/) oleh TailwindLabs, sebagai styling website
 - [PostCSS](https://postcss.org/), sebagai engine CSS yang tak pakai
 - [MongoDB](https://www.mongodb.com/) oleh MongoDB Inc. sebagai Database yang dipakai
