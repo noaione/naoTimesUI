@@ -11,6 +11,7 @@ import { isNone, mapBoolean, Nullable } from "../lib/utils";
 import { NextServerSideContextWithSession } from "../lib/session";
 
 import { ShowAnimeProps, ShowtimesModel } from "../models/show";
+
 interface EmbedUtangProps extends IEmbedParams {
     name?: string;
     projectList: ShowAnimeProps[];
@@ -80,7 +81,16 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     toggleDark(event: MessageEvent<any>) {
-        const data = JSON.parse(event.data);
+        if (event.data) {
+            return;
+        }
+        let data: { [key: string]: any };
+        try {
+            data = JSON.parse(event.data);
+        } catch (e) {
+            console.error("embed.toggleDark: No data received");
+            return;
+        }
         const root = window.document.documentElement;
         if (data.action === "setDark") {
             const isDark = mapBoolean(data.target);
