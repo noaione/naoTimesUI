@@ -74,15 +74,18 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         />
                         <motion.main
                             id="root"
-                            layoutId="adminviewsection"
                             key={`${active ?? "home"}-${realTitle}`}
                             className={`flex-1 overflow-y-auto ${
                                 realOverflowX ? "overflow-x-auto" : "overflow-x-hidden"
                             }`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                            variants={{
+                                zero: { opacity: 0 },
+                                full: { opacity: 1 },
+                            }}
                             transition={{ duration: 0.25 }}
+                            initial="zero"
+                            animate="full"
+                            exit="zero"
                         >
                             {this.props.children}
                         </motion.main>
