@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withSentryConfig } = require("@sentry/nextjs");
 
 const GITHUB_CI = process.env.GITHUB_WORKFLOW;
@@ -20,6 +19,16 @@ const moduleExports = {
         webpack5: true,
     },
     productionBrowserSourceMaps: true,
+    webpack: (config, { dev, isServer, webpack }) => {
+        if (!dev && !isServer) {
+            Object.assign(config.resolve.alias, {
+                react: "preact/compat",
+                "react-dom/test-utils": "preact/test-utils",
+                "react-dom": "preact/compat",
+            });
+        }
+        return config;
+    },
     async headers() {
         return [
             {
