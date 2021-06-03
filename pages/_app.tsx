@@ -1,3 +1,4 @@
+import "preact/debug";
 import React from "react";
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
@@ -38,7 +39,7 @@ Router.events.on("routeChangeError", () => progress.finish());
 function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
     return (
         <AnimateSharedLayout>
-            <AnimatePresence exitBeforeEnter key={router.route}>
+            <AnimatePresence key={router.route}>
                 <Component {...pageProps} />
             </AnimatePresence>
         </AnimateSharedLayout>
