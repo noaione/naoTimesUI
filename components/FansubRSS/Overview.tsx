@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 import { FansubRSSFeeds } from "../../lib/fsrss";
@@ -25,12 +26,11 @@ class FansubRSSOverview extends React.Component<FSRSSProps> {
                 transition={{ delay: animateDelay || 0.25 }}
             >
                 <div className="flex flex-col justify-center">
-                    <a
-                        href={"/admin/fansubrss/" + id}
-                        className="text-xl font-bold text-gray-900 dark:text-gray-200 hover:underline break-all"
-                    >
-                        {feedUrl}
-                    </a>
+                    <Link href={"/admin/fansubrss/" + id} passHref>
+                        <a className="text-xl font-bold text-gray-900 dark:text-gray-200 hover:underline break-all">
+                            {feedUrl}
+                        </a>
+                    </Link>
                 </div>
                 <div className="text-base text-gray-400 break-all">ID: {id}</div>
                 <div className="text-base text-gray-400 break-all">Channel ID: {channel}</div>

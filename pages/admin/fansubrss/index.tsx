@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 
@@ -49,12 +50,11 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
                                         animate={{ x: 0, opacity: 1 }}
                                         transition={{ delay: 0.2 }}
                                     >
-                                        <a
-                                            href="/admin/fansubrss/tambah"
-                                            className="px-3 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200 font-bold"
-                                        >
-                                            Tambah
-                                        </a>
+                                        <Link href="/admin/fansubrss/tambah" passHref>
+                                            <a className="px-3 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200 font-bold">
+                                                Tambah
+                                            </a>
+                                        </Link>
                                     </motion.div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
                                         {fansubRss.map((feed, idx) => {
@@ -79,12 +79,11 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
                                     <div className="text-xl font-bold text-center dark:text-gray-200">
                                         Tidak ada RSS yang terdaftar
                                     </div>
-                                    <a
-                                        href="/admin/fansubrss/tambah"
-                                        className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2"
-                                    >
-                                        Tambah Baru
-                                    </a>
+                                    <Link href="/admin/fansubrss/tambah" passHref>
+                                        <a className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2">
+                                            Tambah Baru
+                                        </a>
+                                    </Link>
                                 </div>
                             </>
                         )}

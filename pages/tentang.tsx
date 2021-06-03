@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
 
 import { motion } from "framer-motion";
@@ -54,19 +55,18 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                         </div>
 
                         <div className="flex items-center space-x-2">
-                            <a
-                                href="/"
-                                className="flex text-gray-200 transition-opacity duration-200 ease-in-out hover:opacity-70 focus:outline-none mb-1 cursor-pointer"
-                            >
-                                <LoginIcon />
-                            </a>
+                            <Link href="/" passHref>
+                                <a className="flex text-gray-200 transition-opacity duration-200 ease-in-out hover:opacity-70 focus:outline-none mb-1 cursor-pointer">
+                                    <LoginIcon />
+                                </a>
+                            </Link>
                         </div>
                     </motion.header>
                     <div className="container mx-auto justify-center items-center">
                         <div className="container mx-auto px-6 py-8">
                             <MotionInView.div
                                 id="about"
-                                className="bg-gray-700 rounded shadow-lg text-gray-200"
+                                className="p-3 bg-gray-700 rounded shadow-lg text-gray-200"
                                 initial={{ y: 50, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ duration: 0.5 }}

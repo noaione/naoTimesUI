@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
@@ -94,16 +95,17 @@ class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTamb
                                         <a
                                             href="https://trakteer.id/noaione"
                                             className="text-pink-500 hover:text-pink-600 duration-200 transition mt-2"
+                                            rel="noopener noreferrer"
+                                            target="_blank"
                                         >
                                             Trakteer/Donasi
                                         </a>
                                     )}
-                                    <a
-                                        href="/admin/fansubrss"
-                                        className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2"
-                                    >
-                                        Kembali
-                                    </a>
+                                    <Link href="/admin/fansubrss" passHref>
+                                        <a className="text-center text-yellow-500 hover:text-yellow-600 duration-200 transition mt-2">
+                                            Kembali
+                                        </a>
+                                    </Link>
                                 </div>
                             </>
                         ) : (

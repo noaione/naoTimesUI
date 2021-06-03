@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import Router from "next/router";
 
 import RolePopup from "./RolePopup";
@@ -52,12 +53,11 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                     <div className="bg-white dark:bg-gray-700 p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="mb-8">
                             <div className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-1">
-                                <a
-                                    href={"/admin/proyek/" + data.id}
-                                    className="no-underline hover:underline cursor-pointer"
-                                >
-                                    {data.title}
-                                </a>
+                                <Link href={"/admin/proyek/" + data.id} passHref>
+                                    <a className="no-underline hover:underline cursor-pointer">
+                                        {data.title}
+                                    </a>
+                                </Link>
                             </div>
                             <p className="text-gray-700 dark:text-gray-300 text-base mb-0.5">
                                 Episode {status.episode.toString()}

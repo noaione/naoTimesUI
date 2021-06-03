@@ -143,6 +143,8 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                         <a
                             className="text-yellow-500 no-underline hover:underline hover:opacity-70"
                             href="https://naoti.me/docs/integrasi/website/#mengatur-ukuran-iframe"
+                            rel="noopener noreferrer"
+                            target="_blank"
                         >
                             Dokumentasi
                         </a>

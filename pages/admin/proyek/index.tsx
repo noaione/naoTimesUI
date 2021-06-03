@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 import Router from "next/router";
 
 import PlusIcon from "mdi-react/PlusIcon";
@@ -59,12 +60,11 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
                     />
                     <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
-                            <a
-                                className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
-                                href={"/admin/proyek/" + id}
-                            >
-                                {title}
-                            </a>
+                            <Link href={"/admin/proyek/" + id} passHref>
+                                <a className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer">
+                                    {title}
+                                </a>
+                            </Link>
                             {generateStatusText()}
                             <div className="flex flex-row flex-wrap gap-1 pt-2 text-center">
                                 {Object.keys(assignments).map((roleName) => {
@@ -132,13 +132,12 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
                         <div className="flex">
-                            <a
-                                href="/admin/proyek/tambah"
-                                className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center"
-                            >
-                                <PlusIcon className="font-bold" />
-                                <span className="font-semibold mt-0.5">Tambah</span>
-                            </a>
+                            <Link href="/admin/proyek/tambah" passHref>
+                                <a className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center">
+                                    <PlusIcon className="font-bold" />
+                                    <span className="font-semibold mt-0.5">Tambah</span>
+                                </a>
+                            </Link>
                         </div>
                         {isLoading ? (
                             <SkeletonLoader.ProjectOverview />

@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 import Router from "next/router";
 
 import AccountIcon from "mdi-react/AccountIcon";
@@ -130,15 +131,16 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                                         {submitting && <LoadingCircle className="mt-0" />}
                                         Daftar
                                     </button>
-                                    <a
-                                        href="/"
-                                        className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100"
-                                    >
-                                        Sudah Terdaftar?
-                                    </a>
+                                    <Link href="/" passHref>
+                                        <a className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100">
+                                            Sudah Terdaftar?
+                                        </a>
+                                    </Link>
                                     <a
                                         href="https://naoti.me/invite"
                                         className="block md:hidden mt-2 text-sm text-center text-blue-500 hover:text-blue-400 transition-colors duration-100"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
                                     >
                                         Invite Bot
                                     </a>

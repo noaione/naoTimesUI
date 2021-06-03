@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 import CogIcon from "mdi-react/CogIcon";
 import HomeIcon from "mdi-react/HomeIcon";
@@ -97,79 +98,82 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                     </div>
 
                     <nav className="flex flex-col mt-10 px-4">
-                        <a
-                            href={curActive === "home" ? "#" : "/admin"}
-                            className={curActive === "home" ? SelClass : NormanClass}
-                        >
-                            <HomeIcon className="text-sm" />
-                            <span className="ml-1">Ikhtisar</span>
-                        </a>
-                        <a
-                            href={curActive === "project" ? "#" : adminPageUrl}
-                            className={
-                                ["project", "projectpage"].includes(curActive)
-                                    ? SelClass + " mt-3"
-                                    : NormanClass + " mt-3"
-                            }
-                        >
-                            {adminPageIcon}
-                            <span className="ml-1">{isAdmin ? "Peladen" : "Proyek"}</span>
-                        </a>
-                        {!isAdmin && (
+                        <Link href={curActive === "home" ? "#" : "/admin"} passHref>
+                            <a className={curActive === "home" ? SelClass : NormanClass}>
+                                <HomeIcon className="text-sm" />
+                                <span className="ml-1">Ikhtisar</span>
+                            </a>
+                        </Link>
+                        <Link href={curActive === "project" ? "#" : adminPageUrl} passHref>
                             <a
-                                href={curActive === "fsrss" ? "#" : "/admin/fansubrss"}
                                 className={
-                                    ["fsrss", "fsrsspage"].includes(curActive)
+                                    ["project", "projectpage"].includes(curActive)
                                         ? SelClass + " mt-3"
                                         : NormanClass + " mt-3"
                                 }
                             >
-                                <NewspaperVariantIcon className="text-sm" />
-                                <span className="ml-1">FansubRSS</span>
+                                {adminPageIcon}
+                                <span className="ml-1">{isAdmin ? "Peladen" : "Proyek"}</span>
                             </a>
+                        </Link>
+                        {!isAdmin && (
+                            <Link href={curActive === "fsrss" ? "#" : "/admin/fansubrss"} passHref>
+                                <a
+                                    className={
+                                        ["fsrss", "fsrsspage"].includes(curActive)
+                                            ? SelClass + " mt-3"
+                                            : NormanClass + " mt-3"
+                                    }
+                                >
+                                    <NewspaperVariantIcon className="text-sm" />
+                                    <span className="ml-1">FansubRSS</span>
+                                </a>
+                            </Link>
                         )}
-                        <a
-                            href={curActive === "settings" ? "#" : "/admin/atur"}
-                            className={curActive === "settings" ? SelClass + " mt-3" : NormanClass + " mt-3"}
-                        >
-                            <CogIcon className="text-sm" />
-                            <span className="ml-1">Pengaturan</span>
-                        </a>
-                        <a
-                            href={curActive === "about" ? "#" : "/admin/tentang"}
-                            className={curActive === "about" ? SelClass + " mt-3" : NormanClass + " mt-3"}
-                        >
-                            <InformationIcon className="text-sm" />
-                            <span className="ml-1">Tentang</span>
-                        </a>
+                        <Link href={curActive === "settings" ? "#" : "/admin/atur"} passHref>
+                            <a
+                                className={
+                                    curActive === "settings" ? SelClass + " mt-3" : NormanClass + " mt-3"
+                                }
+                            >
+                                <CogIcon className="text-sm" />
+                                <span className="ml-1">Pengaturan</span>
+                            </a>
+                        </Link>
+                        <Link href={curActive === "about" ? "#" : "/admin/tentang"} passHref>
+                            <a className={curActive === "about" ? SelClass + " mt-3" : NormanClass + " mt-3"}>
+                                <InformationIcon className="text-sm" />
+                                <span className="ml-1">Tentang</span>
+                            </a>
+                        </Link>
                     </nav>
 
                     <div className="absolute items-end justify-start bottom-0 left-0 ml-4 mb-4 z-10">
                         {semver && (
-                            <>
-                                <div className="dark:text-gray-200 font-semibold flex flex-row mb-2 text-lg items-center">
-                                    <a
-                                        className="text-gray-900 dark:text-gray-100 hover:opacity-70 transition-opacity duration-200"
-                                        href="https://github.com/noaione/naoTimesUI"
-                                    >
-                                        <GitHubIcon />
-                                    </a>
-                                    <span className="ml-2">v{semver}</span>
-                                </div>
-                            </>
+                            <div className="dark:text-gray-200 font-semibold flex flex-row mb-2 text-lg items-center">
+                                <a
+                                    className="text-gray-900 dark:text-gray-100 hover:opacity-70 transition-opacity duration-200"
+                                    href="https://github.com/noaione/naoTimesUI"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <GitHubIcon />
+                                </a>
+                                <span className="ml-2">v{semver}</span>
+                            </div>
                         )}
                         {commit && (
-                            <>
-                                <div className="dark:text-gray-200 font-semibold">
-                                    Commit:{" "}
-                                    <a
-                                        className="text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity duration-200"
-                                        href={"https://github.com/noaione/naoTimesUI/commit/" + commit}
-                                    >
-                                        {commit.slice(0, 7)}
-                                    </a>
-                                </div>
-                            </>
+                            <div className="dark:text-gray-200 font-semibold">
+                                Commit:{" "}
+                                <a
+                                    className="text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity duration-200"
+                                    href={"https://github.com/noaione/naoTimesUI/commit/" + commit}
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                >
+                                    {commit.slice(0, 7)}
+                                </a>
+                            </div>
                         )}
                         <div className="dark:text-gray-200">© {romanizedCC} - naoTimesDev</div>
                     </div>

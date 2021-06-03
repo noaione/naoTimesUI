@@ -1,5 +1,5 @@
 import React from "react";
-import Router from "next/router";
+import Link from "next/link";
 import { uniq } from "lodash";
 
 import BullhornOutlineIcon from "mdi-react/BullhornOutlineIcon";
@@ -10,39 +10,13 @@ interface BannerHeaderState {
     show: boolean;
 }
 
-function isOutsideLink(link: string) {
-    if (!link) {
-        return false;
-    }
-    if (link.startsWith("http")) {
-        return true;
-    }
-    if (link.includes("::/")) {
-        return true;
-    }
-    return false;
-}
-
 class BannerHeader extends React.Component<BannerData, BannerHeaderState> {
     constructor(props: BannerData) {
         super(props);
         this.dismissLink = this.dismissLink.bind(this);
-        this.navigateLink = this.navigateLink.bind(this);
         this.state = {
             show: true,
         };
-    }
-
-    navigateLink(ev: React.MouseEvent<HTMLAnchorElement>) {
-        ev.preventDefault();
-        this.dismissLink();
-        if (this.props.link) {
-            if (isOutsideLink(this.props.link)) {
-                window.open(this.props.link, "_blank", "noreferrer noopener");
-            } else {
-                Router.push(this.props.link);
-            }
-        }
     }
 
     dismissLink() {
@@ -74,13 +48,11 @@ class BannerHeader extends React.Component<BannerData, BannerHeaderState> {
                             </div>
                             {this.props.link && (
                                 <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                                    <a
-                                        href={this.props.link}
-                                        className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50"
-                                        onClick={this.navigateLink}
-                                    >
-                                        Lebih lanjut
-                                    </a>
+                                    <Link href={this.props.link} passHref>
+                                        <a className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50">
+                                            Lebih lanjut
+                                        </a>
+                                    </Link>
                                 </div>
                             )}
                             <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">

@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 import Router from "next/router";
 
 import EyeIcon from "mdi-react/EyeIcon";
@@ -157,12 +158,11 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                         {submitting && <LoadingCircle className="mt-0" />}
                                         Masuk
                                     </button>
-                                    <a
-                                        href="/registrasi"
-                                        className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100"
-                                    >
-                                        Registrasi
-                                    </a>
+                                    <Link href="/registrasi" passHref>
+                                        <a className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100">
+                                            Registrasi
+                                        </a>
+                                    </Link>
                                     <div className="flex flex-row justify-center gap-2">
                                         <a
                                             href="https://naoti.me/invite"
@@ -175,12 +175,11 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                                         <span className="mt-1 font-light text-gray-400 block md:hidden">
                                             |
                                         </span>
-                                        <a
-                                            href="/tentang"
-                                            className="block md:hidden mt-2 text-sm text-center text-indigo-500 hover:text-indigo-400 transition-colors duration-100"
-                                        >
-                                            Tentang
-                                        </a>
+                                        <Link href="/tentang" passHref>
+                                            <a className="block md:hidden mt-2 text-sm text-center text-indigo-500 hover:text-indigo-400 transition-colors duration-100">
+                                                Tentang
+                                            </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

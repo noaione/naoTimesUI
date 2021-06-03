@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 export default function LoginSidebar() {
@@ -16,29 +17,30 @@ export default function LoginSidebar() {
                 <div className="font-semibold text-lg text-gray-100 mb-4">
                     <p>Sebuah Bot Multifungsi dengan fitur utama tracking garapan Fansub</p>
                 </div>
-                <a
-                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-2"
-                    href="https://naoti.me/invite"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Invite!
-                </a>
-                <a
-                    className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
-                    href="https://discord.gg/7KyYecn"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Support Server
-                </a>
-                <div className="mt-3">
+                <Link href="https://naoti.me/invite" passHref>
                     <a
-                        href="/tentang"
-                        className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
+                        className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900 mr-2"
+                        target="_blank"
+                        rel="noreferrer"
                     >
-                        Tentang
+                        Invite!
                     </a>
+                </Link>
+                <Link href="https://discord.gg/7KyYecn" passHref>
+                    <a
+                        className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        Support Server
+                    </a>
+                </Link>
+                <div className="mt-3">
+                    <Link href="/tentang" passHref>
+                        <a className="font-semibold text-lg text-white hover:text-gray-200 transition-all duration-400 ease-in-out rounded-md bg-indigo-800 hover:bg-indigo-700 px-2 py-1 stack-shadow-2 hover:stack-shadow-3 ring-offset-indigo-900">
+                            Tentang
+                        </a>
+                    </Link>
                 </div>
             </div>
         </>
