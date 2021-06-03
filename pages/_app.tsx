@@ -1,4 +1,6 @@
 import React from "react";
+import Router from "next/router";
+import ProgressBar from "@badrap/bar-of-progress";
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 
 import "../styles/global.css";
@@ -19,7 +21,21 @@ console.warn = (message?: any, ...optionalParams: any[]) => {
     originalWarn(message, ...optionalParams);
 };
 
-function MyApp({ Component, pageProps, router }: AppProps) {
+const progress = new ProgressBar({
+    size: 2,
+    color: "#DE6115",
+    className: "z-[99]",
+    delay: 80,
+});
+
+Router.events.on("routeChangeStart", (url) => {
+    console.log(`Loading: ${url}`);
+    progress.start();
+});
+Router.events.on("routeChangeComplete", () => progress.finish());
+Router.events.on("routeChangeError", () => progress.finish());
+
+function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
     return (
         <AnimateSharedLayout>
             <AnimatePresence exitBeforeEnter key={router.route}>
@@ -29,4 +45,4 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     );
 }
 
-export default MyApp;
+export default NaoTimesUIApp;
