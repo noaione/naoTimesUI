@@ -60,7 +60,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft30}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-6 !w-[3.75rem]" />
                 </MotionInView.div>
@@ -69,7 +69,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft30}
-                    transition={{ delay: 0.4 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-4 !w-10" />
                     <SkeletonInputBox />
@@ -79,7 +79,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft30}
-                    transition={{ delay: 0.5 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-4 !w-[3.8rem]" />
                     <SkeletonInputBox />
@@ -89,7 +89,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft30}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-4 !w-8" />
                     <SkeletonInputBox />
@@ -99,7 +99,7 @@ export default function RSSEmbedEditorSkeleton() {
                         initial="hidden"
                         animate="visible"
                         variants={AnimateFlyFromLeft30}
-                        transition={{ delay: 0.7 }}
+                        transition={{ delay: 0.2 }}
                     >
                         <Skeleton className="skeleton-loader h-4 !w-40" />
                     </MotionInView.div>
@@ -109,7 +109,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 0.75 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <Skeleton className="skeleton-loader h-4 !w-[3.4rem]" />
                             <SkeletonInputBox />
@@ -119,7 +119,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 0.75 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <Skeleton className="skeleton-loader h-4 !w-[3.8rem]" />
                             <SkeletonInputBox />
@@ -131,7 +131,7 @@ export default function RSSEmbedEditorSkeleton() {
                         initial="hidden"
                         animate="visible"
                         variants={AnimateFlyFromLeft30}
-                        transition={{ delay: 0.8 }}
+                        transition={{ delay: 0.2 }}
                     >
                         <Skeleton className="skeleton-loader h-4 !w-12" />
                     </MotionInView.div>
@@ -141,7 +141,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 0.85 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <Skeleton className="skeleton-loader h-4 !w-9" />
                             <SkeletonInputBox />
@@ -151,7 +151,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 0.85 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <Skeleton className="skeleton-loader h-4 !w-9" />
                             <SkeletonInputBox />
@@ -163,7 +163,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft30}
-                    transition={{ delay: 0.9 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader !w-5 h-5" />
                     <Skeleton className="skeleton-loader !w-36 h-4 mt-2" />
@@ -173,7 +173,7 @@ export default function RSSEmbedEditorSkeleton() {
                         initial="hidden"
                         animate="visible"
                         variants={AnimateFlyFromLeft30}
-                        transition={{ delay: 1 }}
+                        transition={{ delay: 0.2 }}
                     >
                         <Skeleton className="skeleton-loader h-4 !w-24" />
                     </MotionInView.div>
@@ -183,7 +183,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 1.05 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <SkeletonInputBox />
                         </MotionInView.div>
@@ -192,7 +192,7 @@ export default function RSSEmbedEditorSkeleton() {
                             initial="hidden"
                             animate="visible"
                             variants={AnimateFlyFromLeft30}
-                            transition={{ delay: 1.075 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <Skeleton className="skeleton-loader h-10 !w-14" />
                         </MotionInView.div>
@@ -203,7 +203,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromBottom30}
-                    transition={{ delay: 1.1 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-10" />
                 </MotionInView.div>
@@ -213,7 +213,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromLeft25}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-6 !w-[5.5rem]" />
                 </MotionInView.div>
@@ -222,7 +222,7 @@ export default function RSSEmbedEditorSkeleton() {
                     initial="hidden"
                     animate="visible"
                     variants={AnimateFlyFromBottom30}
-                    transition={{ delay: 0.7 }}
+                    transition={{ delay: 0.2 }}
                 >
                     <Skeleton className="skeleton-loader h-[10rem] lg:h-[40.75rem]" />
                 </MotionInView.div>
@@ -232,7 +232,7 @@ export default function RSSEmbedEditorSkeleton() {
                         initial="hidden"
                         animate="visible"
                         variants={AnimateFlyFromBottom30}
-                        transition={{ delay: 0.9 }}
+                        transition={{ delay: 0.2 }}
                     >
                         <Skeleton className="skeleton-loader !w-5 h-5" />
                         <Skeleton className="skeleton-loader !w-24 h-4 mt-2" />
@@ -242,7 +242,7 @@ export default function RSSEmbedEditorSkeleton() {
                         initial="hidden"
                         animate="visible"
                         variants={AnimateFlyFromBottom30}
-                        transition={{ delay: 1 }}
+                        transition={{ delay: 0.2 }}
                     >
                         <Skeleton className="skeleton-loader !w-5 h-5" />
                         <Skeleton className="skeleton-loader !w-20 h-4 mt-2" />
