@@ -24,6 +24,12 @@ const BannerSets: BannerData[] = [
         shortMessage: "Penambah Kebijakan Privasi dan TOS",
         link: "https://naoti.me/legal",
     },
+    {
+        id: "20210626-1200",
+        message: "Bot naoTimes telah terverifikasi oleh Discord",
+        shortMessage: "Bot naoTimes terverifikasi!",
+        link: "https://naoti.me/blog/2021/06/26/verified",
+    }
 ];
 
 export default BannerSets;
