@@ -59,7 +59,7 @@
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-react": "7.24.0",
     "next-compose-plugins": "^2.2.1",
-    "postcss": "8.3.0",
+    "postcss": "8.3.5",
     "postcss-extend": "1.0.5",
     "postcss-flexbugs-fixes": "5.0.2",
     "postcss-import": "14.0.2",
