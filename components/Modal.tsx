@@ -1,4 +1,5 @@
 import React from "react";
+import Portal from "./Portal";
 
 interface ModalState {
     show: boolean;
@@ -12,6 +13,7 @@ export interface CallbackModal {
 }
 
 interface ModalProps {
+    id?: string;
     onMounted?: (callbacks: CallbackModal) => void;
 }
 
@@ -130,9 +132,14 @@ class Modal extends React.Component<ModalProps, ModalState> {
         } else if (this.state.currentFade === "hide") {
             extraClasses = fadeOutTransition;
         }
+        const { id } = this.props;
+        let realIds = "modal";
+        if (typeof id === "string" && id.length > 0) {
+            realIds = id;
+        }
 
         return (
-            <>
+            <Portal id={realIds}>
                 <div
                     ref={(ref) => (this.divRef = ref)}
                     className={`absolute top-0 left-0 ${
@@ -154,7 +161,7 @@ class Modal extends React.Component<ModalProps, ModalState> {
                         {this.props.children}
                     </div>
                 </div>
-            </>
+            </Portal>
         );
     }
 }

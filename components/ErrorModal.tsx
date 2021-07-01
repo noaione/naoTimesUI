@@ -47,20 +47,18 @@ class ErrorModal extends React.Component<ErrProps> {
 
     render() {
         return (
-            <>
-                <Modal onMounted={(callback) => (this.modalCb = callback)}>
-                    <Modal.Head>Terjadi Kesalahan</Modal.Head>
-                    <Modal.Body>{this.props.children}</Modal.Body>
-                    <Modal.Footer>
-                        <button
-                            onClick={this.handleHide}
-                            className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700"
-                        >
-                            Tutup
-                        </button>
-                    </Modal.Footer>
-                </Modal>
-            </>
+            <Modal id="error-modal" onMounted={(callback) => (this.modalCb = callback)}>
+                <Modal.Head>Terjadi Kesalahan</Modal.Head>
+                <Modal.Body>{this.props.children}</Modal.Body>
+                <Modal.Footer>
+                    <button
+                        onClick={this.handleHide}
+                        className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700"
+                    >
+                        Tutup
+                    </button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 }

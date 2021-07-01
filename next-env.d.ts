@@ -12,6 +12,7 @@ declare global {
     namespace NodeJS {
         interface Global {
             mongoose?: MongooseCached;
+            portalNumber?: number;
         }
 
         // Extend process.env typing
