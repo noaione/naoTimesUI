@@ -1,6 +1,24 @@
 import mongoose from "mongoose";
 import { createSchema, ExtractProps, Type, typedModel } from "ts-mongoose";
 
+const EpisodeStatusSchemas = createSchema(
+    {
+        episode: Type.number({ required: true }),
+        is_done: Type.boolean({ required: true }),
+        progress: Type.object({ required: true }).of({
+            TL: Type.boolean({ required: true }),
+            TLC: Type.boolean({ required: true }),
+            ENC: Type.boolean({ required: true }),
+            ED: Type.boolean({ required: true }),
+            TM: Type.boolean({ required: true }),
+            TS: Type.boolean({ required: true }),
+            QC: Type.boolean({ required: true }),
+        }),
+        airtime: Type.number(),
+    },
+    { versionKey: false, _id: false }
+);
+
 const ShowAnimeSchemas = createSchema(
     {
         id: Type.string({ required: true }),
@@ -38,20 +56,7 @@ const ShowAnimeSchemas = createSchema(
                 name: Type.string(),
             }),
         }),
-        status: Type.array({ required: true }).of({
-            episode: Type.number({ required: true }),
-            is_done: Type.boolean({ required: true }),
-            progress: Type.object({ required: true }).of({
-                TL: Type.boolean({ required: true }),
-                TLC: Type.boolean({ required: true }),
-                ENC: Type.boolean({ required: true }),
-                ED: Type.boolean({ required: true }),
-                TM: Type.boolean({ required: true }),
-                TS: Type.boolean({ required: true }),
-                QC: Type.boolean({ required: true }),
-            }),
-            airtime: Type.number(),
-        }),
+        status: Type.array({ required: true }).of(EpisodeStatusSchemas),
         poster_data: Type.object({ required: true }).of({
             url: Type.string({ required: true }),
             color: Type.number(),
@@ -100,6 +105,7 @@ const ShowAdminSchemas = createSchema(
     }
 );
 
+export type EpisodeStatusProps = ExtractProps<typeof EpisodeStatusSchemas>;
 export type ShowAnimeProps = ExtractProps<typeof ShowAnimeSchemas>;
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
 export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
