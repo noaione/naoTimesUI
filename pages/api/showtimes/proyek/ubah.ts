@@ -130,7 +130,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             .status(400)
             .json({ message: `Terdapat data yang kurang pada event ${eventType}`, code: 400 });
     }
-    if (isNone(!userData)) {
+    if (isNone(userData)) {
         res.status(403).json({ message: "Tidak diperbolehkan untuk mengakses API ini", code: 403 });
     } else {
         await dbConnect();
