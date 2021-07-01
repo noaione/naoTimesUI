@@ -1,4 +1,10 @@
 const { withSentryConfig } = require("@sentry/nextjs");
+const withPlugins = require("next-compose-plugins");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true",
+});
+
+console.info("Is Bundle analyer enabled?", process.env.ANALYZE === "true");
 
 const GITHUB_CI = process.env.GITHUB_WORKFLOW;
 const SKIP_SENTRY = process.env.SKIP_SENTRY;
@@ -44,6 +50,7 @@ const moduleExports = {
     },
 };
 
+console.info("Is Sentry dry run mode?", skipSentry);
 const SentryWebpackPluginOptions = {
     // Additional config options for the Sentry Webpack plugin. Keep in mind that
     // the following options are set automatically, and overriding them is not
@@ -52,6 +59,12 @@ const SentryWebpackPluginOptions = {
     //   urlPrefix, include, ignore
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options.
+    dryRun: skipSentry,
 };
 
-module.exports = skipSentry ? moduleExports : withSentryConfig(moduleExports, SentryWebpackPluginOptions);
+const plugins = [
+    [withBundleAnalyzer],
+    (nextConfig) => withSentryConfig(nextConfig, SentryWebpackPluginOptions),
+];
+
+module.exports = withPlugins(plugins, moduleExports);
