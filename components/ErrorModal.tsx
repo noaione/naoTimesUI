@@ -4,6 +4,7 @@ import Modal, { CallbackModal } from "./Modal";
 
 interface ErrProps {
     onMounted?: (callbacks: CallbackModal) => void;
+    onClose?: () => void;
 }
 
 class ErrorModal extends React.Component<ErrProps> {
@@ -47,7 +48,16 @@ class ErrorModal extends React.Component<ErrProps> {
 
     render() {
         return (
-            <Modal id="error-modal" onMounted={(callback) => (this.modalCb = callback)}>
+            <Modal
+                id="error-modal"
+                onMounted={(callback) => (this.modalCb = callback)}
+                onClose={() => {
+                    // Forward the onClose
+                    if (typeof this.props.onClose === "function") {
+                        this.props.onClose();
+                    }
+                }}
+            >
                 <Modal.Head>Terjadi Kesalahan</Modal.Head>
                 <Modal.Body>{this.props.children}</Modal.Body>
                 <Modal.Footer>
