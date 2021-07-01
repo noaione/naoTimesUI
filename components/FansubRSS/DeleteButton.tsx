@@ -131,7 +131,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                             />
                         </div>
                     </Modal.Body>
-                    <Modal.Footer innerClassName="gap-2">
+                    <Modal.Footer className="gap-2">
                         <button
                             onClick={this.deleteRSSForReal}
                             className={`inline-flex justify-center font-semibold w-full px-4 py-2 transition duration-200 text-white rounded focus:outline-none ${

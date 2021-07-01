@@ -132,7 +132,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
                             />
                         </div>
                     </Modal.Body>
-                    <Modal.Footer innerClassName="gap-2">
+                    <Modal.Footer className="gap-2">
                         <button
                             onClick={this.deleteProjectForReal}
                             className={`inline-flex justify-center font-semibold w-full px-4 py-2 text-white transition duration-200 rounded focus:outline-none ${

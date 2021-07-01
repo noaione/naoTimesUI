@@ -44,8 +44,7 @@ class ModalBody extends React.Component {
 }
 
 interface FooterExtra {
-    innerClassName?: string;
-    outerClassName?: string;
+    className?: string;
 }
 
 class ModalFooter extends React.Component<FooterExtra> {
@@ -54,15 +53,11 @@ class ModalFooter extends React.Component<FooterExtra> {
     }
 
     render() {
-        const { innerClassName, outerClassName, children } = this.props;
+        const { className, children } = this.props;
         return (
-            <>
-                <div className={"mt-5 sm:mt-6 " + (outerClassName ?? "")}>
-                    <span className={"flex w-full rounded-md shadow-sm " + (innerClassName ?? "")}>
-                        {children}
-                    </span>
-                </div>
-            </>
+            <div className={"mt-5 sm:mt-6 flex w-full rounded-md shadow-sm " + (className ?? "")}>
+                {children}
+            </div>
         );
     }
 }
