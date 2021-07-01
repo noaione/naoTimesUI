@@ -2,10 +2,12 @@ import _ from "lodash";
 import React from "react";
 import Head from "next/head";
 
+import { ValidAccent } from "../components/ColorMap";
 import MetadataHead from "../components/MetadataHead";
 import { IEmbedParams } from "../components/EmbedPage/Interface";
 import EmbedPageCard from "../components/EmbedPage/Card";
 
+import { LocaleMap } from "../i18n";
 import dbConnect from "../lib/dbConnect";
 import { isNone, mapBoolean, Nullable } from "../lib/utils";
 import { NextServerSideContextWithSession } from "../lib/session";
@@ -19,6 +21,8 @@ interface EmbedUtangProps extends IEmbedParams {
 
 interface EmbedUtangState {
     dark: string;
+    accent?: typeof ValidAccent[number];
+    lang?: keyof typeof LocaleMap & string;
 }
 
 function selectTime(statusSets: any[]) {
@@ -56,9 +60,11 @@ function filterAnimeData(animeData: ShowAnimeProps[]): ShowAnimeProps[] {
 class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     constructor(props: EmbedUtangProps) {
         super(props);
-        this.toggleDark = this.toggleDark.bind(this);
+        this.propagateEventChange = this.propagateEventChange.bind(this);
         this.state = {
             dark: this.props.dark,
+            accent: this.props.accent || "green",
+            lang: this.props.lang || "id",
         };
     }
 
@@ -71,7 +77,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
         // Watch for incoming message
-        window.addEventListener("message", this.toggleDark);
+        window.addEventListener("message", this.propagateEventChange);
     }
 
     componentDidUpdate() {
@@ -80,15 +86,15 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         window.parent.postMessage(message, "*");
     }
 
-    toggleDark(event: MessageEvent<any>) {
-        if (event.data) {
+    propagateEventChange(event: MessageEvent<any>) {
+        if (!event.data) {
             return;
         }
         let data: { [key: string]: any };
         try {
             data = JSON.parse(event.data);
         } catch (e) {
-            console.error("embed.toggleDark: No data received");
+            console.error("embed.propagateEventChange: No data received");
             return;
         }
         const root = window.document.documentElement;
@@ -103,12 +109,16 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     root.classList.remove("dark");
                 }
             }
+        } else if (data.action === "setAccent") {
+            this.setState({ accent: data.target });
+        } else if (data.action === "setLanguage") {
+            this.setState({ lang: data.target });
         }
     }
 
     render() {
-        const { id, name, projectList, lang, accent } = this.props;
-        const { dark } = this.state;
+        const { id, name, projectList } = this.props;
+        const { dark, lang, accent } = this.state;
         const realName = name || id;
 
         const prefixName = name ? "nama" : "ID";
