@@ -53,7 +53,7 @@ class ErrorModal extends React.Component<ErrProps> {
                 <Modal.Footer>
                     <button
                         onClick={this.handleHide}
-                        className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700"
+                        className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none"
                     >
                         Tutup
                     </button>
