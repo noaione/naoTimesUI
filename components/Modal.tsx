@@ -15,6 +15,7 @@ export interface CallbackModal {
 interface ModalProps {
     id?: string;
     onMounted?: (callbacks: CallbackModal) => void;
+    onClose?: () => void;
 }
 
 class ModalHead extends React.Component {
@@ -96,7 +97,15 @@ class Modal extends React.Component<ModalProps, ModalState> {
         const outerThis = this;
         this.setState({ currentFade: "hide" });
         // fade animation thingamagic.
-        setTimeout(() => outerThis.setState({ show: false, currentFade: null }), 300);
+        setTimeout(
+            () =>
+                outerThis.setState({ show: false, currentFade: null }, () => {
+                    if (typeof this.props.onClose === "function") {
+                        this.props.onClose();
+                    }
+                }),
+            300
+        );
     }
 
     handleShow() {
