@@ -1,16 +1,11 @@
 import React from "react";
 
-import Modal, { CallbackModal } from "./Modal";
+import Modal, { CallbackModal, ModalProps } from "./Modal";
 
-interface ErrProps {
-    onMounted?: (callbacks: CallbackModal) => void;
-    onClose?: () => void;
-}
-
-class ErrorModal extends React.Component<ErrProps> {
+class ErrorModal extends React.Component<ModalProps> {
     modalCb?: CallbackModal;
 
-    constructor(props: ErrProps) {
+    constructor(props: ModalProps) {
         super(props);
         this.handleHide = this.handleHide.bind(this);
         this.handleShow = this.handleShow.bind(this);
@@ -47,14 +42,16 @@ class ErrorModal extends React.Component<ErrProps> {
     }
 
     render() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { onMounted, onClose, ...props } = this.props;
         return (
             <Modal
-                id="error-modal"
+                {...props}
                 onMounted={(callback) => (this.modalCb = callback)}
                 onClose={() => {
                     // Forward the onClose
-                    if (typeof this.props.onClose === "function") {
-                        this.props.onClose();
+                    if (typeof onClose === "function") {
+                        onClose();
                     }
                 }}
             >

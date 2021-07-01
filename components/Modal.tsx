@@ -12,8 +12,9 @@ export interface CallbackModal {
     toggleModal?: () => void;
 }
 
-interface ModalProps {
+export interface ModalProps {
     id?: string;
+    forceOpen?: boolean;
     onMounted?: (callbacks: CallbackModal) => void;
     onClose?: () => void;
 }
@@ -136,7 +137,7 @@ class Modal extends React.Component<ModalProps, ModalState> {
         } else if (this.state.currentFade === "hide") {
             extraClasses = fadeOutTransition;
         }
-        const { id } = this.props;
+        const { forceOpen, id } = this.props;
         let realIds = "modal";
         if (typeof id === "string" && id.length > 0) {
             realIds = id;
@@ -150,7 +151,7 @@ class Modal extends React.Component<ModalProps, ModalState> {
                         this.state.show ? "flex" : "hidden"
                     } items-center justify-center w-full h-full transition-all duration-200 backdrop-filter backdrop-blur bg-[rgba(0,0,0,0.5)] z-40`}
                     onClick={(ev) => {
-                        if (this.divRef && ev.target === this.divRef) {
+                        if (this.divRef && ev.target === this.divRef && !forceOpen) {
                             // Only handle if clicked outside the main div
                             this.handleHide();
                         }
