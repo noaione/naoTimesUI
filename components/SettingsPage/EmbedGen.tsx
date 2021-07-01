@@ -1,9 +1,7 @@
-import React from "react";
+import React, { RefObject } from "react";
 
 import { SettingsProps } from "./base";
-
 import { ValidAccent } from "../ColorMap";
-
 import { LocaleMap } from "../../i18n";
 
 interface EmbedGenProps extends SettingsProps {
@@ -12,6 +10,7 @@ interface EmbedGenProps extends SettingsProps {
 
 interface EmbedGenState {
     genUrl: string;
+    textGeneratedUrl: string;
     accent: typeof ValidAccent[number];
     lang?: keyof typeof LocaleMap & string;
     isDark: boolean;
@@ -32,13 +31,18 @@ function generateEmbedUrl(base: string, id: string, accent: string, lang: string
 }
 
 class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
+    iframeSrc?: RefObject<HTMLIFrameElement>;
+
     constructor(props: EmbedGenProps) {
         super(props);
         this.setAccentColor = this.setAccentColor.bind(this);
         this.setEmbedLang = this.setEmbedLang.bind(this);
         this.setDarkMode = this.setDarkMode.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        this.iframeSrc = React.createRef<HTMLIFrameElement>();
         this.state = {
             genUrl: "",
+            textGeneratedUrl: "",
             accent: "green",
             lang: "id",
             isDark: false,
@@ -54,58 +58,53 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
             this.state.lang,
             this.state.isDark
         );
-        this.setState({ genUrl: generatedNewURL });
+        this.setState({ genUrl: generatedNewURL, textGeneratedUrl: generatedNewURL });
+    }
+
+    sendMessage(data: any) {
+        if (this.iframeSrc && this.iframeSrc.current) {
+            console.info("Sending", data);
+            this.iframeSrc.current.contentWindow.postMessage(JSON.stringify(data), "*");
+        }
     }
 
     setAccentColor(aksen: string) {
-        const { genUrl } = this.state;
         const windowURL = window.location.origin;
-        const generatedNewURL = generateEmbedUrl(
+        const textGeneratedUrl = generateEmbedUrl(
             windowURL,
             this.props.id,
             aksen,
             this.state.lang,
             this.state.isDark
         );
-
-        this.setState({ accent: aksen as typeof ValidAccent[number] });
-        if (genUrl !== generatedNewURL) {
-            this.setState({ genUrl: generatedNewURL });
-        }
+        this.setState({ accent: aksen as typeof ValidAccent[number], textGeneratedUrl });
+        this.sendMessage({ action: "setAccent", target: aksen });
     }
 
     setEmbedLang(lang: string) {
-        const { genUrl } = this.state;
         const windowURL = window.location.origin;
-        const generateNewURL = generateEmbedUrl(
+        const textGeneratedUrl = generateEmbedUrl(
             windowURL,
             this.props.id,
             this.state.accent,
             lang,
             this.state.isDark
         );
-
-        this.setState({ lang: lang as keyof typeof LocaleMap });
-        if (genUrl !== generateNewURL) {
-            this.setState({ genUrl: generateNewURL });
-        }
+        this.setState({ lang: lang as keyof typeof LocaleMap, textGeneratedUrl });
+        this.sendMessage({ action: "setLanguage", target: lang });
     }
 
     setDarkMode(dark: boolean) {
-        const { genUrl } = this.state;
         const windowURL = window.location.origin;
-        const generateNewURL = generateEmbedUrl(
+        const textGeneratedUrl = generateEmbedUrl(
             windowURL,
             this.props.id,
             this.state.accent,
             this.state.lang,
             dark
         );
-
-        this.setState({ isDark: dark });
-        if (genUrl !== generateNewURL) {
-            this.setState({ genUrl: generateNewURL });
-        }
+        this.setState({ isDark: dark, textGeneratedUrl });
+        this.sendMessage({ action: "setDark", target: dark });
     }
 
     render() {
@@ -153,7 +152,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                         <div className="flex flex-col w-full md:w-1/2">
                             <div className="flex flex-col mt-2">
                                 <input
-                                    value={this.state.genUrl}
+                                    value={this.state.textGeneratedUrl}
                                     onFocus={(ev) => ev.target.select()}
                                     className="form-darkable block w-full overflow-ellipsis"
                                     readOnly
@@ -203,7 +202,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
                         </div>
                         <div className="w-full md:w-1/2">
                             <label className="text-base font-medium dark:text-white ml-1">Pratinjau</label>
-                            <iframe src={this.state.genUrl} className="w-full mt-2" />
+                            <iframe ref={this.iframeSrc} src={this.state.genUrl} className="w-full mt-2" />
                         </div>
                     </div>
                 </div>
