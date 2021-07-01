@@ -20,6 +20,15 @@ interface DeleteState {
     correctPassword: boolean;
 }
 
+function resetState(submit: boolean = false): DeleteState {
+    return {
+        targetCheck: generateWordSets(3),
+        isSubmitting: submit,
+        passwordCheck: "",
+        correctPassword: false,
+    };
+}
+
 class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteState> {
     modalCb: CallbackModal;
 
@@ -30,12 +39,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
         this.deleteProjectForReal = this.deleteProjectForReal.bind(this);
         this.verifyParaphrase = this.verifyParaphrase.bind(this);
 
-        this.state = {
-            targetCheck: generateWordSets(3),
-            isSubmitting: false,
-            correctPassword: false,
-            passwordCheck: "",
-        };
+        this.state = resetState();
     }
 
     async deleteProjectForReal() {
@@ -43,12 +47,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
             return;
         }
         this.handleHide();
-        this.setState({
-            isSubmitting: true,
-            passwordCheck: "",
-            targetCheck: generateWordSets(3),
-            correctPassword: false,
-        });
+        this.setState(resetState(true));
 
         const results = await fetch("/api/showtimes/proyek/nuke", {
             method: "POST",
@@ -112,7 +111,12 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
                         </button>
                     </motion.div>
                 </div>
-                <Modal onMounted={(cb) => (this.modalCb = cb)}>
+                <Modal
+                    onMounted={(cb) => (this.modalCb = cb)}
+                    onClose={() => {
+                        this.setState(resetState());
+                    }}
+                >
                     <Modal.Head>Apakah anda yakin?</Modal.Head>
                     <Modal.Body>
                         <div>Proyek akan dihapus selama-lamanya dan data lama tidak dapat dikembalikan!</div>

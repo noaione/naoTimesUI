@@ -19,6 +19,15 @@ interface DeleteState {
     correctPassword: boolean;
 }
 
+function resetState(submit: boolean = false): DeleteState {
+    return {
+        targetCheck: generateWordSets(3),
+        isSubmitting: submit,
+        passwordCheck: "",
+        correctPassword: false,
+    };
+}
+
 class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteState> {
     modalCb: CallbackModal;
 
@@ -30,12 +39,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
         this.deleteRSSForReal = this.deleteRSSForReal.bind(this);
         this.verifyParaphrase = this.verifyParaphrase.bind(this);
 
-        this.state = {
-            targetCheck: generateWordSets(3),
-            isSubmitting: false,
-            correctPassword: false,
-            passwordCheck: "",
-        };
+        this.state = resetState();
     }
 
     async deleteRSSForReal() {
@@ -43,12 +47,7 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
             return;
         }
         this.handleHide();
-        this.setState({
-            isSubmitting: true,
-            passwordCheck: "",
-            targetCheck: generateWordSets(3),
-            correctPassword: false,
-        });
+        this.setState(resetState(true));
 
         const results = await fetch("/api/fsrss/nuke", {
             method: "POST",
@@ -111,7 +110,12 @@ class FansubRSSDeleteButton extends React.Component<ExtendedNukeProps, DeleteSta
                     </button>
                 </MotionInView.div>
 
-                <Modal onMounted={(cb) => (this.modalCb = cb)}>
+                <Modal
+                    onMounted={(cb) => (this.modalCb = cb)}
+                    onClose={() => {
+                        this.setState(resetState());
+                    }}
+                >
                     <Modal.Head>Apakah anda yakin?</Modal.Head>
                     <Modal.Body>
                         <div>RSS akan dihapus selama-lamanya dan data lama tidak dapat dikembalikan!</div>

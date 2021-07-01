@@ -19,6 +19,15 @@ interface DeleteState {
     correctPassword: boolean;
 }
 
+function resetState(submit: boolean = false): DeleteState {
+    return {
+        targetCheck: generateWordSets(3),
+        isSubmitting: submit,
+        passwordCheck: "",
+        correctPassword: false,
+    };
+}
+
 class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteState> {
     modalCb: CallbackModal;
 
@@ -29,12 +38,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
         this.deleteServerForReal = this.deleteServerForReal.bind(this);
         this.verifyParaphrase = this.verifyParaphrase.bind(this);
 
-        this.state = {
-            targetCheck: generateWordSets(3),
-            isSubmitting: false,
-            correctPassword: false,
-            passwordCheck: "",
-        };
+        this.state = resetState();
     }
 
     async deleteServerForReal() {
@@ -43,12 +47,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
         }
         if (this.state.isSubmitting) return;
         this.handleHide();
-        this.setState({
-            isSubmitting: true,
-            passwordCheck: "",
-            targetCheck: generateWordSets(3),
-            correctPassword: false,
-        });
+        this.setState(resetState(true));
 
         const results = await fetch("/api/showtimes/nuke", {
             method: "POST",
@@ -107,7 +106,12 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
                         </div>
                     </div>
                 </div>
-                <Modal onMounted={(cb) => (this.modalCb = cb)}>
+                <Modal
+                    onMounted={(cb) => (this.modalCb = cb)}
+                    onClose={() => {
+                        this.setState(resetState());
+                    }}
+                >
                     <Modal.Head>Apakah anda yakin?</Modal.Head>
                     <Modal.Body>
                         <div>Server akan dihapus selama-lamanya dan data lama tidak dapat dikembalikan!</div>
