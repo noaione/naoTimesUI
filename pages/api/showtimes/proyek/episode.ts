@@ -19,7 +19,7 @@ function verifyContents(event: EpisodeUpdateEvent, changes: any) {
         return false;
     }
     if (event === "add" || event === "remove") {
-        const episodeCheck = Array.isArray(changes.episodes) && changes.episodes > 0;
+        const episodeCheck = Array.isArray(changes.episodes) && changes.episodes.length > 0;
         return verifyExist(changes, "animeId", "string") && episodeCheck;
     }
     return false;
@@ -70,7 +70,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
         const episodeNewData: EpisodeStatusProps[] = [];
         onlyEpisodeNumbers.forEach((episodeNum, idx) => {
             const statusLoc = status.findIndex((es) => es.episode === episodeNum);
-            if (statusLoc !== -1) {
+            if (statusLoc === -1) {
                 let lastEpisode = status[episodeNum - 1];
                 if (isNone(lastEpisode)) {
                     lastEpisode = status[status.length - 1];
