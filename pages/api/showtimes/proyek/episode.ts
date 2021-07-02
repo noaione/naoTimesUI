@@ -157,7 +157,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
             const removedEpisode = [];
             status.forEach((pp, idx) => {
                 const indexed = newStatus.findIndex((x) => x.episode === pp.episode);
-                if (indexed !== -1) {
+                if (indexed === -1) {
                     removedEpisode.push({ episode: pp.episode, index: idx });
                 }
             });
