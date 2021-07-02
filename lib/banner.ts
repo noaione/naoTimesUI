@@ -29,7 +29,13 @@ const BannerSets: BannerData[] = [
         message: "Bot naoTimes telah terverifikasi oleh Discord",
         shortMessage: "Bot naoTimes terverifikasi!",
         link: "https://naoti.me/blog/2021/06/26/verified",
-    }
+    },
+    {
+        id: "20210701-1200",
+        message: "Tambah atau hapus episode untuk proyek anda lewat naoTimesUI",
+        shortMessage: "Ubah total episode via naoTimesUI",
+        link: "/admin/proyek",
+    },
 ];
 
 export default BannerSets;

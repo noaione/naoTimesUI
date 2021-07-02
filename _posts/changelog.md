@@ -54,3 +54,11 @@ Kodenama: *Tidak ada*
 - 🎇 Indikator loading ketika loading antar laman
 - 🏎 Menggunakan [`Preact`](https://preactjs.com/) di Production build, alternatif lebih cepat dan ringan.
 - 🐛 Bugs squashing bonanza.
+
+## Versi 1.1.3
+
+Kodenama *Tidak ada*
+
+- 🚀 Embed generator sekarang berubah lebih cepat dengan menggunakan `postMessage`
+- ✏ Ubah jumlah episode sebuah proyek melalui website langsung!
+- ✨ Beberapa penyesuaian backend agar keliatan lebih professional :)
