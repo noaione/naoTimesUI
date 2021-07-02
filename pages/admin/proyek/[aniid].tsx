@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 import AdminLayout from "../../../components/AdminLayout";
 import ErrorModal from "../../../components/ErrorModal";
+import LoadingCircle from "../../../components/LoadingCircle";
 import MetadataHead from "../../../components/MetadataHead";
 import ProjectPageComponent from "../../../components/ProjectPage";
 import { CallbackModal } from "../../../components/Modal";
@@ -14,7 +15,12 @@ import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../
 import { isNone, Nullable, RoleProject } from "../../../lib/utils";
 
 import { UserProps } from "../../../models/user";
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../models/show";
+import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../models/show";
+
+interface RemovedEpisodeData {
+    episode: number;
+    index;
+}
 
 interface ProyekPageProps {
     user?: UserProps & { loggedIn: boolean };
@@ -23,6 +29,10 @@ interface ProyekPageProps {
 
 interface ProyekPageState {
     errorText: string;
+    episodeMod: boolean;
+    deletedEpisode: number[];
+    statusData: EpisodeStatusProps[];
+    isSubmitting: boolean;
 }
 
 class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
@@ -31,8 +41,19 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
     constructor(props: ProyekPageProps) {
         super(props);
         this.showErrorCallback = this.showErrorCallback.bind(this);
+        this.deleteEpisode = this.deleteEpisode.bind(this);
+        this.deleteTheEpisode = this.deleteTheEpisode.bind(this);
+        this.toggleModifyButton = this.toggleModifyButton.bind(this);
+        this.addAndJoinEpisode = this.addAndJoinEpisode.bind(this);
+        const {
+            animeData: { status },
+        } = props;
         this.state = {
             errorText: "",
+            episodeMod: false,
+            deletedEpisode: [],
+            statusData: status,
+            isSubmitting: false,
         };
     }
 
@@ -43,10 +64,80 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
         }
     }
 
+    deleteEpisode(episode: number) {
+        this.setState((o) => ({ deletedEpisode: o.deletedEpisode.concat([episode]) }));
+    }
+
+    addAndJoinEpisode(episodes: EpisodeStatusProps[]) {
+        this.setState((o) => ({
+            statusData: o.statusData.concat(episodes),
+            episodeMod: false,
+            deletedEpisode: [],
+        }));
+    }
+
+    async deleteTheEpisode() {
+        const { episodeMod, isSubmitting, deletedEpisode, statusData } = this.state;
+        if (!episodeMod) {
+            return;
+        }
+        if (isSubmitting) {
+            return;
+        }
+        if (deletedEpisode.length < 1) {
+            this.setState({ isSubmitting: false, deletedEpisode: [] });
+            return;
+        }
+        this.setState({ isSubmitting: true });
+        const {
+            animeData: { id },
+        } = this.props;
+        const sendData = {
+            event: "remove",
+            changes: {
+                episodes: deletedEpisode,
+                animeId: id,
+            },
+        };
+        const request = await fetch("/api/showtimes/proyek/episode", {
+            method: "POST",
+            body: JSON.stringify(sendData),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        });
+        const response = await request.json();
+        if (!response.success) {
+            this.showErrorCallback(response.message);
+        } else {
+            const removedEpisodeData = response.data as RemovedEpisodeData[];
+            const removedEpisodes = removedEpisodeData.map((e) => e.episode);
+            const newStatusData = statusData.filter((o) => !removedEpisodes.includes(o.episode));
+            this.setState({ statusData: newStatusData });
+        }
+        this.setState({ isSubmitting: false, deletedEpisode: [], episodeMod: false });
+    }
+
+    toggleModifyButton() {
+        if (this.state.episodeMod) {
+            this.deleteTheEpisode()
+                .then(() => {
+                    return;
+                })
+                .catch(() => {
+                    return;
+                });
+        } else {
+            this.setState({ episodeMod: true });
+        }
+    }
+
     render() {
+        const { episodeMod, isSubmitting, statusData } = this.state;
         const { user, animeData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const { id, title, poster_data, assignments, status, aliases } = animeData;
+        const { id, title, poster_data, assignments, aliases } = animeData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
@@ -134,32 +225,83 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                     </div>
                     <div className="container mx-auto px-6 py-4">
                         <motion.h2
-                            className="font-extrabold pb-3 dark:text-white"
+                            className="flex flex-row gap-1 font-extrabold pb-3 dark:text-white items-center"
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            Episode
+                            <span>Episode</span>
+                            <button
+                                disabled={isSubmitting}
+                                className={`flex flex-row items-center ml-2 text-white font-semibold ${
+                                    episodeMod
+                                        ? isSubmitting
+                                            ? "bg-green-400 cursor-not-allowed"
+                                            : "bg-green-500 hover:bg-green-600"
+                                        : "bg-blue-500 hover:bg-blue-600"
+                                } hover:shadow-lg transition duration-200 rounded-md text-lg py-1 px-3 focus:outline-none`}
+                                onClick={this.toggleModifyButton}
+                            >
+                                {isSubmitting && <LoadingCircle className="ml-0 mr-2 mt-0" />}
+                                Modify
+                            </button>
+                            {episodeMod && (
+                                <button
+                                    disabled={isSubmitting}
+                                    className={`flex flex-row items-center ml-2 text-white font-semibold ${
+                                        isSubmitting
+                                            ? "bg-red-400 cursor-not-allowed"
+                                            : "bg-red-500 hover:bg-red-600"
+                                    } hover:shadow-lg transition duration-200 rounded-md text-lg py-1 px-3 focus:outline-none`}
+                                    onClick={() => {
+                                        this.setState((pl) => ({
+                                            episodeMod: !pl.episodeMod,
+                                            deletedEpisode: [],
+                                        }));
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                            )}
                         </motion.h2>
+                        {episodeMod && (
+                            <ProjectPageComponent.EpisodeAdd
+                                animeId={id}
+                                lastStatus={statusData[statusData.length - 1]}
+                                onError={this.showErrorCallback}
+                                onUpdated={this.addAndJoinEpisode}
+                                disabled={isSubmitting}
+                            />
+                        )}
                         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                            {status.map((res, idx) => {
-                                let delayAni = 0.25;
-                                if (idx > 0) {
-                                    delayAni = 0.25 + 0.1 * (idx + 1);
-                                }
-                                return (
-                                    <ProjectPageComponent.Episode
-                                        key={`anime-${id}-episode-${res.episode}`}
-                                        onErrorModal={outerThis.showErrorCallback}
-                                        animeId={id}
-                                        episode={res.episode}
-                                        airTime={res.airtime}
-                                        status={res.progress}
-                                        isReleased={res.is_done}
-                                        animateDelay={delayAni}
-                                    />
-                                );
-                            })}
+                            {!episodeMod
+                                ? statusData.map((res, idx) => {
+                                      let delayAni = 0.25;
+                                      if (idx > 0) {
+                                          delayAni = 0.25 + 0.1 * (idx + 1);
+                                      }
+                                      return (
+                                          <ProjectPageComponent.Episode
+                                              key={`anime-${id}-episode-${res.episode}`}
+                                              onErrorModal={outerThis.showErrorCallback}
+                                              animeId={id}
+                                              episode={res.episode}
+                                              airTime={res.airtime}
+                                              status={res.progress}
+                                              isReleased={res.is_done}
+                                              animateDelay={delayAni}
+                                          />
+                                      );
+                                  })
+                                : statusData.map((res) => {
+                                      return (
+                                          <ProjectPageComponent.EpisodeModify
+                                              key={`anime-${id}-${res.episode}`}
+                                              episode={res.episode}
+                                              onDeleted={this.deleteEpisode}
+                                          />
+                                      );
+                                  })}
                         </div>
                     </div>
                     <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errorText}</ErrorModal>
