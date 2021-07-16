@@ -84,7 +84,7 @@
     "lodash": "4.17.21",
     "luxon": "1.27.0",
     "mdi-react": "7.5.0",
-    "mongoose": "5.12.12",
+    "mongoose": "5.13.3",
     "next": "10.2.3",
     "next-iron-session": "4.1.13",
     "preact": "^10.5.13",
