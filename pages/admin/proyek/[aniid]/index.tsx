@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 
+import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 import { motion } from "framer-motion";
 
 import AdminLayout from "../../../../components/AdminLayout";
@@ -226,8 +227,11 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                 transition={{ delay: 1.1 }}
                                             >
                                                 <Link href={`/admin/proyek/${id}/kolaborasi`} passHref>
-                                                    <a className="rounded text-white px-4 py-2 bg-yellow-600 hover:bg-yellow-700 transition duration-200 items-center focus:outline-none">
-                                                        <span className="font-semibold">Kolaborasi</span>
+                                                    <a className="flex flex-row px-3 py-2 rounded-lg bg-yellow-600 text-white transition hover:bg-yellow-700 duration-200 ease-in-out items-center">
+                                                        <CollabIcon className="font-bold mr-1" />
+                                                        <span className="font-semibold mt-0.5">
+                                                            Kolaborasi
+                                                        </span>
                                                     </a>
                                                 </Link>
                                             </motion.div>
