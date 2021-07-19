@@ -12,6 +12,7 @@ import { isDifferent, verifyExist } from "../../lib/utils";
 
 interface AliasProps extends SettingsProps {
     aniId: string;
+    disableEditing?: boolean;
     aliases?: string[];
 }
 
@@ -102,10 +103,12 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
                     transition={{ delay: isFirst ? 0.2 : 0 }}
                 >
                     <span>{oldAlias.length > 0 ? `Alias: ${oldAlias.join(", ")}` : "Tidak ada alias"}</span>
-                    <button
-                        onClick={() => outerThis.setState({ isEdit: true, isFirst: false })}
-                        className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
-                    >{`[Edit]`}</button>
+                    {!this.props.disableEditing && (
+                        <button
+                            onClick={() => outerThis.setState({ isEdit: true, isFirst: false })}
+                            className="ml-1 text-red-400 hover:text-red-500 transition-colors duration-150 focus:outline-none"
+                        >{`[Edit]`}</button>
+                    )}
                 </MotionInView.div>
             );
         }
