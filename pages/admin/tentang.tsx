@@ -40,7 +40,6 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                     <MetadataHead.Prefetch />
                     <title>Tentang - {pageTitle} :: naoTimesUI</title>
                     <MetadataHead.SEO title={"Tentang - " + pageTitle} urlPath="/admin/tentang" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} active="about" title="Tentang">
                     <div className="container mx-auto px-6 py-8">

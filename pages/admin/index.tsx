@@ -96,7 +96,6 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
                     <MetadataHead.Prefetch />
                     <title>{pageTitle} :: naoTimesUI</title>
                     <MetadataHead.SEO title={pageTitle} urlPath="/admin" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user}>
                     <div className="container mx-auto px-6 py-8">

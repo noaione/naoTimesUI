@@ -13,7 +13,6 @@ class ServerErrorPage extends React.Component {
                     <MetadataHead.Prefetch />
                     <title>500 :: naoTimesUI</title>
                     <MetadataHead.SEO title="500" description="Terjadi kesalahan internal" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <div className="bg-gray-900 text-white h-screen w-screen grid grid-cols-1 lg:grid-cols-2 lg:items-center">
                     <div className="p-4 lg:p-10">
@@ -23,6 +22,7 @@ class ServerErrorPage extends React.Component {
                             layout="responsive"
                             width={786}
                             height={491}
+                            alt="Your friendly bocchi crying image"
                         />
                         <div className="block mt-8 text-center lg:hidden">
                             <div className="flex flex-row gap-2 justify-center mb-4">

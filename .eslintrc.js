@@ -7,6 +7,7 @@ module.exports = {
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "prettier",
+        "next",
     ],
     env: {
         node: true,
@@ -91,6 +92,7 @@ module.exports = {
         "react/react-in-jsx-scope": 0,
         "react/display-name": 0,
         "react/prop-types": 0,
+        "@next/next/no-img-element": 0,
     },
     overrides: [
         {

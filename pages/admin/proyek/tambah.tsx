@@ -196,7 +196,6 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                     <MetadataHead.Prefetch />
                     <title>Tambah Proyek :: naoTimesUI</title>
                     <MetadataHead.SEO title="Tambah Proyek" urlPath="/admin/proyek/tambah" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} title="Tambah Proyek" active="projectpage">
                     <div className="container mx-auto px-6 pt-8 pb-4">
@@ -208,6 +207,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                                             <img
                                                 className="transition duration-300 ease-out transform hover:-translate-y-1"
                                                 src={poster}
+                                                alt="Anime Poster"
                                             />
                                         ) : (
                                             <div className="px-32 py-56 self-center lg:py-44 animate-pulse bg-gray-400" />

@@ -188,17 +188,16 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                         opacity
                                     }
                                 >
-                                    <a
-                                        href="/api/auth/logout"
+                                    <button
                                         onClick={async (ev) => {
                                             ev.preventDefault();
                                             await fetch("/api/auth/logout");
                                             Router.push("/");
                                         }}
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white cursor-pointer"
                                     >
                                         Keluar
-                                    </a>
+                                    </button>
                                 </div>
                             )}
                         </div>

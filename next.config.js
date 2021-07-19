@@ -21,9 +21,6 @@ if (IS_PREVIEW) {
 }
 
 const moduleExports = {
-    future: {
-        webpack5: true,
-    },
     productionBrowserSourceMaps: true,
     webpack: (config, { dev, isServer, webpack }) => {
         if (!dev && !isServer) {

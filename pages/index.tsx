@@ -76,7 +76,6 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                     <MetadataHead.Prefetch />
                     <title>naoTimesUI</title>
                     <MetadataHead.SEO />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <LoginLayout>
                     <div className="text-center mb-5">

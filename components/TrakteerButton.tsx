@@ -17,6 +17,7 @@ class TrakteerButton extends React.Component {
                                 title="Trakteer Logo"
                                 className="object-cover object-center w-full h-full rounded-full"
                                 src="https://trakteer.id/images/mix/Logo%20Trakteer%20-%20Lite-01.png"
+                                alt="Trakteer Logo"
                             />
                         </a>
                     </div>

@@ -24,12 +24,11 @@ function MotionInViewDiv(props: MotionProps & HTMLMotionProps<"div">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.div {...props} ref={ref} animate={controls} />;
 }
@@ -40,12 +39,11 @@ function MotionInViewMain(props: MotionProps & HTMLMotionProps<"main">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.main {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -56,12 +54,11 @@ function MotionInViewHead1(props: MotionProps & HTMLMotionProps<"h1">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.h1 {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -72,12 +69,11 @@ function MotionInViewHead2(props: MotionProps & HTMLMotionProps<"h2">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.h2 {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -88,12 +84,11 @@ function MotionInViewHeader(props: MotionProps & HTMLMotionProps<"header">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.header {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -104,12 +99,11 @@ function MotionInViewImage(props: MotionProps & HTMLMotionProps<"img">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.img {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -120,12 +114,11 @@ function MotionInViewButton(props: MotionProps & HTMLMotionProps<"button">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.button {...props} ref={ref} initial="hidden" animate={controls} />;
 }
@@ -136,12 +129,11 @@ function MotionInViewParagraph(props: MotionProps & HTMLMotionProps<"p">) {
 
     useEffect(() => {
         if (inView) {
-            const { animate } = props;
-            if (typeof animate !== "boolean") {
-                controls.start(animate as ControlsAnimationDefinition);
+            if (typeof props.animate !== "boolean") {
+                controls.start(props.animate as ControlsAnimationDefinition);
             }
         }
-    }, [controls, inView]);
+    }, [controls, inView, props.animate]);
 
     return <motion.p {...props} ref={ref} initial="hidden" animate={controls} />;
 }
