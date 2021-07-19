@@ -36,7 +36,7 @@ interface ProyekPageState {
     isSubmitting: boolean;
 }
 
-class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
+class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
     modalCb?: CallbackModal;
 
     constructor(props: ProyekPageProps) {
@@ -363,4 +363,4 @@ export const getServerSideProps = withSession(async function ({
     return { props: { user: { loggedIn: true, ...user }, animeData: findAnime } };
 });
 
-export default ProyekHomepage;
+export default ProyekMainPage;
