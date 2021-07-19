@@ -53,7 +53,7 @@ export interface NextServerSideContextWithSession extends Omit<GetServerSideProp
     req: IncomingMessage & ExtraRouterContext;
 }
 
-export default function withSession(session: Handler) {
+export default function withSession<Req, Res = any>(session: Handler<Req, Res>) {
     return withIronSession(session, {
         password: process.env.TOKEN_SECRET,
         cookieName: "ntwebui/iron/token",
