@@ -13,7 +13,8 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
     }
 
     const allCollabs: Confirmations = [];
-    serverData.konfirmasi.forEach(async (konfirmasi) => {
+    for (let i = 0; i < serverData.konfirmasi.length; i++) {
+        const konfirmasi = serverData.konfirmasi[i];
         let fetchedAnimeInfo: ShowtimesProps;
         try {
             fetchedAnimeInfo = await ShowtimesModel.findOne(
@@ -37,12 +38,12 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
         }
 
         allCollabs.push({
-            id: konfirmasi.server_id,
+            id: konfirmasi.id,
             animeInfo: findAnime as ShowAnimeProps,
             serverId: konfirmasi.server_id,
             serverName: fetchedAnimeInfo.name,
         });
-    });
+    }
     return allCollabs;
 }
 
