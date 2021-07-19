@@ -1,4 +1,5 @@
 import { ShowAnimeProps } from "@/models/show";
+import { Nullable } from "@/lib/utils";
 
 interface SimpleServerInfo {
     id: string;
@@ -15,6 +16,7 @@ export interface CollabData {
 export interface KonfirmasiData {
     id: string;
     serverId: string;
+    serverName?: Nullable<string>;
     animeInfo: ShowAnimeProps;
 }
 
