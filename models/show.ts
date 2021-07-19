@@ -72,6 +72,18 @@ const ShowAnimeSchemas = createSchema(
     { versionKey: false, _id: false }
 );
 
+const ShowtimesCollab = createSchema(
+    {
+        id: Type.string({ required: true }),
+        server_id: Type.string({ required: true }),
+        anime_id: Type.string({ required: true }),
+    },
+    {
+        versionKey: false,
+        _id: false,
+    }
+);
+
 const ShowtimesSchemas = createSchema(
     {
         _id: Type.objectId({ required: false }),
@@ -81,11 +93,7 @@ const ShowtimesSchemas = createSchema(
         serverowner: Type.array({ required: true }).of(Type.string()),
         announce_channel: Type.string(),
         anime: Type.array({ required: true }).of(ShowAnimeSchemas),
-        konfirmasi: Type.array({ required: true }).of({
-            id: Type.string({ required: true }),
-            server_id: Type.string({ required: true }),
-            anime_id: Type.string({ required: true }),
-        }),
+        konfirmasi: Type.array({ required: true }).of(ShowtimesCollab),
     },
     {
         versionKey: false,
@@ -107,6 +115,7 @@ const ShowAdminSchemas = createSchema(
 
 export type EpisodeStatusProps = ExtractProps<typeof EpisodeStatusSchemas>;
 export type ShowAnimeProps = ExtractProps<typeof ShowAnimeSchemas>;
+export type ShowCollabProps = ExtractProps<typeof ShowtimesCollab>;
 export type ShowtimesProps = ExtractProps<typeof ShowtimesSchemas>;
 export type ShowAdminProps = ExtractProps<typeof ShowAdminSchemas>;
 export const ShowtimesModel =
