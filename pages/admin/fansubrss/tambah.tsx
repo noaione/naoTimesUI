@@ -66,7 +66,6 @@ class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTamb
                         title={"Tambah - FansubRSS - " + pageTitle}
                         urlPath="/admin/fansubrss"
                     />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} title="Tambah RSS" active="fsrsspage">
                     <div

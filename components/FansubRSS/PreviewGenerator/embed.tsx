@@ -125,7 +125,7 @@ class EmbedAuthor extends React.Component<IEmbedAuthor> {
         }
 
         const authorIcon = icon_url ? (
-            <img src={icon_url} role="presentation" className="embed-author-icon" />
+            <img src={icon_url} role="presentation" className="embed-author-icon" alt="Author Icon" />
         ) : null;
         return (
             <div className="embed-author">
@@ -190,6 +190,7 @@ class EmbedThumbnail extends React.Component<IEmbedThumb> {
                 className="embed-rich-thumb"
                 style={{ maxWidth: 80, maxHeight: 80 }}
                 role="presentation"
+                alt="Embed Image Thumbnail"
             />
         );
     }
@@ -212,7 +213,7 @@ class EmbedImage extends React.Component<IEmbedImage> {
 
         return (
             <a className="embed-thumbnail embed-thumbnail-rich">
-                <img className="image" role="presentation" src={url} />
+                <img className="image" role="presentation" src={url} alt="Embedded Image" />
             </a>
         );
     }
@@ -251,6 +252,7 @@ class EmbedFooter extends React.Component<IEmbedFooter> {
                     role="presentation"
                     width={20}
                     height={20}
+                    alt="Footer Icon"
                 />
             ) : null;
 
@@ -306,18 +308,8 @@ export default class EmbedPreview extends React.Component<IEmbed> {
     }
 
     render() {
-        const {
-            color,
-            author,
-            title,
-            url,
-            description,
-            fields,
-            thumbnail,
-            image,
-            timestamp,
-            footer,
-        } = this.props;
+        const { color, author, title, url, description, fields, thumbnail, image, timestamp, footer } =
+            this.props;
 
         return (
             <>

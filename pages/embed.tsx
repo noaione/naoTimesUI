@@ -139,7 +139,6 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                             image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
                             urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
                         />
-                        <MetadataHead.CSSExtra />
                     </Head>
                     <div id="root">
                         <div className="text-center text-2xl font-light mt-4">Tidak ada utang garapan!</div>
@@ -162,7 +161,6 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                         image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=${projectData.length}`}
                         urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
                     />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <div id="root">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">

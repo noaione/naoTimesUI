@@ -12,7 +12,6 @@ class NotFoundPage extends React.Component {
                     <MetadataHead.Prefetch />
                     <title>404 :: naoTimesUI</title>
                     <MetadataHead.SEO title="404" description="Tidak dapat menemukan laman yang dimaksud" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <div className="bg-gray-900 text-white h-screen text-center w-screen flex flex-col items-center justify-center">
                     <div>

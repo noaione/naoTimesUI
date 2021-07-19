@@ -39,7 +39,6 @@ class AdminAboutPage extends React.Component<AboutPageProps> {
                     <MetadataHead.Prefetch />
                     <title>Tentang :: naoTimesUI</title>
                     <MetadataHead.SEO title="Tentang" urlPath="/tentang" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <main className="bg-gray-900 font-inter">
                     <motion.header

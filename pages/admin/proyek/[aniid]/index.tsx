@@ -154,7 +154,6 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                         title={title + " - " + pageTitle}
                         urlPath={"/admin/proyek/" + animeData.id}
                     />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <AdminLayout user={user} title={title} active="projectpage">
                     <div className="container mx-auto px-6 py-8">

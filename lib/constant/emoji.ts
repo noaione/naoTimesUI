@@ -1,4 +1,4 @@
-export default {
+const EmojiSetsConstant = {
     people: [
         {
             names: ["grinning"],
@@ -5690,3 +5690,5 @@ export default {
         },
     ],
 };
+
+export default EmojiSetsConstant;

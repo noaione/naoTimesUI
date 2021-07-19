@@ -64,7 +64,6 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                     <MetadataHead.Prefetch />
                     <title>Registrasi :: naoTimesUI</title>
                     <MetadataHead.SEO title="Registrasi" urlPath="/admin" />
-                    <MetadataHead.CSSExtra />
                 </Head>
                 <LoginLayout>
                     <div className="text-center mb-5">

@@ -8,6 +8,7 @@ export default function LoginSidebar() {
                 <img
                     className="icon h-1/3 mb-2 ring-offset-indigo-800 transition-shadow duration-500 ease-in-out stack-shadow-6 hover:stack-shadow-3"
                     src="/assets/img/nt192.png"
+                    alt="naoTimes Bot Logo"
                 />
                 <div className="font-extrabold text-white text-3xl mb-3 mt-5">
                     <span className="bg-gradient-to-br from-indigo-800 to-indigo-600 transition-shadow duration-500 ease-in-out rounded-none px-2 py-1 stack-shadow-3 hover:stack-shadow-5 ring-offset-gray-800">
