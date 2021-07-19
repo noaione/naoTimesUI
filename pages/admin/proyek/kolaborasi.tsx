@@ -38,22 +38,37 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
             return (
                 <div className="w-full lg:max-w-full lg:flex bg-white dark:bg-gray-700 rounded-lg shadow-lg  break-all">
                     <div
-                        onClick={() => Router.push("/admin/proyek/" + animeId + "/kolaborasi")}
+                        onClick={() => Router.push("/admin/proyek/" + animeId + "/kolaborasi/terima")}
                         className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
                         style={{ backgroundImage: `url(${imageUrl})` }}
                         title={title}
                     />
                     <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
-                            <Link href={"/admin/proyek/" + animeId + "/kolaborasi"} passHref>
+                            <Link href={"/admin/proyek/" + animeId + "/kolaborasi/terima"} passHref>
                                 <a className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer">
                                     {title}
                                 </a>
                             </Link>
                             <div className="flex flex-row flex-wrap gap-1 pt-2 text-center">
-                                <div className="flex">ID: {serverId}</div>
-                                <div className="flex">Nama: {serverName}</div>
-                                <div className="flex">Konfirmasi: {konfirmId}</div>
+                                <div className="flex text-gray-700 dark:text-gray-200 text-left">
+                                    <span>
+                                        <span className="font-semibold mr-0.5">ID:</span>
+                                        {serverId}
+                                    </span>
+                                </div>
+                                <div className="flex text-gray-700 dark:text-gray-200 text-left">
+                                    <span>
+                                        <span className="font-semibold mr-0.5">Dari:</span>
+                                        {serverName}
+                                    </span>
+                                </div>
+                                <div className="flex text-gray-700 dark:text-gray-200 text-left">
+                                    <span>
+                                        <span className="font-semibold mr-0.5">Kode:</span>
+                                        <code>{konfirmId}</code>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,17 +144,19 @@ class KolaborasiMainComponent extends React.Component<{}, KolaborasiMainState> {
                 ) : (
                     <>
                         {collabData.length > 0 ? (
-                            <>
-                                {collabData.map((collab) => {
-                                    return (
-                                        <CollaborationSimpleCard
-                                            key={`collab-o-${collab.id}`}
-                                            collab={collab}
-                                            tipe="collab"
-                                        />
-                                    );
-                                })}
-                            </>
+                            <div className="flex flex-col">
+                                <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
+                                    {collabData.map((collab) => {
+                                        return (
+                                            <CollaborationSimpleCard
+                                                key={`collab-o-${collab.id}`}
+                                                collab={collab}
+                                                tipe="collab"
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         ) : (
                             <span className="dark:text-gray-200 text-gray-700 text-lg font-semibold">
                                 Tidak ada proyek kolaborasi yang terdaftar!
@@ -191,17 +208,25 @@ class KolaborasiPendingComponent extends React.Component<{}, KolaborasiPendingSt
                 ) : (
                     <>
                         {collabData.length > 0 ? (
-                            <>
-                                {collabData.map((collab) => {
-                                    return (
-                                        <CollaborationSimpleCard
-                                            key={`collab-c-${collab.serverId}-${collab.animeInfo.id}`}
-                                            konfirmasi={collab}
-                                            tipe="confirm"
-                                        />
-                                    );
-                                })}
-                            </>
+                            <div className="flex flex-col">
+                                <div className="flex flex-col lg:flex-row items-center text-gray-800 dark:text-gray-100">
+                                    <span>Anda bisa menggunakan bot untuk konfirmasi dengan cara:</span>
+                                    <code className="bg-gray-500 p-0.5 text-white lg:ml-2 rounded-sm bg-opacity-70">
+                                        !kolaborasi konfirmasi {`[kode konfirmasi]`}
+                                    </code>
+                                </div>
+                                <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
+                                    {collabData.map((collab) => {
+                                        return (
+                                            <CollaborationSimpleCard
+                                                key={`collab-c-${collab.serverId}-${collab.animeInfo.id}`}
+                                                konfirmasi={collab}
+                                                tipe="confirm"
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         ) : (
                             <span className="dark:text-gray-200 text-gray-700 text-lg font-semibold">
                                 Tidak ada proyek kolaborasi yang harus diterima!
