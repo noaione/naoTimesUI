@@ -21,7 +21,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
                     id: konfirmasi.server_id,
                     "anime.id": konfirmasi.anime_id,
                 },
-                { id: 1, anime: 1 }
+                { id: 1, anime: 1, name: 1 }
             );
         } catch (e) {
             return;
@@ -40,6 +40,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
             id: konfirmasi.server_id,
             animeInfo: findAnime as ShowAnimeProps,
             serverId: konfirmasi.server_id,
+            serverName: fetchedAnimeInfo.name,
         });
     });
     return allCollabs;
