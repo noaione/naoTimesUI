@@ -30,6 +30,9 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
     try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const test = serverData.id;
+        if (isNone(test)) {
+            return "Tidak dapat menemukan server anda di database?";
+        }
     } catch (e) {
         return "Tidak dapat menemukan server anda di database?";
     }

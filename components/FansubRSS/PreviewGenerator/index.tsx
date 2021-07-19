@@ -74,17 +74,8 @@ class MessageBody extends React.Component<IMsgBodyProps> {
                 <div className="markup">
                     <MessageTimestamp compactMode={compactMode} />
                     <span className="username-wrapper align-bottom">
-                        {compactMode ? (
-                            <>
-                                <span className="bot-tag">BOT</span>
-                                <strong className="user-name">{username}</strong>
-                            </>
-                        ) : (
-                            <>
-                                <strong className="user-name">{username}</strong>
-                                <span className="bot-tag">BOT</span>
-                            </>
-                        )}
+                        <span className="bot-tag">BOT</span>
+                        <strong className="user-name">{username}</strong>
                     </span>
                     <span className="highlight-separator"> - </span>
                     <span className="message-content">{content && parse(content, true, {}, jumboify)}</span>
