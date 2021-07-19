@@ -141,7 +141,7 @@ class KolaborasiMainComponent extends React.Component<{}, KolaborasiMainState> {
                                 })}
                             </>
                         ) : (
-                            <span className="text-gray-200 text-lg font-semibold">
+                            <span className="dark:text-gray-200 text-gray-700 text-lg font-semibold">
                                 Tidak ada proyek kolaborasi yang terdaftar!
                             </span>
                         )}
@@ -203,7 +203,7 @@ class KolaborasiPendingComponent extends React.Component<{}, KolaborasiPendingSt
                                 })}
                             </>
                         ) : (
-                            <span className="text-gray-200 text-lg font-semibold">
+                            <span className="dark:text-gray-200 text-gray-700 text-lg font-semibold">
                                 Tidak ada proyek kolaborasi yang harus diterima!
                             </span>
                         )}
