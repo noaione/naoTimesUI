@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 
@@ -19,7 +20,7 @@ import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } fr
 
 interface RemovedEpisodeData {
     episode: number;
-    index;
+    index: number;
 }
 
 interface ProyekPageProps {
@@ -213,10 +214,24 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                 );
                                             })}
                                         </div>
-                                        <ProjectPageComponent.Deletion
-                                            onErrorModal={this.showErrorCallback}
-                                            id={id}
-                                        />
+                                        <div className="flex row mt-4 gap-3">
+                                            <ProjectPageComponent.Deletion
+                                                onErrorModal={this.showErrorCallback}
+                                                id={id}
+                                            />
+                                            <motion.div
+                                                className="flex flex-col"
+                                                initial={{ y: -20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                transition={{ delay: 1.1 }}
+                                            >
+                                                <Link href={`/admin/proyek/${id}/kolaborasi`} passHref>
+                                                    <a className="rounded text-white px-4 py-2 bg-yellow-600 hover:bg-yellow-700 transition duration-200 items-center focus:outline-none">
+                                                        <span className="font-semibold">Kolaborasi</span>
+                                                    </a>
+                                                </Link>
+                                            </motion.div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
