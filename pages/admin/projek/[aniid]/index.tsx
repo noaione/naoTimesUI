@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NextServerSideContextWithSession } from "../../../lib/session";
+import { NextServerSideContextWithSession } from "../../../../lib/session";
 
 export default function ProjekRedirect() {
     return <div className="hidden"></div>;
