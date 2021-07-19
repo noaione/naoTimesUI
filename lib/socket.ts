@@ -12,6 +12,7 @@ type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "del
 type CreateMethodEvent = "create role";
 
 type FansubRSSEvent = "fsrss get" | "fsrss parse" | "fsrss update" | "fsrss create" | "fsrss delete";
+type CollaborationEvent = "collab create" | "collab delete";
 
 type SocketEvent =
     | CheckMethodEvent
@@ -19,7 +20,8 @@ type SocketEvent =
     | UpdateMethodEvent
     | DeleteMethodEvent
     | CreateMethodEvent
-    | FansubRSSEvent;
+    | FansubRSSEvent
+    | CollaborationEvent;
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {
