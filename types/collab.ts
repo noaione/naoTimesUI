@@ -1,7 +1,7 @@
 import { ShowAnimeProps } from "@/models/show";
 import { Nullable } from "@/lib/utils";
 
-interface SimpleServerInfo {
+export interface SimpleServerInfo {
     id: string;
     name: string;
 }
