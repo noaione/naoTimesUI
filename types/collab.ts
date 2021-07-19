@@ -3,7 +3,7 @@ import { Nullable } from "@/lib/utils";
 
 export interface SimpleServerInfo {
     id: string;
-    name: string;
+    name?: string;
 }
 
 export interface CollabData {
