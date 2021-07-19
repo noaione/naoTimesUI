@@ -5,15 +5,21 @@ import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session
 import { isNone } from "@/lib/utils";
 
 import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
-import { Collaborations } from "@/types/collab";
+import { Confirmations } from "@/types/collab";
 
-async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collaborations> {
+async function fetchAllPendingConfirmations(
+    serverData: ShowtimesProps,
+    animeId: string
+): Promise<Confirmations> {
     if (serverData.konfirmasi.length < 1) {
-        return [];
+        return null;
     }
 
-    const allCollabs: Collaborations = [];
+    const konfirmasiData: Confirmations = [];
     serverData.konfirmasi.forEach(async (konfirmasi) => {
+        if (konfirmasi.anime_id !== animeId) {
+            return;
+        }
         let fetchedAnimeInfo: ShowtimesProps;
         try {
             fetchedAnimeInfo = await ShowtimesModel.findOne(
@@ -21,7 +27,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
                     id: konfirmasi.server_id,
                     "anime.id": konfirmasi.anime_id,
                 },
-                { id: 1, anime: 1 }
+                { id: 1, anime: 1, name: 1 }
             );
         } catch (e) {
             return;
@@ -36,13 +42,14 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
             return;
         }
 
-        allCollabs.push({
+        konfirmasiData.push({
             id: konfirmasi.server_id,
             animeInfo: findAnime as ShowAnimeProps,
             serverId: konfirmasi.server_id,
+            serverName: fetchedAnimeInfo.name,
         });
     });
-    return allCollabs;
+    return konfirmasiData;
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
@@ -58,14 +65,21 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         });
     }
 
+    const { aniid } = req.query;
+
+    let realAnimeId = aniid as string;
+    if (Array.isArray(aniid)) {
+        realAnimeId = aniid[0];
+    }
+
     await dbConnect();
     try {
         const fetchedServers = await ShowtimesModel.findOne(
-            { id: { $eq: user.id } },
+            { id: { $eq: user.id }, "anime.id": aniid },
             { id: 1, name: 1, konfirmasi: 1 }
         );
-        const allCollabs = await fetchAllCollabData(fetchedServers);
-        res.json({ data: allCollabs, success: true });
+        const allPendings = await fetchAllPendingConfirmations(fetchedServers, realAnimeId);
+        res.json({ data: allPendings, success: true });
     } catch (e) {
         res.status(500).json({
             message: "Terjadi kesalahan ketika memproses request anda...",
