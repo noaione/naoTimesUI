@@ -28,7 +28,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.14.7.tgz#7b047d7a3a89a67d2258dc61f604f098f1bc7e08"
   integrity sha512-nS6dZaISCXJ3+518CWiBfEr//gHyMO02uDxBkXTKZDN5POruCnOZ1N4YBRZDCabwF8nZMWBpRxIicmXtBs+fvw==
 
-"@babel/core@^7.14.6":
+"@babel/core@7.14.6":
   version "7.14.6"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.14.6.tgz#e0814ec1a950032ff16c13a2721de39a8416fcab"
   integrity sha512-gJnOEWSqTk96qG5BoIrl5bVtc23DCycmIePPYnamY9RboYdI4nFy5vAQMSl81O5K/W0sLDWfGysnOECC+KUUCA==
@@ -673,7 +673,7 @@
     "@sentry/types" "6.9.0"
     tslib "^1.9.3"
 
-"@sentry/nextjs@^6.9.0":
+"@sentry/nextjs@6.9.0":
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/@sentry/nextjs/-/nextjs-6.9.0.tgz#7d3743ff2363620ec9eeb581a6f9018db13eaeba"
   integrity sha512-PNnUai1nXs2I9Fe621Gwgnhjf2WzeR1ws7JxEdEnad+xmPfWKPu763dDcWSirg42PFOU+uYkE1bqcRaMXqaPGQ==
@@ -2998,7 +2998,7 @@ highlight.js@*:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.0.tgz#e22ac9ca45edc4f87a2187685d591a108ceb8449"
   integrity sha512-ByaTMfsSuoqerTwemOgpIhfULEIaK52JJYhky/sK7/Yqc0+t7Uh5DHay9vIC94YXSupnQ1Vqfc9VXrYP4eXW3Q==
 
-highlight.js@^11.1.0:
+highlight.js@11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.1.0.tgz#0198f7326e64ddfbea5f76b00e84ab542cf24ae8"
   integrity sha512-X9VVhYKHQPPuwffO8jk4bP/FVj+ibNCy3HxZZNDXFtJrq4O5FdcdCDRIkDis5MiMnjh7UwEdHgRZJcHFYdzDdA==
@@ -3398,7 +3398,7 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-javascript-time-ago@^2.3.8:
+javascript-time-ago@2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.3.8.tgz#7e1cd94a770987cc00db82e60e655d3efdd25629"
   integrity sha512-ahVSuInQC6iJtwy/XsburOc6JMsI0OI/84b3nAhtMlDhCm9g4Py+zuiPASnt02B4GkaURqWtiyw98ce0ICAZYQ==
@@ -3666,10 +3666,10 @@ lru_map@^0.3.3:
   resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.3.3.tgz#b5c8351b9464cbd750335a79650a0ec0e56118dd"
   integrity sha1-tcg1G5Rky9dQM1p5ZQoOwOVhGN0=
 
-luxon@1.27.0:
-  version "1.27.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.27.0.tgz#ae10c69113d85dab8f15f5e8390d0cbeddf4f00f"
-  integrity sha512-VKsFsPggTA0DvnxtJdiExAucKdAnwbCCNlMM5ENvHlxubqWd0xhZcdb4XgZ7QFNhaRhilXCFxHuoObP5BNA4PA==
+luxon@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.0.1.tgz#b41ca2f1f5ad8099c18603ae6c36a7794039daf0"
+  integrity sha512-8Eawf81c9ZlQj62W3eq4mp+C7SAIAnmaS7ZuEAiX503YMcn+0C1JnMQRtfaQj6B5qTZLgHv0F4H5WabBCvi1fw==
 
 make-dir@^3.0.2:
   version "3.1.0"
@@ -4002,7 +4002,7 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.13.3:
+mongoose@5.13.3:
   version "5.13.3"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.13.3.tgz#42cb40207bbcaca9c6fa94b0a8c0a38181c1965e"
   integrity sha512-q+zX6kqHAvwxf5speMWhq6qF4vdj+x6/kfD5RSKdZKNm52yGmaUygN+zgrtQjBZPFEzG0B3vF6GP0PoAGadE+w==
