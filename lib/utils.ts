@@ -273,6 +273,42 @@ function multiplyAnilistDate(startTime: number, episode: number): number {
     return expected;
 }
 
+interface AiringNode {
+    id: string;
+    episode: number;
+    airingAt?: number;
+}
+
+function prefillAiringSchedule(airingSchedules: AiringNode[], expected = 1) {
+    if (airingSchedules.length >= expected) {
+        return airingSchedules;
+    }
+    const newSchedules: AiringNode[] = [];
+    const firstEpisode = airingSchedules[0].episode;
+    if (firstEpisode !== 1) {
+        // prefill left.
+        for (let i = 1; i < firstEpisode; i++) {
+            newSchedules.push({
+                id: `prefilled-ep-${i}`,
+                episode: i,
+                airingAt: undefined,
+            });
+        }
+    }
+    newSchedules.push(...airingSchedules);
+    if (newSchedules.length < expected) {
+        // prefill right.
+        for (let i = newSchedules.length; i < expected; i++) {
+            newSchedules.push({
+                id: `prefilled-ep-${i}`,
+                episode: i,
+                airingAt: undefined,
+            });
+        }
+    }
+    return newSchedules;
+}
+
 export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
     let rawResults = originalData;
     if (has(originalData, "data") && has(originalData.data, "Media")) {
@@ -303,7 +339,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         last_update: Math.floor(DateTime.utc().toSeconds()),
     };
 
-    const airingSchedules: any[] = get(rawResults, "airingSchedule.nodes", []);
+    let airingSchedules: AiringNode[] = get(rawResults, "airingSchedule.nodes", []);
     if (airingSchedules.length < 1 && isNone(startDate)) return compiledData;
     if (airingSchedules.length < 1) {
         for (let i = 0; i < expected_episode; i++) {
@@ -328,6 +364,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
             compiledData.status.push(statusSets);
         }
     } else {
+        airingSchedules = prefillAiringSchedule(airingSchedules, expected_episode);
         airingSchedules.forEach((node) => {
             let airtime = node.airingAt || null;
             if (isNone(airtime) && !isNone(startDate)) {
