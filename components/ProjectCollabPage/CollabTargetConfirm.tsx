@@ -11,6 +11,7 @@ interface CollabTargetConfirmProps {
     sourceId: string;
     targetId: string;
     animeId: string;
+    onError?: (errorText: string) => void;
 }
 
 interface CollabConfirmBtnProps {
@@ -31,10 +32,17 @@ class CollabTargetConfirmButton extends React.Component<
 > {
     constructor(props: CollabTargetConfirmBtnProps) {
         super(props);
+        this.showError = this.showError.bind(this);
         this.submitProcess = this.submitProcess.bind(this);
         this.state = {
             isSubmitting: false,
         };
+    }
+
+    showError(errorText: string) {
+        if (typeof this.props.onError === "function") {
+            this.props.onError(errorText);
+        }
     }
 
     async submitProcess() {
@@ -45,7 +53,49 @@ class CollabTargetConfirmButton extends React.Component<
         if (typeof this.props.onClick === "function") {
             this.props.onClick();
         }
-        // send api call to accept collab.
+        let apiRoute = "/api/showtimes/proyek/collab/confirm";
+        if (this.props.type === "no") {
+            apiRoute = `/api/showtimes/proyek/collab/${this.props.animeId}/cancel`;
+        }
+
+        const dataToSent = {
+            id: this.props.konfirmId,
+            serverId: this.props.targetId,
+        };
+        try {
+            const result = await fetch(apiRoute, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataToSent),
+            });
+            const jsonResult = await result.json();
+            if (jsonResult.success) {
+                if (this.props.type === "no") {
+                    Router.push("/admin/proyek/kolaborasi");
+                } else {
+                    Router.push(`/admin/proyek/${this.props.animeId}/kolaborasi`);
+                }
+            } else {
+                this.showError(jsonResult.message || "Terjadi kesalahan yang tidak diketahui...");
+                if (typeof this.props.onClick === "function") {
+                    this.props.onClick();
+                }
+            }
+        } catch (error) {
+            // callback to error modal.
+            console.log(error);
+            if (error instanceof Error) {
+                this.showError("Terjadi kesalahan internal:\n" + error.toString());
+            } else {
+                this.showError("Terjadi kesalahan internal yang tidak diketahui!");
+            }
+            if (typeof this.props.onClick === "function") {
+                this.props.onClick();
+            }
+        }
+        this.setState({ isSubmitting: false });
     }
 
     render() {
@@ -96,10 +146,8 @@ export default function CollabTargetConfirmComponent(props: CollabTargetConfirmP
     const [disabled, setDisabled] = useState(false);
 
     function callbackSubmit() {
-        console.info("Called back...");
         setDisabled(!disabled);
     }
-    console.info(disabled);
 
     return (
         <div className="flex row mt-4 gap-2">
