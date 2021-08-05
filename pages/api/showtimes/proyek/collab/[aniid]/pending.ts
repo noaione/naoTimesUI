@@ -14,7 +14,7 @@ async function fetchAllPendingConfirmations(
     animeId: string
 ): Promise<KonfirmasiTanpaAnime[]> {
     if (serverData.konfirmasi.length < 1) {
-        return null;
+        return [];
     }
 
     const konfirmasiData: KonfirmasiTanpaAnime[] = [];
@@ -37,7 +37,7 @@ async function fetchAllPendingConfirmations(
         }
 
         if (isNone(fetchedAnimeInfo)) {
-            return;
+            continue;
         }
 
         konfirmasiData.push({
