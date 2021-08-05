@@ -3,6 +3,7 @@ import Router from "next/router";
 import AcceptIcon from "mdi-react/CheckAllIcon";
 import DenyIcon from "mdi-react/CloseIcon";
 import GoBackIcon from "mdi-react/ArrowLeftIcon";
+import { motion } from "framer-motion";
 
 import LoadingCircle from "@/components/LoadingCircle";
 
@@ -18,6 +19,7 @@ interface CollabConfirmBtnProps {
     onClick?: () => void;
     type: "yes" | "no";
     disabled?: boolean;
+    delay: number;
 }
 
 type CollabTargetConfirmBtnProps = CollabTargetConfirmProps & CollabConfirmBtnProps;
@@ -118,12 +120,15 @@ class CollabTargetConfirmButton extends React.Component<
         };
 
         return (
-            <button
+            <motion.button
                 className={`flex flex-row px-3 py-2 rounded-lg text-white transition duration-200 ease-in-out items-center ${
                     isDisabled ? COLORDISABLE[type] : COLOR[type]
                 } ${isDisabled ? "cursor-not-allowed" : ""} ${isSubmitting ? "animate-pulse" : ""}`}
                 disabled={isDisabled}
                 onClick={this.submitProcess}
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: this.props.delay }}
             >
                 {isDisabled ? (
                     <LoadingCircle className="ml-0 mr-2 mt-0" />
@@ -137,7 +142,7 @@ class CollabTargetConfirmButton extends React.Component<
                     </>
                 )}
                 <span className="font-semibold mt-0.5">{YES ? "Terima" : "Tolak"}</span>
-            </button>
+            </motion.button>
         );
     }
 }
@@ -151,9 +156,21 @@ export default function CollabTargetConfirmComponent(props: CollabTargetConfirmP
 
     return (
         <div className="flex row mt-4 gap-2">
-            <CollabTargetConfirmButton type="yes" onClick={callbackSubmit} disabled={disabled} {...props} />
-            <CollabTargetConfirmButton type="no" onClick={callbackSubmit} disabled={disabled} {...props} />
-            <button
+            <CollabTargetConfirmButton
+                type="yes"
+                onClick={callbackSubmit}
+                disabled={disabled}
+                delay={0.8}
+                {...props}
+            />
+            <CollabTargetConfirmButton
+                type="no"
+                onClick={callbackSubmit}
+                disabled={disabled}
+                delay={0.85}
+                {...props}
+            />
+            <motion.button
                 className={`flex flex-row px-3 py-2 rounded-lg text-white transition duration-200 ease-in-out items-center ${
                     disabled
                         ? "bg-blue-500 cursor-not-allowed"
@@ -166,10 +183,13 @@ export default function CollabTargetConfirmComponent(props: CollabTargetConfirmP
                     }
                     Router.push("/admin/proyek/kolaborasi");
                 }}
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.9 }}
             >
                 <GoBackIcon className="font-bold mr-1" />
                 <span className="font-semibold mt-0.5">Kembali</span>
-            </button>
+            </motion.button>
         </div>
     );
 }
