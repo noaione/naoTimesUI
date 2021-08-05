@@ -189,7 +189,7 @@ export const getServerSideProps = withSession(async function ({
     params,
 }: NextServerSideContextWithSession) {
     const user = req.session.get<IUserAuth>("user") as UserProps;
-    const { aniid } = params;
+    const { code } = params;
 
     if (!user) {
         return {
@@ -207,10 +207,13 @@ export const getServerSideProps = withSession(async function ({
 
     await dbConnect();
     console.info("Finding confirmation data...");
-    const serverRes = (await ShowtimesModel.findOne({ id: { $eq: user.id } }).lean()) as ShowtimesProps;
+    const serverRes = (await ShowtimesModel.findOne(
+        { id: { $eq: user.id } },
+        { id: 1, konfirmasi: 1 }
+    ).lean()) as ShowtimesProps;
     let findKonfirmasi: Nullable<ShowCollabProps> = null;
     serverRes.konfirmasi.forEach((res) => {
-        if (res.anime_id === aniid && isNone(findKonfirmasi)) {
+        if (res.id === code && isNone(findKonfirmasi)) {
             findKonfirmasi = res;
         }
     });
@@ -238,7 +241,7 @@ export const getServerSideProps = withSession(async function ({
     }
     let findAnime: Nullable<ShowAnimeProps>;
     targetServerRes.anime.forEach((res) => {
-        if (res.id === aniid && isNone(findAnime)) {
+        if (res.id === findKonfirmasi.anime_id && isNone(findAnime)) {
             findAnime = res;
         }
     });

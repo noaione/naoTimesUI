@@ -30,7 +30,6 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
         if (tipe === "confirm") {
             const { id: konfirmId, serverId, serverName, animeInfo } = konfirmasi;
             const {
-                id: animeId,
                 title,
                 poster_data: { url: imageUrl },
             } = animeInfo;
@@ -38,14 +37,14 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
             return (
                 <div className="w-full lg:max-w-full lg:flex bg-white dark:bg-gray-700 rounded-lg shadow-lg  break-all">
                     <div
-                        onClick={() => Router.push("/admin/proyek/" + animeId + "/kolaborasi/terima")}
+                        onClick={() => Router.push("/admin/proyek/kolaborasi/" + konfirmId)}
                         className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
                         style={{ backgroundImage: `url(${imageUrl})` }}
                         title={title}
                     />
                     <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
-                            <Link href={"/admin/proyek/" + animeId + "/kolaborasi/terima"} passHref>
+                            <Link href={"/admin/proyek/kolaborasi/" + konfirmId} passHref>
                                 <a className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer">
                                     {title}
                                 </a>
