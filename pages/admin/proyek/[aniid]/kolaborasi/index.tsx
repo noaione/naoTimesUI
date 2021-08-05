@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import GoBackIcon from "mdi-react/ArrowLeftIcon";
+import AddNewIcon from "mdi-react/AccountPlusOutlineIcon";
 import { motion } from "framer-motion";
 
 import AdminLayout from "@/components/AdminLayout";
@@ -138,6 +139,19 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                                     <a className="flex flex-row px-3 py-2 rounded-lg bg-blue-600 text-white transition hover:bg-blue-700 duration-200 ease-in-out items-center">
                                                         <GoBackIcon className="font-bold mr-1" />
                                                         <span className="font-semibold mt-0.5">Kembali</span>
+                                                    </a>
+                                                </Link>
+                                            </motion.div>
+                                            <motion.div
+                                                className="flex flex-col"
+                                                initial={{ y: -20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                transition={{ delay: 1.15 }}
+                                            >
+                                                <Link href={`/admin/proyek/${id}/kolaborasi/tambah`} passHref>
+                                                    <a className="flex flex-row px-3 py-2 rounded-lg bg-green-600 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center">
+                                                        <AddNewIcon className="font-bold mr-1" />
+                                                        <span className="font-semibold mt-0.5">Tambah</span>
                                                     </a>
                                                 </Link>
                                             </motion.div>
