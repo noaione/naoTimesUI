@@ -4,6 +4,10 @@ import { Nullable } from "@/lib/utils";
 export interface SimpleServerInfo {
     id: string;
     name?: string;
+    selfId?: {
+        id: string;
+        name?: string;
+    };
 }
 
 export interface CollabData {
