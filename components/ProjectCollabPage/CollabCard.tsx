@@ -18,13 +18,8 @@ export default function CollabCardComponent(props: SimpleServerInfo) {
             <div className="flex flex-col py-1">
                 <div className="flex items-center font-bold text-black dark:text-gray-200">{realName}</div>
                 <p className="text-black dark:text-gray-200 leading-5 mt-1">
-                    Klik tombol <b className="text-red-500">Hapus</b> lalu klik tombol{" "}
-                    <b className="text-green-500">Ubah</b> untuk menghapus episode ini.
-                </p>
-                <p className="text-black dark:text-gray-200 leading-5 mt-1">
-                    Anda dapat mengklik banyak episode!
-                    <br />
-                    Aksi ini <span className="text-red-400 font-semibold">tidak dapat dikembalikan!</span>
+                    Klik tombol <b className="text-red-500">Putuskan</b> untuk memberhentikan kolaborasi
+                    dengan semua peladen lain.
                 </p>
             </div>
         </div>
