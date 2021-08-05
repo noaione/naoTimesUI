@@ -162,9 +162,9 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                         </div>
                     </div>
                     <div className="container mx-auto px-6 py-4">
-                        <motion.h2 className="flex flex-row gap-1 font-extrabold pb-3 dark:text-white items-center">
-                            Aktif
-                        </motion.h2>
+                        <motion.div className="flex flex-row gap-1 pb-3 items-center">
+                            <div className="flex font-extrabold dark:text-white">Aktif</div>
+                        </motion.div>
                         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                             {kolaborasi.length > 0 ? (
                                 <>
@@ -190,6 +190,12 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                 </span>
                             )}
                         </div>
+                    </div>
+                    <div className="container mx-auto px-6 py-4">
+                        <motion.div className="flex flex-row gap-1 pb-3 items-center">
+                            <div className="flex font-extrabold dark:text-white">Menunggu Konfirmasi</div>
+                        </motion.div>
+                        <ProjectCollabComponent.Confirms animeId={id} />
                     </div>
                     <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errorText}</ErrorModal>
                 </AdminLayout>
