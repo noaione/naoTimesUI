@@ -16,21 +16,26 @@ import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
 import { UserProps } from "@/models/user";
 import { ShowAnimeProps, ShowCollabProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
+import { KonfirmasiData } from "@/types/collab";
 
-interface ProyekPageProps {
+type KonfirmasiDataTanpaAnime = Omit<KonfirmasiData, "animeInfo">;
+interface ProyekCollabConfirmationProps {
     user?: UserProps & { loggedIn: boolean };
     animeData: ShowAnimeProps;
-    kolebData: ShowCollabProps;
+    kolebData: KonfirmasiDataTanpaAnime;
 }
 
-interface ProyekPageState {
+interface ProyekCollabConfirmationState {
     errorText: string;
 }
 
-class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
+class ProyekCollabConfirmationPage extends React.Component<
+    ProyekCollabConfirmationProps,
+    ProyekCollabConfirmationState
+> {
     modalCb?: CallbackModal;
 
-    constructor(props: ProyekPageProps) {
+    constructor(props: ProyekCollabConfirmationProps) {
         super(props);
         this.showErrorCallback = this.showErrorCallback.bind(this);
         this.state = {
@@ -49,7 +54,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
         const { user, animeData, kolebData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
         const { id, title, poster_data, assignments, aliases, status } = animeData;
-        const { id: konfirmId, server_id: sourceServerId } = kolebData;
+        const { id: konfirmId, serverId: sourceServerId } = kolebData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
@@ -132,6 +137,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                             sourceId={sourceServerId}
                                             targetId={user.id}
                                             animeId={id}
+                                            onError={this.showErrorCallback}
                                         />
                                     </div>
                                 </div>
@@ -186,7 +192,7 @@ export const getServerSideProps = withSession(async function ({
     if (!user) {
         return {
             redirect: {
-                destination: "/",
+                destination: "/?cb=/admin/proyek/kolaborasi",
                 permanent: false,
             },
         };
@@ -241,8 +247,13 @@ export const getServerSideProps = withSession(async function ({
         };
     }
     console.info("Target anime found:", findAnime.id);
+    const collabData: KonfirmasiDataTanpaAnime = {
+        id: findKonfirmasi.id,
+        serverId: targetServerRes.id,
+        serverName: targetServerRes.name,
+    };
 
-    return { props: { user: { loggedIn: true, ...user }, animeData: findAnime, kolebData: findKonfirmasi } };
+    return { props: { user: { loggedIn: true, ...user }, animeData: findAnime, kolebData: collabData } };
 });
 
-export default ProyekMainPage;
+export default ProyekCollabConfirmationPage;
