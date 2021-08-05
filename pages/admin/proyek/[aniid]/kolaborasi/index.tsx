@@ -33,6 +33,7 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
 
     constructor(props: ProyekCollabPageProps) {
         super(props);
+        this.showErrorCallback = this.showErrorCallback.bind(this);
         this.state = {
             errorText: "",
         };
@@ -126,7 +127,7 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                                 );
                                             })}
                                         </div>
-                                        <div className="flex row mt-4 gap-3">
+                                        <div className="flex row mt-4 gap-2">
                                             <motion.div
                                                 className="flex flex-col"
                                                 initial={{ y: -20, opacity: 0 }}
@@ -140,6 +141,20 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                                     </a>
                                                 </Link>
                                             </motion.div>
+                                            {kolaborasi.length > 0 && (
+                                                <motion.div
+                                                    className="flex flex-col"
+                                                    initial={{ y: -20, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    transition={{ delay: 1.2 }}
+                                                >
+                                                    <ProjectCollabComponent.CollabSever
+                                                        id={user.id}
+                                                        animeId={id}
+                                                        onError={this.showErrorCallback}
+                                                    />
+                                                </motion.div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
