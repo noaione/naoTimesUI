@@ -154,10 +154,17 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                             {kolaborasi.length > 0 ? (
                                 <>
                                     {kolaborasi.map((kolebId) => {
+                                        const selfId = { id: user.id, name: user.name };
+                                        if (isNone(selfId.name)) {
+                                            selfId.name = "[Anda sendiri]";
+                                        } else {
+                                            selfId.name += " [Anda sendiri]";
+                                        }
                                         return (
                                             <ProjectCollabComponent.CollabCard
                                                 key={`collab-active-${kolebId}`}
                                                 id={kolebId}
+                                                selfId={selfId}
                                             />
                                         );
                                     })}
@@ -168,11 +175,6 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                 </span>
                             )}
                         </div>
-                    </div>
-                    <div className="container mx-auto px-6 py-4">
-                        <motion.h2 className="flex flex-row gap-1 font-extrabold pb-3 dark:text-white items-center">
-                            Konfirmasi
-                        </motion.h2>
                     </div>
                     <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errorText}</ErrorModal>
                 </AdminLayout>
