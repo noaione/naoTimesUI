@@ -8,25 +8,31 @@ import { Collaborations } from "@/types/collab";
 
 async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collaborations> {
     const allCollabs: Collaborations = [];
-    serverData.anime.forEach((anime) => {
+    for (let i = 0; i < serverData.anime.length; i++) {
+        const anime = serverData.anime[i];
         const filteredCollab = anime.kolaborasi.filter((p) => p !== serverData.id);
         if (filteredCollab.length < 1) {
-            return;
+            continue;
         }
         const allValidCollab = [];
-        filteredCollab.forEach(async (collab) => {
+        for (let jj = 0; jj < filteredCollab.length; jj++) {
+            const collab = filteredCollab[jj];
             try {
+                console.info(`Fetching ${collab} at ${anime.id}`);
                 const requested = (await ShowtimesModel.findOne({ id: { $eq: collab } })) as ShowtimesProps;
+                console.info(`Pushing ${collab} at ${anime.id}`);
                 allValidCollab.push({
                     id: requested.id,
                     name: requested.name,
                 });
+                console.info(`Pushed ${collab} at ${anime.id}`);
             } catch (e) {
-                return;
+                continue;
             }
-        });
+        }
+        console.info("VALID", allValidCollab, anime.id);
         if (allValidCollab.length < 1) {
-            return;
+            continue;
         }
         const imgPoster = anime.poster_data.url;
         allCollabs.push({
@@ -35,7 +41,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
             image: imgPoster,
             collaborations: allValidCollab,
         });
-    });
+    }
     return allCollabs;
 }
 
