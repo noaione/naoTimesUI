@@ -91,9 +91,10 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
                                     {title}
                                 </a>
                             </Link>
-                            <div className="flex flex-row flex-wrap gap-1 pt-2 text-center">
+                            <div className="flex font-semibold dark:text-gray-200 pt-2">Dengan:</div>
+                            <div className="flex flex-row flex-wrap gap-1 pt-1 text-center dark:text-gray-200">
                                 {collaborations.map((collab) => {
-                                    return <span key={`collab-${collab.id}`}>{collab.name}</span>;
+                                    return <span key={`collab-${collab.id}`}>{"- " + collab.name}</span>;
                                 })}
                             </div>
                         </div>
