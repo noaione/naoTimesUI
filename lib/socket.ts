@@ -6,7 +6,13 @@ import { isNone } from "./utils";
 const sleep = promisify(setTimeout);
 
 type CheckMethodEvent = "authenticate" | "ping";
-type GetMethodEvent = "get server" | "get channel" | "get user" | "get user perms" | "get server channel";
+type GetMethodEvent =
+    | "get server"
+    | "get servers"
+    | "get channel"
+    | "get user"
+    | "get user perms"
+    | "get server channel";
 type UpdateMethodEvent = "pull data" | "pull admin";
 type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "delete roles" | "announce drop";
 type CreateMethodEvent = "create role";
