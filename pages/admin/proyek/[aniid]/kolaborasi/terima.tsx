@@ -53,7 +53,7 @@ class ProyekCollabConfirmationPage extends React.Component<
     render() {
         const { user, animeData, kolebData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const { id, title, poster_data, assignments, aliases, status } = animeData;
+        const { id, title, poster_data, assignments, status } = animeData;
         const { id: konfirmId, serverId: sourceServerId } = kolebData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -93,14 +93,16 @@ class ProyekCollabConfirmationPage extends React.Component<
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: 0.1 }}
                                         >
-                                            {title}
+                                            {title} - {sourceServerId}
                                         </motion.div>
-                                        <ProjectPageComponent.Aliases
-                                            onErrorModal={this.showErrorCallback}
-                                            aniId={id}
-                                            aliases={aliases}
-                                            disableEditing
-                                        />
+                                        <motion.div
+                                            className="font-medium text-gray-800 dark:text-gray-300"
+                                            initial={{ x: -30, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.15 }}
+                                        >
+                                            Kode: {konfirmId}
+                                        </motion.div>
                                         <motion.div
                                             className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
                                             initial={{ x: -30, opacity: 0 }}
