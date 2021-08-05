@@ -54,7 +54,7 @@ class ProyekCollabConfirmationPage extends React.Component<
         const { user, animeData, kolebData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
         const { id, title, poster_data, assignments, status } = animeData;
-        const { id: konfirmId, serverId: sourceServerId } = kolebData;
+        const { id: konfirmId, serverId: sourceServerId, serverName: sourceServerName } = kolebData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
@@ -93,21 +93,29 @@ class ProyekCollabConfirmationPage extends React.Component<
                                             animate={{ x: 0, opacity: 1 }}
                                             transition={{ delay: 0.1 }}
                                         >
-                                            {title} - {sourceServerId}
+                                            {title}
                                         </motion.div>
                                         <motion.div
                                             className="font-medium text-gray-800 dark:text-gray-300"
                                             initial={{ x: -30, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: 0.15 }}
+                                            transition={{ delay: 0.2 }}
                                         >
                                             Kode: {konfirmId}
+                                        </motion.div>
+                                        <motion.div
+                                            className="font-medium text-gray-800 dark:text-gray-300"
+                                            initial={{ x: -30, opacity: 0 }}
+                                            animate={{ x: 0, opacity: 1 }}
+                                            transition={{ delay: 0.25 }}
+                                        >
+                                            Inisiasi oleh: {sourceServerName}
                                         </motion.div>
                                         <motion.div
                                             className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
                                             initial={{ x: -30, opacity: 0 }}
                                             animate={{ x: 0, opacity: 1 }}
-                                            transition={{ delay: 0.2 }}
+                                            transition={{ delay: 0.3 }}
                                         >
                                             Staf
                                         </motion.div>
@@ -115,9 +123,9 @@ class ProyekCollabConfirmationPage extends React.Component<
                                             {Object.keys(assignments).map((rrr, idx) => {
                                                 const name = assignments[rrr].name || null;
                                                 const userId = assignments[rrr].id as string;
-                                                let delayAni = 0.25;
+                                                let delayAni = 0.35;
                                                 if (idx > 0) {
-                                                    delayAni = 0.25 + 0.1 * (idx + 1);
+                                                    delayAni = 0.35 + 0.1 * (idx + 1);
                                                 }
 
                                                 return (
