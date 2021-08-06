@@ -115,11 +115,20 @@ Kodenama: *Tidak ada*
 
 ## Versi 1.1.3
 
-Kodenama *Tidak ada*
+Kodenama: *Tidak ada*
 
 - 🚀 Embed generator sekarang berubah lebih cepat dengan menggunakan \`postMessage\`
 - ✏ Ubah jumlah episode sebuah proyek melalui website langsung!
 - ✨ Beberapa penyesuaian backend agar keliatan lebih professional :)
+
+## Versi 1.2.0
+
+Kodenama: *Tidak ada*
+
+- 🤝 Lakukan kolaborasi dengan peladen lain via website
+
+Anda dapat melakukan inisiasi kolaborasi baru, membatalkan kode kolaborasi, dan memputuskan kolaborasi melalui website sekarang!
+Cukup kunjungi \`/admin/proyek/{animeId}/kolaborasi\` untuk mulai!
 `;
 
 export function getAboutContent() {

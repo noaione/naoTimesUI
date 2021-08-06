@@ -4,6 +4,7 @@ import Link from "next/link";
 import Router from "next/router";
 
 import PlusIcon from "mdi-react/PlusIcon";
+import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 
 import AdminLayout from "../../../components/AdminLayout";
 import MetadataHead from "../../../components/MetadataHead";
@@ -130,11 +131,17 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                 </Head>
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
-                        <div className="flex">
+                        <div className="flex flex-row gap-2">
                             <Link href="/admin/proyek/tambah" passHref>
                                 <a className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center">
-                                    <PlusIcon className="font-bold" />
+                                    <PlusIcon className="font-bold mr-1" />
                                     <span className="font-semibold mt-0.5">Tambah</span>
+                                </a>
+                            </Link>
+                            <Link href="/admin/proyek/kolaborasi" passHref>
+                                <a className="flex flex-row px-3 py-2 rounded-lg bg-yellow-500 text-white transition hover:bg-yellow-700 duration-200 ease-in-out items-center">
+                                    <CollabIcon className="font-bold mr-1" />
+                                    <span className="font-semibold mt-0.5">Kolaborasi</span>
                                 </a>
                             </Link>
                         </div>
@@ -173,7 +180,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     if (!user) {
         return {
             redirect: {
-                destination: "/",
+                destination: "/?cb=/admin/proyek",
                 permanent: false,
             },
         };

@@ -44,6 +44,7 @@ interface EpisodeBoxProps extends SettingsProps {
     status: EpisodeStatuses;
     isReleased: boolean;
     animateDelay?: number;
+    disableEditing?: boolean;
 }
 
 interface EpisodeBoxHeaderProps extends Omit<EpisodeBoxProps, "status" | "onErrorModal" | "animeId"> {
@@ -72,23 +73,25 @@ function EpisodeBoxHeader(props: EpisodeBoxHeaderProps) {
                 <div className="flex items-center font-bold text-black dark:text-gray-200">
                     Episode {episode.toString()}
                 </div>
-                <div className="flex items-center">
-                    <button
-                        onClick={props.onClick}
-                        className={`flex flex-row focus:outline-none transition duration-200 text-white text-sm py-1 px-3 rounded-md ${
-                            isEdit
-                                ? isSubmit
-                                    ? "bg-blue-400"
-                                    : "bg-blue-500 hover:bg-blue-600"
-                                : isSubmit
-                                ? "bg-red-400"
-                                : "bg-red-500 hover:bg-red-600"
-                        } hover:shadow-lg ${isSubmit ? "cursor-not-allowed opacity-60" : "opacity-100"}`}
-                    >
-                        {isSubmit && <LoadingCircle className="mt-0 ml-0 mr-2" />}
-                        {isEdit ? "Beres" : "Edit"}
-                    </button>
-                </div>
+                {!props.disableEditing && (
+                    <div className="flex items-center">
+                        <button
+                            onClick={props.onClick}
+                            className={`flex flex-row focus:outline-none transition duration-200 text-white text-sm py-1 px-3 rounded-md ${
+                                isEdit
+                                    ? isSubmit
+                                        ? "bg-blue-400"
+                                        : "bg-blue-500 hover:bg-blue-600"
+                                    : isSubmit
+                                    ? "bg-red-400"
+                                    : "bg-red-500 hover:bg-red-600"
+                            } hover:shadow-lg ${isSubmit ? "cursor-not-allowed opacity-60" : "opacity-100"}`}
+                        >
+                            {isSubmit && <LoadingCircle className="mt-0 ml-0 mr-2" />}
+                            {isEdit ? "Beres" : "Edit"}
+                        </button>
+                    </div>
+                )}
             </div>
             <span className="font-semibold text-gray-800 dark:text-gray-300">
                 📺 Rilis: {isReleased ? <FinishedPopper /> : <UnfinishedPopper />}
@@ -253,6 +256,7 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                             isEdit={this.state.isEdit}
                             isSubmit={this.state.isSubmit}
                             isReleased={isReleased}
+                            disableEditing={this.props.disableEditing}
                         />
                         <div className="flex flex-col">
                             {unfinishedRoles.length > 0 && (

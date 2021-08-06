@@ -1,6 +1,7 @@
 import React from "react";
 import Router from "next/router";
 
+import TrashIcon from "mdi-react/TrashCanIcon";
 import { motion } from "framer-motion";
 
 import Modal, { CallbackModal } from "../Modal";
@@ -91,26 +92,26 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
 
         return (
             <>
-                <div className="flex row mt-4">
-                    <motion.div
-                        className="flex flex-col"
-                        initial={{ y: -20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 1.05 }}
+                <motion.div
+                    className="flex flex-col"
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1.05 }}
+                >
+                    <button
+                        onClick={this.handleShow}
+                        className={`rounded text-white px-4 py-2 ${
+                            isSubmitting ? "bg-red-500 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                        } transition duration-200 flex flex-row items-center focus:outline-none`}
                     >
-                        <button
-                            onClick={this.handleShow}
-                            className={`rounded text-white px-4 py-2 ${
-                                isSubmitting ? "bg-red-500 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
-                            } transition duration-200 flex flex-row items-center focus:outline-none`}
-                        >
-                            {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
-                            <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>
-                                Hapus Proyek
-                            </span>
-                        </button>
-                    </motion.div>
-                </div>
+                        {isSubmitting ? (
+                            <LoadingCircle className="ml-0 mt-0" />
+                        ) : (
+                            <TrashIcon className="font-semibold mr-1 ml-0" />
+                        )}
+                        <span className="font-semibold mt-0.5">Hapus Proyek</span>
+                    </button>
+                </motion.div>
                 <Modal
                     onMounted={(cb) => (this.modalCb = cb)}
                     onClose={() => {

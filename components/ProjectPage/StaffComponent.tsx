@@ -16,6 +16,7 @@ interface StaffProps extends SettingsProps {
     userId?: Nullable<string | number>;
     animateDelay?: number;
     name?: string;
+    disableEditing?: boolean;
 }
 
 interface StaffState {
@@ -85,7 +86,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
     }
 
     render() {
-        const { id, animateDelay } = this.props;
+        const { id, animateDelay, disableEditing } = this.props;
         const { userId, name, isEdit, isFirst } = this.state;
         const roleColors = RoleColorPalette[id];
         const realName = typeof name === "string" ? name : "Tidak Diketahui";
@@ -101,10 +102,12 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: isFirst ? aniDelay : 0 }}
                 >
-                    <PencilIcon
-                        className="text-gray-800 dark:text-gray-200 mr-1 hover:opacity-70 transition-opacity duration-200 ease-out"
-                        onClick={() => this.setState({ isEdit: true, isFirst: false })}
-                    />
+                    {!disableEditing && (
+                        <PencilIcon
+                            className="text-gray-800 dark:text-gray-200 mr-1 hover:opacity-70 transition-opacity duration-200 ease-out"
+                            onClick={() => this.setState({ isEdit: true, isFirst: false })}
+                        />
+                    )}
                     <span className={"px-2 rounded font-semibold " + roleColors}>
                         {expandRoleLocalized(id) + ": " + assigneeName}
                     </span>

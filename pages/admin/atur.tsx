@@ -92,7 +92,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     if (!user) {
         return {
             redirect: {
-                destination: "/",
+                destination: "/?cb=/admin/atur",
                 permanent: false,
             },
         };

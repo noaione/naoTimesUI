@@ -1,6 +1,8 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
+import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 import { motion } from "framer-motion";
 
 import AdminLayout from "../../../../components/AdminLayout";
@@ -19,7 +21,7 @@ import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } fr
 
 interface RemovedEpisodeData {
     episode: number;
-    index;
+    index: number;
 }
 
 interface ProyekPageProps {
@@ -35,7 +37,7 @@ interface ProyekPageState {
     isSubmitting: boolean;
 }
 
-class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
+class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
     modalCb?: CallbackModal;
 
     constructor(props: ProyekPageProps) {
@@ -213,10 +215,27 @@ class ProyekHomepage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                 );
                                             })}
                                         </div>
-                                        <ProjectPageComponent.Deletion
-                                            onErrorModal={this.showErrorCallback}
-                                            id={id}
-                                        />
+                                        <div className="flex row mt-4 gap-3">
+                                            <ProjectPageComponent.Deletion
+                                                onErrorModal={this.showErrorCallback}
+                                                id={id}
+                                            />
+                                            <motion.div
+                                                className="flex flex-col"
+                                                initial={{ y: -20, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                transition={{ delay: 1.1 }}
+                                            >
+                                                <Link href={`/admin/proyek/${id}/kolaborasi`} passHref>
+                                                    <a className="flex flex-row px-3 py-2 rounded-lg bg-yellow-600 text-white transition hover:bg-yellow-700 duration-200 ease-in-out items-center">
+                                                        <CollabIcon className="font-bold mr-1" />
+                                                        <span className="font-semibold mt-0.5">
+                                                            Kolaborasi
+                                                        </span>
+                                                    </a>
+                                                </Link>
+                                            </motion.div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +339,7 @@ export const getServerSideProps = withSession(async function ({
     if (!user) {
         return {
             redirect: {
-                destination: "/",
+                destination: "/?cb=/admin/proyek",
                 permanent: false,
             },
         };
@@ -348,4 +367,4 @@ export const getServerSideProps = withSession(async function ({
     return { props: { user: { loggedIn: true, ...user }, animeData: findAnime } };
 });
 
-export default ProyekHomepage;
+export default ProyekMainPage;

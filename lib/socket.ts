@@ -6,12 +6,19 @@ import { isNone } from "./utils";
 const sleep = promisify(setTimeout);
 
 type CheckMethodEvent = "authenticate" | "ping";
-type GetMethodEvent = "get server" | "get channel" | "get user" | "get user perms" | "get server channel";
+type GetMethodEvent =
+    | "get server"
+    | "get servers"
+    | "get channel"
+    | "get user"
+    | "get user perms"
+    | "get server channel";
 type UpdateMethodEvent = "pull data" | "pull admin";
 type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "delete roles" | "announce drop";
 type CreateMethodEvent = "create role";
 
 type FansubRSSEvent = "fsrss get" | "fsrss parse" | "fsrss update" | "fsrss create" | "fsrss delete";
+type CollaborationEvent = "collab create" | "collab delete";
 
 type SocketEvent =
     | CheckMethodEvent
@@ -19,7 +26,8 @@ type SocketEvent =
     | UpdateMethodEvent
     | DeleteMethodEvent
     | CreateMethodEvent
-    | FansubRSSEvent;
+    | FansubRSSEvent
+    | CollaborationEvent;
 type MockSocketEvent = `mock ${SocketEvent}`;
 
 function createNewSocket() {

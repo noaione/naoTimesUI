@@ -36,6 +36,12 @@ const BannerSets: BannerData[] = [
         shortMessage: "Ubah total episode via naoTimesUI",
         link: "/admin/proyek",
     },
+    {
+        id: "20210806-1500",
+        message: "Inisiasi, batalkan, dan putuskan kolaborasi sebuah proyek melalui naoTimesUI",
+        shortMessage: "Kolaborasi via naoTimesUI",
+        link: "/admin/proyek/kolaborasi",
+    },
 ];
 
 export default BannerSets;

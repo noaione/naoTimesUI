@@ -159,7 +159,7 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
                                     filterOption={() => true}
                                     onChange={this.onChannelSelection}
                                     placeholder="Ubah #kanal..."
-                                    inputId="alias-selector-reactive-input"
+                                    inputId="channel-announcer-selector-rselect"
                                     classNamePrefix="rselect"
                                     isClearable
                                 />

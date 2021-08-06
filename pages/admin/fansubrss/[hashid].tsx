@@ -267,7 +267,7 @@ export const getServerSideProps = withSession(async function ({
     if (!user) {
         return {
             redirect: {
-                destination: "/",
+                destination: "/?cb=/admin/fansubrss",
                 permanent: false,
             },
         };

@@ -16,6 +16,7 @@ import withSession, { IUserAuth, NextServerSideContextWithSession } from "../lib
 
 interface LoginRegistredProps {
     isRegistered?: boolean;
+    callback?: string;
 }
 
 interface LoginState {
@@ -39,6 +40,7 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
     async onSubmit(e: React.FormEvent<Element>) {
         e.preventDefault();
         this.setState({ submitting: true });
+        const { callback } = this.props;
 
         const body = {
             // @ts-ignore
@@ -57,7 +59,11 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
 
         const userObj = await res.json();
         if (userObj.loggedIn) {
-            Router.push("/admin");
+            if (typeof callback === "string") {
+                Router.push(callback);
+            } else {
+                Router.push("/admin");
+            }
         } else {
             this.setState({ errorMsg: userObj.error, submitting: false });
         }
@@ -196,7 +202,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     // eslint-disable-next-line no-underscore-dangle
     const NEXTJS_RouterQuery = req.__NEXT_INIT_QUERY || {};
 
-    const { registered } = NEXTJS_RouterQuery;
+    const { registered, cb } = NEXTJS_RouterQuery;
 
     if (user && !registered) {
         return {
@@ -218,8 +224,12 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     }
 
     const justRegistered = typeof registered === "string";
+    let realCb = null;
+    if (typeof cb === "string" && cb.startsWith("/")) {
+        realCb = cb;
+    }
 
-    return { props: { isRegistered: justRegistered } };
+    return { props: { isRegistered: justRegistered, callback: realCb } };
 });
 
 export default LoginPage;
