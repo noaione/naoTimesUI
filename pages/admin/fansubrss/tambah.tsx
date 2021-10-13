@@ -109,7 +109,7 @@ class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTamb
                             </>
                         ) : (
                             <FansubRSSCreateNew
-                                id={this.props.user.id}
+                                id={this.props.user.id as string}
                                 onErrorModal={this.showErrorCallback}
                             />
                         )}
