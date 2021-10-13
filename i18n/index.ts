@@ -69,5 +69,6 @@ export function timeAgoLocale(unix: number, lang: TimeAgoLocale): string {
     // Create a new TimeAgo class.
     const timeAgo = new TimeAgo(realLang);
     // And then format it
+    // @ts-ignore
     return timeAgo.format(DateTime.fromSeconds(unix, { zone: "UTC" }).toJSDate());
 }

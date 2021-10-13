@@ -1,4 +1,5 @@
 import React from "react";
+// eslint-disable-next-line @next/next/no-document-import-in-page
 import Document, { DocumentContext, Head, Html, Main, NextScript } from "next/document";
 
 import { InlineJs } from "@kachkaev/react-inline-js";

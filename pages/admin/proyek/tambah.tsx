@@ -40,7 +40,32 @@ interface ProjectNewProps {
     user: UserProps & { loggedIn: boolean };
 }
 
-function matchFilterProper(data: any, inputValue: string) {
+interface QuickAnilistResult {
+    id: number;
+    idMal: number;
+    format: string;
+    season: string;
+    seasonYear: number;
+    episodes: number;
+    startDate: {
+        year: string;
+    };
+    title: {
+        romaji: string;
+        english: string;
+        native: string;
+    };
+    coverImage: {
+        medium: string;
+        large: string;
+        extraLarge: string;
+    };
+    titlematch: string;
+    titlematchen: string;
+    titlematchother: string;
+}
+
+function matchFilterProper(data: QuickAnilistResult, inputValue: string) {
     const matchRe = new RegExp(`(${inputValue})`, "i");
     let titleUncased = (data.titlematch as string) ?? "";
     let titleUncasedEN = (data.titlematchen as string) ?? "";
@@ -53,12 +78,13 @@ function matchFilterProper(data: any, inputValue: string) {
 
 const searchAnime = (inputValue: string, callback: Function) => {
     axios
-        .get("/api/anilist/find", { params: { q: inputValue }, responseType: "json" })
+        .get<{ results: QuickAnilistResult[] }>("/api/anilist/find", {
+            params: { q: inputValue },
+            responseType: "json",
+        })
         .then((res) => {
             const results = res.data;
-            const parsedFiltered = results.results.filter((data) =>
-                matchFilterProper(data, inputValue)
-            ) as any[];
+            const parsedFiltered = results.results.filter((data) => matchFilterProper(data, inputValue));
             console.info(
                 `Found ${results.results.length} matches originally, filtered to ${parsedFiltered.length} matches`
             );

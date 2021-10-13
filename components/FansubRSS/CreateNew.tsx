@@ -8,7 +8,12 @@ import LoadingCircle from "../LoadingCircle";
 import { parseFeed } from "../../lib/utils";
 import SampleViewer from "./SampleViewer";
 
-function matchFilterProper(data: any, inputValue: string) {
+interface ChannelSelect {
+    id: string;
+    name: string;
+}
+
+function matchFilterProper(data: ChannelSelect, inputValue: string) {
     const matchRe = new RegExp(`(${inputValue})`, "i");
     const dataID = data.id;
     const dataName = data.name;
@@ -17,10 +22,10 @@ function matchFilterProper(data: any, inputValue: string) {
 
 const loadChannel = (inputValue: string, callback: Function) => {
     axios
-        .get("/api/fsrss/channelfind", { responseType: "json" })
+        .get<{ results: ChannelSelect[] }>("/api/fsrss/channelfind", { responseType: "json" })
         .then((res) => {
             const results = res.data;
-            const properResults = results.results.filter((e: any) => matchFilterProper(e, inputValue));
+            const properResults = results.results.filter((e) => matchFilterProper(e, inputValue));
             callback(properResults);
         })
         .catch((err) => {

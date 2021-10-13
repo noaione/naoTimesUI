@@ -48,6 +48,11 @@ interface ProyekCollabPageState {
     isSubmit: boolean;
 }
 
+interface ChannelData {
+    id: string;
+    name: string;
+}
+
 class ProyekPageCollabAddition extends React.Component<ProyekCollabPageProps, ProyekCollabPageState> {
     modalCb?: CallbackModal;
 
@@ -67,11 +72,17 @@ class ProyekPageCollabAddition extends React.Component<ProyekCollabPageProps, Pr
     }
 
     loadServers(inputValue: string, callback: Function) {
+        interface RawAPIResult {
+            result: ChannelData[];
+            message?: string;
+            success: boolean;
+        }
+
         axios
-            .get("/api/showtimes/servers", { responseType: "json" })
+            .get<RawAPIResult>("/api/showtimes/servers", { responseType: "json" })
             .then((res) => {
                 const results = res.data;
-                let rawOptions: any[] = results.result;
+                let rawOptions = results.result;
                 // Filter out anything that doesnt contain name
                 rawOptions = rawOptions.filter((item) => typeof item.name === "string");
                 // Filter out the current server ID
