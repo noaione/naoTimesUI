@@ -99,6 +99,7 @@ class FansubRSSCreateNew extends React.Component<FansubRSSCreateNewProps, Fansub
             Router.push(`/admin/fansubrss/${jsonRes.id}`);
         } else {
             this.props.onErrorModal(jsonRes.message);
+            this.setState({ isSubmit: false });
         }
     }
 

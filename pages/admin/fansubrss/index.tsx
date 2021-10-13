@@ -120,7 +120,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         isPremium = rssSchemas?.premium ?? false;
     }
 
-    return { props: { user: { loggedIn: true, ...user }, fansubRss: fansubRSSFeeds, isPremium } };
+    return { props: { user: { loggedIn: true, ...user }, fansubRss: fansubRSSFeeds ?? [], isPremium } };
 });
 
 export default FansubrssIndex;

@@ -69,13 +69,13 @@ class EmbedTitle extends React.Component<IEmbedTitle> {
 
         if (url) {
             return (
-                <Link href={url} className="embed-title">
+                <Link href={url} className="embed-title embed-title-url !text-base pb-1">
                     {titleParsed}
                 </Link>
             );
         }
 
-        return <div className="embed-title">{titleParsed}</div>;
+        return <div className="embed-title !text-base pb-1">{titleParsed}</div>;
     }
 }
 
@@ -305,11 +305,22 @@ export interface IEmbed {
 export default class EmbedPreview extends React.Component<IEmbed> {
     constructor(props) {
         super(props);
+        this.shouldRender = this.shouldRender.bind(this);
+    }
+
+    shouldRender() {
+        // Check if we should render embed.
+        const { author, title, description, thumbnail, image, fields } = this.props;
+        return author || title || description || thumbnail || image || fields;
     }
 
     render() {
         const { color, author, title, url, description, fields, thumbnail, image, timestamp, footer } =
             this.props;
+
+        if (!this.shouldRender()) {
+            return null;
+        }
 
         return (
             <>

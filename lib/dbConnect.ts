@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const { MONGODB_URI } = process.env;
+const isDev = process.env.NODE_ENV === "development";
 
 if (!MONGODB_URI) {
     throw new Error(`Please define MONGODB_URI on your environment table`);
@@ -24,15 +25,20 @@ async function dbConnect() {
             global.mongoose.conn.connection.readyState === 3
         ) {
             console.info("Connection to MongoDB dropped, trying to reconnect...");
-            const promised = await mongoose.connect(MONGODB_URI, DEFAULT_OPTS);
+            let joinedDBUrl = MONGODB_URI;
+            if (isDev) joinedDBUrl += "_dev";
+            console.info(`Connecting to ${joinedDBUrl}`);
+            const promised = await mongoose.connect(joinedDBUrl, DEFAULT_OPTS);
             global.mongoose.conn = promised;
         }
         return global.mongoose.conn;
     }
 
     if (!global.mongoose.promise) {
-        console.info("Connecting to Mongoose...");
-        const promised = await mongoose.connect(MONGODB_URI, DEFAULT_OPTS);
+        let joinedDBUrl = MONGODB_URI;
+        if (isDev) joinedDBUrl += "_dev";
+        console.info(`Connecting to ${joinedDBUrl}`);
+        const promised = await mongoose.connect(joinedDBUrl, DEFAULT_OPTS);
         // @ts-ignore
         global.mongoose.promise = true;
         console.info("Connected!");

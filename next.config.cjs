@@ -1,8 +1,14 @@
-const { withSentryConfig } = require("@sentry/nextjs");
-const withPlugins = require("next-compose-plugins");
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-    enabled: process.env.ANALYZE === "true",
-});
+// const { withSentryConfig } = require("@sentry/nextjs");
+// const withPlugins = require("next-compose-plugins");
+// const withBundleAnalyzer = require("@next/bundle-analyzer")({
+//     enabled: process.env.ANALYZE === "true",
+// });
+
+import { withSentryConfig } from "@sentry/nextjs";
+import withPlugins from "next-compose-plugins";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
 console.info("Is Bundle analyer enabled?", process.env.ANALYZE === "true");
 
@@ -22,6 +28,12 @@ if (IS_PREVIEW) {
 
 const moduleExports = {
     productionBrowserSourceMaps: true,
+    experimental: {
+        swcLoader: true,
+        swcMinify: true,
+        esmExternals: true,
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     webpack: (config, { dev, isServer, webpack }) => {
         if (!dev && !isServer) {
             Object.assign(config.resolve.alias, {

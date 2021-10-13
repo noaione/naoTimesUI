@@ -143,7 +143,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     let totalData = 0;
     if (!isNone(rssSchemas)) {
         isPremium = rssSchemas?.premium ?? false;
-        totalData = rssSchemas.feeds.length;
+        totalData = rssSchemas?.feeds?.length ?? 0;
     }
 
     return { props: { user: { loggedIn: true, ...user }, isPremium, totalData } };

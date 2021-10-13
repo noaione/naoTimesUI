@@ -64,14 +64,19 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         res.status(401).json({ error: "Mohon masukan Admin ID", success: false });
     } else {
         try {
+            console.info("Trying to connect...");
             await dbConnect();
+            console.info("Finding love...");
             const checkIfServerExist = await ShowtimesModel.find({ id: { $eq: server } });
             if (checkIfServerExist.length > 0) {
+                console.warn("Already exist!");
                 res.status(400).json({ error: "Server anda telah terdaftar!", success: false });
             } else {
                 try {
+                    console.info("Emitting server info...");
                     const verifyServer = await emitSocketAndWait("get server", server);
                     try {
+                        console.info("Emitting user info...");
                         const verifyUser = await emitSocketAndWait("get user", admin);
                         if (verifyUser.is_bot) {
                             res.status(400).json({
@@ -80,26 +85,29 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                             });
                         } else {
                             try {
+                                console.info("Emitting user perms...");
                                 const userPerms = (await emitSocketAndWait("get user perms", {
                                     id: server,
                                     admin,
                                 })) as string[];
+                                console.info(userPerms);
                                 if (
                                     userPerms.includes("owner") ||
                                     userPerms.includes("manage_guild") ||
                                     userPerms.includes("manage_server") ||
                                     userPerms.includes("administrator")
                                 ) {
+                                    console.info("Registering new server...");
                                     await registerNewServer(verifyServer, verifyUser);
                                     res.json({ success: true });
                                 } else {
                                     res.status(403).json({
-                                        error:
-                                            "Maaf, anda tidak memiliki hak yang cukup untuk menjadi Admin (Manage Guild)",
+                                        error: "Maaf, anda tidak memiliki hak yang cukup untuk menjadi Admin (Manage Guild)",
                                         success: false,
                                     });
                                 }
                             } catch (e) {
+                                console.error(e);
                                 res.status(500).json({
                                     error: "Terjadi kesalahan internal, mohon coba lagi nanti",
                                     success: false,
@@ -120,6 +128,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 }
             }
         } catch (err) {
+            console.error(err);
             res.status(500).json({ error: "Terjadi kesalahan internal, mohon coba lagi!", success: false });
         }
     }

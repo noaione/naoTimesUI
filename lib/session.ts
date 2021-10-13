@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { Handler, withIronSession } from "next-iron-session";
-import { NextApiRequestCookies } from "next/dist/next-server/server/api-utils";
 
+import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import type { IncomingMessage } from "http";
 
 interface SessionClass {

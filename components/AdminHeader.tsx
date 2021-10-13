@@ -194,7 +194,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                             await fetch("/api/auth/logout");
                                             Router.push("/");
                                         }}
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white cursor-pointer"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
                                     >
                                         Keluar
                                     </button>

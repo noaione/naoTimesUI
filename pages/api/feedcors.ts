@@ -14,7 +14,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     try {
         const axiosResp = await axios.get(urlParams.toString(), {
             headers: {
-                "User-Agent": `naoTimesUI/v${APP_VERSION} (+https://github.com/noaione/naoTimesUI)`,
+                "User-Agent": `naoTimesUI-RSSBot/v${APP_VERSION} (+https://github.com/noaione/naoTimesUI)`,
             },
             responseType: "text",
         });

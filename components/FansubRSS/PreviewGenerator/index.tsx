@@ -57,6 +57,20 @@ class MessageTimestamp extends React.Component<BasePreviewProps> {
     }
 }
 
+function BotVerified() {
+    return (
+        <svg
+            aria-label="Verified Bot"
+            className="bot-tag-verified"
+            aria-hidden="false"
+            width="16"
+            height="16"
+            viewBox="0 0 16 15.2"
+        >
+            <path d="M7.4,11.17,4,8.62,5,7.26l2,1.53L10.64,4l1.36,1Z" fill="currentColor"></path>
+        </svg>
+    );
+}
 interface IMsgBodyProps extends BasePreviewProps {
     username: string;
     content?: string;
@@ -74,7 +88,10 @@ class MessageBody extends React.Component<IMsgBodyProps> {
                 <div className="markup">
                     <MessageTimestamp compactMode={compactMode} />
                     <span className="username-wrapper align-bottom">
-                        <span className="bot-tag">BOT</span>
+                        <span className="bot-tag">
+                            <BotVerified />
+                            BOT
+                        </span>
                         <strong className="user-name">{username}</strong>
                     </span>
                     <span className="highlight-separator"> - </span>
@@ -108,7 +125,10 @@ class CozyMessageHeader extends React.Component<ICozyHeader> {
             <h2 style={{ lineHeight: "16px" }}>
                 <span className="username-wrapper align-bottom">
                     <strong className="user-name">{username}</strong>
-                    <span className="bot-tag">BOT</span>
+                    <span className="bot-tag">
+                        <BotVerified />
+                        BOT
+                    </span>
                 </span>
                 <span className="highlight-separator"> - </span>
                 <MessageTimestamp compactMode={compactMode} />

@@ -7,6 +7,8 @@ import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import "../styles/global.css";
 import type { AppProps } from "next/app";
 
+const isDev = process.env.NODE_ENV === "development";
+
 // Get the original warning function and assign it to new variables
 const originalWarn = console.warn;
 // Then rebind the function with some exception
@@ -36,13 +38,31 @@ Router.events.on("routeChangeStart", (url) => {
 Router.events.on("routeChangeComplete", () => progress.finish());
 Router.events.on("routeChangeError", () => progress.finish());
 
+let DevModeBanner: () => JSX.Element | null = () => null;
+if (process.env.NODE_ENV === "development") {
+    DevModeBanner = () => {
+        return (
+            <div className="bottom-0 fixed w-full bg-red-400 text-center py-1 font-bold align-middle z-[999] backdrop-blur-sm bg-opacity-40 dark:text-white">
+                ⚠ Development mode
+            </div>
+        );
+    };
+}
+
 function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
+    let showDevBanner = isDev;
+    if (router.asPath.includes("/embed")) {
+        showDevBanner = false;
+    }
     return (
-        <AnimateSharedLayout>
-            <AnimatePresence key={router.route}>
-                <Component {...pageProps} />
-            </AnimatePresence>
-        </AnimateSharedLayout>
+        <>
+            {showDevBanner && <DevModeBanner />}
+            <AnimateSharedLayout>
+                <AnimatePresence key={router.route}>
+                    <Component {...pageProps} />
+                </AnimatePresence>
+            </AnimateSharedLayout>
+        </>
     );
 }
 

@@ -34,9 +34,17 @@
 }
 
 .bot-tag {
-    @apply font-semibold uppercase align-bottom leading-4 flex-shrink-0 bg-[#7289da] ml-[6px] py-[1px] px-[2px] text-[10px] rounded-[3px];
+    @apply font-semibold uppercase align-bottom leading-4 flex-shrink-0 bg-[#5865f2] pl-1 ml-[6px] py-[1px] px-[2px] text-[10px] rounded-[3px];
     color: #fff !important;
     -ms-flex-negative: 0;
+}
+
+.bot-tag-verified {
+    width: .9375rem;
+    height: .9375rem;
+    margin-left: -.25rem;
+    margin-bottom: .23rem;
+    display: inline-block;
 }
 
 %avatar-container {
@@ -230,6 +238,10 @@
 %chat-link-decor {
     -webkit-transition: 0.05s;
     text-decoration: none;
+}
+
+.embed-title-url {
+    color: rgb(0, 104, 224) !important;
 }
 
 .chat {
@@ -700,6 +712,10 @@
 
     & .hljs-title {
         color: #268bd2;
+    }
+
+    & .embed-title-url {
+        color: rgb(0, 175, 244) !important;
     }
 
     & .hljs-attr,
