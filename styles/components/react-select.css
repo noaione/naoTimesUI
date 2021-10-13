@@ -30,6 +30,10 @@
         @apply bg-gray-800;
     }
 
+    & .rselect__input-container {
+        @apply text-white;
+    }
+
     & .rselect__input {
         @apply text-white border-0;
     }

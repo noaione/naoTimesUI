@@ -11,13 +11,6 @@ if (!global.mongoose) {
     global.mongoose = { conn: null, promise: null };
 }
 
-const DEFAULT_OPTS = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-};
-
 async function dbConnect() {
     if (global.mongoose.conn) {
         if (
@@ -28,7 +21,7 @@ async function dbConnect() {
             let joinedDBUrl = MONGODB_URI;
             if (isDev) joinedDBUrl += "_dev";
             console.info(`Connecting to ${joinedDBUrl}`);
-            const promised = await mongoose.connect(joinedDBUrl, DEFAULT_OPTS);
+            const promised = await mongoose.connect(joinedDBUrl);
             global.mongoose.conn = promised;
         }
         return global.mongoose.conn;
@@ -38,7 +31,7 @@ async function dbConnect() {
         let joinedDBUrl = MONGODB_URI;
         if (isDev) joinedDBUrl += "_dev";
         console.info(`Connecting to ${joinedDBUrl}`);
-        const promised = await mongoose.connect(joinedDBUrl, DEFAULT_OPTS);
+        const promised = await mongoose.connect(joinedDBUrl);
         // @ts-ignore
         global.mongoose.promise = true;
         console.info("Connected!");
