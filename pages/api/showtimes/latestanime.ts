@@ -2,7 +2,7 @@ import runMiddleware, { authMiddleware } from "@/lib/middleware";
 import { NextApiResponse } from "next";
 
 import dbConnect from "@/lib/dbConnect";
-import withSession, { NextApiRequestWithSession } from "@/lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 
 import { ShowtimesModel, ShowtimesProps } from "@/models/show";
@@ -39,9 +39,8 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    await runMiddleware(req, res, authMiddleware);
-    const user = req.activeUser;
-    if (isNone(user)) {
+    const user = req.session.get<IUserAuth>("user");
+    if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
         await dbConnect();
