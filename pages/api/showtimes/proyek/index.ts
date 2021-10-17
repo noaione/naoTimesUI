@@ -28,6 +28,7 @@ function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
             id: anime_data.id,
             title: anime_data.title,
             assignments: anime_data.assignments,
+            // @ts-ignore
             poster: anime_data.poster_data.url,
             is_finished: isFinished,
         };

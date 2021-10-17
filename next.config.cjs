@@ -34,7 +34,10 @@ const moduleExports = {
         esmExternals: true,
     },
     typescript: {
-        ignoreBuildErrors: process.env.NODE_ENV === "production",;
+        ignoreBuildErrors: true,
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     webpack: (config, { dev, isServer, webpack }) => {

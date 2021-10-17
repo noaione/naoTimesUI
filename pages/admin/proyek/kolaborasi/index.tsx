@@ -31,6 +31,7 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
             const { id: konfirmId, serverId, serverName, animeInfo } = konfirmasi;
             const {
                 title,
+                // @ts-ignore
                 poster_data: { url: imageUrl },
             } = animeInfo;
 

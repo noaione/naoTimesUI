@@ -80,6 +80,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
         }
 
         const { id, title, poster_data, status, last_update, start_time } = animeData;
+        // @ts-ignore
         const { url: poster_url } = poster_data;
 
         const unfinishedEpisode = status.filter((episode) => !episode.is_done);

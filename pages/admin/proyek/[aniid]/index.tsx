@@ -5,19 +5,20 @@ import Link from "next/link";
 import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 import { motion } from "framer-motion";
 
-import AdminLayout from "../../../../components/AdminLayout";
-import ErrorModal from "../../../../components/ErrorModal";
-import LoadingCircle from "../../../../components/LoadingCircle";
-import MetadataHead from "../../../../components/MetadataHead";
-import ProjectPageComponent from "../../../../components/ProjectPage";
-import { CallbackModal } from "../../../../components/Modal";
+import AdminLayout from "@/components/AdminLayout";
+import ErrorModal from "@/components/ErrorModal";
+import LoadingCircle from "@/components/LoadingCircle";
+import MetadataHead from "@/components/MetadataHead";
+import ProjectPageComponent from "@/components/ProjectPage";
+import { CallbackModal } from "@/components/Modal";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../../lib/session";
-import { isNone, Nullable, RoleProject } from "../../../../lib/utils";
+import dbConnect from "@/lib/dbConnect";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
-import { UserProps } from "../../../../models/user";
-import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "../../../../models/show";
+import { UserProps } from "@/models/user";
+import { isValidObjectId, ObjectId } from "mongoose";
+import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
 
 interface RemovedEpisodeData {
     episode: number;
@@ -165,6 +166,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                     <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
                                         <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
+                                            // @ts-ignore
                                             src={poster_data.url}
                                             initial={{ y: 50, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
@@ -363,6 +365,8 @@ export const getServerSideProps = withSession(async function ({
             notFound: true,
         };
     }
+
+    // const dumpedData = JSON.parse(JSON.stringify(findAnime));
 
     return { props: { user: { loggedIn: true, ...user }, animeData: findAnime } };
 });

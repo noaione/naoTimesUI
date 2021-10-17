@@ -41,7 +41,12 @@ export interface IUserAuth {
     name?: string;
 }
 
-export type NextApiRequestWithSession = NextApiRequest & { session: SessionClass };
+interface CustomSession {
+    session: SessionClass;
+    activeUser?: IUserAuth & { isToken: boolean };
+}
+
+export type NextApiRequestWithSession = NextApiRequest & CustomSession;
 
 interface ExtraRouterContext {
     cookies: NextApiRequestCookies;

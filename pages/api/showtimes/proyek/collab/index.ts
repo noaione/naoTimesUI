@@ -34,6 +34,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
         if (allValidCollab.length < 1) {
             continue;
         }
+        // @ts-ignore
         const imgPoster = anime.poster_data.url;
         allCollabs.push({
             id: anime.id,

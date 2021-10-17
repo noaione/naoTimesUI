@@ -330,6 +330,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         title: realTitle,
         start_time: startDate,
         poster_data: {
+            // @ts-ignore
             color: rgbHexToRGBInt(coverImage.color),
             url: coverImage.large || coverImage.medium,
         },

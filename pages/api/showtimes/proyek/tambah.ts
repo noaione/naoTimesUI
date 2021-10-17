@@ -172,6 +172,7 @@ async function addNewProject(dataToAdd: any) {
 
     const roleId = generatedRole.id;
     finalizedAnimeData.role_id = roleId;
+    // @ts-ignore
     finalizedAnimeData.assignments = validatedRoles;
     try {
         await ShowtimesModel.updateOne(

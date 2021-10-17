@@ -76,6 +76,7 @@ class ProyekPageCollab extends React.Component<ProyekCollabPageProps, ProyekColl
                                     <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
                                         <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
+                                            // @ts-ignore
                                             src={poster_data.url}
                                             initial={{ y: 50, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
