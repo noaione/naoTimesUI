@@ -21,19 +21,24 @@ import { createSchema, ExtractProps, Type, typedModel } from "ts-mongoose";
 //     }
 // }
 
+const EpisodeStatusChildSchemas = createSchema(
+    {
+        TL: Type.boolean({ required: true }),
+        TLC: Type.boolean({ required: true }),
+        ENC: Type.boolean({ required: true }),
+        ED: Type.boolean({ required: true }),
+        TM: Type.boolean({ required: true }),
+        TS: Type.boolean({ required: true }),
+        QC: Type.boolean({ required: true }),
+    },
+    { _id: false, versionKey: false }
+);
+
 const EpisodeStatusSchemas = createSchema(
     {
         episode: Type.number({ required: true }),
         is_done: Type.boolean({ required: true }),
-        progress: Type.object({ required: true }).of({
-            TL: Type.boolean({ required: true }),
-            TLC: Type.boolean({ required: true }),
-            ENC: Type.boolean({ required: true }),
-            ED: Type.boolean({ required: true }),
-            TM: Type.boolean({ required: true }),
-            TS: Type.boolean({ required: true }),
-            QC: Type.boolean({ required: true }),
-        }),
+        progress: Type.object({ required: true }).of(EpisodeStatusChildSchemas),
         airtime: Type.number(),
     },
     { versionKey: false, _id: false }

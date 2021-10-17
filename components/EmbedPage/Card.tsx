@@ -125,6 +125,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                 key={`episode-card-${id}-${firstEpisode.episode}`}
                                 episode={firstEpisode.episode}
                                 airingAt={firstEpisode.airtime}
+                                // @ts-ignore
                                 progress={firstEpisode.progress}
                                 lang={realLang}
                             />
@@ -138,6 +139,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                                 key={`episode-card-${id}-${ep.episode}`}
                                                 episode={ep.episode}
                                                 airingAt={ep.airtime}
+                                                // @ts-ignore
                                                 progress={ep.progress}
                                                 lang={realLang}
                                             />

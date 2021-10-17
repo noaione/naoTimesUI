@@ -177,6 +177,7 @@ class ProyekCollabConfirmationPage extends React.Component<
                                         animeId={id}
                                         episode={res.episode}
                                         airTime={res.airtime}
+                                        // @ts-ignore
                                         status={res.progress}
                                         isReleased={res.is_done}
                                         animateDelay={delayAni}

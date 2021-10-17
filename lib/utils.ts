@@ -362,6 +362,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
                 },
                 airtime: airingTime,
             };
+            // @ts-ignore
             compiledData.status.push(statusSets);
         }
     } else {
@@ -385,6 +386,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
                 },
                 airtime,
             };
+            // @ts-ignore
             compiledData.status.push(statusSets);
         });
     }

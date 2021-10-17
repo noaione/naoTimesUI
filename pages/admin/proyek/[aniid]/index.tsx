@@ -307,6 +307,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                               animeId={id}
                                               episode={res.episode}
                                               airTime={res.airtime}
+                                              // @ts-ignore
                                               status={res.progress}
                                               isReleased={res.is_done}
                                               animateDelay={delayAni}

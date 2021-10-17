@@ -85,7 +85,9 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                 episodeNewData.push({
                     episode: episodeNum,
                     is_done: false,
+                    // @ts-ignore
                     progress: {
+                        // @ts-ignore
                         TL: false,
                         TLC: false,
                         ENC: false,
