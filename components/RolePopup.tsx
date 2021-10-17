@@ -2,7 +2,7 @@ import React from "react";
 
 import { RoleColorPalette } from "./ColorMap";
 
-import { RoleProject } from "../lib/utils";
+import { isNone, RoleProject } from "../lib/utils";
 
 interface RolePopupProps {
     title: RoleProject;
@@ -24,6 +24,9 @@ class RolePopup extends React.Component<RolePopupProps> {
         }
 
         const extraColor = RoleColorPalette[title];
+        if (isNone(extraColor)) {
+            return null;
+        }
         return (
             <>
                 <div
