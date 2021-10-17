@@ -33,6 +33,9 @@ const moduleExports = {
         swcMinify: true,
         esmExternals: true,
     },
+    typescript: {
+        ignoreBuildErrors: process.env.NODE_ENV === "production",;
+    },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     webpack: (config, { dev, isServer, webpack }) => {
         if (!dev && !isServer) {
