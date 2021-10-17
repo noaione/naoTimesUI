@@ -9,6 +9,7 @@ const UserSchemas = createSchema(
         id: Type.string({ required: true }),
         secret: Type.string({ required: true }),
         name: Type.string(),
+        api_token: Type.string(),
         privilege: Type.string({ required: true, enum: UserPrivilege }),
     },
     {
