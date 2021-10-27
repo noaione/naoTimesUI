@@ -98,8 +98,16 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                                     userPerms.includes("administrator")
                                 ) {
                                     console.info("Registering new server...");
-                                    await registerNewServer(verifyServer, verifyUser);
-                                    res.json({ success: true });
+                                    try {
+                                        await registerNewServer(verifyServer, verifyUser);
+                                        res.json({ success: true });
+                                    } catch (e) {
+                                        console.error(e);
+                                        res.status(500).json({
+                                            error: "Maaf, terjadi kesalahan internal ketika ingin mendaftarkan anda, mohon kontak Admin",
+                                            success: false,
+                                        });
+                                    }
                                 } else {
                                     res.status(403).json({
                                         error: "Maaf, anda tidak memiliki hak yang cukup untuk menjadi Admin (Manage Guild)",
