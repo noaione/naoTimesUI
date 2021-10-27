@@ -21,6 +21,7 @@ async function dbConnect() {
             let joinedDBUrl = MONGODB_URI;
             if (isDev) joinedDBUrl += "_dev";
             console.info(`Connecting to ${joinedDBUrl}`);
+            joinedDBUrl += "?authSource=admin";
             const promised = await mongoose.connect(joinedDBUrl);
             global.mongoose.conn = promised;
         }
@@ -31,6 +32,7 @@ async function dbConnect() {
         let joinedDBUrl = MONGODB_URI;
         if (isDev) joinedDBUrl += "_dev";
         console.info(`Connecting to ${joinedDBUrl}`);
+        joinedDBUrl += "?authSource=admin";
         const promised = await mongoose.connect(joinedDBUrl);
         // @ts-ignore
         global.mongoose.promise = true;
