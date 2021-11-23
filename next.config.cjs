@@ -28,11 +28,9 @@ if (IS_PREVIEW) {
 
 const moduleExports = {
     productionBrowserSourceMaps: true,
-    experimental: {
-        swcLoader: true,
-        swcMinify: true,
-        esmExternals: true,
-    },
+    swcLoader: true,
+    swcMinify: true,
+    esmExternals: true,
     typescript: {
         ignoreBuildErrors: true,
     },
