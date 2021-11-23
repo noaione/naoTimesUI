@@ -42,6 +42,12 @@ const BannerSets: BannerData[] = [
         shortMessage: "Kolaborasi via naoTimesUI",
         link: "/admin/proyek/kolaborasi",
     },
+    {
+        id: "20211123-1100",
+        message: "Pembaharuan Kebijakan Privasi naoTimes",
+        shortMessage: "Pembaharuan Kebijakan Privasi",
+        link: "https://naoti.me/privasi",
+    },
 ];
 
 export default BannerSets;
