@@ -5494,10 +5494,10 @@ react-loading-skeleton@3.0.1:
   resolved "https://registry.yarnpkg.com/react-loading-skeleton/-/react-loading-skeleton-3.0.1.tgz#b1ccd07d18ade80ce5d5b1563f4232331efedf46"
   integrity sha512-YL9tSV7w53HLd5aAPPjUGp9iqUJ5+yj8ZI//E1ES1OHrWy2mSCHTRPSc37u77Di+jWph6evGVNKBr3rpAnKwDQ==
 
-react-markdown@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-7.1.0.tgz#0ba62a4459daab6600ede83495a9228dae9d8f8e"
-  integrity sha512-hL8cLLkTydyoKlZWZOjlU6TvMYIw9qKLh1CCzVfnhKt/R/SnKVAqiyugetXY61CkjhBqJl2C5FdU3OwHYo7SrQ==
+react-markdown@7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-7.1.2.tgz#c9fa9d1c87e24529f028e1cdf731e81ccdd8e547"
+  integrity sha512-ibMcc0EbfmbwApqJD8AUr0yls8BSrKzIbHaUsPidQljxToCqFh34nwtu3CXNEItcVJNzpjDHrhK8A+MAh2JW3A==
   dependencies:
     "@types/hast" "^2.0.0"
     "@types/unist" "^2.0.0"
