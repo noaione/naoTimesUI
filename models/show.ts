@@ -40,6 +40,7 @@ const EpisodeStatusSchemas = createSchema(
         is_done: Type.boolean({ required: true }),
         progress: Type.object({ required: true }).of(EpisodeStatusChildSchemas),
         airtime: Type.number(),
+        delay_reason: Type.string(),
     },
     { versionKey: false, _id: false }
 );
