@@ -10,6 +10,7 @@ interface IEpisodeProps {
     episode: number;
     progress: { [key: string]: boolean };
     lang: Locale;
+    delayReason?: string;
 }
 
 class EpisodeCard extends React.Component<IEpisodeProps> {
@@ -18,7 +19,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
     }
 
     render() {
-        const { progress, episode, airingAt, lang } = this.props;
+        const { progress, episode, airingAt, lang, delayReason } = this.props;
         const unfinishedStatus = [];
         for (const [roleName, roleStat] of Object.entries(progress)) {
             if (!roleStat) {
@@ -119,6 +120,12 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         Episode <span slot="0">{episode.toString()}</span>{" "}
                         {shouldRenderPill ? translate("EPISODE_NEEDS", realLang) : ""}
                         {content}
+                        {delayReason && (
+                            <div className="break-words mt-2">
+                                <span className="font-semibold">Alasan nyangkut: </span>
+                                <span className="break-all">{delayReason}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </>
