@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 
 async function getServerExtra(serverId: string) {
     await dbConnect();
@@ -18,14 +18,21 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (user) {
         // is signed in, let's get the server info too!
         const extraMetadata = await getServerExtra(user.id);
-        const joinedData = { ...user, ...extraMetadata };
         res.json({
-            loggedIn: true,
-            ...joinedData,
+            success: true,
+            code: 200,
+            error: "Success",
+            data: {
+                id: user.id,
+                ...extraMetadata,
+            },
         });
     } else {
-        res.json({
-            loggedIn: false,
+        res.status(401).json({
+            success: false,
+            code: 401,
+            error: "Unauthorized",
+            data: null,
         });
     }
 });

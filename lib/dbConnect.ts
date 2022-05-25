@@ -19,7 +19,7 @@ async function dbConnect() {
         ) {
             console.info("Connection to MongoDB dropped, trying to reconnect...");
             let joinedDBUrl = MONGODB_URI;
-            if (isDev) joinedDBUrl += "_dev";
+            // if (isDev) joinedDBUrl += "_dev";
             console.info(`Connecting to ${joinedDBUrl}`);
             joinedDBUrl += "?authSource=admin";
             const promised = await mongoose.connect(joinedDBUrl);
@@ -30,7 +30,7 @@ async function dbConnect() {
 
     if (!global.mongoose.promise) {
         let joinedDBUrl = MONGODB_URI;
-        if (isDev) joinedDBUrl += "_dev";
+        // if (isDev) joinedDBUrl += "_dev";
         console.info(`Connecting to ${joinedDBUrl}`);
         joinedDBUrl += "?authSource=admin";
         const promised = await mongoose.connect(joinedDBUrl);
