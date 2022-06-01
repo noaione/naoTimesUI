@@ -18,15 +18,15 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 const user: IUserAuth = { id, privilege, name };
                 req.session.set("user", user);
                 await req.session.save();
-                res.json({ loggedIn: true, id, privilege, name });
+                res.json({ loggedIn: true, id, privilege, name, code: 2000, error: "Sukses" });
             } else {
-                res.status(401).json({ error: "Password salah" });
+                res.status(401).json({ error: "Password salah", loggedIn: false, code: 4001 });
             }
         } else {
-            res.status(401).json({ error: "Tidak dapat menemukan ID tersebut!" });
+            res.status(401).json({ error: "Tidak dapat menemukan ID tersebut!", loggedIn: false, code: 4002 });
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Terjadi kesalahan internal, mohon coba lagi!" });
+        res.status(500).json({ error: "Terjadi kesalahan internal, mohon coba lagi!", loggedIn: false, code: 5000 });
     }
 });
