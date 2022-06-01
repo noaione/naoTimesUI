@@ -59,9 +59,9 @@ async function registerNewServer(server: any, admin: any) {
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const { server, admin } = await req.body;
     if (!checkStringValid(server)) {
-        res.status(401).json({ error: "Mohon masukan server ID", success: false });
+        res.status(401).json({ error: "Mohon masukan server ID", success: false, code: 400 });
     } else if (!checkStringValid(admin)) {
-        res.status(401).json({ error: "Mohon masukan Admin ID", success: false });
+        res.status(401).json({ error: "Mohon masukan Admin ID", success: false, code: 400 });
     } else {
         try {
             console.info("Trying to connect...");
@@ -70,7 +70,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             const checkIfServerExist = await ShowtimesModel.find({ id: { $eq: server } });
             if (checkIfServerExist.length > 0) {
                 console.warn("Already exist!");
-                res.status(400).json({ error: "Server anda telah terdaftar!", success: false });
+                res.status(400).json({ error: "Server anda telah terdaftar!", success: false, code: 4104 });
             } else {
                 try {
                     console.info("Emitting server info...");
@@ -81,6 +81,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                         if (verifyUser.is_bot) {
                             res.status(400).json({
                                 error: "User adalah bot, bot tidak bisa menjadi Admin",
+                                code: 4103,
                                 success: false,
                             });
                         } else {
@@ -105,12 +106,14 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                                         console.error(e);
                                         res.status(500).json({
                                             error: "Maaf, terjadi kesalahan internal ketika ingin mendaftarkan anda, mohon kontak Admin",
+                                            code: 500,
                                             success: false,
                                         });
                                     }
                                 } else {
                                     res.status(403).json({
                                         error: "Maaf, anda tidak memiliki hak yang cukup untuk menjadi Admin (Manage Guild)",
+                                        code: 4102,
                                         success: false,
                                     });
                                 }
@@ -118,6 +121,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                                 console.error(e);
                                 res.status(500).json({
                                     error: "Terjadi kesalahan internal, mohon coba lagi nanti",
+                                    code: 500,
                                     success: false,
                                 });
                             }
@@ -126,18 +130,24 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                         res.status(400).json({
                             error: "Bot tidak dapat menemukan user tersebut!",
                             success: false,
+                            code: 4101,
                         });
                     }
                 } catch (e) {
                     res.status(400).json({
                         error: "Bot tidak dapat menemukan server tersebut! Pastikan Bot sudah di Invite!",
+                        code: 4100,
                         success: false,
                     });
                 }
             }
         } catch (err) {
             console.error(err);
-            res.status(500).json({ error: "Terjadi kesalahan internal, mohon coba lagi!", success: false });
+            res.status(500).json({
+                error: "Terjadi kesalahan internal, mohon coba lagi!",
+                code: 500,
+                success: false,
+            });
         }
     }
 });
