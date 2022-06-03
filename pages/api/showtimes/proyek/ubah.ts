@@ -175,12 +175,12 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 const episodeSets = modifedData.anime[indexAnime].status;
                 const episodeInfo = _.find(episodeSets, (o) => o.episode === parseInt(changes.episode));
                 if (isNone(episodeInfo)) {
-                    res.json({ result: {}, success: false });
+                    res.json({ results: null, success: false });
                 } else {
                     res.json({ success: true, results: { progress: episodeInfo.progress } });
                 }
             } else {
-                res.json({ result: {}, success: false });
+                res.json({ results: null, success: false });
             }
         }
     }
