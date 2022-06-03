@@ -40,11 +40,12 @@ function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const user = req.session.get<IUserAuth>("user");
     if (!user) {
-        res.status(403).json({ message: "Unauthorized", code: 403 });
+        res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
         await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
+                success: false,
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
             });
@@ -59,7 +60,12 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                     "anime.status": 1,
                 }
             );
-            res.json({ data: projectOverviewKeyFilter(fetchServers), code: 200 });
+            res.json({
+                message: "Sukses",
+                data: projectOverviewKeyFilter(fetchServers),
+                code: 200,
+                success: true,
+            });
         }
     }
 });
