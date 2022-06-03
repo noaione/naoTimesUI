@@ -65,13 +65,17 @@ async function getAnimeInfo(animeId: string | number): Promise<any> {
 
 async function addNewProject(dataToAdd: any) {
     if (!verifyExist(dataToAdd, "server", "string")) {
-        return { success: false, message: "missing server key on request, or server key is not a string" };
+        return {
+            success: false,
+            message: "missing server key on request, or server key is not a string",
+            code: 400,
+        };
     }
     if (!verifyExist(dataToAdd, "roles", "array")) {
-        return { success: false, message: "missing roles key that should contain array" };
+        return { success: false, message: "missing roles key that should contain array", code: 400 };
     }
     if (!verifyExist(dataToAdd, "anime", "object")) {
-        return { success: false, message: "missing anime key that should be an object" };
+        return { success: false, message: "missing anime key that should be an object", code: 400 };
     }
     const VALID_ROLES = ["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"];
     const animeData = dataToAdd.anime;
@@ -80,7 +84,11 @@ async function addNewProject(dataToAdd: any) {
     const animeName = animeData.name;
     const expectedEpisode: number = animeData.episode;
     if (isNone(animeId) || isNone(animeName)) {
-        return { success: false, message: "missing `id` or `name` or `episode` key on `anime` object" };
+        return {
+            success: false,
+            message: "missing `id` or `name` or `episode` key on `anime` object",
+            code: 400,
+        };
     }
     const showServer = await ShowtimesModel.findOne({ id: { $eq: serverId } }, { "anime.id": 1 });
     let isExist = false;
@@ -93,6 +101,7 @@ async function addNewProject(dataToAdd: any) {
         return {
             success: false,
             message: "Anime sudah terdaftar di daftar garapan, mohon gunakan mode edit!",
+            code: 4200,
         };
     }
     const addedRoles = dataToAdd.roles;
@@ -128,7 +137,11 @@ async function addNewProject(dataToAdd: any) {
     };
     const apiRequest = await getAnimeInfo(animeId);
     if (Object.keys(apiRequest).length < 1) {
-        return { success: false, message: "Gagal mendapatkan dari Anilist, mohon coba lagi nanti!" };
+        return {
+            success: false,
+            message: "Gagal mendapatkan dari Anilist, mohon coba lagi nanti!",
+            code: 4201,
+        };
     }
     const finalizedAnimeData = parseAnilistAPIResult(apiRequest, expectedEpisode);
     if (finalizedAnimeData.status.length < 1) {
@@ -137,6 +150,7 @@ async function addNewProject(dataToAdd: any) {
             message:
                 // eslint-disable-next-line max-len
                 "Mohon maaf, anime tidak bisa ditambahkan karena tidak ada waktu tayang yang pasti, mohon coba lagi nanti",
+            code: 4203,
         };
     }
     const cachedUserID = {};
@@ -167,7 +181,7 @@ async function addNewProject(dataToAdd: any) {
     try {
         generatedRole = await emitSocketAndWait("create role", { id: serverId, name: animeName });
     } catch (e) {
-        return { success: false, message: e.toString() };
+        return { success: false, message: e.toString(), code: 4204 };
     }
 
     const roleId = generatedRole.id;
@@ -182,20 +196,21 @@ async function addNewProject(dataToAdd: any) {
         );
     } catch (err) {
         console.error(err);
-        return { success: false, message: "Gagal memperbaharui database, mohon coba lagi nanti" };
+        return { success: false, message: "Gagal memperbaharui database, mohon coba lagi nanti", code: 4500 };
     }
     emitSocket("pull data", serverId);
-    return { success: true, message: "success" };
+    return { success: true, message: "success", code: 200 };
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const user = req.session.get<IUserAuth>("user");
     if (!user) {
-        res.status(403).json({ message: "Unauthorized", code: 403 });
+        res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
         await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
+                success: false,
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
             });
