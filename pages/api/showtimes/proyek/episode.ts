@@ -61,7 +61,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
     }
     const { anime } = serverData;
     if (!Array.isArray(anime)) {
-        return ["Data anime tidak ada di database", 4300];
+        return ["Data anime tidak ada di database", 4303];
     }
     const animeIdxLoc = anime.findIndex((e) => e.id === animeId);
     if (animeIdxLoc < 0) {

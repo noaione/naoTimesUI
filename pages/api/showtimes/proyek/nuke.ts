@@ -88,7 +88,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
         console.error(e);
         return {
             message: "Gagal menghapus proyek dari database, mohon coba lagi nanti!",
-            code: 500,
+            code: 4501,
             success: false,
         };
     }
@@ -127,6 +127,8 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             let code = results.code;
             if (code === 4301) {
                 code = 400;
+            } else if (code == 4501) {
+                code = 500;
             }
             res.status(code).json({ ...results });
         }
