@@ -46,7 +46,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     const fetchServers = await ShowtimesModel.findOne({ id: { $eq: server_id } });
     const matchingAnime = fetchServers.anime.filter((res) => res.id === anime_id);
     if (matchingAnime.length < 1) {
-        return { message: "Tidak dapat menemukan Anime tersebut di database!", code: 400, success: false };
+        return { message: "Tidak dapat menemukan Anime tersebut di database!", code: 4301, success: false };
     }
     const matched = matchingAnime[0] as ShowAnimeProps;
     let anyDone = false;
@@ -124,7 +124,11 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             });
         } else {
             const results = await deleteAnimeId(jsonBody.animeId, user.id);
-            res.status(results.code).json({ ...results });
+            let code = results.code;
+            if (code === 4301) {
+                code = 400;
+            }
+            res.status(code).json({ ...results });
         }
     }
 });

@@ -31,14 +31,14 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const test = serverData.id;
         if (isNone(test)) {
-            return "Tidak dapat menemukan server anda di database?";
+            return ["Tidak dapat menemukan server anda di database?", 4501];
         }
     } catch (e) {
-        return "Tidak dapat menemukan server anda di database?";
+        return ["Tidak dapat menemukan server anda di database?", 4501];
     }
     const { animeId, episodes } = changes;
     if (!Array.isArray(episodes)) {
-        return "Tidak ada data `episodes` di request, mohon coba lagi!";
+        return ["Tidak ada data `episodes` di request, mohon coba lagi!", 400];
     }
     const onlyEpisodeNumbers = [] as number[];
     episodes.forEach((num) => {
@@ -57,15 +57,15 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
         }
     });
     if (onlyEpisodeNumbers.length < 1) {
-        return "Tidak ada episode yang ingin ditambah.";
+        return ["Tidak ada episode yang ingin ditambah.", 4300];
     }
     const { anime } = serverData;
     if (!Array.isArray(anime)) {
-        return "Data anime tidak ada di database";
+        return ["Data anime tidak ada di database", 4300];
     }
     const animeIdxLoc = anime.findIndex((e) => e.id === animeId);
     if (animeIdxLoc < 0) {
-        return "Tidak dapat menemukan Anime tersebut di database.";
+        return ["Tidak dapat menemukan Anime tersebut di database.", 4301];
     }
     const currentTime = DateTime.now().toUTC().startOf("hour").toSeconds();
     if (event === "add") {
@@ -127,7 +127,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
         // @ts-ignore
         await ShowtimesModel.updateOne({ id: { $eq: serverId } }, serverData);
         emitSocket("pull data", serverId);
-        return episodeNewData;
+        return [episodeNewData, 200];
     } else if (event === "remove") {
         const status = anime[animeIdxLoc].status as EpisodeStatusProps[];
         const newStatus = status.filter((epStat) => !episodes.includes(epStat.episode));
@@ -166,53 +166,67 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                     removedEpisode.push({ episode: pp.episode, index: idx });
                 }
             });
-            return removedEpisode;
+            return [removedEpisode, 200];
         } else {
-            return "Tidak ada episode yang dihapus, pastikan episode itu terdapat di database.";
+            return ["Tidak ada episode yang dihapus, pastikan episode itu terdapat di database.", 4302];
         }
     }
-    return "Event perubahan tidak diketahui.";
+    return ["Event perubahan tidak diketahui.", 4600];
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const jsonBody = await req.body;
     const userData = req.session.get<IUserAuth>("user");
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
-        return res.status(400).json({ message: "Tidak dapat menemukan body di request", code: 400 });
+        return res
+            .status(400)
+            .json({ success: false, message: "Tidak dapat menemukan body di request", code: 400 });
     }
     const raweventType: Nullable<string> = jsonBody.event;
     if (isNone(raweventType)) {
-        return res.status(400).json({ message: "`event` tidak dapat ditemukan", code: 400 });
+        return res.status(400).json({ success: false, message: "`event` tidak dapat ditemukan", code: 400 });
     }
     const eventType = raweventType.toLowerCase() as EpisodeUpdateEvent;
     if (!["add", "remove"].includes(eventType)) {
-        return res.status(400).json({ message: "Tipe `event` tidak diketahui", code: 400 });
+        return res.status(400).json({ success: false, message: "Tipe `event` tidak diketahui", code: 400 });
     }
     const { changes } = jsonBody;
     if (isNone(changes)) {
-        return res.status(400).json({ message: "Tidak ada data `changes` di request", code: 400 });
-    }
-    if (!verifyContents(eventType, changes)) {
         return res
             .status(400)
-            .json({ message: `Terdapat data yang kurang pada event ${eventType}`, code: 400 });
+            .json({ success: false, message: "Tidak ada data `changes` di request", code: 400 });
+    }
+    if (!verifyContents(eventType, changes)) {
+        return res.status(400).json({
+            success: false,
+            message: `Terdapat data yang kurang pada event ${eventType}`,
+            code: 400,
+        });
     }
     if (isNone(userData)) {
-        res.status(403).json({ message: "Tidak diperbolehkan untuk mengakses API ini", code: 403 });
+        res.status(403).json({
+            success: false,
+            message: "Tidak diperbolehkan untuk mengakses API ini",
+            code: 403,
+        });
     } else {
         await dbConnect();
         if (userData.privilege === "owner") {
-            res.status(504).json({ message: "Route not implemented yet", success: false });
+            res.status(504).json({
+                success: false,
+                message: "Route not implemented yet",
+                code: 504,
+            });
         } else {
-            const modifiedData = await doEpisodeChanges(
+            const [modifiedData, statusCode] = await doEpisodeChanges(
                 eventType,
                 userData.id,
                 changes as EpisodeUpdateChanges
             );
             if (typeof modifiedData === "string") {
-                res.status(500).json({ success: false, message: modifiedData });
+                res.status(500).json({ success: false, message: modifiedData, code: statusCode });
             } else {
-                res.json({ success: true, data: modifiedData, message: "Sukses" });
+                res.json({ success: true, data: modifiedData, message: "Sukses", code: 200 });
             }
         }
     }

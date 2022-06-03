@@ -119,7 +119,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     }
     const eventType = raweventType.toLowerCase() as AnimeChangeEvent;
     if (!["status", "staff"].includes(eventType)) {
-        return res.status(400).json({ message: "Tipe `event` tidak diketahui", code: 400 });
+        return res.status(400).json({ message: "Tipe `event` tidak diketahui", code: 4600 });
     }
     const { changes } = jsonBody;
     if (isNone(changes)) {
