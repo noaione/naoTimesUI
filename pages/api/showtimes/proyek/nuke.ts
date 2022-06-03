@@ -110,14 +110,15 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     const user = req.session.get<IUserAuth>("user");
     const jsonBody = await req.body;
     if (!has(jsonBody, "animeId")) {
-        return res.status(400).json({ message: "Missing `animeId` key" });
+        return res.status(400).json({ success: false, message: "Missing `animeId` key", code: 400 });
     }
     if (!user) {
-        res.status(403).json({ message: "Unauthorized", code: 403 });
+        res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
         await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
+                success: false,
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
             });
