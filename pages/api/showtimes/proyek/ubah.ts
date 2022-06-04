@@ -111,33 +111,33 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     const jsonBody = await req.body;
     const userData = req.session.get<IUserAuth>("user");
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
-        return res.status(400).json({ message: "Tidak dapat menemukan body di request", code: 400 });
+        return res.status(400).json({ success: false, message: "Tidak dapat menemukan body di request", code: 400 });
     }
     const raweventType: Nullable<string> = jsonBody.event;
     if (isNone(raweventType)) {
-        return res.status(400).json({ message: "`event` tidak dapat ditemukan", code: 400 });
+        return res.status(400).json({ success: false, message: "`event` tidak dapat ditemukan", code: 400 });
     }
     const eventType = raweventType.toLowerCase() as AnimeChangeEvent;
     if (!["status", "staff"].includes(eventType)) {
-        return res.status(400).json({ message: "Tipe `event` tidak diketahui", code: 4600 });
+        return res.status(400).json({ success: false, message: "Tipe `event` tidak diketahui", code: 4600 });
     }
     const { changes } = jsonBody;
     if (isNone(changes)) {
-        return res.status(400).json({ message: "Tidak ada data `changes` di request", code: 400 });
+        return res.status(400).json({ success: false, message: "Tidak ada data `changes` di request", code: 400 });
     }
     if (!verifyChangesContents(eventType, changes)) {
         return res
             .status(400)
-            .json({ message: `Terdapat data yang kurang pada event ${eventType}`, code: 400 });
+            .json({ success: false, message: `Terdapat data yang kurang pada event ${eventType}`, code: 400 });
     }
     if (isNone(userData)) {
-        res.status(403).json({ message: "Tidak diperbolehkan untuk mengakses API ini", code: 403 });
+        res.status(403).json({ success: false, message: "Tidak diperbolehkan untuk mengakses API ini", code: 403 });
     } else {
         await dbConnect();
         if (userData.privilege === "owner") {
             const serverId = req.body.server;
             if (isNone(serverId)) {
-                res.status(400).json({ message: "Data `server` tidak dapat ditemukan", code: 400 });
+                res.status(400).json({ success: false, message: "Data `server` tidak dapat ditemukan", code: 400 });
             } else {
                 const serverData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
                 if (isNone(serverData) || Object.keys(serverData).length < 1) {
