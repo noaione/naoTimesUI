@@ -1,17 +1,21 @@
 import _ from "lodash";
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-import { emitSocket } from "../../../../lib/socket";
-import { verifyExist } from "../../../../lib/utils";
-
-import { ShowAnimeProps, ShowtimesModel } from "../../../../models/show";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { emitSocket } from "@/lib/socket";
+import { isNone, verifyExist } from "@/lib/utils";
+import { Project } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases: string[]) {
-    let animeData: ShowAnimeProps[] = [];
+    let animeData: Project[] = [];
+    let mongoId: string;
     try {
-        const rawData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
+        const rawData = await prisma.showtimesdatas.findFirst({ where: { id: serverId } });
+        if (isNone(rawData)) {
+            return [aliases, "Tidak dapat menghubungi database, mohon coba lagi nanti", false];
+        }
+        mongoId = rawData.mongo_id;
         animeData = rawData.anime;
     } catch (e) {
         return [aliases, "Tidak dapat menghubungi database, mohon coba lagi nanti", false];
@@ -29,13 +33,22 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
         }
     });
 
-    const animeSet = `anime.${animeIdx}.aliases`;
-    const $setsData = {};
-    $setsData[animeSet] = verifiedList;
-
     try {
-        // @ts-ignore
-        await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: $setsData });
+        await prisma.showtimesdatas.update({
+            where: { mongo_id: mongoId },
+            data: {
+                anime: {
+                    updateMany: {
+                        where: {
+                            id: animeData[animeIdx].id,
+                        },
+                        data: {
+                            aliases: verifiedList,
+                        },
+                    },
+                },
+            },
+        });
     } catch (e) {
         return [aliases, "Gagal memperbarui database, mohon coba lagi nanti", false];
     }
@@ -56,7 +69,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",

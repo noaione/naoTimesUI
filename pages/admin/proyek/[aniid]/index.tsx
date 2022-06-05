@@ -12,13 +12,11 @@ import MetadataHead from "@/components/MetadataHead";
 import ProjectPageComponent from "@/components/ProjectPage";
 import { CallbackModal } from "@/components/Modal";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
-import { UserProps } from "@/models/user";
-import { isValidObjectId, ObjectId } from "mongoose";
-import { EpisodeStatusProps, ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
+import prisma from "@/lib/prisma";
+import { Project, ProjectEpisodeStatus } from "@prisma/client";
 
 interface RemovedEpisodeData {
     episode: number;
@@ -26,15 +24,15 @@ interface RemovedEpisodeData {
 }
 
 interface ProyekPageProps {
-    user?: UserProps & { loggedIn: boolean };
-    animeData: ShowAnimeProps;
+    user?: IUserAuth & { loggedIn: boolean };
+    animeData: Project;
 }
 
 interface ProyekPageState {
     errorText: string;
     episodeMod: boolean;
     deletedEpisode: number[];
-    statusData: EpisodeStatusProps[];
+    statusData: ProjectEpisodeStatus[];
     isSubmitting: boolean;
 }
 
@@ -71,7 +69,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
         this.setState((o) => ({ deletedEpisode: o.deletedEpisode.concat([episode]) }));
     }
 
-    addAndJoinEpisode(episodes: EpisodeStatusProps[]) {
+    addAndJoinEpisode(episodes: ProjectEpisodeStatus[]) {
         this.setState((o) => ({
             statusData: o.statusData.concat(episodes),
             episodeMod: false,
@@ -166,7 +164,6 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                     <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
                                         <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
-                                            // @ts-ignore
                                             src={poster_data.url}
                                             initial={{ y: 50, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
@@ -307,7 +304,6 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                               animeId={id}
                                               episode={res.episode}
                                               airTime={res.airtime}
-                                              // @ts-ignore
                                               status={res.progress}
                                               isReleased={res.is_done}
                                               animateDelay={delayAni}
@@ -336,7 +332,7 @@ export const getServerSideProps = withSession(async function ({
     req,
     params,
 }: NextServerSideContextWithSession) {
-    const user = req.session.get<IUserAuth>("user") as UserProps;
+    const user = req.session.get<IUserAuth>("user") as IUserAuth;
     const { aniid } = params;
 
     if (!user) {
@@ -353,9 +349,17 @@ export const getServerSideProps = withSession(async function ({
         };
     }
 
-    await dbConnect();
-    const serverRes = (await ShowtimesModel.findOne({ id: { $eq: user.id } }).lean()) as ShowtimesProps;
-    let findAnime: Nullable<ShowAnimeProps>;
+    const serverRes = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: user.id,
+        },
+        select: {
+            id: true,
+            name: true,
+            anime: true,
+        },
+    });
+    let findAnime: Nullable<Project>;
     serverRes.anime.forEach((res) => {
         if (res.id === aniid && isNone(findAnime)) {
             findAnime = res;

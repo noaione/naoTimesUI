@@ -378,6 +378,7 @@ class TemplateEngine extends React.Component<TemplateEngineProps, TemplateEngine
                             </div>
                             <div className="relative">
                                 {this.state.showColPick && (
+                                    // @ts-ignore
                                     <SketchPicker
                                         className="block z-20 mt-2"
                                         color={this.state.rawCol}

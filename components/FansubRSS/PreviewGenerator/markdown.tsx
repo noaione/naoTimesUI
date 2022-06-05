@@ -334,7 +334,7 @@ function createRules(r: typeof baseRules): SimpleMarkdown.ParserRules {
                 // this contains some special casing for invites (?)
                 // or something like that.
                 // we don't really bother here
-                const children = recurseOutput(node.content, state);
+                const children = recurseOutput(node.content, state) as React.ReactNode;
                 const title = node.title || astToString(node.content);
                 return (
                     <a

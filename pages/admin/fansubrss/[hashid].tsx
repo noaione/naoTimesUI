@@ -8,22 +8,20 @@ import { ActionMeta } from "react-select";
 import { Dictionary } from "lodash";
 import { motion } from "framer-motion";
 
-import AdminLayout from "../../../components/AdminLayout";
-import MetadataHead from "../../../components/MetadataHead";
-import ErrorModal from "../../../components/ErrorModal";
-import LoadingCircle from "../../../components/LoadingCircle";
-import TemplateEngine from "../../../components/FansubRSS/TemplateEditor";
-import FansubRSSDeleteButton from "../../../components/FansubRSS/DeleteButton";
-import SampleViewer from "../../../components/FansubRSS/SampleViewer";
-import SkeletonLoader from "../../../components/Skeleton";
-import { CallbackModal } from "../../../components/Modal";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import ErrorModal from "@/components/ErrorModal";
+import LoadingCircle from "@/components/LoadingCircle";
+import TemplateEngine from "@/components/FansubRSS/TemplateEditor";
+import FansubRSSDeleteButton from "@/components/FansubRSS/DeleteButton";
+import SampleViewer from "@/components/FansubRSS/SampleViewer";
+import SkeletonLoader from "@/components/Skeleton";
+import { CallbackModal } from "@/components/Modal";
 
-import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
-import { isNone, Nullable, parseFeed } from "../../../lib/utils";
-
-import { UserProps } from "../../../models/user";
+import { FansubRSSFeeds, FansubRSSSchemas } from "@/lib/fsrss";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
+import { isNone, Nullable, parseFeed } from "@/lib/utils";
 
 interface FansubRSSPageState {
     isLoading: boolean;
@@ -34,7 +32,7 @@ interface FansubRSSPageState {
 }
 
 interface FansubRSSPageProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
     feed: FansubRSSFeeds;
 }
 

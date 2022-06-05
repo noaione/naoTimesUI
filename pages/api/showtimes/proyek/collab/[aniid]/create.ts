@@ -1,9 +1,8 @@
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { NextApiResponse } from "next";
 
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { emitSocketAndWait } from "@/lib/socket";
-import dbConnect from "@/lib/dbConnect";
+import prisma from "@/lib/prisma";
 
 interface KonfirmAPIData {
     targetId: string;
@@ -29,12 +28,23 @@ function generateRandomStringAndNumber(length: number) {
 async function createNewCollab(collabData: KonfirmasiData) {
     const { animeId, serverId, targetId } = collabData;
 
-    const fetchedServer = (await ShowtimesModel.findOne(
-        {
-            id: { $eq: targetId },
+    const fetchedServer = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: targetId,
         },
-        { id: 1, name: 1, konfirmasi: 1, "anime.id": 1, "anime.kolaborasi": 1 }
-    )) as ShowtimesProps;
+        select: {
+            id: true,
+            name: true,
+            konfirmasi: true,
+            anime: {
+                select: {
+                    id: true,
+                    kolaborasi: true,
+                },
+            },
+            mongo_id: true,
+        },
+    });
     const randomId = generateRandomStringAndNumber(16);
     const indexedAnime = fetchedServer.anime.findIndex((pog) => pog.id === animeId);
     if (indexedAnime !== -1) {
@@ -60,9 +70,14 @@ async function createNewCollab(collabData: KonfirmasiData) {
         const indexData = konfirmData[indexed];
         return [false, `Kode sudah ada, mohon berikan kode berikut: ${indexData.id}`];
     }
-    konfirmData.push(newContent);
-    // @ts-ignore
-    await ShowtimesModel.updateOne({ id: targetId }, { konfirmasi: konfirmData });
+    await prisma.showtimesdatas.update({
+        where: { mongo_id: fetchedServer.mongo_id },
+        data: {
+            konfirmasi: {
+                push: newContent,
+            },
+        },
+    });
     await emitSocketAndWait("pull data", targetId);
     return [
         true,
@@ -105,7 +120,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         return res.status(400).json({ message: "Invalid data", code: 400 });
     }
     const serverTarget = bodyBag.targetId;
-    await dbConnect();
 
     try {
         const [boolRes, result] = await createNewCollab({

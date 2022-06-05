@@ -1,28 +1,29 @@
 import React from "react";
 import Head from "next/head";
 
-import AdminLayout from "../../components/AdminLayout";
-import MetadataHead from "../../components/MetadataHead";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
 
 // Import all Settings Component
-import SettingsComponent from "../../components/SettingsPage";
+import SettingsComponent from "@/components/SettingsPage";
 
-import dbConnect from "../../lib/dbConnect";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
+import prisma from "@/lib/prisma";
+import type { showtimesdatas } from "@prisma/client";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 
-import { UserProps } from "../../models/user";
-import ErrorModal from "../../components/ErrorModal";
-import { CallbackModal } from "../../components/Modal";
-import { ShowtimesModel, ShowtimesProps } from "../../models/show";
+import ErrorModal from "@/components/ErrorModal";
+import { CallbackModal } from "@/components/Modal";
 
 interface SettingsHomepageState {
     errText: string;
     serverData?: { [key: string]: any };
 }
 
+type ServerPropsFromDB = Pick<showtimesdatas, "serverowner" | "announce_channel">;
+
 interface SettingsHomepageProps {
-    serverProps?: ShowtimesProps;
-    user?: UserProps & { loggedIn: boolean };
+    serverProps?: ServerPropsFromDB;
+    user?: IUserAuth & { loggedIn: boolean };
 }
 
 class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHomepageState> {
@@ -43,7 +44,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
     render() {
         const { user } = this.props;
-        const serverProps = this.props.serverProps || ({} as ShowtimesProps);
+        const serverProps = this.props.serverProps || ({} as ServerPropsFromDB);
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
 
         return (
@@ -98,16 +99,20 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         };
     }
 
-    await dbConnect();
-    let serverRes: ShowtimesProps;
     if (user.privilege === "server") {
-        serverRes = (await ShowtimesModel.findOne(
-            { id: { $eq: user.id } },
-            { serverowner: 1, announce_channel: 1, _id: 0 }
-        ).lean()) as ShowtimesProps;
+        const serverInfo = await prisma.showtimesdatas.findFirst({
+            where: {
+                id: user.id,
+            },
+            select: {
+                serverowner: true,
+                announce_channel: true,
+                mongo_id: false,
+            },
+        });
+        return { props: { user: { loggedIn: true, ...user }, serverProps: serverInfo } };
     }
-
-    return { props: { user: { loggedIn: true, ...user }, serverProps: serverRes } };
+    return { props: { user: { loggedIn: true, ...user }, serverProps: undefined } };
 });
 
 export default SettingsHomepage;

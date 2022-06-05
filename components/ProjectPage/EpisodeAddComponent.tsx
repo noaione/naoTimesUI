@@ -1,15 +1,14 @@
+import { ProjectEpisodeStatus } from "@prisma/client";
 import React from "react";
 
 import LoadingCircle from "../LoadingCircle";
 import Modal, { CallbackModal } from "../Modal";
 
-import { EpisodeStatusProps } from "../../models/show";
-
 interface EpisodeAddProps {
     animeId: string;
-    lastStatus: EpisodeStatusProps;
+    lastStatus: ProjectEpisodeStatus;
     disabled?: boolean;
-    onUpdated?: (newStatus: EpisodeStatusProps[]) => void;
+    onUpdated?: (newStatus: ProjectEpisodeStatus[]) => void;
     onError?: (errorText: string) => void;
 }
 

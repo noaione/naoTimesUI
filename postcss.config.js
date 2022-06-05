@@ -2,6 +2,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 const usePlugins = [
     "postcss-import",
+    "tailwindcss/nesting",
     "tailwindcss",
     "postcss-extend",
     "postcss-flexbugs-fixes",

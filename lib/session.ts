@@ -10,12 +10,12 @@ interface SessionClass {
      * @param name The name of the session to save to request data
      * @param value The value of it
      */
-    set<T extends any>(name: string, value: T): void;
+    set<T>(name: string, value: T): void;
     /**
      * Get a data that are saved into session
      * @param name The name of the key
      */
-    get<T extends any>(name: string): T;
+    get<T>(name: string): T;
     /**
      * Unset a key
      * @param name the key to be unset

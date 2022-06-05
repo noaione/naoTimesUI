@@ -1,12 +1,15 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { Collaborations } from "@/types/collab";
+import prisma from "@/lib/prisma";
+import { showtimesdatas } from "@prisma/client";
+import { isNone } from "@/lib/utils";
 
-async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collaborations> {
+type ServerInfo = Pick<showtimesdatas, "id" | "name" | "anime">;
+
+async function fetchAllCollabData(serverData: ServerInfo): Promise<Collaborations> {
     const allCollabs: Collaborations = [];
     for (let i = 0; i < serverData.anime.length; i++) {
         const anime = serverData.anime[i];
@@ -19,7 +22,13 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
             const collab = filteredCollab[jj];
             try {
                 console.info(`Fetching ${collab} at ${anime.id}`);
-                const requested = (await ShowtimesModel.findOne({ id: { $eq: collab } })) as ShowtimesProps;
+                const requested = await prisma.showtimesdatas.findFirst({
+                    where: { id: collab },
+                    select: { id: true, name: true },
+                });
+                if (isNone(requested)) {
+                    continue;
+                }
                 console.info(`Pushing ${collab} at ${anime.id}`);
                 allValidCollab.push({
                     id: requested.id,
@@ -34,7 +43,6 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Collabora
         if (allValidCollab.length < 1) {
             continue;
         }
-        // @ts-ignore
         const imgPoster = anime.poster_data.url;
         allCollabs.push({
             id: anime.id,
@@ -59,12 +67,17 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         });
     }
 
-    await dbConnect();
     try {
-        const fetchedServers = await ShowtimesModel.findOne(
-            { id: { $eq: user.id } },
-            { id: 1, name: 1, anime: 1 }
-        );
+        const fetchedServers = await prisma.showtimesdatas.findFirst({
+            where: {
+                id: user.id,
+            },
+            select: {
+                id: true,
+                name: true,
+                anime: true,
+            },
+        });
         const allCollabs = await fetchAllCollabData(fetchedServers);
         res.json({ data: allCollabs, success: true });
     } catch (e) {

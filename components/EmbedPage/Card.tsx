@@ -12,8 +12,7 @@ import { ValidAccent } from "../ColorMap";
 import ReactTimeAgoLocale from "../TimeAgo";
 
 import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
-
-import { ShowAnimeProps } from "../../models/show";
+import { Project } from "@prisma/client";
 
 function getSeason(month: number, year: number, locale: Locale): string {
     const yearS = year.toString();
@@ -56,7 +55,7 @@ const borderTop = {
 };
 
 interface EmbedPageCardProps extends IEmbedParams {
-    animeData: ShowAnimeProps;
+    animeData: Project;
 }
 
 interface EmbedPageCardState {
@@ -97,7 +96,6 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
         }
 
         const { id, title, poster_data, status, last_update, start_time } = animeData;
-        // @ts-ignore
         const { url: poster_url } = poster_data;
 
         const unfinishedEpisode = status.filter((episode) => !episode.is_done);
@@ -142,7 +140,6 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                 key={`episode-card-${id}-${firstEpisode.episode}`}
                                 episode={firstEpisode.episode}
                                 airingAt={firstEpisode.airtime}
-                                // @ts-ignore
                                 progress={firstEpisode.progress}
                                 lang={realLang}
                                 delayReason={firstEpisode.delay_reason}
@@ -157,7 +154,6 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                                 key={`episode-card-${id}-${ep.episode}`}
                                                 episode={ep.episode}
                                                 airingAt={ep.airtime}
-                                                // @ts-ignore
                                                 progress={ep.progress}
                                                 lang={realLang}
                                             />

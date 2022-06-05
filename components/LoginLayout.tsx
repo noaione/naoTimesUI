@@ -2,7 +2,7 @@ import React from "react";
 import LoginSidebar from "./LoginSidebar";
 import TrakteerButton from "./TrakteerButton";
 
-class LoginLayout extends React.Component {
+class LoginLayout extends React.Component<React.PropsWithChildren<{}>> {
     constructor(props) {
         super(props);
     }

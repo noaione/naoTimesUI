@@ -3,10 +3,9 @@ import { has } from "lodash";
 import { DateTime } from "luxon";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import { determineSeason, isNone, Nullable, seasonNaming } from "../../../../lib/utils";
-
-import { ShowAnimeProps, ShowtimesModel } from "../../../../models/show";
+import { determineSeason, isNone, Nullable, seasonNaming } from "@/lib/utils";
+import { Project } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 const corsMiddleware = cors({
     methods: ["GET", "HEAD"],
@@ -78,7 +77,7 @@ function keyNamingRole(key: string) {
     }
 }
 
-function parseStatusOldStyles(animeData: ShowAnimeProps[]): IResultOldSeasonKey {
+function parseStatusOldStyles(animeData: Project[]): IResultOldSeasonKey {
     const seasonKeys: IResultOldSeasonKey = {};
     animeData.forEach((anime) => {
         let fetched = false;
@@ -129,11 +128,15 @@ export default async function serverStatusHandler(req: NextApiRequest, res: Next
 
     const { serverid } = req.query;
     try {
-        let animeSets: Nullable<ShowAnimeProps[]>;
+        let animeSets: Nullable<Project[]>;
         try {
-            await dbConnect();
-            const serverRes = await ShowtimesModel.findOne({ id: { $eq: selectServerID(serverid) } });
-            // @ts-ignore
+            const serverRes = await prisma.showtimesdatas.findFirst({
+                where: { id: selectServerID(serverid) },
+            });
+            if (isNone(serverRes)) {
+                res.status(404).json({ message: "Cannot find that server", status_code: 404 });
+                return;
+            }
             animeSets = serverRes.anime;
             if (isNone(animeSets)) {
                 res.status(404).json({ message: "Cannot find that server", status_code: 404 });
@@ -143,11 +146,6 @@ export default async function serverStatusHandler(req: NextApiRequest, res: Next
             }
         } catch (e) {
             res.status(404).json({ message: "Cannot find that server", status_code: 404 });
-        }
-        if (isNone(animeSets)) {
-            res.status(404).json({ message: "Cannot find that server", status_code: 404 });
-        } else {
-            // parse
         }
     } catch (e) {
         res.status(500).json({ message: `An error occured, ${e.toString()}`, status_code: 500 });

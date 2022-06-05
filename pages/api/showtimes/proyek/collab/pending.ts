@@ -1,13 +1,15 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { Confirmations } from "@/types/collab";
+import prisma from "@/lib/prisma";
+import { showtimesdatas } from "@prisma/client";
 
-async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmations> {
+type ShowtimesCollabData = Pick<showtimesdatas, "id" | "name" | "konfirmasi">;
+
+async function fetchAllCollabData(serverData: ShowtimesCollabData): Promise<Confirmations> {
     if (serverData.konfirmasi.length < 1) {
         return [];
     }
@@ -15,15 +17,18 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
     const allCollabs: Confirmations = [];
     for (let i = 0; i < serverData.konfirmasi.length; i++) {
         const konfirmasi = serverData.konfirmasi[i];
-        let fetchedAnimeInfo: ShowtimesProps;
+        let fetchedAnimeInfo: Pick<showtimesdatas, "id" | "name" | "anime">;
         try {
-            fetchedAnimeInfo = await ShowtimesModel.findOne(
-                {
+            fetchedAnimeInfo = await prisma.showtimesdatas.findFirst({
+                where: {
                     id: konfirmasi.server_id,
-                    "anime.id": konfirmasi.anime_id,
                 },
-                { id: 1, anime: 1, name: 1 }
-            );
+                select: {
+                    id: true,
+                    anime: true,
+                    name: true,
+                },
+            });
         } catch (e) {
             return;
         }
@@ -39,7 +44,7 @@ async function fetchAllCollabData(serverData: ShowtimesProps): Promise<Confirmat
 
         allCollabs.push({
             id: konfirmasi.id,
-            animeInfo: findAnime as ShowAnimeProps,
+            animeInfo: findAnime,
             serverId: konfirmasi.server_id,
             serverName: fetchedAnimeInfo.name,
         });
@@ -60,12 +65,17 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         });
     }
 
-    await dbConnect();
     try {
-        const fetchedServers = await ShowtimesModel.findOne(
-            { id: { $eq: user.id } },
-            { id: 1, name: 1, konfirmasi: 1 }
-        );
+        const fetchedServers = await prisma.showtimesdatas.findFirst({
+            where: {
+                id: user.id,
+            },
+            select: {
+                id: true,
+                name: true,
+                konfirmasi: true,
+            },
+        });
         const allCollabs = await fetchAllCollabData(fetchedServers);
         res.json({ data: allCollabs, success: true });
     } catch (e) {

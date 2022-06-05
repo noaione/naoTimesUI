@@ -1,15 +1,19 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-import { isNone } from "../../../../lib/utils";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { isNone, Nullable } from "@/lib/utils";
+import prisma from "@/lib/prisma";
+import { Project, ProjectEpisodeStatus } from "@prisma/client";
 
-import { ShowtimesModel, ShowtimesProps } from "../../../../models/show";
+type ProjectPick = Pick<Project, "id" | "title" | "assignments" | "poster_data" | "start_time" | "status">;
+interface ProjectGet {
+    anime: ProjectPick[];
+}
 
-function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
+function projectOverviewKeyFilter(fetchedData: ProjectGet) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
-        let latestEpisode;
+        let latestEpisode: Nullable<ProjectEpisodeStatus>;
         for (let ep = 0; ep < anime_data.status.length; ep++) {
             const status_ep = anime_data.status[ep];
             if (status_ep.is_done) {
@@ -28,7 +32,6 @@ function projectOverviewKeyFilter(fetchedData: ShowtimesProps) {
             id: anime_data.id,
             title: anime_data.title,
             assignments: anime_data.assignments,
-            // @ts-ignore
             poster: anime_data.poster_data.url,
             is_finished: isFinished,
         };
@@ -42,7 +45,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 success: false,
@@ -50,19 +52,24 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 code: 501,
             });
         } else {
-            const fetchServers = await ShowtimesModel.findOne(
-                { id: { $eq: user.id } },
-                {
-                    "anime.id": 1,
-                    "anime.title": 1,
-                    "anime.assignments": 1,
-                    "anime.poster_data": 1,
-                    "anime.status": 1,
-                }
-            );
+            const fetchedData = await prisma.showtimesdatas.findFirst({
+                where: { id: user.id },
+                select: {
+                    anime: {
+                        select: {
+                            id: true,
+                            title: true,
+                            assignments: true,
+                            poster_data: true,
+                            start_time: true,
+                            status: true,
+                        },
+                    },
+                },
+            });
             res.json({
                 message: "Sukses",
-                data: projectOverviewKeyFilter(fetchServers),
+                data: projectOverviewKeyFilter(fetchedData),
                 code: 200,
                 success: true,
             });

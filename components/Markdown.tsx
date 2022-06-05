@@ -19,7 +19,7 @@ function MarkdownLinkFormatting({ href, ...rest }: React.HTMLProps<HTMLAnchorEle
 }
 
 // A wrapper around ReactMarkdown :)
-export default class Markdown extends React.Component {
+export default class Markdown extends React.Component<React.PropsWithChildren<{}>> {
     constructor(props) {
         super(props);
     }

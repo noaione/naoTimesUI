@@ -1,13 +1,16 @@
-import runMiddleware, { authMiddleware } from "@/lib/middleware";
 import { NextApiResponse } from "next";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
+import prisma from "@/lib/prisma";
+import { Project } from "@prisma/client";
 
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
+type ProjectPick = Pick<Project, "id" | "title" | "assignments" | "poster_data" | "start_time" | "status">;
+interface ProjectGet {
+    anime: ProjectPick[];
+}
 
-function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
+function filterToNewestStatusOnly(fetchedData: ProjectGet) {
     const animeSets = [];
     fetchedData.anime.forEach((anime_data) => {
         let latestEpisode: Nullable<any>;
@@ -29,7 +32,6 @@ function filterToNewestStatusOnly(fetchedData: ShowtimesProps) {
             title: anime_data.title,
             start_time: anime_data.start_time,
             assignments: anime_data.assignments,
-            // @ts-ignore
             poster: anime_data.poster_data.url,
             status: latestEpisode,
         };
@@ -43,25 +45,28 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
             });
         } else {
-            const fetchServers = await ShowtimesModel.findOne(
-                { id: { $eq: user.id } },
-                {
-                    "anime.id": 1,
-                    "anime.title": 1,
-                    "anime.assignments": 1,
-                    "anime.poster_data": 1,
-                    "anime.start_time": 1,
-                    "anime.status": 1,
-                }
-            );
-            res.json({ data: filterToNewestStatusOnly(fetchServers), code: 200 });
+            const fetchedData = await prisma.showtimesdatas.findFirst({
+                where: { id: user.id },
+                select: {
+                    anime: {
+                        select: {
+                            id: true,
+                            title: true,
+                            assignments: true,
+                            poster_data: true,
+                            start_time: true,
+                            status: true,
+                        },
+                    },
+                },
+            });
+            res.json({ data: filterToNewestStatusOnly(fetchedData), code: 200 });
         }
     }
 });

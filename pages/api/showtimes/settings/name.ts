@@ -1,9 +1,24 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import prisma from "@/lib/prisma";
+import { isNone } from "@/lib/utils";
 
-import { UserModel } from "../../../../models/user";
+async function findAndUpdate(userId: string, targetName: string) {
+    const uiLogin = await prisma.showtimesuilogin.findFirst({
+        where: { id: userId },
+        select: { id: true, mongo_id: true },
+    });
+    if (isNone(uiLogin)) {
+        return;
+    }
+    await prisma.showtimesuilogin.update({
+        where: { mongo_id: uiLogin.mongo_id },
+        data: {
+            name: targetName,
+        },
+    });
+}
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
@@ -15,8 +30,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     } else if (typeof reqData.newname !== "string") {
         res.status(400).json({ message: "Mohon masukan nama baru", code: 400 });
     } else {
-        await dbConnect();
-        await UserModel.updateOne({ id: { $eq: user.id } }, { $set: { name: reqData.newname } });
+        await findAndUpdate(user.id, reqData.newname);
         const newSession: IUserAuth = {
             id: user.id,
             name: reqData.newname,

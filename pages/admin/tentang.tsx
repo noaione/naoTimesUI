@@ -1,19 +1,17 @@
 import Head from "next/head";
 import React from "react";
 
-import AdminLayout from "../../components/AdminLayout";
-import MetadataHead from "../../components/MetadataHead";
-import Markdown from "../../components/Markdown";
-import MotionInView from "../../components/MotionInView";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import Markdown from "@/components/Markdown";
+import MotionInView from "@/components/MotionInView";
 
-import { romanizeNumber } from "../../lib/utils";
-import { getAboutContent, getChangelogContent } from "../../lib/postshelper";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
-
-import { UserProps } from "../../models/user";
+import { romanizeNumber } from "@/lib/utils";
+import { getAboutContent, getChangelogContent } from "@/lib/postshelper";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 
 interface AdminAboutProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
     aboutPage: string;
     changelogPage: string;
 }

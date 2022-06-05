@@ -16,12 +16,11 @@ import MetadataHead from "@/components/MetadataHead";
 import LoadingCircle from "@/components/LoadingCircle";
 import { CallbackModal } from "@/components/Modal";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 
-import { UserProps } from "@/models/user";
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
+import { Project } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 function optionValueChannel(data: any) {
     const { id, name } = data;
@@ -36,8 +35,8 @@ function matchFilterProper(data: any, inputValue: string) {
 }
 
 interface ProyekCollabPageProps {
-    user?: UserProps & { loggedIn: boolean };
-    animeData: ShowAnimeProps;
+    user?: IUserAuth & { loggedIn: boolean };
+    animeData: Project;
 }
 
 interface ProyekCollabPageState {
@@ -196,7 +195,6 @@ class ProyekPageCollabAddition extends React.Component<ProyekCollabPageProps, Pr
                                     <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
                                         <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
-                                            // @ts-ignore
                                             src={poster_data.url}
                                             initial={{ y: 50, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
@@ -338,12 +336,17 @@ export const getServerSideProps = withSession(async function ({
         };
     }
 
-    await dbConnect();
-    const serverRes = (await ShowtimesModel.findOne(
-        { id: { $eq: user.id } },
-        { id: 1, name: 1, anime: 1 }
-    ).lean()) as ShowtimesProps;
-    let findAnime: Nullable<ShowAnimeProps>;
+    const serverRes = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: user.id,
+        },
+        select: {
+            id: true,
+            name: true,
+            anime: true,
+        },
+    });
+    let findAnime: Nullable<Project>;
     serverRes.anime.forEach((res) => {
         if (res.id === aniid && isNone(findAnime)) {
             findAnime = res;

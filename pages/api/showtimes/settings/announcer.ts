@@ -1,10 +1,25 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import { emitSocket, emitSocketAndWait } from "../../../../lib/socket";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
+import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import prisma from "@/lib/prisma";
+import { isNone } from "@/lib/utils";
 
-import { ShowtimesModel } from "../../../../models/show";
+async function findOneAndUpdate(serverId: string, channelId: string) {
+    const server = await prisma.showtimesdatas.findFirst({
+        where: { id: serverId },
+        select: { id: true, mongo_id: true },
+    });
+    if (isNone(server)) {
+        return [false, "Gagal mendapatkan server"];
+    }
+    await prisma.showtimesdatas.update({
+        where: { mongo_id: server.mongo_id },
+        data: {
+            announce_channel: channelId,
+        },
+    });
+}
 
 async function changeChannelId(serverId: string, channelId: string): Promise<[boolean, string]> {
     let channelInfo;
@@ -26,11 +41,7 @@ async function changeChannelId(serverId: string, channelId: string): Promise<[bo
     }
 
     try {
-        // @ts-ignore
-        await ShowtimesModel.findOneAndUpdate(
-            { id: { $eq: serverId } },
-            { $set: { announce_channel: channelInfo.id } }
-        );
+        await findOneAndUpdate(serverId, channelInfo.id);
     } catch (e) {
         return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
     }
@@ -44,8 +55,7 @@ async function changeChannelId(serverId: string, channelId: string): Promise<[bo
 
 async function removeChannelAnnouncer(serverId: string): Promise<[boolean, string]> {
     try {
-        // @ts-ignore
-        await ShowtimesModel.findOneAndUpdate({ id: { $eq: serverId } }, { $set: { announce_channel: "" } });
+        await findOneAndUpdate(serverId, "");
     } catch (e) {
         return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
     }
@@ -63,7 +73,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     } else if (typeof reqData.channelid !== "string") {
         res.status(400).json({ message: "Mohon masukan channel ID", code: 400 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",

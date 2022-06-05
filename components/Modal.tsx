@@ -15,11 +15,16 @@ export interface CallbackModal {
 export interface ModalProps {
     id?: string;
     forceOpen?: boolean;
+    children?: React.ReactNode;
     onMounted?: (callbacks: CallbackModal) => void;
     onClose?: () => void;
 }
 
-class ModalHead extends React.Component {
+interface ChildProps {
+    children?: React.ReactNode;
+}
+
+class ModalHead extends React.Component<ChildProps> {
     render() {
         return (
             <>
@@ -31,7 +36,7 @@ class ModalHead extends React.Component {
     }
 }
 
-class ModalBody extends React.Component {
+class ModalBody extends React.Component<ChildProps> {
     render() {
         return (
             <>
@@ -47,6 +52,7 @@ class ModalBody extends React.Component {
 
 interface FooterExtra {
     className?: string;
+    children?: React.ReactNode;
 }
 
 class ModalFooter extends React.Component<FooterExtra> {

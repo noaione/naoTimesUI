@@ -1,5 +1,5 @@
-import { ShowAnimeProps } from "@/models/show";
 import { Nullable } from "@/lib/utils";
+import { Project } from "@prisma/client";
 
 export interface SimpleServerInfo {
     id: string;
@@ -21,7 +21,7 @@ export interface KonfirmasiData {
     id: string;
     serverId: string;
     serverName?: Nullable<string>;
-    animeInfo: ShowAnimeProps;
+    animeInfo: Project;
 }
 
 export type Confirmations = KonfirmasiData[];

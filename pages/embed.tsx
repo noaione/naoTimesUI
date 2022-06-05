@@ -2,21 +2,20 @@ import _ from "lodash";
 import React from "react";
 import Head from "next/head";
 
-import { ValidAccent } from "../components/ColorMap";
-import MetadataHead from "../components/MetadataHead";
-import { IEmbedParams } from "../components/EmbedPage/Interface";
-import EmbedPageCard from "../components/EmbedPage/Card";
+import { ValidAccent } from "@/components/ColorMap";
+import MetadataHead from "@/components/MetadataHead";
+import { IEmbedParams } from "@/components/EmbedPage/Interface";
+import EmbedPageCard from "@/components/EmbedPage/Card";
 
 import { LocaleMap } from "../i18n";
-import dbConnect from "../lib/dbConnect";
-import { isNone, mapBoolean, Nullable } from "../lib/utils";
-import { NextServerSideContextWithSession } from "../lib/session";
-
-import { ShowAnimeProps, ShowtimesModel } from "../models/show";
+import prisma from "@/lib/prisma";
+import { isNone, mapBoolean, Nullable } from "@/lib/utils";
+import { NextServerSideContextWithSession } from "@/lib/session";
+import { Project } from "@prisma/client";
 
 interface EmbedUtangProps extends IEmbedParams {
     name?: string;
-    projectList: ShowAnimeProps[];
+    projectList: Project[];
 }
 
 interface EmbedUtangState {
@@ -35,7 +34,7 @@ function selectTime(statusSets: any[]) {
     return selected;
 }
 
-function filterAnimeData(animeData: ShowAnimeProps[]): ShowAnimeProps[] {
+function filterAnimeData(animeData: Project[]): Project[] {
     const newAnimeSets = [];
     animeData.forEach((res) => {
         const deepCopy = _.cloneDeep(res);
@@ -201,20 +200,12 @@ export async function getServerSideProps(context: NextServerSideContextWithSessi
         };
     }
 
-    await dbConnect();
-    const serverRes = await ShowtimesModel.find({ id: { $eq: newParamsSets.id } }).lean();
-    if (serverRes.length < 1) {
-        return {
-            notFound: true,
-        };
-    }
-
-    const firstOccurences = serverRes[0];
+    const serverRes = await prisma.showtimesdatas.findFirst({ where: { id: newParamsSets.id } });
 
     return {
         props: {
-            projectList: firstOccurences.anime,
-            name: firstOccurences.name || null,
+            projectList: serverRes.anime,
+            name: serverRes.name || null,
             ...newParamsSets,
         },
     };

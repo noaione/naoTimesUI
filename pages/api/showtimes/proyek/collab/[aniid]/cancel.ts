@@ -1,21 +1,28 @@
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { NextApiResponse } from "next";
 
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { emitSocketAndWait } from "@/lib/socket";
-import dbConnect from "@/lib/dbConnect";
+import prisma from "@/lib/prisma";
+import { showtimesdatas } from "@prisma/client";
+import { isNone } from "@/lib/utils";
 
-async function removeConfirmationCode(serverData: ShowtimesProps, animeId: string): Promise<boolean> {
+async function removeConfirmationCode(
+    serverData: Pick<showtimesdatas, "id" | "name" | "konfirmasi" | "mongo_id">,
+    animeId: string
+): Promise<boolean> {
     if (serverData.konfirmasi.length < 1) {
         return false;
     }
 
     const leftOver = serverData.konfirmasi.filter((o) => o.anime_id !== animeId);
-    serverData.konfirmasi = leftOver;
-    console.info(leftOver);
-
-    // @ts-ignore
-    await ShowtimesModel.updateOne({ id: serverData.id }, { konfirmasi: leftOver });
+    await prisma.showtimesdatas.update({
+        where: {
+            mongo_id: serverData.mongo_id,
+        },
+        data: {
+            konfirmasi: leftOver,
+        },
+    });
     await emitSocketAndWait("pull data", serverData.id);
     return true;
 }
@@ -38,22 +45,36 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
 
     // remove from existence!
     const { aniid } = req.query;
-    await dbConnect();
 
     try {
-        const fetchedServers = await ShowtimesModel.findOne(
-            { id: { $eq: user.id }, "konfirmasi.anime_id": aniid },
-            { id: 1, name: 1, konfirmasi: 1 }
-        );
-        const success = await removeConfirmationCode(fetchedServers, aniid as string);
-        if (success) {
-            res.json({ success: true, code: 200 });
-        } else {
+        const fetchedServers = await prisma.showtimesdatas.findFirst({
+            where: {
+                id: user.id,
+            },
+            select: {
+                id: true,
+                name: true,
+                konfirmasi: true,
+                mongo_id: true,
+            },
+        });
+        if (isNone(fetchedServers)) {
             res.status(500).json({
-                success: true,
-                code: 500,
-                message: "Terjadi kesalahan ketika menghubungi database, mohon coba lagi nanti!",
+                success: false,
+                code: 4501,
+                message: "Tidak dapat menemukan server anda!",
             });
+        } else {
+            const success = await removeConfirmationCode(fetchedServers, aniid as string);
+            if (success) {
+                res.json({ success: true, code: 200 });
+            } else {
+                res.status(500).json({
+                    success: true,
+                    code: 500,
+                    message: "Terjadi kesalahan ketika menghubungi database, mohon coba lagi nanti!",
+                });
+            }
         }
     } catch (e) {
         console.error(e);

@@ -10,18 +10,17 @@ import ProjectPageComponent from "@/components/ProjectPage";
 import ProjectCollabComponent from "@/components/ProjectCollabPage";
 import { CallbackModal } from "@/components/Modal";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
-import { UserProps } from "@/models/user";
-import { ShowAnimeProps, ShowCollabProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { KonfirmasiData } from "@/types/collab";
+import prisma from "@/lib/prisma";
+import { Project, ProjectCollabRequest } from "@prisma/client";
 
 type KonfirmasiDataTanpaAnime = Omit<KonfirmasiData, "animeInfo">;
 interface ProyekCollabConfirmationProps {
-    user?: UserProps & { loggedIn: boolean };
-    animeData: ShowAnimeProps;
+    user?: IUserAuth & { loggedIn: boolean };
+    animeData: Project;
     kolebData: KonfirmasiDataTanpaAnime;
 }
 
@@ -80,7 +79,6 @@ class ProyekCollabConfirmationPage extends React.Component<
                                     <div className="icon h-5/6 p-1 mx-auto md:mr-3 md:ml-0 z-[5]">
                                         <motion.img
                                             className="transition duration-300 ease-out transform hover:-translate-y-1"
-                                            // @ts-ignore
                                             src={poster_data.url}
                                             initial={{ y: 50, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
@@ -177,7 +175,6 @@ class ProyekCollabConfirmationPage extends React.Component<
                                         animeId={id}
                                         episode={res.episode}
                                         airTime={res.airtime}
-                                        // @ts-ignore
                                         status={res.progress}
                                         isReleased={res.is_done}
                                         animateDelay={delayAni}
@@ -198,7 +195,7 @@ export const getServerSideProps = withSession(async function ({
     req,
     params,
 }: NextServerSideContextWithSession) {
-    const user = req.session.get<IUserAuth>("user") as UserProps;
+    const user = req.session.get<IUserAuth>("user") as IUserAuth;
     const { code } = params;
 
     if (!user) {
@@ -215,13 +212,17 @@ export const getServerSideProps = withSession(async function ({
         };
     }
 
-    await dbConnect();
     console.info("Finding confirmation data...");
-    const serverRes = (await ShowtimesModel.findOne(
-        { id: { $eq: user.id } },
-        { id: 1, konfirmasi: 1 }
-    ).lean()) as ShowtimesProps;
-    let findKonfirmasi: Nullable<ShowCollabProps> = null;
+    const serverRes = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: user.id,
+        },
+        select: {
+            id: true,
+            konfirmasi: true,
+        },
+    });
+    let findKonfirmasi: Nullable<ProjectCollabRequest> = null;
     serverRes.konfirmasi.forEach((res) => {
         if (res.id === code && isNone(findKonfirmasi)) {
             findKonfirmasi = res;
@@ -236,20 +237,23 @@ export const getServerSideProps = withSession(async function ({
     console.info(`Confirmation data found: ${findKonfirmasi.id}`);
 
     console.info("Finding the target anime...");
-    const targetServerRes = (await ShowtimesModel.findOne(
-        {
-            id: { $eq: findKonfirmasi.server_id },
-            "anime.id": { $eq: findKonfirmasi.anime_id },
+    const targetServerRes = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: findKonfirmasi.server_id,
         },
-        { id: 1, name: 1, anime: 1 }
-    ).lean()) as ShowtimesProps;
+        select: {
+            id: true,
+            name: true,
+            anime: true,
+        },
+    });
     if (isNone(targetServerRes)) {
         console.info("The fetch process return empty data...");
         return {
             notFound: true,
         };
     }
-    let findAnime: Nullable<ShowAnimeProps>;
+    let findAnime: Nullable<Project>;
     targetServerRes.anime.forEach((res) => {
         if (res.id === findKonfirmasi.anime_id && isNone(findAnime)) {
             findAnime = res;

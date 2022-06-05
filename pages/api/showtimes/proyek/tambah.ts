@@ -2,12 +2,10 @@ import axios from "axios";
 import { get, has } from "lodash";
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-import { emitSocket, emitSocketAndWait } from "../../../../lib/socket";
-import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "../../../../lib/utils";
-
-import { ShowtimesModel } from "../../../../models/show";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "@/lib/utils";
+import prisma from "@/lib/prisma";
 
 const AnimeInfoQuery = `
 query ($id:Int!) {
@@ -90,7 +88,17 @@ async function addNewProject(dataToAdd: any) {
             code: 400,
         };
     }
-    const showServer = await ShowtimesModel.findOne({ id: { $eq: serverId } }, { "anime.id": 1 });
+    const showServer = await prisma.showtimesdatas.findFirst({
+        where: { id: serverId },
+        select: {
+            anime: {
+                select: {
+                    id: true,
+                },
+            },
+            mongo_id: true,
+        },
+    });
     let isExist = false;
     showServer.anime.forEach((res) => {
         if (res.id === animeId) {
@@ -186,14 +194,16 @@ async function addNewProject(dataToAdd: any) {
 
     const roleId = generatedRole.id;
     finalizedAnimeData.role_id = roleId;
-    // @ts-ignore
     finalizedAnimeData.assignments = validatedRoles;
     try {
-        await ShowtimesModel.updateOne(
-            { id: { $eq: serverId } },
-            // @ts-ignore
-            { $addToSet: { anime: finalizedAnimeData } }
-        );
+        await prisma.showtimesdatas.update({
+            where: { mongo_id: showServer.mongo_id },
+            data: {
+                anime: {
+                    push: finalizedAnimeData,
+                },
+            },
+        });
     } catch (err) {
         console.error(err);
         return { success: false, message: "Gagal memperbaharui database, mohon coba lagi nanti", code: 4500 };
@@ -207,7 +217,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 success: false,

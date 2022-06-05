@@ -2,21 +2,19 @@ import React from "react";
 import Head from "next/head";
 import Link from "next/link";
 
-import AdminLayout from "../../../components/AdminLayout";
-import MetadataHead from "../../../components/MetadataHead";
-import ErrorModal from "../../../components/ErrorModal";
-import FansubRSSCreateNew from "../../../components/FansubRSS/CreateNew";
-import { CallbackModal } from "../../../components/Modal";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import ErrorModal from "@/components/ErrorModal";
+import FansubRSSCreateNew from "@/components/FansubRSS/CreateNew";
+import { CallbackModal } from "@/components/Modal";
 
-import { FansubRSSSchemas } from "../../../lib/fsrss";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
-import { isNone, Nullable } from "../../../lib/utils";
-
-import { UserProps } from "../../../models/user";
+import { FansubRSSSchemas } from "@/lib/fsrss";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
+import { isNone, Nullable } from "@/lib/utils";
 
 interface FansubRSSTambahProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
     totalData: number;
     isPremium: boolean;
 }

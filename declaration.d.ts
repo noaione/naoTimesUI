@@ -1,4 +1,4 @@
-import { Mongoose } from "mongoose";
+import { PrismaClient } from "@prisma/client";
 
 interface MongooseCached {
     promise?: Promise<Mongoose> | null;
@@ -8,7 +8,7 @@ interface MongooseCached {
 declare global {
     namespace NodeJS {
         interface Global {
-            mongoose?: MongooseCached;
+            prisma?: PrismaClient;
             portalNumber?: number;
         }
 

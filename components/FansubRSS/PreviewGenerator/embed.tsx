@@ -65,7 +65,7 @@ class EmbedTitle extends React.Component<IEmbedTitle> {
             return null;
         }
 
-        const titleParsed = parseEmbedTitle(title);
+        const titleParsed = parseEmbedTitle(title) as React.ReactNode;
 
         if (url) {
             return (
@@ -94,6 +94,7 @@ class EmbedDescription extends React.Component<IEmbedDescription> {
             return null;
         }
 
+        // @ts-ignore
         return <div className="embed-description markup">{parseAllowLinks(content)}</div>;
     }
 }
@@ -155,8 +156,10 @@ class EmbedField extends React.Component<IEmbedField> {
 
         const classExtra = "embed-field" + (inline ? " embed-field-inline" : "");
 
+        // @ts-ignore
         const fieldName = name ? <div className="embed-field-name">{parseEmbedTitle(name)}</div> : null;
         const fieldValue = value ? (
+            // @ts-ignore
             <div className="embed-field-value markup">{parseAllowLinks(name)}</div>
         ) : null;
 
