@@ -1,4 +1,3 @@
-import "preact/debug";
 import React from "react";
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
