@@ -4,9 +4,9 @@
 //     enabled: process.env.ANALYZE === "true",
 // });
 
-import { withSentryConfig } from "@sentry/nextjs";
-import withPlugins from "next-compose-plugins";
-import bundleAnalyzer from "@next/bundle-analyzer";
+const { withSentryConfig } = require("@sentry/nextjs");
+const withPlugins = require("next-compose-plugins");
+const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
@@ -26,28 +26,14 @@ if (IS_PREVIEW) {
     skipSentry = true;
 }
 
+/***
+ * @type {import("next").NextConfig}
+ */
 const moduleExports = {
     productionBrowserSourceMaps: true,
     swcLoader: true,
     swcMinify: true,
     esmExternals: true,
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    webpack: (config, { dev, isServer, webpack }) => {
-        if (!dev && !isServer) {
-            Object.assign(config.resolve.alias, {
-                react: "preact/compat",
-                "react-dom/test-utils": "preact/test-utils",
-                "react-dom": "preact/compat",
-            });
-        }
-        return config;
-    },
     async headers() {
         return [
             {

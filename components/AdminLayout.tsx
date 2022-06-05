@@ -6,15 +6,15 @@ import AdminBanner from "./AdminBanner";
 import AdminHeader from "./AdminHeader";
 import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
 
-import { UserProps } from "../models/user";
-
 import packageJSON from "../package.json";
+import { IUserAuth } from "@/lib/session";
 
 interface AdminLayoutProps {
-    user: UserProps;
+    user: IUserAuth;
     active?: SidenavActiveState;
     title?: string;
     overflowX?: boolean;
+    children: React.ReactNode;
 }
 
 interface AdminLayoutState {
@@ -74,6 +74,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         />
                         <motion.main
                             id="root"
+                            layoutId="root-container"
                             key={`${active ?? "home"}-${realTitle}`}
                             className={`flex-1 overflow-y-auto ${
                                 realOverflowX ? "overflow-x-auto" : "overflow-x-hidden"

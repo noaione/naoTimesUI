@@ -7,7 +7,7 @@ import { isNone, Nullable } from "../../../lib/utils";
 import _ from "lodash";
 
 interface SessionClass {
-    get<T extends any>(key: string): Nullable<T>;
+    get<T>(key: string): Nullable<T>;
 }
 
 const SearchAnimeQuery = `

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { DateTime } from "luxon";
 import { get, has } from "lodash";
 
-import { ShowAnimeProps, ShowtimesProps } from "../models/show";
+import { Project, showtimesdatas } from "@prisma/client";
 
 export type Nullable<T> = T | null;
 export type NoneType = null | undefined;
@@ -73,7 +73,7 @@ export function isDifferent(array1: string[], array2: string[]) {
     return unmatching;
 }
 
-export function mapBoolean<T extends any>(input_data: T): boolean {
+export function mapBoolean<T>(input_data: T): boolean {
     if (isNone(input_data)) {
         return false;
     }
@@ -152,7 +152,7 @@ export function seasonNaming(season: 0 | 1 | 2 | 3): string {
     return seasonName;
 }
 
-export function filterToSpecificAnime(results: ShowtimesProps, anime_id: string) {
+export function filterToSpecificAnime(results: showtimesdatas, anime_id: string) {
     const animeLists = results.anime.filter((res) => res.id === anime_id);
     return animeLists;
 }
@@ -316,17 +316,15 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
     }
     // This will convert the data to the database format
     const anilistId = intToStr(rawResults.id);
-    const malId = intToStr(rawResults.idMal);
     const animeTitle = get(rawResults, "title", {});
     const realTitle = animeTitle.romaji || animeTitle.english || animeTitle.native;
     const { coverImage } = rawResults;
 
     const startDate = parseAnilistDate(rawResults.startDate);
 
-    // @ts-ignore
-    const compiledData: ShowAnimeProps = {
+    const compiledData: Project = {
         id: anilistId,
-        mal_id: malId,
+        mal_id: rawResults.idMal,
         title: realTitle,
         start_time: startDate,
         poster_data: {
@@ -338,6 +336,38 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
         aliases: [],
         kolaborasi: [],
         last_update: Math.floor(DateTime.utc().toSeconds()),
+        role_id: null,
+        assignments: {
+            TL: {
+                id: null,
+                name: null,
+            },
+            TLC: {
+                id: null,
+                name: null,
+            },
+            ENC: {
+                id: null,
+                name: null,
+            },
+            ED: {
+                id: null,
+                name: null,
+            },
+            TM: {
+                id: null,
+                name: null,
+            },
+            TS: {
+                id: null,
+                name: null,
+            },
+            QC: {
+                id: null,
+                name: null,
+            },
+        },
+        fsdb_data: null,
     };
 
     let airingSchedules: AiringNode[] = get(rawResults, "airingSchedule.nodes", []);

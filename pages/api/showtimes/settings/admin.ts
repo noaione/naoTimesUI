@@ -1,11 +1,9 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import { emitSocket } from "../../../../lib/socket";
-import { isNone } from "../../../../lib/utils";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-
-import { ShowAdminModel, ShowtimesModel } from "../../../../models/show";
+import { emitSocket } from "@/lib/socket";
+import { isNone } from "@/lib/utils";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import prisma from "@/lib/prisma";
 
 async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Promise<[string, boolean]> {
     if (!Array.isArray(newAdminIds)) {
@@ -28,7 +26,7 @@ async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Pr
     }
     let successCheck2 = false;
     try {
-        const showAdmin = await ShowAdminModel.find({});
+        const showAdmin = await prisma.showtimesadmin.findMany();
         const serversAdminsSets: string[] = [];
         showAdmin.forEach((res) => {
             if (res.servers.includes(serverId)) {
@@ -48,11 +46,21 @@ async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Pr
         return ["Tidak dapat menemukan Server Admin utama dalam list baru, mohon cek lagi", false];
     }
     try {
-        // @ts-ignore
-        await ShowtimesModel.findOneAndUpdate(
-            { id: { $eq: serverId } },
-            { $set: { serverowner: newAdminIds } }
-        );
+        const serverInfo = await prisma.showtimesdatas.findFirst({
+            where: { id: serverId },
+            select: { id: true, mongo_id: true },
+        });
+        if (isNone(serverInfo)) {
+            return ["Gagal memperbarui database, mohon coba lagi nanti", false];
+        }
+        await prisma.showtimesdatas.update({
+            where: { mongo_id: serverInfo.mongo_id },
+            data: {
+                serverowner: {
+                    set: newAdminIds,
+                },
+            },
+        });
     } catch (e) {
         return ["Gagal memperbarui database, mohon coba lagi nanti", false];
     }
@@ -70,7 +78,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     } else if (isNone(reqData.adminIds)) {
         res.status(400).json({ message: "Mohon berikan adminIds untuk perubahan baru", code: 400 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",

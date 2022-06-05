@@ -71,3 +71,11 @@ Kodenama: *Tidak ada*
 
 Anda dapat melakukan inisiasi kolaborasi baru, membatalkan kode kolaborasi, dan memputuskan kolaborasi melalui website sekarang!
 Cukup kunjungi `/admin/proyek/{animeId}/kolaborasi` untuk mulai!
+
+## Versi 1.3.0
+
+Edisi tugas kuliah.
+
+- ⚡ Bumping berbagai macam dependencies
+- 🤖 Perubahan ORM dari Mongoose ke Prisma
+- 🔧 API dibuat lebih konsisten

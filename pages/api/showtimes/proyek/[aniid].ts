@@ -1,10 +1,9 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
-
-import { ShowAnimeProps, ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { isNone, Nullable } from "@/lib/utils";
+import prisma from "@/lib/prisma";
+import { Project } from "@prisma/client";
 
 function selectFirst(target: string | string[]): string {
     if (Array.isArray(target)) {
@@ -20,17 +19,18 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
             });
         } else {
-            const fetchServers = (await ShowtimesModel.findOne({
-                id: { $eq: user.id },
-            }).lean()) as ShowtimesProps;
-            let findAnime: Nullable<ShowAnimeProps>;
+            const fetchServers = await prisma.showtimesdatas.findFirst({
+                where: {
+                    id: user.id,
+                },
+            });
+            let findAnime: Nullable<Project>;
             // loop till find the anime
             for (let i = 0; i < fetchServers.anime.length; i++) {
                 if (fetchServers.anime[i].id === singleAnimeId) {

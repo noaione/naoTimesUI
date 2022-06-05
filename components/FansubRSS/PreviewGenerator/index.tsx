@@ -83,6 +83,7 @@ class MessageBody extends React.Component<IMsgBodyProps> {
 
     render() {
         const { compactMode, username, content } = this.props;
+        const actualContent = parse(content, true, {}, jumboify) as React.ReactNode;
         if (compactMode) {
             return (
                 <div className="markup">
@@ -95,11 +96,11 @@ class MessageBody extends React.Component<IMsgBodyProps> {
                         <strong className="user-name">{username}</strong>
                     </span>
                     <span className="highlight-separator"> - </span>
-                    <span className="message-content">{content && parse(content, true, {}, jumboify)}</span>
+                    <span className="message-content">{content && actualContent}</span>
                 </div>
             );
         } else if (content) {
-            return <div className="markup">{parse(content, true, {}, jumboify)}</div>;
+            return <div className="markup">{actualContent}</div>;
         }
 
         return null;
@@ -184,6 +185,7 @@ class ErrorHeader extends React.Component<IErrorHeader> {
 
 interface IViewWrapper {
     darkTheme?: boolean;
+    children?: React.ReactNode;
 }
 
 class DiscordViewWrapper extends React.Component<IViewWrapper> {

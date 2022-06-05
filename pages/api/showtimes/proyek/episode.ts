@@ -1,11 +1,11 @@
 import { DateTime } from "luxon";
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-import { emitSocket } from "../../../../lib/socket";
-import { isNone, Nullable, verifyExist } from "../../../../lib/utils";
-import { EpisodeStatusProps, ShowtimesModel, ShowtimesProps } from "../../../../models/show";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { emitSocket } from "@/lib/socket";
+import { isNone, Nullable, verifyExist } from "@/lib/utils";
+import prisma from "@/lib/prisma";
+import { ProjectEpisodeStatus } from "@prisma/client";
 
 type EpisodeUpdateEvent = "add" | "remove";
 
@@ -26,14 +26,8 @@ function verifyContents(event: EpisodeUpdateEvent, changes: any) {
 }
 
 async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, changes: EpisodeUpdateChanges) {
-    const serverData = (await ShowtimesModel.findOne({ id: { $eq: serverId } })) as ShowtimesProps;
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const test = serverData.id;
-        if (isNone(test)) {
-            return ["Tidak dapat menemukan server anda di database?", 4501];
-        }
-    } catch (e) {
+    const serverData = await prisma.showtimesdatas.findFirst({ where: { id: serverId } });
+    if (isNone(serverData)) {
         return ["Tidak dapat menemukan server anda di database?", 4501];
     }
     const { animeId, episodes } = changes;
@@ -69,8 +63,8 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
     }
     const currentTime = DateTime.now().toUTC().startOf("hour").toSeconds();
     if (event === "add") {
-        let status = anime[animeIdxLoc].status as EpisodeStatusProps[];
-        const episodeNewData: EpisodeStatusProps[] = [];
+        let status = anime[animeIdxLoc].status;
+        const episodeNewData: ProjectEpisodeStatus[] = [];
         onlyEpisodeNumbers.forEach((episodeNum, idx) => {
             const statusLoc = status.findIndex((es) => es.episode === episodeNum);
             if (statusLoc === -1) {
@@ -85,9 +79,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                 episodeNewData.push({
                     episode: episodeNum,
                     is_done: false,
-                    // @ts-ignore
                     progress: {
-                        // @ts-ignore
                         TL: false,
                         TLC: false,
                         ENC: false,
@@ -97,6 +89,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                         QC: false,
                     },
                     airtime: lastAirtime + 604800 * idx,
+                    delay_reason: null,
                 });
             }
         });
@@ -105,31 +98,46 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
             (targetServer) => targetServer !== serverId
         );
         if (kolaborasiServer.length > 0) {
-            const targetServers = (await ShowtimesModel.find({
-                id: { $in: kolaborasiServer },
-            })) as ShowtimesProps[];
+            const targetServers = await prisma.showtimesdatas.findMany({
+                where: { id: { in: kolaborasiServer } },
+            });
             if (targetServers.length > 0) {
-                targetServers.forEach(async (targetSrv) => {
-                    const animeIdxTarget = targetSrv.anime.findIndex((pepela) => pepela.id === animeId);
-                    if (animeIdxTarget < 0) {
-                        return;
-                    }
-                    // @ts-ignore
-                    targetSrv.anime[animeIdxTarget].status = status;
-                    // @ts-ignore
-                    await ShowtimesModel.updateOne({ id: { $eq: targetSrv.id } }, targetSrv);
-                    emitSocket("pull data", targetSrv.id);
+                await prisma.showtimesdatas.updateMany({
+                    where: { mongo_id: { in: targetServers.map((r) => r.mongo_id) } },
+                    data: {
+                        anime: {
+                            updateMany: {
+                                where: {
+                                    id: animeId,
+                                },
+                                data: {
+                                    status: status,
+                                },
+                            },
+                        },
+                    },
                 });
             }
         }
-        // @ts-ignore
-        serverData.anime[animeIdxLoc].status = status;
-        // @ts-ignore
-        await ShowtimesModel.updateOne({ id: { $eq: serverId } }, serverData);
+        await prisma.showtimesdatas.updateMany({
+            where: { mongo_id: serverData.mongo_id },
+            data: {
+                anime: {
+                    updateMany: {
+                        where: {
+                            id: animeId,
+                        },
+                        data: {
+                            status: status,
+                        },
+                    },
+                },
+            },
+        });
         emitSocket("pull data", serverId);
         return [episodeNewData, 200];
     } else if (event === "remove") {
-        const status = anime[animeIdxLoc].status as EpisodeStatusProps[];
+        const status = anime[animeIdxLoc].status;
         const newStatus = status.filter((epStat) => !episodes.includes(epStat.episode));
         if (status.length !== newStatus.length) {
             // Change data
@@ -137,27 +145,42 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                 (targetServer) => targetServer !== serverId
             );
             if (kolaborasiServer.length > 0) {
-                const targetServers = (await ShowtimesModel.find({
-                    id: { $in: kolaborasiServer },
-                })) as ShowtimesProps[];
+                const targetServers = await prisma.showtimesdatas.findMany({
+                    where: { id: { in: kolaborasiServer } },
+                });
                 if (targetServers.length > 0) {
-                    targetServers.forEach(async (targetSrv) => {
-                        const animeIdxTarget = targetSrv.anime.findIndex((pepela) => pepela.id === animeId);
-                        if (animeIdxTarget < 0) {
-                            return;
-                        }
-                        // @ts-ignore
-                        targetSrv.anime[animeIdxTarget].status = newStatus;
-                        // @ts-ignore
-                        await ShowtimesModel.updateOne({ id: { $eq: targetSrv.id } }, targetSrv);
-                        emitSocket("pull data", targetSrv.id);
+                    await prisma.showtimesdatas.updateMany({
+                        where: { mongo_id: { in: targetServers.map((r) => r.mongo_id) } },
+                        data: {
+                            anime: {
+                                updateMany: {
+                                    where: {
+                                        id: animeId,
+                                    },
+                                    data: {
+                                        status: status,
+                                    },
+                                },
+                            },
+                        },
                     });
                 }
             }
-            // @ts-ignore
-            serverData.anime[animeIdxLoc].status = newStatus;
-            // @ts-ignore
-            await ShowtimesModel.updateOne({ id: { $eq: serverId } }, serverData);
+            await prisma.showtimesdatas.updateMany({
+                where: { mongo_id: serverData.mongo_id },
+                data: {
+                    anime: {
+                        updateMany: {
+                            where: {
+                                id: animeId,
+                            },
+                            data: {
+                                status: status,
+                            },
+                        },
+                    },
+                },
+            });
             emitSocket("pull data", serverId);
             const removedEpisode = [];
             status.forEach((pp, idx) => {
@@ -210,7 +233,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             code: 403,
         });
     } else {
-        await dbConnect();
         if (userData.privilege === "owner") {
             res.status(504).json({
                 success: false,

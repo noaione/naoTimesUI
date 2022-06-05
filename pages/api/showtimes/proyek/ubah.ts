@@ -1,13 +1,12 @@
+import prisma from "@/lib/prisma";
+import { showtimesdatas } from "@prisma/client";
 import _ from "lodash";
 import { DateTime } from "luxon";
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../../lib/session";
-import { emitSocket, emitSocketAndWait } from "../../../../lib/socket";
-import { isNone, Nullable, RoleProject, verifyExist } from "../../../../lib/utils";
-
-import { ShowtimesModel, ShowtimesProps } from "../../../../models/show";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { isNone, Nullable, RoleProject, verifyExist } from "@/lib/utils";
 
 type AnimeChangeEvent = "staff" | "status";
 
@@ -34,23 +33,19 @@ function verifyChangesContents(event: AnimeChangeEvent, changes: any) {
     return false;
 }
 
-async function doAnimeChanges(
-    event: AnimeChangeEvent,
-    databaseData: ShowtimesProps,
-    changes: any
-): Promise<ShowtimesProps> {
+async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesdatas, changes: any) {
     if (event === "staff") {
         let { role } = changes;
         if (isNone(role)) {
-            return databaseData;
+            return null;
         }
         if (!["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role)) {
-            return databaseData;
+            return null;
         }
         const { anime_id } = changes;
-        if (isNone(anime_id)) return databaseData;
+        if (isNone(anime_id)) return null;
         const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
-        if (indexAnime === -1) return databaseData;
+        if (indexAnime === -1) return null;
         role = role.toUpperCase();
         let userId: Nullable<string> = changes.user_id;
         if (typeof userId !== "string") {
@@ -62,14 +57,27 @@ async function doAnimeChanges(
             userName = userInfo.name;
         } catch (e) {}
         const newUserData = { id: userId, name: userName };
-        // eslint-disable-next-line no-param-reassign
-        databaseData.anime[indexAnime].assignments[role] = newUserData;
-        return databaseData;
+        const assignments = databaseData.anime[indexAnime].assignments;
+        assignments[role] = newUserData;
+        await prisma.showtimesdatas.update({
+            where: { mongo_id: databaseData.mongo_id },
+            data: {
+                anime: {
+                    updateMany: {
+                        where: { id: anime_id },
+                        data: {
+                            assignments: assignments,
+                        },
+                    },
+                },
+            },
+        });
+        return newUserData;
     }
     if (event === "status") {
         const rolesSets: Nullable<StatusRoleChanges[]> = changes.roles;
         if (isNone(rolesSets)) {
-            return databaseData;
+            return null;
         }
         const verifiedChanges: StatusRoleChanges[] = [];
         rolesSets.forEach((res) => {
@@ -80,38 +88,61 @@ async function doAnimeChanges(
             verifiedChanges.push({ role, tick: res.tick });
         });
         const { anime_id } = changes;
-        if (isNone(anime_id)) return databaseData;
+        if (isNone(anime_id)) return null;
         let episode_no: Nullable<number | string> = changes.episode;
-        if (isNone(episode_no)) return databaseData;
+        if (isNone(episode_no)) return null;
         if (typeof episode_no === "string") {
             episode_no = parseInt(episode_no);
-            if (Number.isNaN(episode_no)) return databaseData;
+            if (Number.isNaN(episode_no)) return null;
         }
-        if (typeof episode_no !== "number") return databaseData;
+        if (typeof episode_no !== "number") return null;
         const currentUTC = DateTime.utc().toSeconds();
         const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
-        if (indexAnime === -1) return databaseData;
-        const indexEpisode = _.findIndex(
-            databaseData.anime[indexAnime].status,
-            (pred) => pred.episode === episode_no
-        );
-        if (indexEpisode === -1) return databaseData;
+        if (indexAnime === -1) return null;
+        const animeInfo = databaseData.anime[indexAnime];
+        const indexEpisode = _.findIndex(animeInfo.status, (pred) => pred.episode === episode_no);
+        if (indexEpisode === -1) return null;
+        const status = animeInfo.status[indexEpisode];
         verifiedChanges.forEach((res) => {
-            // eslint-disable-next-line no-param-reassign
-            databaseData.anime[indexAnime].status[indexEpisode].progress[res.role] = res.tick;
+            status.progress[res.role] = res.tick;
         });
-        // eslint-disable-next-line no-param-reassign
-        databaseData.anime[indexAnime].last_update = currentUTC;
-        return databaseData;
+        await prisma.showtimesdatas.update({
+            where: { mongo_id: databaseData.mongo_id },
+            data: {
+                anime: {
+                    updateMany: {
+                        where: { id: anime_id },
+                        data: {
+                            status: {
+                                updateMany: {
+                                    where: {
+                                        episode: status.episode,
+                                    },
+                                    data: {
+                                        progress: status.progress,
+                                    },
+                                },
+                            },
+                            last_update: {
+                                set: parseInt(currentUTC.toString(), 10),
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        return status.progress;
     }
-    return databaseData;
+    return null;
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const jsonBody = await req.body;
     const userData = req.session.get<IUserAuth>("user");
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
-        return res.status(400).json({ success: false, message: "Tidak dapat menemukan body di request", code: 400 });
+        return res
+            .status(400)
+            .json({ success: false, message: "Tidak dapat menemukan body di request", code: 400 });
     }
     const raweventType: Nullable<string> = jsonBody.event;
     if (isNone(raweventType)) {
@@ -123,61 +154,79 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     }
     const { changes } = jsonBody;
     if (isNone(changes)) {
-        return res.status(400).json({ success: false, message: "Tidak ada data `changes` di request", code: 400 });
-    }
-    if (!verifyChangesContents(eventType, changes)) {
         return res
             .status(400)
-            .json({ success: false, message: `Terdapat data yang kurang pada event ${eventType}`, code: 400 });
+            .json({ success: false, message: "Tidak ada data `changes` di request", code: 400 });
+    }
+    if (!verifyChangesContents(eventType, changes)) {
+        return res.status(400).json({
+            success: false,
+            message: `Terdapat data yang kurang pada event ${eventType}`,
+            code: 400,
+        });
     }
     if (isNone(userData)) {
-        res.status(403).json({ success: false, message: "Tidak diperbolehkan untuk mengakses API ini", code: 403 });
+        res.status(403).json({
+            success: false,
+            message: "Tidak diperbolehkan untuk mengakses API ini",
+            code: 403,
+        });
     } else {
-        await dbConnect();
         if (userData.privilege === "owner") {
             const serverId = req.body.server;
             if (isNone(serverId)) {
-                res.status(400).json({ success: false, message: "Data `server` tidak dapat ditemukan", code: 400 });
+                res.status(400).json({
+                    success: false,
+                    message: "Data `server` tidak dapat ditemukan",
+                    code: 400,
+                });
             } else {
-                const serverData = await ShowtimesModel.findOne({ id: { $eq: serverId } });
-                if (isNone(serverData) || Object.keys(serverData).length < 1) {
+                const serverData = await prisma.showtimesdatas.findFirst({
+                    where: {
+                        id: serverId,
+                    },
+                });
+                if (isNone(serverData)) {
                     res.json({ success: false });
                 } else {
                     const modifedData = await doAnimeChanges(eventType, serverData, changes);
-                    // @ts-ignore
-                    await ShowtimesModel.updateOne({ id: { $eq: userData.id } }, modifedData);
+                    emitSocket("pull data", serverId);
                     if (eventType === "staff") {
-                        const roleChange = changes.role;
-                        const indexAnime = _.findIndex(
-                            modifedData.anime,
-                            (pred) => pred.id === changes.anime_id
-                        );
-                        const roleChanges = modifedData.anime[indexAnime].assignments[roleChange];
-                        res.json({ ...roleChanges, success: true });
+                        if (isNone(modifedData)) {
+                            res.status(500).json({ success: false });
+                        } else {
+                            res.json({ ...modifedData, success: true });
+                        }
+                    } else if (eventType === "status") {
+                        if (isNone(modifedData)) {
+                            res.json({ results: null, success: false });
+                        } else {
+                            res.json({ success: true, results: { progress: modifedData } });
+                        }
                     } else {
-                        res.json({ success: false });
+                        res.json({ results: null, success: false });
                     }
                 }
             }
         } else {
-            const serverData = await ShowtimesModel.findOne({ id: { $eq: userData.id } });
+            const serverData = await prisma.showtimesdatas.findFirst({
+                where: {
+                    id: userData.id,
+                },
+            });
             const modifedData = await doAnimeChanges(eventType, serverData, changes);
-            // @ts-ignore
-            await ShowtimesModel.updateOne({ id: { $eq: userData.id } }, modifedData);
             emitSocket("pull data", userData.id);
             if (eventType === "staff") {
-                const roleChange = changes.role;
-                const indexAnime = _.findIndex(modifedData.anime, (pred) => pred.id === changes.anime_id);
-                const roleChanges = modifedData.anime[indexAnime].assignments[roleChange];
-                res.json({ ...roleChanges, success: true });
+                if (isNone(modifedData)) {
+                    res.status(500).json({ success: false });
+                } else {
+                    res.json({ ...modifedData, success: true });
+                }
             } else if (eventType === "status") {
-                const indexAnime = _.findIndex(modifedData.anime, (pred) => pred.id === changes.anime_id);
-                const episodeSets = modifedData.anime[indexAnime].status;
-                const episodeInfo = _.find(episodeSets, (o) => o.episode === parseInt(changes.episode));
-                if (isNone(episodeInfo)) {
+                if (isNone(modifedData)) {
                     res.json({ results: null, success: false });
                 } else {
-                    res.json({ success: true, results: { progress: episodeInfo.progress } });
+                    res.json({ success: true, results: { progress: modifedData } });
                 }
             } else {
                 res.json({ results: null, success: false });

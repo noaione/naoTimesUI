@@ -1,8 +1,7 @@
-import "preact/debug";
 import React from "react";
 import Router from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 import "../styles/global.css";
 import type { AppProps } from "next/app";
@@ -57,11 +56,9 @@ function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
     return (
         <>
             {showDevBanner && <DevModeBanner />}
-            <AnimateSharedLayout>
-                <AnimatePresence key={router.route}>
-                    <Component {...pageProps} />
-                </AnimatePresence>
-            </AnimateSharedLayout>
+            <AnimatePresence key={router.route}>
+                <Component {...pageProps} />
+            </AnimatePresence>
         </>
     );
 }

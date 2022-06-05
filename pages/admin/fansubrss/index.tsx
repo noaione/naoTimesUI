@@ -4,19 +4,17 @@ import Link from "next/link";
 
 import { motion } from "framer-motion";
 
-import AdminLayout from "../../../components/AdminLayout";
-import MetadataHead from "../../../components/MetadataHead";
-import FansubRSSOverview from "../../../components/FansubRSS/Overview";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import FansubRSSOverview from "@/components/FansubRSS/Overview";
 
-import { FansubRSSFeeds, FansubRSSSchemas } from "../../../lib/fsrss";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
-import { isNone, Nullable } from "../../../lib/utils";
-
-import { UserProps } from "../../../models/user";
+import { FansubRSSFeeds, FansubRSSSchemas } from "@/lib/fsrss";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
+import { isNone, Nullable } from "@/lib/utils";
 
 interface FansubrssIndexProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
     fansubRss: FansubRSSFeeds[];
     isPremium: boolean;
 }

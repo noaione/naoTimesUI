@@ -1,11 +1,18 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "../../../lib/dbConnect";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import { Project, showtimesdatas } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-import { ShowtimesModel, ShowtimesProps } from "../../../models/show";
+// serverowner: string[];
+// anime: {
+//     id: string;
+// }[];
+type ServerOwnerPick = Pick<showtimesdatas, "serverowner">;
+type AnimePick = Pick<Project, "id">;
+type ServerPick = ServerOwnerPick & { anime: AnimePick[] };
 
-function countAdminStats(servers_data: ShowtimesProps[]) {
+function countAdminStats(servers_data: ServerPick[]) {
     let adminCount = 0;
     const savedAdmin = [];
     servers_data.forEach((server) => {
@@ -19,7 +26,7 @@ function countAdminStats(servers_data: ShowtimesProps[]) {
     return adminCount;
 }
 
-function countAnimeStats(servers_data: ShowtimesProps[]) {
+function countAnimeStats(servers_data: ServerPick[]) {
     let animeCount = 0;
     let rawProjectCount = 0;
     const savedAnime = [];
@@ -40,15 +47,17 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
-        await dbConnect();
         if (user.privilege === "owner") {
-            const fetchServers = await ShowtimesModel.find(
-                {},
-                {
-                    serverowner: 1,
-                    "anime.id": 1,
-                }
-            );
+            const fetchServers = await prisma.showtimesdatas.findMany({
+                select: {
+                    serverowner: true,
+                    anime: {
+                        select: {
+                            id: true,
+                        },
+                    },
+                },
+            });
             const totalServers = fetchServers.length;
             const [totalAnime, rawProjectCount] = countAnimeStats(fetchServers);
             const totalAdmin = countAdminStats(fetchServers);
@@ -74,12 +83,18 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 ],
             });
         } else {
-            const fetchServers = await ShowtimesModel.findOne(
-                { id: { $eq: user.id } },
-                {
-                    "anime.status": 1,
-                }
-            );
+            const fetchServers = await prisma.showtimesdatas.findFirst({
+                where: {
+                    id: user.id,
+                },
+                select: {
+                    anime: {
+                        select: {
+                            status: true,
+                        },
+                    },
+                },
+            });
             const statsData = { finished: 0, unfinished: 0 };
             fetchServers.anime.forEach((anime) => {
                 let anyUndone = false;

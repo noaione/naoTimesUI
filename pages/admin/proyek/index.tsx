@@ -6,21 +6,19 @@ import Router from "next/router";
 import PlusIcon from "mdi-react/PlusIcon";
 import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 
-import AdminLayout from "../../../components/AdminLayout";
-import MetadataHead from "../../../components/MetadataHead";
-import SkeletonLoader from "../../../components/Skeleton";
-import RolePopup from "../../../components/RolePopup";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import SkeletonLoader from "@/components/Skeleton";
+import RolePopup from "@/components/RolePopup";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 import {
     AssignmentsData,
     expandRoleLocalized,
     expandRoleName,
     getAssigneeName,
     RoleProject,
-} from "../../../lib/utils";
-
-import { UserProps } from "../../../models/user";
+} from "@/lib/utils";
 
 interface AnimeProyekData {
     id: string;
@@ -97,7 +95,7 @@ interface ProyekHomepageState {
 }
 
 interface ProyekHomepageProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
 }
 
 class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepageState> {

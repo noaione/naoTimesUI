@@ -1,0 +1,101 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("MONGODB_URI")
+}
+
+type ProjectEpisodeProgress {
+    TL      Boolean
+    TLC     Boolean
+    ENC     Boolean
+    ED      Boolean
+    TM      Boolean
+    TS      Boolean
+    QC      Boolean
+}
+
+type ProjectEpisodeStatus {
+    episode         Int
+    is_done         Boolean
+    progress        ProjectEpisodeProgress
+    airtime         Int?
+    delay_reason    String?
+}
+
+type ProjectAssignmentPerson {
+    id      String?
+    name    String?
+}
+
+type ProjectAssignment {
+    TL      ProjectAssignmentPerson
+    TLC     ProjectAssignmentPerson
+    ENC     ProjectAssignmentPerson
+    ED      ProjectAssignmentPerson
+    TM      ProjectAssignmentPerson
+    TS      ProjectAssignmentPerson
+    QC      ProjectAssignmentPerson
+}
+
+type ProjectPoster {
+    url     String
+    color   Int?
+}
+
+type ProjectFSDB {
+    id      Int?
+    ani_id  Int
+}
+
+type Project {
+    id String
+    mal_id Int?
+    title String
+    role_id String?
+    start_time Int?
+    assignments ProjectAssignment
+    status ProjectEpisodeStatus[]
+    poster_data ProjectPoster
+    fsdb_data ProjectFSDB?
+    aliases String[]
+    kolaborasi String[]
+    last_update Int
+}
+
+type ProjectCollabRequest {
+    id String
+    server_id String
+    anime_id String
+}
+
+model showtimesdatas {
+    mongo_id String @id @default(auto()) @map("_id") @db.ObjectId
+    id String
+    name String?
+    fsdb_id Int?
+    serverowner String[]
+    announce_channel String?
+    anime Project[]
+    konfirmasi ProjectCollabRequest[]
+
+    @@index([anime.id, id], map: "Anime ID and ID")
+    @@index([id], map: "Server ID")
+}
+
+model showtimesadmin {
+    mongo_id  String   @id @default(auto()) @map("_id") @db.ObjectId
+    id        String   @map("id")
+    servers   String[]
+}
+
+model showtimesuilogin {
+    mongo_id  String @id @default(auto()) @map("_id") @db.ObjectId
+    id        String
+    name      String?
+    privilege String
+    secret    String
+    @@index([id], map: "User ID")   
+}

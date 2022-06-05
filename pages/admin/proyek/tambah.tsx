@@ -8,15 +8,13 @@ import AsyncSelect from "react-select/async";
 import { ActionMeta } from "react-select";
 import PlusIcon from "mdi-react/PlusIcon";
 
-import AdminLayout from "../../../components/AdminLayout";
-import MetadataHead from "../../../components/MetadataHead";
-import LoadingCircle from "../../../components/LoadingCircle";
-import { CallbackModal } from "../../../components/Modal";
-import ErrorModal from "../../../components/ErrorModal";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import LoadingCircle from "@/components/LoadingCircle";
+import { CallbackModal } from "@/components/Modal";
+import ErrorModal from "@/components/ErrorModal";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../../lib/session";
-
-import { UserProps } from "../../../models/user";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 
 interface ProjectNewState {
     errTxt: string;
@@ -37,7 +35,7 @@ interface ProjectNewState {
 }
 
 interface ProjectNewProps {
-    user: UserProps & { loggedIn: boolean };
+    user: IUserAuth & { loggedIn: boolean };
 }
 
 interface QuickAnilistResult {

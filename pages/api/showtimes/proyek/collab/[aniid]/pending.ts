@@ -1,16 +1,18 @@
 import { NextApiResponse } from "next";
 
-import dbConnect from "@/lib/dbConnect";
 import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { KonfirmasiData } from "@/types/collab";
+import prisma from "@/lib/prisma";
+import { showtimesdatas } from "@prisma/client";
 
 type KonfirmasiTanpaAnime = Omit<KonfirmasiData, "animeInfo">;
 
+type ServerKonfirmasi = Pick<showtimesdatas, "id" | "name" | "konfirmasi" | "mongo_id">;
+
 async function fetchAllPendingConfirmations(
-    serverData: ShowtimesProps,
+    serverData: ServerKonfirmasi,
     animeId: string
 ): Promise<KonfirmasiTanpaAnime[]> {
     if (serverData.konfirmasi.length < 1) {
@@ -23,15 +25,12 @@ async function fetchAllPendingConfirmations(
         if (konfirmasi.anime_id !== animeId) {
             continue;
         }
-        let fetchedAnimeInfo: ShowtimesProps;
+        let fetchedAnimeInfo: Pick<showtimesdatas, "id" | "name" | "mongo_id">;
         try {
-            fetchedAnimeInfo = await ShowtimesModel.findOne(
-                {
-                    id: konfirmasi.server_id,
-                    "anime.id": konfirmasi.anime_id,
-                },
-                { id: 1, name: 1 }
-            );
+            fetchedAnimeInfo = await prisma.showtimesdatas.findFirst({
+                where: { id: konfirmasi.server_id },
+                select: { id: true, name: true, mongo_id: true },
+            });
         } catch (e) {
             continue;
         }
@@ -69,13 +68,17 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         realAnimeId = aniid[0];
     }
 
-    await dbConnect();
     try {
         console.info("Fetching...");
-        const fetchedServers = await ShowtimesModel.findOne(
-            { id: { $eq: user.id }, "anime.id": aniid },
-            { id: 1, name: 1, konfirmasi: 1 }
-        );
+        const fetchedServers = await prisma.showtimesdatas.findFirst({
+            where: { id: user.id },
+            select: {
+                konfirmasi: true,
+                id: true,
+                mongo_id: true,
+                name: true,
+            },
+        });
         const allPendings = await fetchAllPendingConfirmations(fetchedServers, realAnimeId);
         res.json({ data: allPendings, success: true });
     } catch (e) {

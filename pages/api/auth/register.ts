@@ -1,13 +1,10 @@
 import { toString } from "lodash";
 import { NextApiResponse } from "next";
-import { Types } from "mongoose";
 
-import dbConnect from "../../../lib/dbConnect";
-import withSession, { NextApiRequestWithSession } from "../../../lib/session";
-import { isNone, Nullable } from "../../../lib/utils";
-import { emitSocket, emitSocketAndWait } from "../../../lib/socket";
-
-import { ShowAdminModel, ShowtimesModel, ShowtimesProps } from "../../../models/show";
+import withSession, { NextApiRequestWithSession } from "@/lib/session";
+import { isNone } from "@/lib/utils";
+import prisma from "@/lib/prisma";
+import { emitSocket, emitSocketAndWait } from "@/lib/socket";
 
 function checkStringValid(data: any): boolean {
     if (typeof data !== "string") return false;
@@ -16,22 +13,30 @@ function checkStringValid(data: any): boolean {
 }
 
 async function tryServerAdminAdd(adminId: string, serverId: string) {
-    const existingUsers = await ShowAdminModel.find({ id: { $eq: adminId } });
-    let existingId: Nullable<Types.ObjectId>;
-    if (existingUsers.length > 0) {
+    const existingUsers = await prisma.showtimesadmin.findFirst({ where: { id: adminId } });
+    let existingId: string;
+    if (!isNone(existingUsers)) {
         // eslint-disable-next-line no-underscore-dangle
-        existingId = existingUsers[0]._id;
+        existingId = existingUsers.mongo_id;
     }
     if (isNone(existingId)) {
-        const newSuperAdmin = {
-            _id: new Types.ObjectId(),
-            id: adminId,
-            servers: [serverId],
-        };
-        await ShowAdminModel.insertMany([newSuperAdmin]);
+        await prisma.showtimesadmin.create({
+            data: {
+                id: adminId,
+                servers: [serverId],
+            },
+        });
     } else {
-        // @ts-ignore
-        await ShowAdminModel.findByIdAndUpdate(existingId, { $addToSet: { servers: serverId } });
+        await prisma.showtimesadmin.update({
+            where: {
+                mongo_id: existingId,
+            },
+            data: {
+                servers: {
+                    push: serverId,
+                },
+            },
+        });
     }
     emitSocket("pull admin", adminId);
 }
@@ -42,16 +47,16 @@ async function registerNewServer(server: any, admin: any) {
 
     const adminId = admin.id;
 
-    const newShowtimesServer: ShowtimesProps = {
-        id: toString(serverId),
-        name: serverName,
-        serverowner: [toString(adminId)],
-        anime: [],
-        announce_channel: null,
-        konfirmasi: [],
-    };
-    // @ts-ignore
-    await ShowtimesModel.insertMany([newShowtimesServer]);
+    await prisma.showtimesdatas.create({
+        data: {
+            id: toString(serverId),
+            name: serverName,
+            serverowner: [toString(adminId)],
+            anime: [],
+            announce_channel: null,
+            konfirmasi: [],
+        },
+    });
     await tryServerAdminAdd(toString(adminId), toString(serverId));
     emitSocket("pull data", serverId);
 }
@@ -64,11 +69,9 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         res.status(401).json({ error: "Mohon masukan Admin ID", success: false, code: 400 });
     } else {
         try {
-            console.info("Trying to connect...");
-            await dbConnect();
             console.info("Finding love...");
-            const checkIfServerExist = await ShowtimesModel.find({ id: { $eq: server } });
-            if (checkIfServerExist.length > 0) {
+            const checkIfServerExist = await prisma.showtimesdatas.findFirst({ where: { id: server } });
+            if (!isNone(checkIfServerExist)) {
                 console.warn("Already exist!");
                 res.status(400).json({ error: "Server anda telah terdaftar!", success: false, code: 4104 });
             } else {

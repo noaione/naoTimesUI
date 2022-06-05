@@ -1,15 +1,13 @@
 import React from "react";
 import Head from "next/head";
 
-import AdminLayout from "../../components/AdminLayout";
-import MetadataHead from "../../components/MetadataHead";
-import IkhtisarAnime, { ProjectOverview } from "../../components/IkhtisarAnime";
-import SkeletonLoader from "../../components/Skeleton";
-import StatsCard, { IStatsType } from "../../components/StatsCard";
+import AdminLayout from "@/components/AdminLayout";
+import MetadataHead from "@/components/MetadataHead";
+import IkhtisarAnime, { ProjectOverview } from "@/components/IkhtisarAnime";
+import SkeletonLoader from "@/components/Skeleton";
+import StatsCard, { IStatsType } from "@/components/StatsCard";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../../lib/session";
-
-import { UserProps } from "../../models/user";
+import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
 
 interface StatsData {
     key: IStatsType;
@@ -28,7 +26,7 @@ interface AdminAnimeProps {
 }
 
 interface AdminHomepageProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
 }
 
 class AdminAnimeSets extends React.Component<AdminAnimeProps> {

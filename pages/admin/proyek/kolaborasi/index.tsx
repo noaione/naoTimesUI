@@ -11,7 +11,6 @@ import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
 
 import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
-import { UserProps } from "@/models/user";
 import { CollabData, Collaborations, Confirmations, KonfirmasiData } from "@/types/collab";
 
 interface CollabCardProps {
@@ -31,7 +30,6 @@ class CollaborationSimpleCard extends React.Component<CollabCardProps> {
             const { id: konfirmId, serverId, serverName, animeInfo } = konfirmasi;
             const {
                 title,
-                // @ts-ignore
                 poster_data: { url: imageUrl },
             } = animeInfo;
 
@@ -241,7 +239,7 @@ class KolaborasiPendingComponent extends React.Component<{}, KolaborasiPendingSt
 }
 
 interface KolaborasiHomepageProps {
-    user?: UserProps & { loggedIn: boolean };
+    user?: IUserAuth & { loggedIn: boolean };
 }
 
 class KolaborasiHomepage extends React.Component<KolaborasiHomepageProps> {

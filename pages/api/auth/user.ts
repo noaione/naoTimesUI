@@ -1,15 +1,19 @@
-import dbConnect from "@/lib/dbConnect";
-import { ShowtimesModel, ShowtimesProps } from "@/models/show";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "../../../lib/session";
+import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import prisma from "@/lib/prisma";
 
 async function getServerExtra(serverId: string) {
-    await dbConnect();
-    const serverRes = (await ShowtimesModel.findOne(
-        { id: { $eq: serverId } },
-        { serverowner: 1, announce_channel: 1, _id: 0 }
-    ).lean()) as ShowtimesProps;
+    const serverRes = await prisma.showtimesdatas.findFirst({
+        where: {
+            id: serverId,
+        },
+        select: {
+            serverowner: true,
+            announce_channel: true,
+            mongo_id: false,
+        },
+    });
     return serverRes;
 }
 
