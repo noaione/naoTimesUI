@@ -11,6 +11,7 @@
     "analyze": "cross-env SKIP_SENTRY=1 ANALYZE=true next build",
     "analyze-with-sentry": "cross-env ANALYZE=true next build",
     "build": "next build",
+    "build-vercel": "prisma:generate && next build",
     "build-no-sentry": "cross-env SKIP_SENTRY=1 next build",
     "start": "next start -p 6710",
     "dev": "cross-env SKIP_SENTRY=1 next dev -p 6700",
@@ -19,7 +20,8 @@
     "format": "prettier --write .",
     "lint": "eslint --ext ts --ext tsx --ext js pages/ lib/ components/",
     "lintfix": "eslint --ext ts --ext tsx --ext js pages/ lib/ components/ --fix",
-    "testall": "npm-run-all lint type-check"
+    "testall": "npm-run-all lint type-check",
+    "prisma:generate": "prisma generate"
   },
   "repository": {
     "type": "git",
