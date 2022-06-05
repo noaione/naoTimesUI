@@ -74,6 +74,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         />
                         <motion.main
                             id="root"
+                            layoutId="root-container"
                             key={`${active ?? "home"}-${realTitle}`}
                             className={`flex-1 overflow-y-auto ${
                                 realOverflowX ? "overflow-x-auto" : "overflow-x-hidden"
