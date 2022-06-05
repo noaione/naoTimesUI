@@ -11,7 +11,7 @@
     "analyze": "cross-env SKIP_SENTRY=1 ANALYZE=true next build",
     "analyze-with-sentry": "cross-env ANALYZE=true next build",
     "build": "next build",
-    "build-vercel": "prisma:generate && next build",
+    "build-vercel": "prisma:generate && analyze-with-sentry",
     "build-no-sentry": "cross-env SKIP_SENTRY=1 next build",
     "start": "next start -p 6710",
     "dev": "cross-env SKIP_SENTRY=1 next dev -p 6700",
