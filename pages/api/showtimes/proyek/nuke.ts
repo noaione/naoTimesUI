@@ -114,7 +114,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
         console.error(e);
         return {
             message: "Gagal menghapus proyek dari database, mohon coba lagi nanti!",
-            code: 4501,
+            code: 4502,
             success: false,
         };
     }
