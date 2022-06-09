@@ -21,7 +21,7 @@ async function findOneAndUpdate(serverId: string, channelId: string) {
     });
 }
 
-async function changeChannelId(serverId: string, channelId: string): Promise<[boolean, string]> {
+async function changeChannelId(serverId: string, channelId: string): Promise<[boolean, string, number]> {
     let channelInfo;
     try {
         channelInfo = await emitSocketAndWait("get channel", { id: channelId, server: serverId });
@@ -37,64 +37,68 @@ async function changeChannelId(serverId: string, channelId: string): Promise<[bo
         } else if (errorData.includes("bukan textchannel")) {
             msgFucked = "Channel bukanlah channel teks (Text Channel)";
         }
-        return [false, `Gagal mendapatkan channel: ${msgFucked}`];
+        return [false, `Gagal mendapatkan channel: ${msgFucked}`, 4400];
     }
 
     try {
         await findOneAndUpdate(serverId, channelInfo.id);
     } catch (e) {
-        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
+        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi", 4500];
     }
     emitSocket("pull data", serverId);
     let channelName = channelInfo.name || channelId;
     if (channelName !== channelId) {
         channelName = `#${channelName}`;
     }
-    return [true, channelName];
+    return [true, channelName, 200];
 }
 
-async function removeChannelAnnouncer(serverId: string): Promise<[boolean, string]> {
+async function removeChannelAnnouncer(serverId: string): Promise<[boolean, string, number]> {
     try {
         await findOneAndUpdate(serverId, "");
     } catch (e) {
-        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi"];
+        return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi", 4500];
     }
     emitSocket("pull data", serverId);
-    return [true, "Terhapus"];
+    return [true, "Terhapus", 200];
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
     const user = req.session.get<IUserAuth>("user");
     if (!user) {
-        res.status(403).json({ message: "Unauthorized", code: 403 });
+        res.status(403).json({ message: "Unauthorized", code: 403, success: false });
     } else if (!reqData) {
-        res.status(400).json({ message: "Tidak ada body yang diberikan :(", code: 400 });
+        res.status(400).json({ message: "Tidak ada body yang diberikan :(", code: 400, success: false });
     } else if (typeof reqData.channelid !== "string") {
-        res.status(400).json({ message: "Mohon masukan channel ID", code: 400 });
+        res.status(400).json({ message: "Mohon masukan channel ID", code: 400, success: false });
     } else {
         if (user.privilege === "owner") {
             res.status(501).json({
                 message: "Sorry, this API routes is not implemented",
                 code: 501,
+                success: false,
             });
         } else {
             let result: boolean;
             let msg: string;
+            let statCode: number;
             if (reqData.toRemove) {
-                [result, msg] = await removeChannelAnnouncer(user.id);
+                [result, msg, statCode] = await removeChannelAnnouncer(user.id);
             } else {
-                [result, msg] = await changeChannelId(user.id, reqData.channelid);
+                [result, msg, statCode] = await changeChannelId(user.id, reqData.channelid);
             }
             if (!result) {
                 res.status(500).json({
                     message: msg,
-                    code: 500,
+                    code: statCode,
+                    success: false,
                 });
             } else {
                 res.status(200).json({
                     message: "success",
                     code: 200,
+                    success: true,
                 });
             }
         }

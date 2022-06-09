@@ -24,11 +24,11 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     const reqData = await req.body;
     const user = req.session.get<IUserAuth>("user");
     if (!user) {
-        res.status(403).json({ message: "Unauthorized", code: 403 });
+        res.status(403).json({ message: "Unauthorized", code: 403, success: false });
     } else if (!reqData) {
-        res.status(400).json({ message: "Tidak ada body yang diberikan :(", code: 400 });
+        res.status(400).json({ message: "Tidak ada body yang diberikan :(", code: 400, success: false });
     } else if (typeof reqData.newname !== "string") {
-        res.status(400).json({ message: "Mohon masukan nama baru", code: 400 });
+        res.status(400).json({ message: "Mohon masukan nama baru", code: 400, success: false });
     } else {
         await findAndUpdate(user.id, reqData.newname);
         const newSession: IUserAuth = {
@@ -39,6 +39,6 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         req.session.unset("user");
         req.session.set("user", newSession);
         await req.session.save();
-        res.json({ message: "success", code: 200 });
+        res.json({ message: "success", code: 200, success: true });
     }
 });
