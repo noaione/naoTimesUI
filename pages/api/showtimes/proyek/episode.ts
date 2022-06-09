@@ -158,7 +158,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                                         id: animeId,
                                     },
                                     data: {
-                                        status: status,
+                                        status: newStatus,
                                     },
                                 },
                             },
@@ -175,7 +175,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                                 id: animeId,
                             },
                             data: {
-                                status: status,
+                                status: newStatus,
                             },
                         },
                     },
