@@ -64,14 +64,11 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
     const currentTime = DateTime.now().toUTC().startOf("hour").toSeconds();
     if (event === "add") {
         let status = anime[animeIdxLoc].status;
+        const lastEpisode = status[status.length - 1];
         const episodeNewData: ProjectEpisodeStatus[] = [];
         onlyEpisodeNumbers.forEach((episodeNum, idx) => {
             const statusLoc = status.findIndex((es) => es.episode === episodeNum);
             if (statusLoc === -1) {
-                let lastEpisode = status[episodeNum - 1];
-                if (isNone(lastEpisode)) {
-                    lastEpisode = status[status.length - 1];
-                }
                 let lastAirtime = lastEpisode.airtime;
                 if (typeof lastAirtime !== "number") {
                     lastAirtime = currentTime;
