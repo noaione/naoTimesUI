@@ -85,7 +85,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                         TS: false,
                         QC: false,
                     },
-                    airtime: lastAirtime + 604800 * idx,
+                    airtime: lastAirtime + 604800 * (idx + 1),
                     delay_reason: null,
                 });
             }
