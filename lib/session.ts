@@ -35,10 +35,13 @@ interface SessionClass {
     destroy(): Promise<void>;
 }
 
+export type IUserAuthMethod = "local" | "discord";
+
 export interface IUserAuth {
     id: string;
     privilege: "owner" | "server";
     name?: string;
+    authType: IUserAuthMethod;
 }
 
 interface CustomSession {

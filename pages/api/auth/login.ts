@@ -16,7 +16,12 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         if (!isNone(firstUser)) {
             if (firstUser.id === server && firstUser.secret === password) {
                 const { id, privilege, name } = firstUser;
-                const user: IUserAuth = { id, privilege: privilege as "owner" | "server", name };
+                const user: IUserAuth = {
+                    id,
+                    privilege: privilege as "owner" | "server",
+                    name,
+                    authType: "local",
+                };
                 req.session.set("user", user);
                 await req.session.save();
                 res.json({ loggedIn: true, id, privilege, name, code: 2000, error: "Sukses" });
