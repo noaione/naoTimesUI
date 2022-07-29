@@ -75,7 +75,7 @@
   "dependencies": {
     "@badrap/bar-of-progress": "0.2.1",
     "@kachkaev/react-inline-js": "0.4.0",
-    "@prisma/client": "3.14.0",
+    "@prisma/client": "3.15.2",
     "@sentry/nextjs": "7.0.0",
     "axios": "0.27.2",
     "cors": "2.8.5",
