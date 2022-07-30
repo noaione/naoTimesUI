@@ -80,7 +80,7 @@
     "axios": "0.27.2",
     "cors": "2.8.5",
     "framer-motion": "6.3.10",
-    "highlight.js": "11.5.1",
+    "highlight.js": "11.6.0",
     "javascript-time-ago": "2.5.4",
     "lodash": "4.17.21",
     "luxon": "2.4.0",
