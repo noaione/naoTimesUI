@@ -58,7 +58,8 @@ jobs:
         echo "BOT_SOCKET_PASSWORD=$(openssl rand -hex 16)" >> .env.local
     - name: Build for ${{ matrix.node-version }}
       run: |
-        yarn run build
+        yarn run prisma:generate
+        yarn run build-no-sentry
 
   lint:
     if: "!contains(github.event.head_commit.message, 'skip ci')"

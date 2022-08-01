@@ -5,7 +5,6 @@
 // });
 
 const { withSentryConfig } = require("@sentry/nextjs");
-const withPlugins = require("next-compose-plugins");
 const bundleAnalyzer = require("@next/bundle-analyzer");
 
 const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
@@ -31,9 +30,7 @@ if (IS_PREVIEW) {
  */
 const moduleExports = {
     productionBrowserSourceMaps: true,
-    swcLoader: true,
     swcMinify: true,
-    esmExternals: true,
     async headers() {
         return [
             {
@@ -61,9 +58,8 @@ const SentryWebpackPluginOptions = {
     dryRun: skipSentry,
 };
 
-const plugins = [
-    [withBundleAnalyzer],
-    (nextConfig) => withSentryConfig(nextConfig, SentryWebpackPluginOptions),
-];
-
-module.exports = withPlugins(plugins, moduleExports);
+module.exports = () => {
+    const plugins = [withBundleAnalyzer, (config) => withSentryConfig(config, SentryWebpackPluginOptions)];
+    const config = plugins.reduce((acc, next) => next(acc), { ...moduleExports });
+    return config;
+};

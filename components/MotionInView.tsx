@@ -1,21 +1,14 @@
 import React, { useEffect } from "react";
 
-import {
-    HTMLMotionProps,
-    motion,
-    MotionProps,
-    TargetAndTransition,
-    useAnimation,
-    Variants,
-} from "framer-motion";
-import { ControlsAnimationDefinition } from "framer-motion/types/animation/types";
+import { motion, useAnimation } from "framer-motion";
 
 import { useInView } from "react-intersection-observer";
-import { TargetResolver } from "framer-motion/types/types";
+import type { HTMLMotionProps, MotionProps, Variant, Variants } from "framer-motion";
 
+type ControlsAnimationDefinition = string | string[] | Variant;
 export interface MotionViewVariants extends Variants {
-    hidden?: TargetAndTransition | TargetResolver;
-    visible?: TargetAndTransition | TargetResolver;
+    hidden?: Variant;
+    visible?: Variant;
 }
 
 function MotionInViewDiv(props: MotionProps & HTMLMotionProps<"div">) {
