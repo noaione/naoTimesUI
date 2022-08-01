@@ -92,10 +92,30 @@ model showtimesadmin {
 }
 
 model showtimesuilogin {
-    mongo_id  String @id @default(auto()) @map("_id") @db.ObjectId
-    id        String
-    name      String?
-    privilege String
-    secret    String
+    mongo_id     String @id @default(auto()) @map("_id") @db.ObjectId
+    id           String
+    name         String?
+    privilege    LoginPrivilege @default(server)
+    secret       String
+    user_type    LoginType @default(PASSWORD)
+    discord_meta UILoginDiscord?
     @@index([id], map: "User ID")   
+}
+
+enum LoginType {
+    PASSWORD
+    DISCORD
+}
+
+enum LoginPrivilege {
+    admin
+    server
+}
+
+type UILoginDiscord {
+    id            String
+    name          String
+    access_token  String
+    refresh_token String
+    expires_at    Int
 }
