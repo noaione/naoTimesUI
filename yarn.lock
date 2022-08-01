@@ -2818,10 +2818,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-javascript-time-ago@2.5.4:
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.4.tgz#ffb5046c3aaaa7af887c572778f8b2b1979d7705"
-  integrity sha512-4y+AOCkUfB/JQNzUdM4c7tu7IDbrdyM0B1slrhtDAhgLQpXeKDhcwKwHlyQ1sNfgLLQUExX+3WXuVgI/KWFkig==
+javascript-time-ago@2.5.7:
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/javascript-time-ago/-/javascript-time-ago-2.5.7.tgz#a99a77c23e2e59810da4b41b935801928e209c87"
+  integrity sha512-EGvh6K4hpJz0S0aZinbW2EfXDqT/JBB84HfMOFDTzGg7yjpjql9feSgtlG1JQ6b6/NkIxl+PoKSUTEMsatTuTg==
   dependencies:
     relative-time-format "^1.1.4"
 

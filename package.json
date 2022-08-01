@@ -80,7 +80,7 @@
     "cors": "2.8.5",
     "framer-motion": "6.3.10",
     "highlight.js": "11.6.0",
-    "javascript-time-ago": "2.5.4",
+    "javascript-time-ago": "2.5.7",
     "lodash": "4.17.21",
     "luxon": "3.0.1",
     "mdi-react": "9.0.0",
