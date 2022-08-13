@@ -1,4 +1,7 @@
 import axios from "axios";
+import { DateTime } from "luxon";
+import { IUserDiscordMeta } from "./session";
+import prisma from "./prisma";
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -77,6 +80,51 @@ export async function refreshDiscordToken(refreshToken: string) {
         }
     );
     return tokenRequest.data;
+}
+
+async function updateTokenOnDatabase(tokenMeta: IUserDiscordMeta) {
+    const firstUser = await prisma.showtimesuilogin.findFirst({
+        where: {
+            id: tokenMeta.id,
+        },
+    });
+    await prisma.showtimesuilogin.update({
+        where: {
+            mongo_id: firstUser.mongo_id,
+        },
+        data: {
+            name: tokenMeta.name,
+            discord_meta: {
+                set: {
+                    id: tokenMeta.id,
+                    name: tokenMeta.name,
+                    access_token: tokenMeta.access_token,
+                    refresh_token: tokenMeta.refresh_token,
+                    expires_at: tokenMeta.expires_at,
+                },
+            },
+        },
+    });
+}
+
+export async function shouldRefreshDiscordTokenOrNot(
+    discordMeta: IUserDiscordMeta
+): Promise<IUserDiscordMeta> {
+    const currentUtc = DateTime.utc().toUnixInteger();
+    if (currentUtc > discordMeta.expires_at) {
+        console.warn("[discord-oauth] Token is expired, refreshing...");
+        const newToken = await refreshDiscordToken(discordMeta.refresh_token);
+        const tokenMetaNew = {
+            id: discordMeta.id,
+            name: discordMeta.name,
+            access_token: newToken.access_token,
+            refresh_token: newToken.refresh_token,
+            expires_at: currentUtc + newToken.expires_in,
+        };
+        await updateTokenOnDatabase(tokenMetaNew);
+        return tokenMetaNew;
+    }
+    return discordMeta;
 }
 
 export async function discordGetUser(token: string) {

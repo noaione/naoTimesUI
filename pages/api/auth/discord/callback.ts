@@ -117,6 +117,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         name: userInfo.username,
         access_token: discordToken.access_token,
         refresh_token: discordToken.refresh_token,
+        expires_at: expiresAt,
     });
     await req.session.save();
     res.redirect("/discord");

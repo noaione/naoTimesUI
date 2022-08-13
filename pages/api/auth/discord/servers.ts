@@ -5,15 +5,19 @@
 import { NextApiResponse } from "next";
 
 import withSession, { IUserDiscordMeta, NextApiRequestWithSession } from "@/lib/session";
-import { discordGetUserGuilds } from "@/lib/discord-oauth";
+import { discordGetUserGuilds, shouldRefreshDiscordTokenOrNot } from "@/lib/discord-oauth";
 import { emitSocketAndWait } from "@/lib/socket";
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+    let discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
     if (!discordMeta) {
         res.status(401).json({ code: 401, error: "Account not logged in as discord!", success: false });
         return;
     }
+
+    discordMeta = await shouldRefreshDiscordTokenOrNot(discordMeta);
+    req.session.set("userDiscordMeta", discordMeta);
+    await req.session.save();
 
     const discordServers = await discordGetUserGuilds(discordMeta.access_token);
     if (!discordServers) {
