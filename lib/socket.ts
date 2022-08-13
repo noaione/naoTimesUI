@@ -55,7 +55,7 @@ function createNewSocket() {
     }
 }
 
-export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
+export function emitSocket<D = any>(event: SocketEvent | MockSocketEvent, data: D) {
     const client = createNewSocket();
 
     client.on("connect", () => {
@@ -64,7 +64,15 @@ export function emitSocket(event: SocketEvent | MockSocketEvent, data: any) {
     });
 }
 
-export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, data: any): Promise<any> {
+interface SocketResult<T = any> {
+    success: number;
+    message: T;
+}
+
+export async function emitSocketAndWait<T = any, D = any>(
+    event: SocketEvent | MockSocketEvent,
+    data: D
+): Promise<T> {
     const client = createNewSocket();
     // eslint-disable-next-line no-underscore-dangle
 
@@ -117,9 +125,9 @@ export async function emitSocketAndWait(event: SocketEvent | MockSocketEvent, da
     if (parsedData.endsWith("\x04")) {
         parsedData = parsedData.replace("\x04", "");
     }
-    const JSONified = JSON.parse(parsedData);
+    const JSONified = JSON.parse(parsedData) as SocketResult<T>;
     if (JSONified.success === 0) {
-        throw new Error(JSONified.message);
+        throw new Error(JSONified.message as any);
     }
     if (JSONified.success === -1) {
         // Need auth, redo the whole thing.
