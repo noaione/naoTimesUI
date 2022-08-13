@@ -35,6 +35,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             id: user.id,
             name: reqData.newname,
             privilege: user.privilege,
+            authType: user.authType,
         };
         req.session.unset("user");
         req.session.set("user", newSession);
