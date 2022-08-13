@@ -108,7 +108,7 @@ enum LoginType {
 }
 
 enum LoginPrivilege {
-    admin
+    owner
     server
 }
 
