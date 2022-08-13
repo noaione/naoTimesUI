@@ -16,7 +16,7 @@ interface ServerSideProps {
     user: IUserAuth & { loggedIn: boolean };
 }
 
-interface ServerInfo {
+interface RequestedServer {
     id: string;
     name: string;
     avatar: string;
@@ -25,23 +25,18 @@ interface ServerInfo {
 interface DiscordSelectionState {
     isLoading: boolean;
     selectedServer: Nullable<string>;
-    registeredServers: ServerInfo[];
-    unregisteredServers: ServerInfo[];
-}
-
-interface RequestedServer {
-    id: string;
-    name: string;
-    avatar: string;
+    registeredServers: RequestedServer[];
+    unregisteredServers: RequestedServer[];
 }
 
 function DiscordServerSelect(props: {
     guild: RequestedServer;
     disabled?: boolean;
     selected?: boolean;
+    mode: "register" | "unregister";
     onClick: (guild: RequestedServer) => void;
 }) {
-    const { guild, disabled, selected } = props;
+    const { guild, disabled, selected, mode } = props;
     return (
         <div className="p-5 bg-gray-700 text-white rounded shadow-md">
             <div className="flex items-center pt-1">
@@ -63,7 +58,7 @@ function DiscordServerSelect(props: {
                             disabled ? "bg-green-800 cursor-not-allowed" : "bg-green-700 hover:bg-green-600"
                         } ${selected ? "animate-pulse" : ""}`}
                     >
-                        Access
+                        {mode === "register" ? "Akses" : "Buat"}
                     </button>
                 </div>
             </div>
@@ -112,6 +107,36 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
     async enterDiscordServer(guild: RequestedServer) {
         this.setState({ selectedServer: guild.id });
         console.info(`Entering ${guild.name}`);
+
+        try {
+            const response = await axios.post<{ code: number; error?: string; success: boolean }>(
+                "/api/auth/discord/access",
+                {
+                    id: guild.id,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    responseType: "json",
+                }
+            );
+            if (response.data.success) {
+                Router.push("/admin");
+            } else {
+                this.setState({ selectedServer: null });
+                alert(response.data.error ?? "Terjadi kesalahan");
+            }
+        } catch (e) {
+            console.error(e);
+            this.setState({ selectedServer: null });
+            alert("Terjadi kesalahan");
+        }
+    }
+
+    async createDiscordServer(guild: RequestedServer) {
+        this.setState({ selectedServer: guild.id });
+        console.info(`Creating ${guild.name}`);
     }
 
     render() {
@@ -175,6 +200,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                                         }}
                                         disabled={shouldDisable}
                                         selected={this.state.selectedServer === guild.id}
+                                        mode="register"
                                     />
                                 ))}
                             </>
@@ -192,7 +218,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                                         key={`discord-unregistered-${guild.id}`}
                                         guild={guild}
                                         onClick={(guild) => {
-                                            this.enterDiscordServer(guild)
+                                            this.createDiscordServer(guild)
                                                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                                                 .then(() => {})
                                                 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -200,6 +226,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                                         }}
                                         disabled={shouldDisable}
                                         selected={this.state.selectedServer === guild.id}
+                                        mode="unregister"
                                     />
                                 ))}
                             </>
