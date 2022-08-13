@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "scripts": {
     "analyze": "cross-env SKIP_SENTRY=1 ANALYZE=true next build",
-    "analyze-with-sentry": "cross-env ANALYZE=true npm run prisma:generate && npm run build",
+    "analyze-with-sentry": "cross-env ANALYZE=true next build",
     "build": "next build",
     "build-vercel": "prisma:generate && analyze-with-sentry",
     "build-no-sentry": "cross-env SKIP_SENTRY=1 next build",
