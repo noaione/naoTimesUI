@@ -27,6 +27,15 @@ export interface DiscordUser {
     public_flags: number;
 }
 
+export interface DiscordPartialGuild {
+    id: string;
+    name: string;
+    icon: string;
+    owner: boolean;
+    permissions: string;
+    features: string[];
+}
+
 export async function exchangeDiscordToken(code: string, redirectBase: string) {
     // create a request for the token
     if (redirectBase.endsWith("/")) {
@@ -35,17 +44,16 @@ export async function exchangeDiscordToken(code: string, redirectBase: string) {
     const tokenRequest = await axios.post<DiscordToken>(
         `${BASE_URL}/oauth2/token`,
         new URLSearchParams({
-            grant_type: "authorization_code",
-            code,
             client_id: DISCORD_CLIENT_ID,
             client_secret: DISCORD_CLIENT_SECRET,
+            grant_type: "authorization_code",
+            code,
             redirect_uri: `${redirectBase}/api/auth/discord/callback`,
-        }),
+        }).toString(),
         {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            responseType: "json",
         }
     );
     return tokenRequest.data;
@@ -79,4 +87,14 @@ export async function discordGetUser(token: string) {
         responseType: "json",
     });
     return userRequest.data;
+}
+
+export async function discordGetUserGuilds(token: string) {
+    const guildRequest = await axios.get<DiscordPartialGuild[]>(`${BASE_URL}/users/@me/guilds`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        responseType: "json",
+    });
+    return guildRequest.data;
 }

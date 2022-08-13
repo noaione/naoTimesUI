@@ -12,7 +12,8 @@ type GetMethodEvent =
     | "get channel"
     | "get user"
     | "get user perms"
-    | "get server channel";
+    | "get server channel"
+    | "get user privileged";
 type UpdateMethodEvent = "pull data" | "pull admin";
 type DeleteMethodEvent = "delete server" | "delete admin" | "delete role" | "delete roles" | "announce drop";
 type CreateMethodEvent = "create role";

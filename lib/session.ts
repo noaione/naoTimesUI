@@ -44,6 +44,13 @@ export interface IUserAuth {
     authType: IUserAuthMethod;
 }
 
+export interface IUserDiscordMeta {
+    id: string;
+    name: string;
+    access_token: string;
+    refresh_token: string;
+}
+
 interface CustomSession {
     session: SessionClass;
     activeUser?: IUserAuth & { isToken: boolean };

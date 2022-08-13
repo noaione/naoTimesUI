@@ -17,6 +17,7 @@ function pickFirstOne<T>(data: T | T[]): T {
     return data;
 }
 
+// TODO: implement click jacking prevention
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const { code } = req.query;
     if (!code) {
@@ -72,13 +73,15 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 id: userInfo.id,
                 name: userInfo.username,
                 privilege: "server",
-                secret:
-                    "discordoauth-" +
-                    discordToken.access_token +
-                    ">>" +
-                    discordToken.refresh_token +
-                    ">>" +
-                    expiresAt,
+                secret: "notset",
+                user_type: "DISCORD",
+                discord_meta: {
+                    id: userInfo.id,
+                    name: userInfo.username,
+                    access_token: discordToken.access_token,
+                    refresh_token: discordToken.refresh_token,
+                    expires_at: expiresAt,
+                },
             },
         });
     } else {
@@ -89,13 +92,15 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             },
             data: {
                 name: userInfo.username,
-                secret:
-                    "discordoauth-" +
-                    discordToken.access_token +
-                    ">>" +
-                    discordToken.refresh_token +
-                    ">>" +
-                    expiresAt,
+                discord_meta: {
+                    set: {
+                        id: userInfo.id,
+                        name: userInfo.username,
+                        access_token: discordToken.access_token,
+                        refresh_token: discordToken.refresh_token,
+                        expires_at: expiresAt,
+                    },
+                },
             },
         });
     }
@@ -107,6 +112,12 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         authType: "discord",
     };
     req.session.set("user", userAuth);
+    req.session.set("userDiscordMeta", {
+        id: userInfo.id,
+        name: userInfo.username,
+        access_token: discordToken.access_token,
+        refresh_token: discordToken.refresh_token,
+    });
     await req.session.save();
     res.redirect("/discord");
 });
