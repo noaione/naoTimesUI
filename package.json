@@ -78,7 +78,7 @@
     "@sentry/nextjs": "7.10.0",
     "axios": "0.27.2",
     "cors": "2.8.5",
-    "framer-motion": "6.5.1",
+    "framer-motion": "7.1.0",
     "highlight.js": "11.6.0",
     "javascript-time-ago": "2.5.7",
     "lodash": "4.17.21",
