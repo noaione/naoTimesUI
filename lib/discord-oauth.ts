@@ -51,7 +51,7 @@ export async function exchangeDiscordToken(code: string, redirectBase: string) {
             client_secret: DISCORD_CLIENT_SECRET,
             grant_type: "authorization_code",
             code,
-            redirect_uri: `${redirectBase}/api/auth/discord/callback`,
+            redirect_uri: `${redirectBase}/discord/callback`,
         }).toString(),
         {
             headers: {

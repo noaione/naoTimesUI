@@ -19,28 +19,22 @@ function pickFirstOne<T>(data: T | T[]): T {
 
 // TODO: implement click jacking prevention
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const { code } = req.query;
+    const { code, base_url } = req.query;
     if (!code) {
-        res.redirect("/discord/failure?error=400");
+        res.status(400).json({ error: "Tidak ada kode yang diberikan!" });
+        return;
+    }
+    if (!base_url) {
+        res.status(400).json({ error: "Tidak ada base url yang diberikan!" });
         return;
     }
 
-    // get base url
-    const symbols = Object.getOwnPropertySymbols(req);
-    const lastSymbol = symbols[symbols.length - 1];
-    const nextMeta = req[lastSymbol];
-    let baseUrl = null;
-    for (const value of Object.values(nextMeta)) {
-        // @ts-ignore
-        if (value.startsWith("http")) {
-            baseUrl = value;
-            break;
-        }
-    }
+    // nextjs, get the base url used when requesting this url
+    const baseUrl = decodeURIComponent(pickFirstOne(base_url));
 
     // parse baseUrl
     if (!baseUrl) {
-        res.redirect("/discord/failure?error=5002");
+        res.status(400).json({ error: "Tidak ada base url yang diberikan!" });
         return;
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,7 +47,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         discordToken = await exchangeDiscordToken(pickFirstOne(code), actualBaseUrl);
     } catch (err) {
         console.error(err);
-        res.redirect("/discord/failure?error=5001");
+        res.status(500).json({ error: "Tidak dapat mendapatkan token dari Discord!" });
         return;
     }
 
@@ -120,5 +114,5 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         expires_at: expiresAt,
     });
     await req.session.save();
-    res.redirect("/discord");
+    res.json({ error: "Sukses" });
 });

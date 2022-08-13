@@ -39,7 +39,7 @@ function generateDiscordLogin(baseUrl: string, discordId?: Nullable<string>) {
     // https://discord.com/api/oauth2/authorize?client_id=XXXXXXXXX&redirect_uri=http%3A%2F%2F127.0.0.1%3A6700%2Fapi%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20email%20guilds
     const scopes = ["identify", "email", "guilds"];
     // get current webpage base url
-    const redirectUrl = `${baseUrl}/api/auth/discord/callback`;
+    const redirectUrl = `${baseUrl}/discord/callback`;
     // encode redirect url
     const redirectUrlEncoded = encodeURIComponent(redirectUrl);
     const url = `https://discord.com/api/oauth2/authorize?client_id=${discordId}&redirect_uri=${redirectUrlEncoded}&response_type=code&scope=${scopes.join(
