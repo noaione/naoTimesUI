@@ -88,7 +88,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 }
 
 export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    const user = req.session.get<IUserAuth>("user");
+    let user = req.session.get<IUserAuth>("user");
 
     if (!user) {
         return {
@@ -97,6 +97,19 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
                 permanent: false,
             },
         };
+    }
+
+    if (user.authType === "discord") {
+        // override with server info
+        user = req.session.get<IUserAuth>("userServer");
+        if (!user) {
+            return {
+                redirect: {
+                    destination: "/discord",
+                    permanent: false,
+                },
+            };
+        }
     }
 
     if (user.privilege === "server") {

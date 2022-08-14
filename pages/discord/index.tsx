@@ -37,6 +37,10 @@ function DiscordServerSelect(props: {
     onClick: (guild: RequestedServer) => void;
 }) {
     const { guild, disabled, selected, mode } = props;
+    const colorado =
+        mode === "register" ? "bg-blue-800 cursor-not-allowed" : "bg-green-800 cursor-not-allowed";
+    const coloradoActive =
+        mode === "register" ? "bg-blue-700 hover:bg-blue-600" : "bg-green-700 hover:bg-green-600";
     return (
         <div className="p-5 bg-gray-700 text-white rounded shadow-md">
             <div className="flex items-center pt-1">
@@ -55,7 +59,7 @@ function DiscordServerSelect(props: {
                             props.onClick(guild);
                         }}
                         className={`text-white break-all p-2 transition rounded-md my-1 ${
-                            disabled ? "bg-green-800 cursor-not-allowed" : "bg-green-700 hover:bg-green-600"
+                            disabled ? colorado : coloradoActive
                         } ${selected ? "animate-pulse" : ""}`}
                     >
                         {mode === "register" ? "Akses" : "Buat"}
@@ -150,7 +154,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                     <title>Discord :: naoTimesUI</title>
                     <MetadataHead.SEO title="Discord Selection" urlPath="/discord" />
                 </Head>
-                <main className="bg-gray-900 font-inter h-screen text-white">
+                <main className="bg-gray-900 font-inter text-white h-full lg:h-screen">
                     <motion.header
                         className="flex justify-between items-center p-4 py-6 bg-gray-800"
                         initial={{ y: -50 }}
@@ -181,56 +185,59 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                     </motion.header>
 
                     {/* Create card handler */}
-                    <h1 className="text-3xl mx-4 mt-6 font-bold">Managed Servers</h1>
-                    <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6">
-                        {isLoading ? (
-                            <SkeletonLoader.StatsCard />
-                        ) : (
-                            <>
-                                {registeredServers.map((guild) => (
-                                    <DiscordServerSelect
-                                        key={`discord-registered-${guild.id}`}
-                                        guild={guild}
-                                        onClick={(guild) => {
-                                            this.enterDiscordServer(guild)
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .then(() => {})
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .catch(() => {});
-                                        }}
-                                        disabled={shouldDisable}
-                                        selected={this.state.selectedServer === guild.id}
-                                        mode="register"
-                                    />
-                                ))}
-                            </>
-                        )}
-                    </div>
+                    <div className="bg-gray-900 font-inter text-white h-full lg:h-auto">
+                        <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang di Kontrol</h1>
+                        <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6">
+                            {isLoading ? (
+                                <SkeletonLoader.StatsCard />
+                            ) : (
+                                <>
+                                    {registeredServers.map((guild) => (
+                                        <DiscordServerSelect
+                                            key={`discord-registered-${guild.id}`}
+                                            guild={guild}
+                                            onClick={(guild) => {
+                                                this.enterDiscordServer(guild)
+                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                    .then(() => {})
+                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                    .catch(() => {});
+                                            }}
+                                            disabled={shouldDisable}
+                                            selected={this.state.selectedServer === guild.id}
+                                            mode="register"
+                                        />
+                                    ))}
+                                </>
+                            )}
+                        </div>
 
-                    <h1 className="text-3xl mx-4 mt-6 font-bold">Registerable Servers</h1>
-                    <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6">
-                        {isLoading ? (
-                            <SkeletonLoader.StatsCard />
-                        ) : (
-                            <>
-                                {unregisteredServers.map((guild) => (
-                                    <DiscordServerSelect
-                                        key={`discord-unregistered-${guild.id}`}
-                                        guild={guild}
-                                        onClick={(guild) => {
-                                            this.createDiscordServer(guild)
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .then(() => {})
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .catch(() => {});
-                                        }}
-                                        disabled={shouldDisable}
-                                        selected={this.state.selectedServer === guild.id}
-                                        mode="unregister"
-                                    />
-                                ))}
-                            </>
-                        )}
+                        <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang bisa didaftarkan</h1>
+                        <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6 lg:mt-6">
+                            {isLoading ? (
+                                <SkeletonLoader.StatsCard />
+                            ) : (
+                                <>
+                                    {unregisteredServers.map((guild) => (
+                                        <DiscordServerSelect
+                                            key={`discord-unregistered-${guild.id}`}
+                                            guild={guild}
+                                            onClick={(guild) => {
+                                                this.createDiscordServer(guild)
+                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                    .then(() => {})
+                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                    .catch(() => {});
+                                            }}
+                                            disabled={shouldDisable}
+                                            selected={this.state.selectedServer === guild.id}
+                                            mode="unregister"
+                                        />
+                                    ))}
+                                </>
+                            )}
+                            <p className="mb-6 lg:mb-0 block lg:hidden"></p>
+                        </div>
                     </div>
                 </main>
             </>
@@ -259,5 +266,5 @@ export const getServerSideProps = withSession(async ({ req }: NextServerSideCont
             },
         };
     }
-    return { props: { user: { loggedIn: true, ...user } } };
+    return { props: { user: { loggedIn: true, ...user }, forceDarkMode: true } };
 });
