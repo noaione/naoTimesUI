@@ -3,6 +3,7 @@ import { Handler, withIronSession } from "next-iron-session";
 
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import type { IncomingMessage } from "http";
+import { isNone } from "./utils";
 
 interface SessionClass {
     /**
@@ -79,4 +80,18 @@ export default function withSession<Req, Res = any>(session: Handler<Req, Res>) 
             maxAge: 2 * 24 * 60 * 60,
         },
     });
+}
+
+export function getServerUser(req: NextApiRequestWithSession) {
+    let user = req.session.get<IUserAuth>("user");
+    if (isNone(user)) {
+        return null;
+    }
+    if (user.authType === "discord") {
+        user = req.session.get<IUserAuth>("userServer");
+        if (isNone(user)) {
+            return null;
+        }
+    }
+    return user;
 }
