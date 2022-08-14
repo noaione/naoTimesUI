@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
 import { KonfirmasiData } from "@/types/collab";
@@ -49,7 +49,7 @@ async function fetchAllPendingConfirmations(
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unauthorized", code: 403 });
     }

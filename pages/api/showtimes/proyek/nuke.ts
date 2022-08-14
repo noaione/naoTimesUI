@@ -1,7 +1,7 @@
 import { has } from "lodash";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 import { emitSocket } from "@/lib/socket";
 import prisma from "@/lib/prisma";
@@ -133,7 +133,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     const jsonBody = await req.body;
     if (!has(jsonBody, "animeId")) {
         return res.status(400).json({ success: false, message: "Missing `animeId` key", code: 400 });

@@ -2,7 +2,7 @@ import { NextApiResponse } from "next";
 
 import { emitSocket } from "@/lib/socket";
 import { isNone } from "@/lib/utils";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 
 async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Promise<[string, boolean]> {
@@ -70,7 +70,7 @@ async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Pr
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else if (!reqData) {

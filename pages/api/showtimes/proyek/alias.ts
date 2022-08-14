@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import { isNone, verifyExist } from "@/lib/utils";
 import { Project } from "@prisma/client";
@@ -57,7 +57,7 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     const jsonBody = await req.body;
     if (!verifyExist(jsonBody, "animeId", "string")) {
         return res.status(400).json({ message: "Missing animeId key", code: 400 });

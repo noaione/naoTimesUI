@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import _ from "lodash";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import { isNone, mapBoolean, verifyExist } from "@/lib/utils";
 
@@ -16,7 +16,7 @@ function verifyContents(data: any) {
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const jsonBody = await req.body;
-    const userData = req.session.get<IUserAuth>("user");
+    const userData = getServerUser(req);
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
         return res
             .status(400)

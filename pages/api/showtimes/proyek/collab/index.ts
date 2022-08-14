@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 
 import { Collaborations } from "@/types/collab";
 import prisma from "@/lib/prisma";
@@ -55,7 +55,7 @@ async function fetchAllCollabData(serverData: ServerInfo): Promise<Collaboration
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unauthorized", code: 403 });
     }

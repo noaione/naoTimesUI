@@ -4,7 +4,7 @@ import _ from "lodash";
 import { DateTime } from "luxon";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
 import { isNone, Nullable, RoleProject, verifyExist } from "@/lib/utils";
 
@@ -138,7 +138,7 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const jsonBody = await req.body;
-    const userData = req.session.get<IUserAuth>("user");
+    const userData = getServerUser(req);
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
         return res
             .status(400)

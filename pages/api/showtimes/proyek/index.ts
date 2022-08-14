@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { Project, ProjectEpisodeStatus } from "@prisma/client";
@@ -41,7 +41,7 @@ function projectOverviewKeyFilter(fetchedData: ProjectGet) {
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ success: false, message: "Unauthorized", code: 403 });
     } else {
