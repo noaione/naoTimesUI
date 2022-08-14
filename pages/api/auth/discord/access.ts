@@ -77,7 +77,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             name: server.name,
             authType: "discord",
         };
-        req.session.set("user", user);
+        req.session.set("userServer", user);
         await req.session.save();
         res.json({ code: 200, success: true, error: "Sukses" });
     } catch (e) {
