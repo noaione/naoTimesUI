@@ -59,7 +59,6 @@ interface ExtraProps {
 class NaoTimesAppDocument extends Document<ExtraProps> {
     static async getInitialProps(ctx: DocumentContext) {
         const initialProps = await Document.getInitialProps(ctx);
-        console.info(ctx.pathname);
         return { ...initialProps, pathname: ctx.pathname };
     }
 
