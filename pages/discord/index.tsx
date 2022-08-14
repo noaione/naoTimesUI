@@ -154,7 +154,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                     <title>Discord :: naoTimesUI</title>
                     <MetadataHead.SEO title="Discord Selection" urlPath="/discord" />
                 </Head>
-                <main className="bg-gray-900 font-inter text-white h-full lg:h-screen">
+                <main className="font-inter bg-gray-900">
                     <motion.header
                         className="flex justify-between items-center p-4 py-6 bg-gray-800"
                         initial={{ y: -50 }}
@@ -185,59 +185,56 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                     </motion.header>
 
                     {/* Create card handler */}
-                    <div className="bg-gray-900 font-inter text-white h-full lg:h-auto">
-                        <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang di Kontrol</h1>
-                        <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6">
-                            {isLoading ? (
-                                <SkeletonLoader.StatsCard />
-                            ) : (
-                                <>
-                                    {registeredServers.map((guild) => (
-                                        <DiscordServerSelect
-                                            key={`discord-registered-${guild.id}`}
-                                            guild={guild}
-                                            onClick={(guild) => {
-                                                this.enterDiscordServer(guild)
-                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                    .then(() => {})
-                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                    .catch(() => {});
-                                            }}
-                                            disabled={shouldDisable}
-                                            selected={this.state.selectedServer === guild.id}
-                                            mode="register"
-                                        />
-                                    ))}
-                                </>
-                            )}
-                        </div>
+                    <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang di Kontrol</h1>
+                    <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6">
+                        {isLoading ? (
+                            <SkeletonLoader.StatsCard />
+                        ) : (
+                            <>
+                                {registeredServers.map((guild) => (
+                                    <DiscordServerSelect
+                                        key={`discord-registered-${guild.id}`}
+                                        guild={guild}
+                                        onClick={(guild) => {
+                                            this.enterDiscordServer(guild)
+                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                .then(() => {})
+                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                .catch(() => {});
+                                        }}
+                                        disabled={shouldDisable}
+                                        selected={this.state.selectedServer === guild.id}
+                                        mode="register"
+                                    />
+                                ))}
+                            </>
+                        )}
+                    </div>
 
-                        <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang bisa didaftarkan</h1>
-                        <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6 lg:mt-6">
-                            {isLoading ? (
-                                <SkeletonLoader.StatsCard />
-                            ) : (
-                                <>
-                                    {unregisteredServers.map((guild) => (
-                                        <DiscordServerSelect
-                                            key={`discord-unregistered-${guild.id}`}
-                                            guild={guild}
-                                            onClick={(guild) => {
-                                                this.createDiscordServer(guild)
-                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                    .then(() => {})
-                                                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                    .catch(() => {});
-                                            }}
-                                            disabled={shouldDisable}
-                                            selected={this.state.selectedServer === guild.id}
-                                            mode="unregister"
-                                        />
-                                    ))}
-                                </>
-                            )}
-                            <p className="mb-6 lg:mb-0 block lg:hidden"></p>
-                        </div>
+                    <h1 className="text-3xl mx-4 mt-6 font-bold">Peladen yang bisa didaftarkan</h1>
+                    <div className="mx-4 grid gap-7 sm:grid-cols-2 lg:grid-cols-4 items-center my-6 lg:mt-6">
+                        {isLoading ? (
+                            <SkeletonLoader.StatsCard />
+                        ) : (
+                            <>
+                                {unregisteredServers.map((guild) => (
+                                    <DiscordServerSelect
+                                        key={`discord-unregistered-${guild.id}`}
+                                        guild={guild}
+                                        onClick={(guild) => {
+                                            this.createDiscordServer(guild)
+                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                .then(() => {})
+                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                                                .catch(() => {});
+                                        }}
+                                        disabled={shouldDisable}
+                                        selected={this.state.selectedServer === guild.id}
+                                        mode="unregister"
+                                    />
+                                ))}
+                            </>
+                        )}
                     </div>
                 </main>
             </>
