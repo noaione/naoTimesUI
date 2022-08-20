@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 
 import { emitSocketAndWait } from "@/lib/socket";
 

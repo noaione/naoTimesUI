@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
 import { KonfirmasiData } from "@/types/collab";
