@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Router from "next/router";
 import withSession, { IUserDiscordMeta } from "@/lib/session";
 
@@ -11,7 +11,11 @@ import Head from "next/head";
 import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
 import { isNone, Nullable } from "@/lib/utils";
+import Modal, { CallbackModal, ModalProps } from "@/components/Modal";
+import ErrorModal from "@/components/ErrorModal";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
 interface ServerSideProps {
     user: IUserAuth & { loggedIn: boolean };
 }
@@ -24,9 +28,11 @@ interface RequestedServer {
 
 interface DiscordSelectionState {
     isLoading: boolean;
-    selectedServer: Nullable<string>;
+    selectedServer: Nullable<RequestedServer>;
+    internalSelectedServer: Nullable<RequestedServer>;
     registeredServers: RequestedServer[];
     unregisteredServers: RequestedServer[];
+    errorMsg: string;
 }
 
 function DiscordServerSelect(props: {
@@ -80,15 +86,105 @@ interface DiscordRefreshedData {
     };
 }
 
+interface ExtraModalCallback {
+    executeAdd: () => void;
+}
+
+class DiscordConfirmationModal extends React.Component<ModalProps & ExtraModalCallback> {
+    modalCb?: CallbackModal;
+
+    constructor(props: ModalProps & ExtraModalCallback) {
+        super(props);
+        this.handleHide = this.handleHide.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+    }
+
+    componentDidMount(): void {
+        if (typeof this.props.onMounted === "function") {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const outerThis = this;
+            this.props.onMounted({
+                showModal: () => outerThis.handleShow(),
+                hideModal: () => outerThis.handleHide(),
+            });
+        }
+    }
+
+    handleHide() {
+        if (this.modalCb) {
+            this.modalCb.hideModal();
+        }
+    }
+
+    handleShow() {
+        if (this.modalCb) {
+            this.modalCb.showModal();
+        }
+    }
+
+    toggleModal() {
+        if (this.modalCb && this.modalCb.toggleModal) {
+            this.modalCb.toggleModal();
+        }
+    }
+
+    render() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { onMounted, onClose, ...props } = this.props;
+        return (
+            <Modal
+                {...props}
+                onMounted={(callback) => (this.modalCb = callback)}
+                onClose={() => {
+                    // Forward the onClose
+                    if (typeof onClose === "function") {
+                        onClose();
+                    }
+                }}
+            >
+                <Modal.Head>Apakah anda yakin?</Modal.Head>
+                <Modal.Body>{this.props.children}</Modal.Body>
+                <Modal.Footer className="gap-2">
+                    <button
+                        onClick={() => {
+                            this.props.executeAdd();
+                        }}
+                        className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-green-500 rounded hover:bg-green-700 focus:outline-none"
+                    >
+                        Tambah
+                    </button>
+                    <button
+                        onClick={this.handleHide}
+                        className="inline-flex justify-center font-semibold w-full px-4 py-2 text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none"
+                    >
+                        Batal
+                    </button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+}
+
 export default class DiscordSelectionWebpage extends React.Component<ServerSideProps, DiscordSelectionState> {
+    callbackModal?: CallbackModal;
+    errorModal?: CallbackModal;
+
     constructor(props: ServerSideProps) {
         super(props);
         this.state = {
             isLoading: true,
             selectedServer: null,
+            internalSelectedServer: null,
             registeredServers: [],
             unregisteredServers: [],
+            errorMsg: "",
         };
+
+        this.refreshServerData = this.refreshServerData.bind(this);
+        this.enterDiscordServer = this.enterDiscordServer.bind(this);
+        this.createDiscordServer = this.createDiscordServer.bind(this);
+        this.actuallyCreateDiscordServer = this.actuallyCreateDiscordServer.bind(this);
     }
 
     async refreshServerData() {
@@ -109,7 +205,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
     }
 
     async enterDiscordServer(guild: RequestedServer) {
-        this.setState({ selectedServer: guild.id });
+        this.setState({ selectedServer: guild, internalSelectedServer: guild });
         console.info(`Entering ${guild.name}`);
 
         try {
@@ -131,16 +227,71 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                 this.setState({ selectedServer: null });
                 alert(response.data.error ?? "Terjadi kesalahan");
             }
-        } catch (e) {
+        } catch (e: unknown) {
             console.error(e);
+            // check if axioserror
             this.setState({ selectedServer: null });
-            alert("Terjadi kesalahan");
+            if (e instanceof AxiosError) {
+                const axiosError = e as AxiosError<{ code: number; error?: string; success: boolean }>;
+                const errorMsg = axiosError.response?.data?.error ?? "Terjadi kesalahan internal";
+                this.setState({ errorMsg });
+                if (this.errorModal) {
+                    this.errorModal.showModal();
+                }
+            } else {
+                this.setState({ errorMsg: "Terjadi kesalahan internal" });
+                if (this.errorModal) {
+                    this.errorModal.showModal();
+                }
+            }
         }
     }
 
-    async createDiscordServer(guild: RequestedServer) {
-        this.setState({ selectedServer: guild.id });
+    createDiscordServer(guild: RequestedServer) {
+        this.setState({ selectedServer: guild, internalSelectedServer: guild });
         console.info(`Creating ${guild.name}`);
+        if (this.callbackModal) {
+            this.callbackModal.showModal();
+        }
+    }
+
+    async actuallyCreateDiscordServer() {
+        const { internalSelectedServer } = this.state;
+        if (isNone(internalSelectedServer)) {
+            this.setState({ errorMsg: "Tidak ada server yang dipilih...?" });
+            if (this.errorModal) {
+                this.errorModal.showModal();
+            }
+            return;
+        }
+        // make sure we lock the state!
+        console.info("Locking state...");
+        this.setState({ selectedServer: internalSelectedServer });
+        console.info(`Actuallly Creating ${internalSelectedServer.name}`);
+
+        const body = {
+            server: internalSelectedServer.id,
+            admin: this.props.user.id,
+        };
+
+        const res = await fetch("/api/auth/discord/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+        });
+
+        const userObj = await res.json();
+        if (userObj.success) {
+            // success? execute access then route to admin
+            await this.enterDiscordServer(internalSelectedServer);
+        } else {
+            this.setState({ errorMsg: userObj.error });
+            if (this.errorModal) {
+                this.errorModal.showModal();
+            }
+        }
     }
 
     render() {
@@ -152,7 +303,11 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
                     <title>Discord :: naoTimesUI</title>
-                    <MetadataHead.SEO title="Discord Selection" urlPath="/discord" />
+                    <MetadataHead.SEO
+                        title="Discord Selection"
+                        urlPath="/discord"
+                        description="Pilih peladen yang ingin anda akses atau buat!"
+                    />
                 </Head>
                 <main className="font-inter bg-gray-900">
                     <motion.header
@@ -203,7 +358,7 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                                                 .catch(() => {});
                                         }}
                                         disabled={shouldDisable}
-                                        selected={this.state.selectedServer === guild.id}
+                                        selected={this.state.selectedServer?.id === guild.id}
                                         mode="register"
                                     />
                                 ))}
@@ -222,20 +377,32 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
                                         key={`discord-unregistered-${guild.id}`}
                                         guild={guild}
                                         onClick={(guild) => {
-                                            this.createDiscordServer(guild)
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .then(() => {})
-                                                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                                                .catch(() => {});
+                                            this.createDiscordServer(guild);
                                         }}
                                         disabled={shouldDisable}
-                                        selected={this.state.selectedServer === guild.id}
+                                        selected={this.state.selectedServer?.id === guild.id}
                                         mode="unregister"
                                     />
                                 ))}
                             </>
                         )}
                     </div>
+                    <DiscordConfirmationModal
+                        onMounted={(cb) => (this.callbackModal = cb)}
+                        executeAdd={() => {
+                            console.info(this.state.selectedServer);
+                            this.actuallyCreateDiscordServer().then(noop).catch(noop);
+                            if (this.callbackModal) {
+                                this.callbackModal.hideModal();
+                            }
+                        }}
+                    >
+                        <p>
+                            Ini akan menambahkan peladen <strong>{this.state.selectedServer?.name}</strong> ke
+                            Showtimes
+                        </p>
+                    </DiscordConfirmationModal>
+                    <ErrorModal onMounted={(cb) => (this.errorModal = cb)}>{this.state.errorMsg}</ErrorModal>
                 </main>
             </>
         );
