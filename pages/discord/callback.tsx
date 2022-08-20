@@ -13,6 +13,7 @@ interface Props {
 
 interface State {
     errorMsg?: string;
+    ready: boolean;
 }
 
 export default class DiscordCallbackPage extends React.Component<Props, State> {
@@ -20,6 +21,7 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
         super(props);
         this.state = {
             errorMsg: undefined,
+            ready: false,
         };
     }
     async componentDidMount() {
@@ -36,7 +38,9 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
             if (result.status !== 200) {
                 this.setState({ errorMsg: data.error });
             } else {
-                Router.push("/discord");
+                this.setState({ ready: true }, () => {
+                    Router.push("/discord");
+                });
             }
         } catch (e) {
             console.error(e);
@@ -46,7 +50,7 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
 
     render() {
         const { failure } = this.props;
-        const { errorMsg } = this.state;
+        const { errorMsg, ready } = this.state;
         return (
             <>
                 <Head>
@@ -65,7 +69,7 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
                     </div>
                     <div>
                         <h1 className="hidden md:inline-block border-r border-gray-300 m-0 mr-5 py-3 pr-6 pl-0 text-2xl font-semibold align-top">
-                            {failure ? <span>💢</span> : <span>🤔</span>}
+                            {failure ? <span>💢</span> : <>{ready ? <span>😄</span> : <span>🤔</span>}</>}
                         </h1>
                         <div className="inline-block text-left leading-10 h-10 align-middle items-center place-items-start justify-items-center">
                             {failure ? (
@@ -73,9 +77,17 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
                                     Tidak dapat memproses login Discord, mohon ulangi!
                                 </h2>
                             ) : (
-                                <h2 className="text-sm font-normal mt-5 p-0 self-center place-self-center">
-                                    Memproses login Discord...
-                                </h2>
+                                <>
+                                    {ready ? (
+                                        <h2 className="text-sm font-normal mt-5 p-0 self-center place-self-center">
+                                            Sukses, mengalihkan ke halaman utama...
+                                        </h2>
+                                    ) : (
+                                        <h2 className="text-sm font-normal mt-5 p-0 self-center place-self-center">
+                                            Memproses login Discord...
+                                        </h2>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>
