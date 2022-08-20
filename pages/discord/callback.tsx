@@ -56,6 +56,7 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
                     <MetadataHead.SEO
                         title="Discord OAuth2"
                         description="Autentikasi naoTimes dengan akun Discord anda!"
+                        urlPath="/discord/callback"
                     />
                 </Head>
                 <div className="bg-gray-900 text-white h-screen text-center w-screen flex flex-col items-center justify-center">
