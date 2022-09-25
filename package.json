@@ -82,7 +82,7 @@
     "highlight.js": "11.6.0",
     "javascript-time-ago": "2.5.7",
     "lodash": "4.17.21",
-    "luxon": "3.0.1",
+    "luxon": "3.0.4",
     "mdi-react": "9.0.0",
     "next": "12.2.3",
     "next-iron-session": "4.2.0",
