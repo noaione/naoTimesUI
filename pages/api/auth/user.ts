@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 
 async function getServerExtra(serverId: string) {
@@ -18,7 +18,7 @@ async function getServerExtra(serverId: string) {
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (user) {
         // is signed in, let's get the server info too!
         const extraMetadata = await getServerExtra(user.id);

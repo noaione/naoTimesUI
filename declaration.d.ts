@@ -20,6 +20,8 @@ declare global {
             BOT_SOCKET_PORT?: string;
             BOT_SOCKET_PASSWORD?: string;
             PLAUSIBLE_DOMAIN_TRACK?: string;
+            DISCORD_CLIENT_ID?: string;
+            DISCORD_CLIENT_SECRET?: string;
         }
     }
 }

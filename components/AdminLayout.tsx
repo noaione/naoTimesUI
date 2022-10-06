@@ -71,6 +71,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                             privilige={user.privilege}
                             title={realTitle}
                             onOpen={this.openSidebar}
+                            isDiscord={user.authType === "discord"}
                         />
                         <motion.main
                             id="root"

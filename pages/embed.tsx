@@ -131,7 +131,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     <Head>
                         <MetadataHead.Base />
                         <MetadataHead.Prefetch />
-                        <title>{`Utang - ${realName}`} :: naoTimesUI</title>
+                        <title>{`Utang - ${realName} :: naoTimesUI`}</title>
                         <MetadataHead.SEO
                             title={`Utang - ${realName}`}
                             description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
@@ -153,7 +153,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{`Utang - ${realName}`} :: naoTimesUI</title>
+                    <title>{`Utang - ${realName} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={`Utang - ${realName}`}
                         description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}

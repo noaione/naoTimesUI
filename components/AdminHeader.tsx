@@ -14,6 +14,7 @@ interface HeaderProps {
     name?: string;
     privilige: "owner" | "server";
     title: string;
+    isDiscord?: boolean;
     onOpen: () => void;
 }
 
@@ -126,7 +127,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     render() {
-        const { id, name, privilige, title } = this.props;
+        const { id, name, privilige, title, isDiscord } = this.props;
         const { isDarkMode } = this.state;
 
         const username = name || id;
@@ -184,17 +185,30 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                 <div
                                     ref={this.wrapperRef}
                                     className={
-                                        "absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10 transition ease-in-out duration-100 " +
+                                        "absolute right-0 mt-2 w-48 divide-y-[1px] divide-gray-700 dark:divide-gray-500 bg-white dark:bg-gray-700 rounded-md overflow-hidden shadow-xl z-10 transition ease-in-out duration-100 " +
                                         opacity
                                     }
                                 >
+                                    {isDiscord && (
+                                        <button
+                                            onClick={async (ev) => {
+                                                ev.preventDefault();
+                                                await fetch("/api/auth/discord/revoke");
+                                                Router.push("/discord");
+                                            }}
+                                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
+                                        >
+                                            Ganti Server
+                                        </button>
+                                    )}
+
                                     <button
                                         onClick={async (ev) => {
                                             ev.preventDefault();
                                             await fetch("/api/auth/logout");
                                             Router.push("/");
                                         }}
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
+                                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
                                     >
                                         Keluar
                                     </button>

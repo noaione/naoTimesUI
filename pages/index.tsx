@@ -12,10 +12,14 @@ import MetadataHead from "../components/MetadataHead";
 import LoginLayout from "../components/LoginLayout";
 import LoadingCircle from "../components/LoadingCircle";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "../lib/session";
+import withSession, { IUserAuth, IUserDiscordMeta, NextServerSideContextWithSession } from "../lib/session";
+import DiscordIcon from "@/components/Icons/Discord";
+import { isNone, Nullable } from "@/lib/utils";
 
 interface LoginRegistredProps {
+    discordClientId?: Nullable<string>;
     isRegistered?: boolean;
+    discordIsLoggedIn?: boolean;
     callback?: string;
 }
 
@@ -23,6 +27,25 @@ interface LoginState {
     errorMsg: string;
     submitting: boolean;
     peekPass: boolean;
+    webBaseUrl: string;
+}
+
+// TODO: implement click jacking prevention
+function generateDiscordLogin(baseUrl: string, discordId?: Nullable<string>) {
+    // sample URL
+    if (isNone(discordId)) {
+        return undefined;
+    }
+    // https://discord.com/api/oauth2/authorize?client_id=XXXXXXXXX&redirect_uri=http%3A%2F%2F127.0.0.1%3A6700%2Fapi%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20email%20guilds
+    const scopes = ["identify", "email", "guilds"];
+    // get current webpage base url
+    const redirectUrl = `${baseUrl}/discord/callback`;
+    // encode redirect url
+    const redirectUrlEncoded = encodeURIComponent(redirectUrl);
+    const url = `https://discord.com/api/oauth2/authorize?client_id=${discordId}&redirect_uri=${redirectUrlEncoded}&response_type=code&scope=${scopes.join(
+        "%20"
+    )}`;
+    return url;
 }
 
 class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
@@ -34,7 +57,14 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
             errorMsg: "",
             submitting: false,
             peekPass: false,
+            webBaseUrl: "",
         };
+    }
+
+    componentDidMount(): void {
+        const currentUrl = window.location.href;
+        const baseUrl = currentUrl.substring(0, currentUrl.indexOf("/", currentUrl.indexOf("//") + 2));
+        this.setState({ webBaseUrl: baseUrl });
     }
 
     async onSubmit(e: React.FormEvent<Element>) {
@@ -74,7 +104,13 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
     }
 
     render() {
-        const { errorMsg, submitting } = this.state;
+        const { errorMsg, submitting, webBaseUrl } = this.state;
+        const { discordClientId, discordIsLoggedIn } = this.props;
+
+        let discordUrl = generateDiscordLogin(webBaseUrl, discordClientId);
+        if (discordIsLoggedIn) {
+            discordUrl = "/discord";
+        }
         return (
             <>
                 <Head>
@@ -190,6 +226,30 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
                             </div>
                         </form>
                     </div>
+                    {!isNone(discordUrl) && (
+                        <div className="flex flex-row justify-center -my-1">
+                            <Link href={discordUrl} passHref>
+                                <a
+                                    id="discord-sign-in-btn"
+                                    className={`inline-flex items-center w-full max-w-xs mx-auto transition duraion-200 ease-in-out ${
+                                        submitting
+                                            ? "bg-[#121315]"
+                                            : "bg-[#2c2f33] hover:bg-[#18191c] focus:bg-[#121315]"
+                                    } text-white rounded-lg px-3 py-3 font-semibold justify-center ${
+                                        submitting ? "cursor-not-allowed opacity-60" : "opacity-100"
+                                    }`}
+                                    onClick={(ev) => {
+                                        if (submitting) {
+                                            ev.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    <DiscordIcon />
+                                    <p className="ml-1">Masuk dengan Discord</p>
+                                </a>
+                            </Link>
+                        </div>
+                    )}
                 </LoginLayout>
             </>
         );
@@ -201,10 +261,18 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     // Catch the Next.js Router push event with query mask
     // eslint-disable-next-line no-underscore-dangle
     const NEXTJS_RouterQuery = req.__NEXT_INIT_QUERY || {};
+    let discordClientId = process.env.DISCORD_CLIENT_ID;
+
+    // check discordClientId, if string empty, set to undefined.
+    if (typeof discordClientId === "string" && discordClientId.length === 0) {
+        discordClientId = null;
+    }
 
     const { registered, cb } = NEXTJS_RouterQuery;
+    const discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+    const hasDiscordMeta = !isNone(discordMeta);
 
-    if (user && !registered) {
+    if (user && !registered && !hasDiscordMeta) {
         return {
             redirect: {
                 destination: "/admin",
@@ -212,7 +280,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
             },
         };
     }
-    if (typeof registered === "string") {
+    if (typeof registered === "string" && !hasDiscordMeta) {
         if (user.id === registered) {
             return {
                 redirect: {
@@ -229,7 +297,14 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
         realCb = cb;
     }
 
-    return { props: { isRegistered: justRegistered, callback: realCb } };
+    return {
+        props: {
+            isRegistered: justRegistered,
+            callback: realCb,
+            discordClientId,
+            discordIsLoggedIn: hasDiscordMeta,
+        },
+    };
 });
 
 export default LoginPage;

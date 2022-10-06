@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 
 import { KonfirmasiData } from "@/types/collab";
 import { emitSocketAndWait } from "@/lib/socket";
@@ -11,7 +11,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     if (req.method?.toLowerCase() !== "post") {
         return res.status(405).json({ message: "Method not allowed", code: 405 });
     }
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unauthorized", code: 403 });
     }

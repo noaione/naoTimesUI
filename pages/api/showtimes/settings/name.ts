@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, IUserAuth, NextApiRequestWithSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 
@@ -22,7 +22,7 @@ async function findAndUpdate(userId: string, targetName: string) {
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403, success: false });
     } else if (!reqData) {
@@ -35,9 +35,15 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             id: user.id,
             name: reqData.newname,
             privilege: user.privilege,
+            authType: user.authType,
         };
-        req.session.unset("user");
-        req.session.set("user", newSession);
+        if (user.authType === "discord") {
+            req.session.unset("userServer");
+            req.session.set("userServer", newSession);
+        } else {
+            req.session.unset("user");
+            req.session.set("user", newSession);
+        }
         await req.session.save();
         res.json({ message: "success", code: 200, success: true });
     }

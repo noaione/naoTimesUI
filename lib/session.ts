@@ -3,6 +3,7 @@ import { Handler, withIronSession } from "next-iron-session";
 
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import type { IncomingMessage } from "http";
+import { isNone } from "./utils";
 
 interface SessionClass {
     /**
@@ -35,10 +36,21 @@ interface SessionClass {
     destroy(): Promise<void>;
 }
 
+export type IUserAuthMethod = "local" | "discord";
+
 export interface IUserAuth {
     id: string;
     privilege: "owner" | "server";
     name?: string;
+    authType: IUserAuthMethod;
+}
+
+export interface IUserDiscordMeta {
+    id: string;
+    name: string;
+    access_token: string;
+    refresh_token: string;
+    expires_at: number;
 }
 
 interface CustomSession {
@@ -68,4 +80,31 @@ export default function withSession<Req, Res = any>(session: Handler<Req, Res>) 
             maxAge: 2 * 24 * 60 * 60,
         },
     });
+}
+
+export function getServerUser(req: NextApiRequestWithSession) {
+    let user = req.session.get<IUserAuth>("user");
+    if (isNone(user)) {
+        return null;
+    }
+    if (user.authType === "discord") {
+        user = req.session.get<IUserAuth>("userServer");
+        if (isNone(user)) {
+            return null;
+        }
+    }
+    return user;
+}
+
+export async function removeServerUser(req: NextApiRequestWithSession) {
+    const user = req.session.get<IUserAuth>("user");
+    if (isNone(user)) {
+        return;
+    }
+    if (user.authType === "discord") {
+        req.session.unset("userServer");
+    } else {
+        req.session.unset("user");
+    }
+    await req.session.save();
 }

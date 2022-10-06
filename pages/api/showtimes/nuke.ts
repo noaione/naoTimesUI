@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { NextApiResponse } from "next";
 
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession, removeServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
@@ -108,7 +108,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
 }
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });
     } else {
@@ -120,7 +120,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         } else {
             try {
                 await deleteAndUnlinkEverything(user.id);
-                await req.session.destroy();
+                await removeServerUser(req);
                 res.json({ success: true, message: "sukses" });
             } catch (e) {
                 res.json({ success: false, message: `An error occured: ${e.toString()}` });

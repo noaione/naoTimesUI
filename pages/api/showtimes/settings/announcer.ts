@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
 
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 
@@ -65,7 +65,7 @@ async function removeChannelAnnouncer(serverId: string): Promise<[boolean, strin
 
 export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
     const reqData = await req.body;
-    const user = req.session.get<IUserAuth>("user");
+    const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403, success: false });
     } else if (!reqData) {

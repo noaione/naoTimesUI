@@ -52,10 +52,14 @@ const toggleTheme = function() {
 };
 `;
 
-class NaoTimesAppDocument extends Document {
+interface ExtraProps {
+    pathname: string;
+}
+
+class NaoTimesAppDocument extends Document<ExtraProps> {
     static async getInitialProps(ctx: DocumentContext) {
         const initialProps = await Document.getInitialProps(ctx);
-        return { ...initialProps };
+        return { ...initialProps, pathname: ctx.pathname };
     }
 
     render() {
@@ -65,6 +69,8 @@ class NaoTimesAppDocument extends Document {
         if (!isNone(PLAUSIBLE_DOMAIN_TRACK) && PLAUSIBLE_DOMAIN_TRACK.trim().length > 0) {
             addTracking = true;
         }
+        // get current route
+        const isAdminRoute = this.props.pathname.startsWith("/admin");
         return (
             <Html prefix="og: https://ogp.me/ns#">
                 <Head>
@@ -82,7 +88,7 @@ class NaoTimesAppDocument extends Document {
                         rel="stylesheet"
                     />
                 </Head>
-                <body>
+                <body className={isAdminRoute ? "" : `bg-gray-900 text-white`}>
                     <Main />
                     <NextScript />
                 </body>

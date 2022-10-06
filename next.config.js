@@ -58,8 +58,15 @@ const SentryWebpackPluginOptions = {
     dryRun: skipSentry,
 };
 
+function withWrappedSentry(config) {
+    return withSentryConfig(config, SentryWebpackPluginOptions);
+}
+
 module.exports = () => {
-    const plugins = [withBundleAnalyzer, (config) => withSentryConfig(config, SentryWebpackPluginOptions)];
+    const plugins = [withBundleAnalyzer];
+    if (!skipSentry) {
+        plugins.push(withWrappedSentry);
+    }
     const config = plugins.reduce((acc, next) => next(acc), { ...moduleExports });
     return config;
 };

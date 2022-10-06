@@ -195,16 +195,29 @@ export const getServerSideProps = withSession(async function ({
     req,
     params,
 }: NextServerSideContextWithSession) {
-    const user = req.session.get<IUserAuth>("user") as IUserAuth;
+    let user = req.session.get<IUserAuth>("user");
     const { code } = params;
 
     if (!user) {
         return {
             redirect: {
-                destination: "/?cb=/admin/proyek/kolaborasi",
+                destination: `/?cb=/admin/proyek/kolaborasi/${code}`,
                 permanent: false,
             },
         };
+    }
+
+    if (user.authType === "discord") {
+        // override with server info
+        user = req.session.get<IUserAuth>("userServer");
+        if (!user) {
+            return {
+                redirect: {
+                    destination: "/discord",
+                    permanent: false,
+                },
+            };
+        }
     }
     if (user.privilege === "owner") {
         return {
