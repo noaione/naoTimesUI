@@ -95,3 +95,16 @@ export function getServerUser(req: NextApiRequestWithSession) {
     }
     return user;
 }
+
+export async function removeServerUser(req: NextApiRequestWithSession) {
+    const user = req.session.get<IUserAuth>("user");
+    if (isNone(user)) {
+        return;
+    }
+    if (user.authType === "discord") {
+        req.session.unset("userServer");
+    } else {
+        req.session.unset("user");
+    }
+    await req.session.save();
+}

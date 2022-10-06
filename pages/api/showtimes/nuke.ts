@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, NextApiRequestWithSession, removeServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
@@ -120,7 +120,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         } else {
             try {
                 await deleteAndUnlinkEverything(user.id);
-                await req.session.destroy();
+                await removeServerUser(req);
                 res.json({ success: true, message: "sukses" });
             } catch (e) {
                 res.json({ success: false, message: `An error occured: ${e.toString()}` });
