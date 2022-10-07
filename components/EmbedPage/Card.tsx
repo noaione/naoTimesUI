@@ -122,7 +122,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         <h1 className="font-medium text-base text-gray-800 dark:text-gray-100">{title}</h1>
                         {jointWith.length > 0 && (
                             <p className="text-sm italic text-gray-300 mt-2">
-                                Kolaborasi dengan {jointWith.join(", ")}
+                                {translate("COLLAB_WITH", realLang, [jointWith.join(", ")])}
                             </p>
                         )}
                         <div>
@@ -165,9 +165,11 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                         )}
                                     </div>
                                     {dropdownOpen ? (
-                                        <div className="mt-1">{translate("DROPDOWN.RETRACT", realLang)}</div>
+                                        <div className="mt-1 text-left">
+                                            {translate("DROPDOWN.RETRACT", realLang)}
+                                        </div>
                                     ) : (
-                                        <div className="mt-1">
+                                        <div className="mt-1 text-left">
                                             {translate("DROPDOWN.EXPAND", realLang, [
                                                 next3Episode.length.toString(),
                                             ])}

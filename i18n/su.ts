@@ -102,6 +102,7 @@ const Locale = {
     LAST_UPDATE: "Diropéa {0}",
     EPISODE_NEEDS: "peryogi",
     WAITING_RELEASE: "Ngantosan dirilis...",
+    COLLAB_WITH: "Babarengan jeung {0}",
 };
 
 export { Locale, TimeAgoLocale };

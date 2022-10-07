@@ -251,6 +251,7 @@ const Locale = {
     LAST_UPDATE: "Diperbarui {0}",
     EPISODE_NEEDS: "butuh",
     WAITING_RELEASE: "Menunggu dirilis...",
+    COLLAB_WITH: "Barengan sama {0}",
 };
 
 export { Locale, TimeAgoLocale };

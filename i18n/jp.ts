@@ -40,6 +40,7 @@ const Locale = {
     LAST_UPDATE: "最終更新{0}",
     EPISODE_NEEDS: "要する",
     WAITING_RELEASE: "発売を待つ。。。",
+    COLLAB_WITH: "{0}と共同",
 };
 
 export { Locale, TimeAgoLocale };

@@ -117,6 +117,7 @@ const Locale = {
     LAST_UPDATE: "Dianyari {0}",
     EPISODE_NEEDS: "betah",
     WAITING_RELEASE: "Ngenteni dirilis...",
+    COLLAB_WITH: "Bebarengan karo {0}",
 };
 
 export { Locale, TimeAgoLocale };

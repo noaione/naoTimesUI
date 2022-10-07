@@ -37,6 +37,7 @@ const Locale = {
     LAST_UPDATE: "Updated {0}",
     EPISODE_NEEDS: "needs",
     WAITING_RELEASE: "Waiting for release...",
+    COLLAB_WITH: "Joint with {0}",
 };
 
 export { Locale, TimeAgoLocale };
