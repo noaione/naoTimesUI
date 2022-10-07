@@ -121,7 +121,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                     <div className="text-xs h-full flex-grow px-3 pt-2 py-8 max-w-full flex flex-col">
                         <h1 className="font-medium text-base text-gray-800 dark:text-gray-100">{title}</h1>
                         {jointWith.length > 0 && (
-                            <p className="text-sm italic text-gray-300 mt-2">
+                            <p className="text-sm italic text-gray-700 dark:text-gray-300 mt-2">
                                 {translate("COLLAB_WITH", realLang, [jointWith.join(", ")])}
                             </p>
                         )}
