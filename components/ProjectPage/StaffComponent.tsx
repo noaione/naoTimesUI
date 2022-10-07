@@ -8,7 +8,7 @@ import { RoleColorPalette } from "../ColorMap";
 import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { expandRoleLocalized, getAssigneeName, Nullable, RoleProject } from "../../lib/utils";
+import { expandRoleLocalized, getAssigneeName, Nullable, RoleProject } from "@/lib/utils";
 
 interface StaffProps extends SettingsProps {
     id: RoleProject;

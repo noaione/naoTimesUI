@@ -8,7 +8,7 @@ import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { generateWordSets } from "../../lib/words";
+import { generateWordSets } from "@/lib/words";
 
 interface ExtendedNukeProps extends SettingsProps {
     id: string;

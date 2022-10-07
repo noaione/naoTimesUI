@@ -8,7 +8,7 @@ import LoadingCircle from "../LoadingCircle";
 import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { isDifferent, verifyExist } from "../../lib/utils";
+import { isDifferent, verifyExist } from "@/lib/utils";
 
 interface AliasProps extends SettingsProps {
     aniId: string;

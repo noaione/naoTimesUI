@@ -6,7 +6,7 @@ import { SettingsProps } from "./base";
 import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
 
-import { generateWordSets } from "../../lib/words";
+import { generateWordSets } from "@/lib/words";
 
 interface ExtendedDeleteProps extends SettingsProps {
     id: string;

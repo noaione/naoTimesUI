@@ -1,4 +1,4 @@
-import withSession, { removeServerUser } from "../../../lib/session";
+import withSession, { removeServerUser } from "@/lib/session";
 
 export default withSession(async (req, res) => {
     await removeServerUser(req);

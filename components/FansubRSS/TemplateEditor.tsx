@@ -10,8 +10,8 @@ import PreviewGen from "./PreviewGenerator";
 import { combineRGB, extractRGB } from "./PreviewGenerator/color";
 import { IEmbed } from "./PreviewGenerator/embed";
 
-import { FansubRSSEmbed, FansubRSSFeeds } from "../../lib/fsrss";
-import { isNone, Nullable } from "../../lib/utils";
+import { FansubRSSEmbed, FansubRSSFeeds } from "@/lib/fsrss";
+import { isNone, Nullable } from "@/lib/utils";
 
 function matchPattern(regex: RegExp, match: string) {
     let m: RegExpExecArray;

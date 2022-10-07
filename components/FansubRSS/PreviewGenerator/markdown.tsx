@@ -8,7 +8,7 @@ import SimpleMarkdown from "simple-markdown";
 import hljs from "highlight.js";
 import Twemoji from "twemoji";
 
-import Emoji from "../../../lib/constant/emoji";
+import Emoji from "@/lib/constant/emoji";
 
 function flattenAst(node: SimpleMarkdown.ASTNode, parent?: SimpleMarkdown.SingleASTNode) {
     if (Array.isArray(node)) {

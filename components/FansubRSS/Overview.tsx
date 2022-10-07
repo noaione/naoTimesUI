@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-import { FansubRSSFeeds } from "../../lib/fsrss";
+import { FansubRSSFeeds } from "@/lib/fsrss";
 import MotionInView from "../MotionInView";
 
 interface FSRSSProps {

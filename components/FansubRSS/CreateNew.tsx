@@ -5,8 +5,8 @@ import Router from "next/router";
 import SelectAsync from "react-select/async";
 import { ActionMeta } from "react-select";
 import LoadingCircle from "../LoadingCircle";
-import { parseFeed } from "../../lib/utils";
 import SampleViewer from "./SampleViewer";
+import { parseFeed } from "@/lib/utils";
 
 interface ChannelSelect {
     id: string;

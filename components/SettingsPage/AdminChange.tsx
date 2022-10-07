@@ -5,7 +5,7 @@ import { SettingsProps } from "./base";
 
 import LoadingCircle from "../LoadingCircle";
 
-import { isDifferent, Nullable } from "../../lib/utils";
+import { isDifferent, Nullable } from "@/lib/utils";
 
 interface AdminTextBoxProps {
     index: number;

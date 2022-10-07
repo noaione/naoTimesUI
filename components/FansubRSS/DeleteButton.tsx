@@ -6,7 +6,7 @@ import LoadingCircle from "../LoadingCircle";
 import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { generateWordSets } from "../../lib/words";
+import { generateWordSets } from "@/lib/words";
 
 interface ExtendedNukeProps extends SettingsProps {
     id: string;
