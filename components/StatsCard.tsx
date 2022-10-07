@@ -1,4 +1,4 @@
-import _, { capitalize } from "lodash";
+import { capitalize, get as loGet } from "lodash";
 import React from "react";
 import CountUp from "react-countup";
 
@@ -57,7 +57,7 @@ class StatsCard extends React.Component<IStatsProps> {
             done: "bg-green-500",
         };
 
-        const coloredBG = _.get(TYPE_MAP, this.props.type, "bg-gray-300 dark:bg-gray-600");
+        const coloredBG = loGet(TYPE_MAP, this.props.type, "bg-gray-300 dark:bg-gray-600");
         let realAmount = 0;
         if (typeof amount === "number") {
             realAmount = amount;

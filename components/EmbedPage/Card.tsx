@@ -33,29 +33,13 @@ function getSeason(month: number, year: number, locale: Locale): string {
     }
 }
 
-function InfoIconBottom() {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 align-middle self-center"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-        >
-            <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                clipRule="evenodd"
-            />
-        </svg>
-    );
-}
-
 const borderTop = {
     borderTopWidth: "3px",
 };
 
 interface EmbedPageCardProps extends IEmbedParams {
     animeData: Project;
+    serverInfo: { [srvId: string]: string | null };
 }
 
 interface EmbedPageCardState {
@@ -83,7 +67,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
     }
 
     render() {
-        const { animeData, accent, lang } = this.props;
+        const { animeData, accent, lang, serverInfo } = this.props;
         const { dropdownOpen } = this.state;
 
         let realAccent = "green";
@@ -116,6 +100,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
         const startTime = DateTime.fromSeconds(start_time, { zone: "UTC" });
 
         const extraHiddenThing = dropdownOpen ? "" : "hidden ";
+        const jointWith = Object.values(serverInfo).filter((r) => typeof r === "string");
 
         return (
             <>
@@ -135,6 +120,11 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                     </div>
                     <div className="text-xs h-full flex-grow px-3 pt-2 py-8 max-w-full flex flex-col">
                         <h1 className="font-medium text-base text-gray-800 dark:text-gray-100">{title}</h1>
+                        {jointWith.length > 0 && (
+                            <p className="text-sm italic text-gray-300 mt-2">
+                                Kolaborasi dengan {jointWith.join(", ")}
+                            </p>
+                        )}
                         <div>
                             <EpisodeCard
                                 key={`episode-card-${id}-${firstEpisode.episode}`}
@@ -190,15 +180,25 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                     <div>
                         <div className="absolute bottom-2 left-3 text-xs text-gray-400 dark:text-gray-300">
                             <div className="flex flex-row gap-1 text-left">
-                                <div>
-                                    {firstEpisode.delay_reason && (
-                                        <div
-                                            className="inline-block align-top mr-0.5 text-yellow-400 cursor-pointer"
-                                            title={firstEpisode.delay_reason}
+                                {firstEpisode.delay_reason && (
+                                    <span className="z-10 inline-block h-4 w-4 relative text-blue-400 group">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
                                         >
-                                            <InfoIconBottom />
-                                        </div>
-                                    )}
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        <span className="pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity shadow rounded rounded-bl-none absolute bottom-5 w-60 border bg-blue-100 text-blue-800 border-blue-400 px-2 py-2">
+                                            {firstEpisode.delay_reason}
+                                        </span>
+                                    </span>
+                                )}
+                                <span>
                                     {reactStringReplace(lastUpdated, "{0}", () => {
                                         return (
                                             <ReactTimeAgoLocale
@@ -208,7 +208,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                             />
                                         );
                                     })}
-                                </div>
+                                </span>
                             </div>
                         </div>
                         <div className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-300">

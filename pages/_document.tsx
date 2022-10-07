@@ -71,6 +71,8 @@ class NaoTimesAppDocument extends Document<ExtraProps> {
         }
         // get current route
         const isAdminRoute = this.props.pathname.startsWith("/admin");
+        const isEmbedRoute = this.props.pathname.startsWith("/embed");
+        const isNonSplashRoute = isAdminRoute || isEmbedRoute;
         return (
             <Html prefix="og: https://ogp.me/ns#">
                 <Head>
@@ -88,7 +90,7 @@ class NaoTimesAppDocument extends Document<ExtraProps> {
                         rel="stylesheet"
                     />
                 </Head>
-                <body className={isAdminRoute ? "" : `bg-gray-900 text-white`}>
+                <body className={isNonSplashRoute ? "" : `bg-gray-900 text-white`}>
                     <Main />
                     <NextScript />
                 </body>
