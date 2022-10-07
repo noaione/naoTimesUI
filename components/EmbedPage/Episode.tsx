@@ -66,7 +66,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                 if (unfinishedStatus.length > 0) {
                     content = (
                         <>
-                            <div slot="2" className="flex gap-1 mt-1">
+                            <div slot="2" className="flex flex-wrap gap-1 mt-1">
                                 {unfinishedStatus.map((role) => {
                                     const customText = customTextMapping[role];
                                     if (customText) {
