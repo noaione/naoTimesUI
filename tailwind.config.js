@@ -11,5 +11,5 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require("@tailwindcss/forms")({ strategy: "class" }), require("@tailwindcss/aspect-ratio")],
+    plugins: [require("@tailwindcss/forms")({ strategy: "class" })],
 };
