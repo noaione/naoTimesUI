@@ -8,19 +8,19 @@ datasource db {
 }
 
 type CustomProjectEpisodeProgress {
-    key         String?
-    name        String?
-    done        Boolean
+    key         String
+    name        String
+    done        Boolean @default(false)
 }
 
 type ProjectEpisodeProgress {
-    TL      Boolean
-    TLC     Boolean
-    ENC     Boolean
-    ED      Boolean
-    TM      Boolean
-    TS      Boolean
-    QC      Boolean
+    TL      Boolean @default(false)
+    TLC     Boolean @default(false)
+    ENC     Boolean @default(false)
+    ED      Boolean @default(false)
+    TM      Boolean @default(false)
+    TS      Boolean @default(false)
+    QC      Boolean @default(false)
     custom CustomProjectEpisodeProgress[]
 }
 
@@ -38,8 +38,8 @@ type ProjectAssignmentPerson {
 }
 
 type CustomProjectAssignment {
-    key         String?
-    name        String?
+    key         String
+    name        String
     person      ProjectAssignmentPerson
 }
 
