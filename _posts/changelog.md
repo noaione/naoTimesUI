@@ -79,3 +79,18 @@ Edisi tugas kuliah.
 - ⚡ Bumping berbagai macam dependencies
 - 🤖 Perubahan ORM dari Mongoose ke Prisma
 - 🔧 API dibuat lebih konsisten
+
+## Versi 1.3.1
+
+- ⚡ Bumping berbagai macam dependencies
+- 🔧 Bug Fixing
+
+## Versi 1.4.0
+
+- 🆕🎉 Discord OAuth2 Login
+- 🎨 Perbaikan design embed
+  - Tambah bagian kolaborasi
+  - Perbaikan note/alasan
+- 🔧 Bug Fixing
+- 🤔 Migrasi ke iron-session untuk session handling
+- ⚡ Bumping berbagai macam dependencies
