@@ -10,7 +10,7 @@ datasource db {
 type CustomProjectEpisodeProgress {
     key         String?
     name        String?
-    person      ProjectAssignmentPerson
+    done        Boolean
 }
 
 type ProjectEpisodeProgress {
