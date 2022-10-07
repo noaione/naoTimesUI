@@ -1,12 +1,11 @@
+import { GetServerSidePropsContext } from "next";
 import React from "react";
-
-import { NextServerSideContextWithSession } from "../../../../lib/session";
 
 export default function ProjekRedirect() {
     return <div className="hidden"></div>;
 }
 
-export async function getServerSideProps({ params }: NextServerSideContextWithSession) {
+export async function getServerSideProps({ params }: GetServerSidePropsContext) {
     const { aniid } = params;
     return {
         redirect: {
