@@ -138,19 +138,28 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
         const { episodeMod, isSubmitting, statusData } = this.state;
         const { user, animeData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const { id, title, poster_data, assignments, aliases } = animeData;
+        const {
+            id,
+            title,
+            poster_data,
+            assignments: { custom: customAssignee, ...assignments },
+            aliases,
+        } = animeData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
+
+        const customAssigneeName: { [role: string]: string } = {};
+        customAssignee.forEach((o) => {
+            customAssigneeName[o.key] = o.name;
+        });
 
         return (
             <>
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>
-                        {title} - {pageTitle} :: naoTimesUI
-                    </title>
+                    <title>{`${title} - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={title + " - " + pageTitle}
                         urlPath={"/admin/proyek/" + animeData.id}
@@ -210,6 +219,27 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                         userId={userId}
                                                         animeId={id}
                                                         animateDelay={delayAni}
+                                                    />
+                                                );
+                                            })}
+                                            {customAssignee.map((rrr, idx) => {
+                                                const name = rrr.person.name || null;
+                                                const userId = rrr.person.id as string;
+                                                let delayAni = 0.25;
+                                                if (idx >= 0) {
+                                                    delayAni = 0.25 + 0.1 * (idx + 8);
+                                                }
+
+                                                return (
+                                                    <ProjectPageComponent.Staff
+                                                        onErrorModal={outerThis.showErrorCallback}
+                                                        key={rrr.key + "-custom-staff-" + id}
+                                                        id={rrr.key as RoleProject}
+                                                        name={name}
+                                                        userId={userId}
+                                                        animeId={id}
+                                                        animateDelay={delayAni}
+                                                        assigneeName={customAssigneeName}
                                                     />
                                                 );
                                             })}

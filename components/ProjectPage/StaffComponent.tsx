@@ -4,7 +4,7 @@ import React from "react";
 import CheckAllIcon from "mdi-react/CheckAllIcon";
 import PencilIcon from "mdi-react/PencilIcon";
 
-import { RoleColorPalette } from "../ColorMap";
+import { RoleColorFallback, RoleColorPalette } from "../ColorMap";
 import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
@@ -17,6 +17,7 @@ interface StaffProps extends SettingsProps {
     animateDelay?: number;
     name?: string;
     disableEditing?: boolean;
+    assigneeName?: { [role: string]: string };
 }
 
 interface StaffState {
@@ -87,13 +88,15 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
 
     render() {
         const { id, animateDelay, disableEditing } = this.props;
+        const customAssigneeName = this.props.assigneeName || {};
         const { userId, name, isEdit, isFirst } = this.state;
-        const roleColors = RoleColorPalette[id];
+        const roleColors = RoleColorPalette[id] || RoleColorFallback;
         const realName = typeof name === "string" ? name : "Tidak Diketahui";
 
         const assigneeName = getAssigneeName({ name: realName, id: toString(userId) });
 
         if (!isEdit) {
+            const roleExpand = customAssigneeName[id] || expandRoleLocalized(id);
             const aniDelay = animateDelay || 0.25;
             return (
                 <MotionInView.div
@@ -109,7 +112,7 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
                         />
                     )}
                     <span className={"px-2 rounded font-semibold " + roleColors}>
-                        {expandRoleLocalized(id) + ": " + assigneeName}
+                        {roleExpand + ": " + assigneeName}
                     </span>
                 </MotionInView.div>
             );

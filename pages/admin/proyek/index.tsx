@@ -12,18 +12,13 @@ import SkeletonLoader from "@/components/Skeleton";
 import RolePopup from "@/components/RolePopup";
 
 import { IUserAuth, withSessionSsr } from "@/lib/session";
-import {
-    AssignmentsData,
-    expandRoleLocalized,
-    expandRoleName,
-    getAssigneeName,
-    RoleProject,
-} from "@/lib/utils";
+import { expandRoleLocalized, expandRoleName, getAssigneeName, RoleProject } from "@/lib/utils";
+import type { ProjectAssignment, ProjectAssignmentPerson } from "@prisma/client";
 
 interface AnimeProyekData {
     id: string;
     title: string;
-    assignments: { [role: string]: AssignmentsData };
+    assignments: ProjectAssignment;
     poster: string;
     is_finished: boolean;
 }
@@ -39,7 +34,13 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
 
     render() {
         const { anime } = this.props;
-        const { id, title, assignments, poster, is_finished } = anime;
+        const {
+            id,
+            title,
+            assignments: { custom: customAssignee, ...assignments },
+            poster,
+            is_finished,
+        } = anime;
 
         function generateStatusText() {
             if (is_finished) {
@@ -47,6 +48,19 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
             }
             return <div className="text-base font-semibold text-red-500">Proses</div>;
         }
+
+        const remappedAssignees: { [key: string]: ProjectAssignmentPerson } = {};
+        for (const [role, assignee] of Object.entries(assignments)) {
+            if (role === "QC") {
+                continue;
+            }
+            remappedAssignees[role] = assignee;
+        }
+        const customTextMapping: { [key: string]: string } = {};
+        customAssignee.forEach((cAss) => {
+            customTextMapping[cAss.key] = cAss.name;
+            remappedAssignees[cAss.key] = cAss.person;
+        });
 
         return (
             <>
@@ -66,10 +80,11 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
                             </Link>
                             {generateStatusText()}
                             <div className="flex flex-row flex-wrap gap-1 pt-2 text-center">
-                                {Object.keys(assignments).map((roleName) => {
-                                    const assigneeValues = assignments[roleName];
+                                {Object.keys(remappedAssignees).map((roleName) => {
+                                    const assigneeValues = remappedAssignees[roleName];
                                     const expandRole = expandRoleName(roleName);
-                                    const titleRole = expandRoleLocalized(roleName);
+                                    const titleRole =
+                                        customTextMapping[roleName] || expandRoleLocalized(roleName);
                                     const name = getAssigneeName(assigneeValues);
                                     return (
                                         <RolePopup

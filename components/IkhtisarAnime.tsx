@@ -5,6 +5,7 @@ import Router from "next/router";
 import RolePopup from "./RolePopup";
 
 import { AssignmentsData, expandRoleLocalized, expandRoleName, getAssigneeName } from "../lib/utils";
+import { ProjectEpisodeProgress } from "@prisma/client";
 
 export interface ProjectOverview {
     id: string;
@@ -15,7 +16,7 @@ export interface ProjectOverview {
         airtime: number;
         episode: number;
         is_done: boolean;
-        progress: { [key: string]: boolean };
+        progress: ProjectEpisodeProgress;
     };
     assignments: { [key: string]: AssignmentsData };
 }
@@ -32,13 +33,25 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
     render() {
         const { data } = this.props;
         const { status, assignments } = data;
-        const { progress } = status;
+        const {
+            progress: { custom: customProgress, QC, ...progress },
+        } = status;
 
         const unfinishedProgress = [];
         for (const [role, isDone] of Object.entries(progress)) {
             if (!isDone) {
                 unfinishedProgress.push(role);
             }
+        }
+        const customTextMapping: { [key: string]: string } = {};
+        customProgress.forEach((custom) => {
+            customTextMapping[custom.key] = custom.name;
+            if (!custom.done) {
+                unfinishedProgress.push(custom.key);
+            }
+        });
+        if (!QC) {
+            unfinishedProgress.push("QC");
         }
 
         return (
@@ -68,7 +81,9 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                                     unfinishedProgress.map((role) => {
                                         const name = getAssigneeName(assignments[role]);
                                         const override = expandRoleName(role);
-                                        const popuptext = `${expandRoleLocalized(role)}: ${name}`;
+                                        const expandedRole =
+                                            customTextMapping[role] || expandRoleLocalized(role);
+                                        const popuptext = `${expandedRole}: ${name}`;
                                         return (
                                             <RolePopup
                                                 key={`${role}-anime-${data.id}`}

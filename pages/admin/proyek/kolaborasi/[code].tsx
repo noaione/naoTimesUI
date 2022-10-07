@@ -52,11 +52,22 @@ class ProyekCollabConfirmationPage extends React.Component<
     render() {
         const { user, animeData, kolebData } = this.props;
         const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
-        const { id, title, poster_data, assignments, status } = animeData;
+        const {
+            id,
+            title,
+            poster_data,
+            assignments: { custom: customAssignee, ...assignments },
+            status,
+        } = animeData;
         const { id: konfirmId, serverId: sourceServerId, serverName: sourceServerName } = kolebData;
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
+
+        const customAssigneeName: { [role: string]: string } = {};
+        customAssignee.forEach((o) => {
+            customAssigneeName[o.key] = o.name;
+        });
 
         return (
             <>
@@ -136,6 +147,28 @@ class ProyekCollabConfirmationPage extends React.Component<
                                                         userId={userId}
                                                         animeId={id}
                                                         animateDelay={delayAni}
+                                                        disableEditing
+                                                    />
+                                                );
+                                            })}
+                                            {customAssignee.map((rrr, idx) => {
+                                                const name = rrr.person.name || null;
+                                                const userId = rrr.person.id as string;
+                                                let delayAni = 0.25;
+                                                if (idx >= 0) {
+                                                    delayAni = 0.25 + 0.1 * (idx + 8);
+                                                }
+
+                                                return (
+                                                    <ProjectPageComponent.Staff
+                                                        onErrorModal={outerThis.showErrorCallback}
+                                                        key={rrr.key + "-custom-staff-" + id}
+                                                        id={rrr.key as RoleProject}
+                                                        name={name}
+                                                        userId={userId}
+                                                        animeId={id}
+                                                        animateDelay={delayAni}
+                                                        assigneeName={customAssigneeName}
                                                         disableEditing
                                                     />
                                                 );

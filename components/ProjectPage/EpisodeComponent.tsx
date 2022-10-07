@@ -7,6 +7,7 @@ import RolePopup from "../RolePopup";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { expandRoleLocalized, expandRoleName, RoleProject } from "../../lib/utils";
+import type { ProjectEpisodeProgress } from "@prisma/client";
 
 function FinishedPopper() {
     return <span className="text-green-500">✔</span>;
@@ -16,32 +17,32 @@ function UnfinishedPopper() {
     return <span>❌</span>;
 }
 
-function isStatusDifferent(status: EpisodeStatuses, oldStatus: EpisodeStatuses) {
-    const redoneStatus = Object.entries(status).map(([name, stat]) => {
-        return `${name}-${stat ? "true" : "false"}`;
-    });
-    const redoneOldStatus = Object.entries(oldStatus).map(([name, stat]) => {
-        return `${name}-${stat ? "true" : "false"}`;
-    });
-    const diffs = difference(redoneStatus, redoneOldStatus);
-    return diffs.length > 0;
+function processStatus(status: ProjectEpisodeProgress) {
+    const statusList = [];
+    for (const [roleName, roleStat] of Object.entries(status)) {
+        if (Array.isArray(roleStat)) {
+            roleStat.forEach((role) => {
+                statusList.push(`${role.key}-${role.done ? "true" : "false"}`);
+            });
+        } else {
+            statusList.push(`${roleName}-${roleStat ? "true" : "false"}`);
+        }
+    }
+    return statusList;
 }
 
-interface EpisodeStatuses {
-    TL: boolean;
-    TLC: boolean;
-    ENC: boolean;
-    ED: boolean;
-    TM: boolean;
-    TS: boolean;
-    QC: boolean;
+function isStatusDifferent(status: ProjectEpisodeProgress, oldStatus: ProjectEpisodeProgress) {
+    const redoneStatus = processStatus(status);
+    const redoneOldStatus = processStatus(oldStatus);
+    const diffs = difference(redoneStatus, redoneOldStatus);
+    return diffs.length > 0;
 }
 
 interface EpisodeBoxProps extends SettingsProps {
     animeId: string;
     episode: number;
     airTime?: number;
-    status: EpisodeStatuses;
+    status: ProjectEpisodeProgress;
     isReleased: boolean;
     animateDelay?: number;
     disableEditing?: boolean;
@@ -54,8 +55,8 @@ interface EpisodeBoxHeaderProps extends Omit<EpisodeBoxProps, "status" | "onErro
 }
 
 interface EpisodeBoxState {
-    status: EpisodeStatuses;
-    oldStatus: EpisodeStatuses;
+    status: ProjectEpisodeProgress;
+    oldStatus: ProjectEpisodeProgress;
     isEdit: boolean;
     isSubmit: boolean;
     isFirst: boolean;
@@ -108,6 +109,7 @@ interface IEpisodeBoxChecker {
     check: boolean;
     role: RoleProject;
     onTicked(roleName: RoleProject, checked: boolean): void;
+    overrideName?: string;
 }
 
 function EpisodeBoxChecker(props: IEpisodeBoxChecker) {
@@ -120,6 +122,9 @@ function EpisodeBoxChecker(props: IEpisodeBoxChecker) {
         TS: "text-purple-600",
         QC: "text-pink-600",
     };
+    const FallbackPalette = "text-gray-600";
+
+    const expandedName = props.overrideName || expandRoleName(props.role);
 
     return (
         <>
@@ -128,11 +133,9 @@ function EpisodeBoxChecker(props: IEpisodeBoxChecker) {
                     type="checkbox"
                     checked={props.check}
                     onChange={(ev) => props.onTicked(props.role, ev.target.checked)}
-                    className={"form-checkbox h-4 w-4 " + CheckboxPalette[props.role]}
+                    className={"form-checkbox h-4 w-4 " + CheckboxPalette[props.role] || FallbackPalette}
                 />
-                <span className="ml-2 text-gray-700 dark:text-gray-200 font-bold">
-                    {expandRoleName(props.role)}
-                </span>
+                <span className="ml-2 text-gray-700 dark:text-gray-200 font-bold">{expandedName}</span>
             </label>
         </>
     );
@@ -185,11 +188,21 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
         }
         this.setState({ isSubmit: true });
 
-        const buildStatus = Object.keys(this.state.status).map((role) => {
+        const {
+            status: { custom: customStatus, ...status },
+        } = this.state;
+
+        const buildStatus = Object.keys(status).map((role) => {
             return {
-                tick: this.state.status[role] as boolean,
+                tick: status[role] as boolean,
                 role,
             };
+        });
+        customStatus.forEach((custom) => {
+            buildStatus.push({
+                tick: custom.done,
+                role: custom.key,
+            });
         });
 
         const bodyBag = {
@@ -224,15 +237,34 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
         }
     }
 
-    toggleStatusCheck(statusKey: keyof EpisodeStatuses, checked: boolean) {
+    toggleStatusCheck(statusKey: keyof Omit<ProjectEpisodeProgress, "custom">, checked: boolean) {
         const { status } = this.state;
-        status[statusKey] = checked;
+        console.info(status, statusKey, checked);
+        // yeet custom type
+        const isCustom = !["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(statusKey);
+        if (isCustom) {
+            const customInfo = status.custom.findIndex((c) => c.key === statusKey);
+            if (customInfo !== -1) {
+                status.custom[customInfo].done = checked;
+            }
+        } else {
+            status[statusKey] = checked;
+        }
         this.setState({ status });
     }
 
     render() {
         const { episode, airTime, isReleased, animateDelay } = this.props;
-        const { status, isEdit, isFirst } = this.state;
+        const {
+            status: { custom: customProgress, QC: QCStatus, ...status },
+            isEdit,
+            isFirst,
+        } = this.state;
+
+        const customTextMapping: { [key: string]: string } = {};
+        customProgress.forEach((custom) => {
+            customTextMapping[custom.key] = custom.name;
+        });
 
         if (!isEdit) {
             const unfinishedRoles = [];
@@ -244,7 +276,22 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                     unfinishedRoles.push(roleName);
                 }
             }
+
+            customProgress.forEach((custom) => {
+                if (custom.done) {
+                    finishedRoles.push(custom.key);
+                } else {
+                    unfinishedRoles.push(custom.key);
+                }
+            });
+
+            if (QCStatus) {
+                finishedRoles.push("QC");
+            } else {
+                unfinishedRoles.push("QC");
+            }
             const aniDelay = animateDelay || 0.25;
+            // @ts-ignore
 
             return (
                 <SimpleEpisodeViewContainer animate={isFirst} animateDelay={aniDelay}>
@@ -264,7 +311,8 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                                     <span className="font-semibold mt-2 dark:text-gray-100">⏰ Proses</span>
                                     <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
                                         {unfinishedRoles.map((roleName) => {
-                                            const expanded = expandRoleLocalized(roleName);
+                                            const expanded =
+                                                customTextMapping[roleName] || expandRoleLocalized(roleName);
                                             return (
                                                 <RolePopup
                                                     key={roleName + "-unfinished"}
@@ -281,8 +329,10 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                                     <span className="font-semibold mt-2 dark:text-gray-100">✔ Beres</span>
                                     <div className="flex-row pt-2 text-center flex flex-wrap gap-1">
                                         {finishedRoles.map((roleName) => {
-                                            const expandedPop = expandRoleLocalized(roleName);
+                                            const expandedPop =
+                                                customTextMapping[roleName] || expandRoleLocalized(roleName);
                                             const expanded = expandRoleName(roleName);
+
                                             return (
                                                 <RolePopup
                                                     key={roleName + "-finished"}
@@ -303,6 +353,8 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
+        // @ts-ignore
+        status.QC = QCStatus;
 
         return (
             <>
@@ -326,6 +378,18 @@ class EpisodeComponent extends React.Component<EpisodeBoxProps, EpisodeBoxState>
                                     role={roleName as RoleProject}
                                     onTicked={outerThis.toggleStatusCheck}
                                     check={outerThis.state.status[roleName]}
+                                />
+                            );
+                        })}
+                        {customProgress.map((role) => {
+                            return (
+                                <EpisodeBoxChecker
+                                    id={`role-tickbox-custom-${role.key}`}
+                                    key={`role-tickbox-custom-${role.key}`}
+                                    role={role.key as RoleProject}
+                                    onTicked={outerThis.toggleStatusCheck}
+                                    check={role.done}
+                                    overrideName={role.name}
                                 />
                             );
                         })}
