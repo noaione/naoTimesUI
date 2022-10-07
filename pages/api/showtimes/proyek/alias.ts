@@ -1,7 +1,6 @@
-import _ from "lodash";
-import { NextApiResponse } from "next";
+import { findIndex } from "lodash";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import { isNone, verifyExist } from "@/lib/utils";
 import { Project } from "@prisma/client";
@@ -21,7 +20,7 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
         return [aliases, "Tidak dapat menghubungi database, mohon coba lagi nanti", false];
     }
 
-    const animeIdx = _.findIndex(animeData, (o) => o.id === animeId);
+    const animeIdx = findIndex(animeData, (o) => o.id === animeId);
     if (animeIdx === -1) {
         return [aliases, "Tidak dapat menemukan Anime tersebut", false];
     }
@@ -56,7 +55,7 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
     return [verifiedList, "sukses", true];
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     const jsonBody = await req.body;
     if (!verifyExist(jsonBody, "animeId", "string")) {

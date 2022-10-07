@@ -1,7 +1,6 @@
 import { has } from "lodash";
-import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 import { emitSocket } from "@/lib/socket";
 import prisma from "@/lib/prisma";
@@ -132,7 +131,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     return { message: "Sukses", code: 200, success: true };
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     const jsonBody = await req.body;
     if (!has(jsonBody, "animeId")) {

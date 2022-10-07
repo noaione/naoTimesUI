@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
 import { Confirmations } from "@/types/collab";
@@ -52,7 +50,7 @@ async function fetchAllCollabData(serverData: ShowtimesCollabData): Promise<Conf
     return allCollabs;
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unauthorized", code: 403 });

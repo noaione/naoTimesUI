@@ -12,7 +12,7 @@ import MetadataHead from "../components/MetadataHead";
 import LoginLayout from "../components/LoginLayout";
 import LoadingCircle from "../components/LoadingCircle";
 
-import withSession, { IUserAuth, IUserDiscordMeta, NextServerSideContextWithSession } from "../lib/session";
+import { withSessionSsr } from "../lib/session";
 import DiscordIcon from "@/components/Icons/Discord";
 import { isNone, Nullable } from "@/lib/utils";
 
@@ -256,9 +256,10 @@ class LoginPage extends React.Component<LoginRegistredProps, LoginState> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    const user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async ({ req }) => {
+    const user = req.session.user;
     // Catch the Next.js Router push event with query mask
+    // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
     const NEXTJS_RouterQuery = req.__NEXT_INIT_QUERY || {};
     let discordClientId = process.env.DISCORD_CLIENT_ID;
@@ -269,7 +270,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
     }
 
     const { registered, cb } = NEXTJS_RouterQuery;
-    const discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+    const discordMeta = req.session.userDiscordMeta;
     const hasDiscordMeta = !isNone(discordMeta);
 
     if (user && !registered && !hasDiscordMeta) {

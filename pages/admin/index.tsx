@@ -7,7 +7,7 @@ import IkhtisarAnime, { ProjectOverview } from "@/components/IkhtisarAnime";
 import SkeletonLoader from "@/components/Skeleton";
 import StatsCard, { IStatsType } from "@/components/StatsCard";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 
 interface StatsData {
     key: IStatsType;
@@ -124,8 +124,8 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async function ({ req }) {
+    let user = req.session.user;
 
     if (!user) {
         return {
@@ -138,7 +138,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

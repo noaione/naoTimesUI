@@ -1,13 +1,11 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 
 import { KonfirmasiData } from "@/types/collab";
 import { emitSocketAndWait } from "@/lib/socket";
 
 type KonfirmasiTanpaAnime = Omit<KonfirmasiData, "animeInfo">;
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     if (req.method?.toLowerCase() !== "post") {
         return res.status(405).json({ message: "Method not allowed", code: 405 });
     }

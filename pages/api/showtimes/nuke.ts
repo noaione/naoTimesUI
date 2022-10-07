@@ -1,7 +1,6 @@
-import _ from "lodash";
-import { NextApiResponse } from "next";
+import { findIndex } from "lodash";
 
-import withSession, { getServerUser, NextApiRequestWithSession, removeServerUser } from "@/lib/session";
+import withSession, { getServerUser, removeServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
@@ -69,7 +68,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
             where: { id: unlink.id },
             select: { anime: true, mongo_id: true },
         });
-        const animeId = _.findIndex(osrvData.anime, (o: Project) => o.id === unlink.animeId);
+        const animeId = findIndex(osrvData.anime, (o: Project) => o.id === unlink.animeId);
         if (animeId === -1) return;
         let kolebData = osrvData.anime[animeId].kolaborasi;
         if (kolebData.length < 1) return;
@@ -107,7 +106,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
     }
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });

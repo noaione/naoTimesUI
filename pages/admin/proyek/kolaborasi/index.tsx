@@ -10,7 +10,7 @@ import AdminLayout from "@/components/AdminLayout";
 import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 import { CollabData, Collaborations, Confirmations, KonfirmasiData } from "@/types/collab";
 
 interface CollabCardProps {
@@ -283,8 +283,8 @@ class KolaborasiHomepage extends React.Component<KolaborasiHomepageProps> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async function ({ req }) {
+    let user = req.session.user;
 
     if (!user) {
         return {
@@ -297,7 +297,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

@@ -1,10 +1,8 @@
-import { NextApiResponse } from "next";
+import withSession, { getServerUser } from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
+import { isNone } from "@/lib/utils";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
-import { isNone } from "../../../lib/utils";
-
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unathorized", success: false });

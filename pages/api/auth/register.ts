@@ -1,7 +1,6 @@
 import { toString } from "lodash";
-import { NextApiResponse } from "next";
 
-import withSession, { NextApiRequestWithSession } from "@/lib/session";
+import withSession from "@/lib/session";
 import { isNone } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
@@ -61,7 +60,7 @@ async function registerNewServer(server: any, admin: any) {
     emitSocket("pull data", serverId);
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const { server, admin } = await req.body;
     if (!checkStringValid(server)) {
         res.status(401).json({ error: "Mohon masukan server ID", success: false, code: 400 });

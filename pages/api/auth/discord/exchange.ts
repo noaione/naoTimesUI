@@ -2,10 +2,8 @@
  * Handle Discord OAuth2 callback
  */
 
-import { NextApiResponse } from "next";
-
 import { DateTime } from "luxon";
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { IUserAuth } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 import { discordGetUser, DiscordToken, exchangeDiscordToken } from "@/lib/discord-oauth";
@@ -18,7 +16,7 @@ function pickFirstOne<T>(data: T | T[]): T {
 }
 
 // TODO: implement click jacking prevention
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const { code, base_url } = req.query;
     if (!code) {
         res.status(400).json({ error: "Tidak ada kode yang diberikan!" });
@@ -105,14 +103,14 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
         name: userInfo.username,
         authType: "discord",
     };
-    req.session.set("user", userAuth);
-    req.session.set("userDiscordMeta", {
+    req.session.user = userAuth;
+    req.session.userDiscordMeta = {
         id: userInfo.id,
         name: userInfo.username,
         access_token: discordToken.access_token,
         refresh_token: discordToken.refresh_token,
         expires_at: expiresAt,
-    });
+    };
     await req.session.save();
     res.json({ error: "Sukses" });
 });

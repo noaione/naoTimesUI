@@ -1,14 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-
 import axios from "axios";
 
-import withSession from "../../../lib/session";
-import { isNone, Nullable } from "../../../lib/utils";
-import _ from "lodash";
-
-interface SessionClass {
-    get<T>(key: string): Nullable<T>;
-}
+import withSession from "@/lib/session";
+import { isNone } from "@/lib/utils";
+import { get as loGet } from "lodash";
 
 const SearchAnimeQuery = `
 query ($search:String) {
@@ -51,11 +45,11 @@ async function searchAnime(query: string): Promise<any[]> {
         }
     );
     const res = req.data;
-    return _.get(res, "data.Page.media", []);
+    return loGet(res, "data.Page.media", []);
 }
 
-export default withSession(async (req: NextApiRequest & { session: SessionClass }, res: NextApiResponse) => {
-    const queryParams = _.get(req.query, "q", _.get(req.query, "term"));
+export default withSession(async (req, res) => {
+    const queryParams = loGet(req.query, "q", loGet(req.query, "term"));
     if (isNone(queryParams)) {
         return res.status(400).json({ results: [] });
     }

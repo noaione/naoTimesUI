@@ -1,8 +1,7 @@
 import axios from "axios";
 import { get, has } from "lodash";
-import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
 import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "@/lib/utils";
 import prisma from "@/lib/prisma";
@@ -212,7 +211,7 @@ async function addNewProject(dataToAdd: any) {
     return { success: true, message: "success", code: 200 };
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ success: false, message: "Unauthorized", code: 403 });

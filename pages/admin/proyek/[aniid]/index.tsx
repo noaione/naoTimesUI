@@ -12,7 +12,7 @@ import MetadataHead from "@/components/MetadataHead";
 import ProjectPageComponent from "@/components/ProjectPage";
 import { CallbackModal } from "@/components/Modal";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
 import prisma from "@/lib/prisma";
@@ -328,12 +328,9 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({
-    req,
-    params,
-}: NextServerSideContextWithSession) {
+export const getServerSideProps = withSessionSsr(async function ({ req, params }) {
     const { aniid } = params;
-    let user = req.session.get<IUserAuth>("user");
+    let user = req.session.user;
 
     if (!user) {
         return {
@@ -346,7 +343,7 @@ export const getServerSideProps = withSession(async function ({
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

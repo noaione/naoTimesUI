@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
@@ -40,7 +38,7 @@ function filterToNewestStatusOnly(fetchedData: ProjectGet) {
     return animeSets;
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });

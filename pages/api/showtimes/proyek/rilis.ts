@@ -1,8 +1,7 @@
 import prisma from "@/lib/prisma";
-import _ from "lodash";
-import { NextApiResponse } from "next";
+import { findIndex } from "lodash";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import { isNone, mapBoolean, verifyExist } from "@/lib/utils";
 
@@ -14,7 +13,7 @@ function verifyContents(data: any) {
     );
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const jsonBody = await req.body;
     const userData = getServerUser(req);
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {
@@ -52,7 +51,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                 });
             } else {
                 const { anime_id, episode, is_done } = jsonBody;
-                const indexAnime = _.findIndex(serverData.anime, (pred) => pred.id === anime_id);
+                const indexAnime = findIndex(serverData.anime, (pred) => pred.id === anime_id);
                 if (indexAnime === -1) {
                     res.status(400).json({
                         success: false,
@@ -61,7 +60,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                     });
                 } else {
                     const project = serverData.anime[indexAnime];
-                    const episodeIndex = _.findIndex(
+                    const episodeIndex = findIndex(
                         project.status,
                         (pred) => pred.episode === parseInt(episode)
                     );

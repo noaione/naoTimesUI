@@ -2,10 +2,9 @@
  * Discord, get access to the servers.
  */
 
-import { NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 
-import withSession, { IUserAuth, IUserDiscordMeta, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { IUserAuth } from "@/lib/session";
 import { shouldRefreshDiscordTokenOrNot } from "@/lib/discord-oauth";
 import { emitSocketAndWait } from "@/lib/socket";
 import { isNone } from "@/lib/utils";
@@ -25,9 +24,9 @@ interface RequestedValidServer {
     u: RequestedServer[];
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const reqBody = (await req.body) as RequestBody;
-    let discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+    let discordMeta = req.session.userDiscordMeta;
     if (!discordMeta) {
         res.status(401).json({ code: 401, error: "Account not logged in as discord!", success: false });
         return;
@@ -39,7 +38,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
     }
 
     discordMeta = await shouldRefreshDiscordTokenOrNot(discordMeta);
-    req.session.set("userDiscordMeta", discordMeta);
+    req.session.userDiscordMeta = discordMeta;
     await req.session.save();
 
     try {
@@ -77,7 +76,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             name: server.name,
             authType: "discord",
         };
-        req.session.set("userServer", user);
+        req.session.userServer = user;
         await req.session.save();
         res.json({ code: 200, success: true, error: "Sukses" });
     } catch (e) {

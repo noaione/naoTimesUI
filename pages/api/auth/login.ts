@@ -1,10 +1,8 @@
-import { NextApiResponse } from "next";
-
-import withSession, { IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { IUserAuth } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const { server, password } = await req.body;
 
     try {
@@ -22,7 +20,7 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
                     name,
                     authType: "local",
                 };
-                req.session.set("user", user);
+                req.session.user = user;
                 await req.session.save();
                 res.json({ loggedIn: true, id, privilege, name, code: 2000, error: "Sukses" });
             } else {

@@ -1,5 +1,4 @@
 import axios from "axios";
-import _ from "lodash";
 import Head from "next/head";
 import Router from "next/router";
 import React from "react";
@@ -7,6 +6,7 @@ import React from "react";
 import AsyncSelect from "react-select/async";
 import { ActionMeta } from "react-select";
 import PlusIcon from "mdi-react/PlusIcon";
+import { toString } from "lodash";
 
 import AdminLayout from "@/components/AdminLayout";
 import MetadataHead from "@/components/MetadataHead";
@@ -14,7 +14,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CallbackModal } from "@/components/Modal";
 import ErrorModal from "@/components/ErrorModal";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 
 interface ProjectNewState {
     errTxt: string;
@@ -184,7 +184,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
             const title = data.title || {};
             const selTitle = title.romaji || title.english || title.native;
             this.setState({
-                aniId: _.toString(id),
+                aniId: toString(id),
                 episode: totalEpisode,
                 poster: posterUrl,
                 shouldShowEpisode: totalEpisode < 1,
@@ -483,8 +483,8 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async function ({ req }) {
+    let user = req.session.user;
 
     if (!user) {
         return {
@@ -497,7 +497,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

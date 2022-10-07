@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
@@ -12,7 +10,7 @@ function selectFirst(target: string | string[]): string {
     return target;
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     const { aniid } = req.query;
     const singleAnimeId = selectFirst(aniid);

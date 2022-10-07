@@ -1,7 +1,6 @@
 import { DateTime } from "luxon";
-import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { emitSocket } from "@/lib/socket";
 import { isNone, Nullable, verifyExist } from "@/lib/utils";
 import prisma from "@/lib/prisma";
@@ -194,7 +193,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
     return ["Event perubahan tidak diketahui.", 4600];
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const jsonBody = await req.body;
     const userData = getServerUser(req);
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {

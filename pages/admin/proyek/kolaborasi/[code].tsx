@@ -10,7 +10,7 @@ import ProjectPageComponent from "@/components/ProjectPage";
 import ProjectCollabComponent from "@/components/ProjectCollabPage";
 import { CallbackModal } from "@/components/Modal";
 
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 import { isNone, Nullable, RoleProject } from "@/lib/utils";
 
 import { KonfirmasiData } from "@/types/collab";
@@ -191,11 +191,8 @@ class ProyekCollabConfirmationPage extends React.Component<
     }
 }
 
-export const getServerSideProps = withSession(async function ({
-    req,
-    params,
-}: NextServerSideContextWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async function ({ req, params }) {
+    let user = req.session.user;
     const { code } = params;
 
     if (!user) {
@@ -209,7 +206,7 @@ export const getServerSideProps = withSession(async function ({
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

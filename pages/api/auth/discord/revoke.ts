@@ -2,13 +2,11 @@
  * Revoke the userServer session thingy
  */
 
-import { NextApiResponse } from "next";
+import withSession, { safeUnset } from "@/lib/session";
 
-import withSession, { NextApiRequestWithSession } from "@/lib/session";
-
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     try {
-        req.session.unset("userServer");
+        safeUnset(req, "userServer");
     } catch (e) {}
     await req.session.save();
     res.json({ status: "ok" });

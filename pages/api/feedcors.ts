@@ -1,14 +1,13 @@
 import axios from "axios";
-import { NextApiResponse } from "next";
 
-import withSession, { NextApiRequestWithSession } from "../../lib/session";
-import { emitSocketAndWait } from "../../lib/socket";
+import withSession from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
 
 import packageJSON from "../../package.json";
 
 const APP_VERSION = packageJSON.version;
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const urlParams = new URL(req.query.url as string);
 
     try {

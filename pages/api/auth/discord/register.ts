@@ -1,7 +1,6 @@
 import { toString } from "lodash";
-import { NextApiResponse } from "next";
 
-import withSession, { IUserDiscordMeta, NextApiRequestWithSession } from "@/lib/session";
+import withSession from "@/lib/session";
 import { isNone } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
@@ -83,8 +82,8 @@ async function registerNewServerWithUIAccount(server: any, admin: any) {
     await generateNewAccountInformation(serverId, serverName);
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
-    const discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+export default withSession(async (req, res) => {
+    const discordMeta = req.session.userDiscordMeta;
     if (!discordMeta) {
         res.status(401).json({ code: 401, error: "Account not logged in as discord!", success: false });
         return;

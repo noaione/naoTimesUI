@@ -1,40 +1,7 @@
-import { GetServerSidePropsContext, NextApiRequest } from "next";
-import { Handler, withIronSession } from "next-iron-session";
+import { GetServerSidePropsContext, GetServerSidePropsResult, NextApiHandler, NextApiRequest } from "next";
+import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 
-import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import type { IncomingMessage } from "http";
 import { isNone } from "./utils";
-
-interface SessionClass {
-    /**
-     * Set a data to session key of API Request or getServerSideProps
-     * @param name The name of the session to save to request data
-     * @param value The value of it
-     */
-    set<T>(name: string, value: T): void;
-    /**
-     * Get a data that are saved into session
-     * @param name The name of the key
-     */
-    get<T>(name: string): T;
-    /**
-     * Unset a key
-     * @param name the key to be unset
-     */
-    unset(name: string): void;
-    /**
-     * Save the session and set it into cookies
-     *
-     * This is an asynchronous function
-     */
-    save(): Promise<void>;
-    /**
-     * Destroy the cookie, or invalidate it.
-     *
-     * This is an asynchronous function
-     */
-    destroy(): Promise<void>;
-}
 
 export type IUserAuthMethod = "local" | "discord";
 
@@ -53,42 +20,50 @@ export interface IUserDiscordMeta {
     expires_at: number;
 }
 
-interface CustomSession {
-    session: SessionClass;
-    activeUser?: IUserAuth & { isToken: boolean };
-}
-
-export type NextApiRequestWithSession = NextApiRequest & CustomSession;
-
-interface ExtraRouterContext {
-    cookies: NextApiRequestCookies;
-    session: SessionClass;
-    __NEXT_INIT_QUERY?: { [key: string]: string };
-}
-
-export interface NextServerSideContextWithSession extends Omit<GetServerSidePropsContext, "req"> {
-    req: IncomingMessage & ExtraRouterContext;
-}
-
-export default function withSession<Req, Res = any>(session: Handler<Req, Res>) {
-    return withIronSession(session, {
+export default function withSession(session: NextApiHandler<any>) {
+    return withIronSessionApiRoute(session, {
         password: process.env.TOKEN_SECRET,
         cookieName: "ntwebui/iron/token",
         cookieOptions: {
-            secure: process.env.NODE_ENV === "production" ? true : false,
-            // Valid for 48 hours
-            maxAge: 2 * 24 * 60 * 60,
+            // Valid for 72 hours
+            maxAge: 3 * 24 * 60 * 60,
         },
     });
 }
 
-export function getServerUser(req: NextApiRequestWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export function withSessionSsr<
+    P extends {
+        [key: string]: unknown;
+    } = {
+        [key: string]: unknown;
+    }
+>(
+    session: (
+        context: GetServerSidePropsContext
+    ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
+) {
+    return withIronSessionSsr(session, {
+        password: process.env.TOKEN_SECRET,
+        cookieName: "ntwebui/iron/token",
+        cookieOptions: {
+            maxAge: 3 * 24 * 60 * 60,
+        },
+    });
+}
+
+export function safeUnset(req: NextApiRequest, key: string) {
+    try {
+        delete req.session[key];
+    } catch (e) {}
+}
+
+export function getServerUser(req: NextApiRequest) {
+    let user = req.session.user;
     if (isNone(user)) {
         return null;
     }
     if (user.authType === "discord") {
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (isNone(user)) {
             return null;
         }
@@ -96,15 +71,15 @@ export function getServerUser(req: NextApiRequestWithSession) {
     return user;
 }
 
-export async function removeServerUser(req: NextApiRequestWithSession) {
-    const user = req.session.get<IUserAuth>("user");
+export async function removeServerUser(req: NextApiRequest) {
+    const user = req.session.user;
     if (isNone(user)) {
         return;
     }
     if (user.authType === "discord") {
-        req.session.unset("userServer");
+        safeUnset(req, "userServer");
     } else {
-        req.session.unset("user");
+        safeUnset(req, "user");
     }
     await req.session.save();
 }
