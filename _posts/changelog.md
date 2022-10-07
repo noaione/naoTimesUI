@@ -94,3 +94,8 @@ Edisi tugas kuliah.
 - 🔧 Bug Fixing
 - 🤔 Migrasi ke iron-session untuk session handling
 - ⚡ Bumping berbagai macam dependencies
+
+## Versi 1.4.1
+
+- 🎨 Support custom role (selain TL dsb)
+- 🔧 Perbaikan design embed
