@@ -1,15 +1,4 @@
-// const { withSentryConfig } = require("@sentry/nextjs");
-// const withPlugins = require("next-compose-plugins");
-// const withBundleAnalyzer = require("@next/bundle-analyzer")({
-//     enabled: process.env.ANALYZE === "true",
-// });
-
 const { withSentryConfig } = require("@sentry/nextjs");
-const bundleAnalyzer = require("@next/bundle-analyzer");
-
-const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
-
-console.info("Is Bundle analyer enabled?", process.env.ANALYZE === "true");
 
 const GITHUB_CI = process.env.GITHUB_WORKFLOW;
 const SKIP_SENTRY = process.env.SKIP_SENTRY;
@@ -63,7 +52,7 @@ function withWrappedSentry(config) {
 }
 
 module.exports = () => {
-    const plugins = [withBundleAnalyzer];
+    const plugins = [];
     if (!skipSentry) {
         plugins.push(withWrappedSentry);
     }

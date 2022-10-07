@@ -1,5 +1,4 @@
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
-import { NextApiResponse } from "next";
+import withSession, { getServerUser } from "@/lib/session";
 
 import { emitSocketAndWait } from "@/lib/socket";
 import prisma from "@/lib/prisma";
@@ -27,7 +26,7 @@ async function removeConfirmationCode(
     return true;
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     if (req.method?.toLowerCase() !== "post") {
         return res.status(405).json({ message: "Method not allowed", code: 405 });
     }

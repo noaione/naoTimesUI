@@ -1,12 +1,12 @@
 import React from "react";
 import axios, { AxiosError } from "axios";
 import Router from "next/router";
-import withSession, { IUserDiscordMeta } from "@/lib/session";
+import { withSessionSsr } from "@/lib/session";
 
 import { motion } from "framer-motion";
 import LogOutIcon from "mdi-react/LogoutIcon";
 
-import type { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import type { IUserAuth } from "@/lib/session";
 import Head from "next/head";
 import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
@@ -409,8 +409,8 @@ export default class DiscordSelectionWebpage extends React.Component<ServerSideP
     }
 }
 
-export const getServerSideProps = withSession(async ({ req }: NextServerSideContextWithSession) => {
-    const user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async ({ req }) => {
+    const user = req.session.user;
 
     if (!user) {
         return {
@@ -421,7 +421,7 @@ export const getServerSideProps = withSession(async ({ req }: NextServerSideCont
         };
     }
 
-    const discordMeta = req.session.get<IUserDiscordMeta>("userDiscordMeta");
+    const discordMeta = req.session.userDiscordMeta;
     if (!discordMeta) {
         return {
             redirect: {

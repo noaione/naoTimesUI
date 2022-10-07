@@ -1,10 +1,9 @@
 import { has } from "lodash";
-import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "../../../lib/session";
-import { emitSocketAndWait } from "../../../lib/socket";
+import withSession, { getServerUser } from "@/lib/session";
+import { emitSocketAndWait } from "@/lib/socket";
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         return res.status(403).json({ message: "Unathorized", success: false });

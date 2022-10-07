@@ -1,8 +1,17 @@
 import { PrismaClient } from "@prisma/client";
+import type { IUserAuth, IUserDiscordMeta } from "./lib/session";
 
 interface MongooseCached {
     promise?: Promise<Mongoose> | null;
     conn?: Mongoose | null;
+}
+
+declare module "iron-session" {
+    interface IronSessionData {
+        user?: IUserAuth;
+        userServer?: IUserAuth;
+        userDiscordMeta?: IUserDiscordMeta;
+    }
 }
 
 declare global {

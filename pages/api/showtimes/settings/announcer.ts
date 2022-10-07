@@ -1,7 +1,5 @@
-import { NextApiResponse } from "next";
-
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 
@@ -63,7 +61,7 @@ async function removeChannelAnnouncer(serverId: string): Promise<[boolean, strin
     return [true, "Terhapus", 200];
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const reqData = await req.body;
     const user = getServerUser(req);
     if (!user) {

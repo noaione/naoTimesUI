@@ -1,6 +1,7 @@
-import _ from "lodash";
 import React from "react";
 import Head from "next/head";
+import { cloneDeep, has as loHas, sortBy } from "lodash";
+import { GetServerSidePropsContext } from "next";
 
 import { ValidAccent } from "@/components/ColorMap";
 import MetadataHead from "@/components/MetadataHead";
@@ -10,12 +11,12 @@ import EmbedPageCard from "@/components/EmbedPage/Card";
 import { LocaleMap } from "../i18n";
 import prisma from "@/lib/prisma";
 import { isNone, mapBoolean, Nullable } from "@/lib/utils";
-import { NextServerSideContextWithSession } from "@/lib/session";
 import { Project } from "@prisma/client";
 
 interface EmbedUtangProps extends IEmbedParams {
     name?: string;
     projectList: Project[];
+    serverInfo: { [srvId: string]: string | null };
 }
 
 interface EmbedUtangState {
@@ -37,7 +38,7 @@ function selectTime(statusSets: any[]) {
 function filterAnimeData(animeData: Project[]): Project[] {
     const newAnimeSets = [];
     animeData.forEach((res) => {
-        const deepCopy = _.cloneDeep(res);
+        const deepCopy = cloneDeep(res);
         if (isNone(deepCopy.start_time)) {
             deepCopy.start_time = selectTime(res.status);
         }
@@ -116,7 +117,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     render() {
-        const { id, name, projectList } = this.props;
+        const { id, name, projectList, serverInfo } = this.props;
         const { dark, lang, accent } = this.state;
         const realName = name || id;
 
@@ -146,7 +147,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
             );
         }
 
-        const projectData = _.sortBy(animeData, (o) => o.start_time).reverse();
+        const projectData = sortBy(animeData, (o) => o.start_time).reverse();
 
         return (
             <>
@@ -164,6 +165,11 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                 <div id="root">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
                         {projectData.map((res) => {
+                            const selectInfo = {};
+                            res.kolaborasi.forEach((elem) => {
+                                const srvName = serverInfo[elem];
+                                selectInfo[elem] = srvName || null;
+                            });
                             return (
                                 <EmbedPageCard
                                     key={"utang-ani-" + res.id}
@@ -171,6 +177,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                                     lang={lang}
                                     dark={dark}
                                     accent={accent}
+                                    serverInfo={selectInfo}
                                 />
                             );
                         })}
@@ -181,7 +188,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 }
 
-export async function getServerSideProps(context: NextServerSideContextWithSession) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
     const defaultParams: IEmbedParams = {
         lang: "id",
         accent: "green",
@@ -189,7 +196,7 @@ export async function getServerSideProps(context: NextServerSideContextWithSessi
     };
     const { query } = context;
     const newParamsSets: IEmbedParams = Object.assign({}, defaultParams, query);
-    if (!_.has(newParamsSets, "id")) {
+    if (!loHas(newParamsSets, "id")) {
         return {
             notFound: true,
         };
@@ -200,12 +207,56 @@ export async function getServerSideProps(context: NextServerSideContextWithSessi
         };
     }
 
-    const serverRes = await prisma.showtimesdatas.findFirst({ where: { id: newParamsSets.id } });
+    const serverRes = await prisma.showtimesdatas.findFirst({
+        where: { id: newParamsSets.id },
+        select: {
+            name: true,
+            anime: {
+                select: {
+                    id: true,
+                    title: true,
+                    poster_data: {
+                        select: {
+                            url: true,
+                        },
+                    },
+                    start_time: true,
+                    last_update: true,
+                    status: true,
+                    kolaborasi: true,
+                },
+            },
+        },
+    });
+
+    const serverCollabName = {};
+    const fetchServerName = [];
+    if (serverRes.anime.length > 0) {
+        serverRes.anime.forEach((res) => {
+            if (res.kolaborasi.length > 0) {
+                res.kolaborasi.forEach((collab) => {
+                    if (collab !== newParamsSets.id && !fetchServerName.includes(collab)) {
+                        fetchServerName.push(collab);
+                    }
+                });
+            }
+        });
+    }
+
+    console.info("Fetching collaboration server name:", fetchServerName);
+    const serverCollabInfo = await prisma.showtimesdatas.findMany({
+        where: { id: { in: fetchServerName } },
+        select: { id: true, name: true },
+    });
+    serverCollabInfo.forEach((res) => {
+        serverCollabName[res.id] = res.name;
+    });
 
     return {
         props: {
             projectList: serverRes.anime,
             name: serverRes.name || null,
+            serverInfo: serverCollabName,
             ...newParamsSets,
         },
     };

@@ -9,7 +9,7 @@ import SettingsComponent from "@/components/SettingsPage";
 
 import prisma from "@/lib/prisma";
 import type { showtimesdatas } from "@prisma/client";
-import withSession, { IUserAuth, NextServerSideContextWithSession } from "@/lib/session";
+import { IUserAuth, withSessionSsr } from "@/lib/session";
 
 import ErrorModal from "@/components/ErrorModal";
 import { CallbackModal } from "@/components/Modal";
@@ -87,8 +87,8 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
     }
 }
 
-export const getServerSideProps = withSession(async function ({ req }: NextServerSideContextWithSession) {
-    let user = req.session.get<IUserAuth>("user");
+export const getServerSideProps = withSessionSsr(async ({ req }) => {
+    let user = req.session.user;
 
     if (!user) {
         return {
@@ -101,7 +101,7 @@ export const getServerSideProps = withSession(async function ({ req }: NextServe
 
     if (user.authType === "discord") {
         // override with server info
-        user = req.session.get<IUserAuth>("userServer");
+        user = req.session.userServer;
         if (!user) {
             return {
                 redirect: {

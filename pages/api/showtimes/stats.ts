@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { Project, showtimesdatas } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
@@ -42,7 +40,7 @@ function countAnimeStats(servers_data: ServerPick[]) {
     return [animeCount, rawProjectCount];
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const user = getServerUser(req);
     if (!user) {
         res.status(403).json({ message: "Unauthorized", code: 403 });

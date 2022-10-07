@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import withSession, { getServerUser, IUserAuth, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser, IUserAuth, safeUnset } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
 
@@ -20,7 +18,7 @@ async function findAndUpdate(userId: string, targetName: string) {
     });
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const reqData = await req.body;
     const user = getServerUser(req);
     if (!user) {
@@ -38,11 +36,11 @@ export default withSession(async (req: NextApiRequestWithSession, res: NextApiRe
             authType: user.authType,
         };
         if (user.authType === "discord") {
-            req.session.unset("userServer");
-            req.session.set("userServer", newSession);
+            safeUnset(req, "userServer");
+            req.session.userServer = newSession;
         } else {
-            req.session.unset("user");
-            req.session.set("user", newSession);
+            safeUnset(req, "user");
+            req.session.user = newSession;
         }
         await req.session.save();
         res.json({ message: "success", code: 200, success: true });

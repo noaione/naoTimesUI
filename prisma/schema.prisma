@@ -7,6 +7,12 @@ datasource db {
     url      = env("MONGODB_URI")
 }
 
+type CustomProjectEpisodeProgress {
+    key         String?
+    name        String?
+    person      ProjectAssignmentPerson
+}
+
 type ProjectEpisodeProgress {
     TL      Boolean
     TLC     Boolean
@@ -15,6 +21,7 @@ type ProjectEpisodeProgress {
     TM      Boolean
     TS      Boolean
     QC      Boolean
+    custom CustomProjectEpisodeProgress[]
 }
 
 type ProjectEpisodeStatus {
@@ -30,6 +37,12 @@ type ProjectAssignmentPerson {
     name    String?
 }
 
+type CustomProjectAssignment {
+    key         String?
+    name        String?
+    person      ProjectAssignmentPerson
+}
+
 type ProjectAssignment {
     TL      ProjectAssignmentPerson
     TLC     ProjectAssignmentPerson
@@ -38,6 +51,7 @@ type ProjectAssignment {
     TM      ProjectAssignmentPerson
     TS      ProjectAssignmentPerson
     QC      ProjectAssignmentPerson
+    custom  CustomProjectAssignment[]
 }
 
 type ProjectPoster {

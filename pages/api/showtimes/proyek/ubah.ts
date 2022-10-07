@@ -1,10 +1,9 @@
 import prisma from "@/lib/prisma";
 import { showtimesdatas } from "@prisma/client";
-import _ from "lodash";
+import { findIndex } from "lodash";
 import { DateTime } from "luxon";
-import { NextApiResponse } from "next";
 
-import withSession, { getServerUser, NextApiRequestWithSession } from "@/lib/session";
+import withSession, { getServerUser } from "@/lib/session";
 import { emitSocket, emitSocketAndWait } from "@/lib/socket";
 import { isNone, Nullable, RoleProject, verifyExist } from "@/lib/utils";
 
@@ -44,7 +43,7 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         }
         const { anime_id } = changes;
         if (isNone(anime_id)) return null;
-        const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
+        const indexAnime = findIndex(databaseData.anime, (pred) => pred.id === anime_id);
         if (indexAnime === -1) return null;
         role = role.toUpperCase();
         let userId: Nullable<string> = changes.user_id;
@@ -97,10 +96,10 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         }
         if (typeof episode_no !== "number") return null;
         const currentUTC = DateTime.utc().toSeconds();
-        const indexAnime = _.findIndex(databaseData.anime, (pred) => pred.id === anime_id);
+        const indexAnime = findIndex(databaseData.anime, (pred) => pred.id === anime_id);
         if (indexAnime === -1) return null;
         const animeInfo = databaseData.anime[indexAnime];
-        const indexEpisode = _.findIndex(animeInfo.status, (pred) => pred.episode === episode_no);
+        const indexEpisode = findIndex(animeInfo.status, (pred) => pred.episode === episode_no);
         if (indexEpisode === -1) return null;
         const status = animeInfo.status[indexEpisode];
         verifiedChanges.forEach((res) => {
@@ -136,7 +135,7 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
     return null;
 }
 
-export default withSession(async (req: NextApiRequestWithSession, res: NextApiResponse) => {
+export default withSession(async (req, res) => {
     const jsonBody = await req.body;
     const userData = getServerUser(req);
     if (isNone(jsonBody) || Object.keys(jsonBody).length < 1) {

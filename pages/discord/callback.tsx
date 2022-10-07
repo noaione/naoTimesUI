@@ -3,7 +3,7 @@ import Head from "next/head";
 import Router from "next/router";
 
 import MetadataHead from "@/components/MetadataHead";
-import withSession, { NextServerSideContextWithSession } from "@/lib/session";
+import { withSessionSsr } from "@/lib/session";
 import { isNone } from "@/lib/utils";
 
 interface Props {
@@ -102,10 +102,7 @@ export default class DiscordCallbackPage extends React.Component<Props, State> {
     }
 }
 
-export const getServerSideProps = withSession(async function ({ query }: NextServerSideContextWithSession) {
-    // Catch the Next.js Router push event with query mask
-    // eslint-disable-next-line no-underscore-dangle
-
+export const getServerSideProps = withSessionSsr(async function ({ query }) {
     // check discordClientId, if string empty, set to undefined.
     const { code } = query;
     if (isNone(code)) {
