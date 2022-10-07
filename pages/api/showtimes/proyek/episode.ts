@@ -67,6 +67,9 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
         const episodeNewData: ProjectEpisodeStatus[] = [];
         onlyEpisodeNumbers.forEach((episodeNum, idx) => {
             const statusLoc = status.findIndex((es) => es.episode === episodeNum);
+            const lastStatusCustom = lastEpisode.progress.custom.map((e) => {
+                return { ...e, done: false };
+            });
             if (statusLoc === -1) {
                 let lastAirtime = lastEpisode.airtime;
                 if (typeof lastAirtime !== "number") {
@@ -83,6 +86,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                         TM: false,
                         TS: false,
                         QC: false,
+                        custom: lastStatusCustom,
                     },
                     airtime: lastAirtime + 604800 * (idx + 1),
                     delay_reason: null,

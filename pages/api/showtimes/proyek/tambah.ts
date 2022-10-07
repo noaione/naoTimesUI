@@ -141,6 +141,7 @@ async function addNewProject(dataToAdd: any) {
             id: null,
             name: null,
         },
+        custom: [],
     };
     const apiRequest = await getAnimeInfo(animeId);
     if (Object.keys(apiRequest).length < 1) {

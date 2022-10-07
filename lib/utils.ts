@@ -366,6 +366,7 @@ export function parseAnilistAPIResult(originalData: any, expected_episode = 1) {
                 id: null,
                 name: null,
             },
+            custom: [],
         },
         fsdb_data: null,
     };

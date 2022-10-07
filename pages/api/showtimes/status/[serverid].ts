@@ -98,12 +98,25 @@ function parseStatusOldStyles(animeData: Project[]): IResultOldSeasonKey {
                 const newStatus = {};
                 // eslint-disable-next-line no-restricted-syntax
                 for (const [key, val] of Object.entries(status.progress)) {
-                    newStatus[keyNamingRole(key)] = val;
+                    if (typeof val === "boolean") {
+                        newStatus[keyNamingRole(key)] = val;
+                    } else {
+                        val.forEach((v) => {
+                            newStatus[v.name] = v.done;
+                        });
+                    }
                 }
                 const staffAssigned = {};
                 // eslint-disable-next-line no-restricted-syntax
                 for (const [staff, staffData] of Object.entries(anime.assignments)) {
-                    staffAssigned[keyNamingRole(staff)] = staffData.name || "Tidak diketahui";
+                    if (Array.isArray(staffData)) {
+                        staffData.forEach((staffDataItem) => {
+                            staffAssigned[staffDataItem.name] =
+                                staffDataItem.person.name || "Tidak diketahui";
+                        });
+                    } else {
+                        staffAssigned[keyNamingRole(staff)] = staffData.name || "Tidak diketahui";
+                    }
                 }
                 const dataToAdd: IResultOldDataset = {
                     id: anime.id,

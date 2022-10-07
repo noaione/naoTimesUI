@@ -1,11 +1,11 @@
 import React from "react";
 
-import { RoleColorPalette } from "./ColorMap";
+import { RoleColorFallback, RoleColorPalette } from "./ColorMap";
 
 import { isNone, RoleProject } from "../lib/utils";
 
 interface RolePopupProps {
-    title: RoleProject;
+    title: string;
     popupText: string;
     overrideTitle?: string;
 }
@@ -23,7 +23,7 @@ class RolePopup extends React.Component<RolePopupProps> {
             realTitle = overrideTitle;
         }
 
-        const extraColor = RoleColorPalette[title];
+        const extraColor = RoleColorPalette[title as RoleProject] || RoleColorFallback;
         if (isNone(extraColor)) {
             return null;
         }

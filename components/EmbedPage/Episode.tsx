@@ -4,11 +4,12 @@ import { DateTime } from "luxon";
 import RolePopup from "../RolePopup";
 
 import { Locale, timeAgoLocale, translate, ValidLocale } from "../../i18n";
+import type { ProjectEpisodeProgress } from "@prisma/client";
 
 interface IEpisodeProps {
     airingAt?: number;
     episode: number;
-    progress: { [key: string]: boolean };
+    progress: ProjectEpisodeProgress;
     lang: Locale;
     delayReason?: string;
 }
@@ -19,12 +20,31 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
     }
 
     render() {
-        const { progress, episode, airingAt, lang } = this.props;
-        const unfinishedStatus = [];
+        const {
+            progress: { custom: customProgress, ...progress },
+            episode,
+            airingAt,
+            lang,
+        } = this.props;
+        const unfinishedStatus: string[] = [];
+        const customTextMapping: { [key: string]: string } = {};
+        customProgress.forEach((custom) => {
+            if (!custom.done) {
+                customTextMapping[custom.key] = custom.name;
+            }
+        });
         for (const [roleName, roleStat] of Object.entries(progress)) {
             if (!roleStat) {
                 unfinishedStatus.push(roleName);
             }
+        }
+        const qcDex = unfinishedStatus.indexOf("QC");
+        if (qcDex !== -1) {
+            // insert custom text before QC
+            unfinishedStatus.splice(qcDex, 0, ...Object.keys(customTextMapping));
+        } else {
+            // append custom text to the end
+            unfinishedStatus.push(...Object.keys(customTextMapping));
         }
         const currentTime = DateTime.utc().toSeconds();
         let aired = true;
@@ -39,7 +59,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
         const wrapMode = unfinishedStatus.length > 5 ? "flex-col" : "flex-row";
         const extraClass = unfinishedStatus.length > 4 ? "col-start-1 col-end-3" : "";
 
-        let content;
+        let content: React.ReactNode;
         let shouldRenderPill = false;
         if (aired) {
             if (anyProgress) {
@@ -48,6 +68,16 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         <>
                             <div slot="2" className="flex gap-1 mt-1">
                                 {unfinishedStatus.map((role) => {
+                                    const customText = customTextMapping[role];
+                                    if (customText) {
+                                        return (
+                                            <RolePopup
+                                                key={`ep-${episode}-custom-${role}`}
+                                                title={role}
+                                                popupText={customText}
+                                            />
+                                        );
+                                    }
                                     return (
                                         <RolePopup
                                             key={`ep-${episode}-${role}`}

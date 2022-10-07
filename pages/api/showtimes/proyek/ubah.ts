@@ -38,6 +38,7 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         if (isNone(role)) {
             return null;
         }
+        const isCustomRole = !["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role);
         if (!["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role)) {
             return null;
         }
@@ -46,6 +47,11 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         const indexAnime = findIndex(databaseData.anime, (pred) => pred.id === anime_id);
         if (indexAnime === -1) return null;
         role = role.toUpperCase();
+        const assignments = databaseData.anime[indexAnime].assignments;
+        if (isCustomRole) {
+            const indexRole = findIndex(assignments.custom, (prod) => prod.key === role);
+            if (indexRole === -1) return null;
+        }
         let userId: Nullable<string> = changes.user_id;
         if (typeof userId !== "string") {
             userId = "";
@@ -56,8 +62,17 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
             userName = userInfo.name;
         } catch (e) {}
         const newUserData = { id: userId, name: userName };
-        const assignments = databaseData.anime[indexAnime].assignments;
-        assignments[role] = newUserData;
+        if (isCustomRole) {
+            const indexRole = findIndex(assignments.custom, (prod) => prod.key === role);
+            if (indexRole === -1) return null;
+            assignments.custom[indexRole] = {
+                key: role,
+                name: assignments.custom[indexRole].name,
+                person: newUserData,
+            };
+        } else {
+            assignments[role] = newUserData;
+        }
         await prisma.showtimesdatas.update({
             where: { mongo_id: databaseData.mongo_id },
             data: {
@@ -82,7 +97,7 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         rolesSets.forEach((res) => {
             if (isNone(res.role)) return;
             const role = res.role.toUpperCase() as RoleProject;
-            if (!["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role)) return;
+            // if (!["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(role)) return;
             if (typeof res.tick !== "boolean") return;
             verifiedChanges.push({ role, tick: res.tick });
         });
@@ -103,7 +118,18 @@ async function doAnimeChanges(event: AnimeChangeEvent, databaseData: showtimesda
         if (indexEpisode === -1) return null;
         const status = animeInfo.status[indexEpisode];
         verifiedChanges.forEach((res) => {
-            status.progress[res.role] = res.tick;
+            const isCustomRole = !["TL", "TLC", "ENC", "ED", "TM", "TS", "QC"].includes(res.role);
+            if (isCustomRole) {
+                const indexRole = findIndex(status.progress.custom, (prod) => prod.key === res.role);
+                if (indexRole === -1) return;
+                status.progress.custom[indexRole] = {
+                    key: res.role,
+                    name: status.progress.custom[indexRole].name,
+                    done: res.tick,
+                };
+            } else {
+                status.progress[res.role] = res.tick;
+            }
         });
         await prisma.showtimesdatas.update({
             where: { mongo_id: databaseData.mongo_id },

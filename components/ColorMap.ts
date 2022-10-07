@@ -7,5 +7,6 @@ export const RoleColorPalette = {
     TS: "bg-purple-100 text-purple-800 border-purple-200",
     QC: "bg-pink-200 text-pink-800 border-pink-300",
 };
+export const RoleColorFallback = "bg-gray-100 text-gray-800 border-gray-200";
 
 export const ValidAccent = ["red", "yellow", "green", "blue", "indigo", "purple", "pink", "none"] as const;
