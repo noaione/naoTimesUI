@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Router from "next/router";
 import { cloneDeep, has as loHas, sortBy } from "lodash";
 import { GetServerSidePropsContext } from "next";
 
@@ -57,10 +58,19 @@ function filterAnimeData(animeData: Project[]): Project[] {
     return newAnimeSets;
 }
 
+function hasParamAndNotDefault(data: EmbedUtangState) {
+    return (
+        (loHas(data, "accent") && data.accent !== "green") ||
+        (loHas(data, "lang") && data.lang !== "id") ||
+        (loHas(data, "dark") && data.dark !== "false")
+    );
+}
+
 class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     constructor(props: EmbedUtangProps) {
         super(props);
         this.propagateEventChange = this.propagateEventChange.bind(this);
+        this.propagateHashChange = this.propagateHashChange.bind(this);
         this.state = {
             dark: this.props.dark,
             accent: this.props.accent || "green",
@@ -69,6 +79,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     componentDidMount() {
+        this.propagateHashChange();
         const isDark = mapBoolean(this.state.dark);
         if (isDark) {
             window.document.documentElement.classList.add("dark");
@@ -78,12 +89,81 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         window.parent.postMessage(message, "*");
         // Watch for incoming message
         window.addEventListener("message", this.propagateEventChange);
+        // Detect for hash url change
+        window.addEventListener("hashchange", this.propagateHashChange);
+
+        // Use router replace to move the configuration from URL query to the hash
+        if (
+            hasParamAndNotDefault({ dark: this.props.dark, accent: this.props.accent, lang: this.props.lang })
+        ) {
+            Router.replace(
+                {
+                    pathname: "/embed",
+                    query: {
+                        id: this.props.id,
+                    },
+                    hash:
+                        "#" +
+                        new URLSearchParams({
+                            dark: this.state.dark ? "true" : "false",
+                            accent: this.state.accent,
+                            lang: this.state.lang,
+                        }).toString(),
+                },
+                undefined,
+                // shallow mode, so it doesn't rerender the page
+                { shallow: true }
+            ).catch((_) => {
+                return;
+            });
+        }
     }
 
     componentDidUpdate() {
         const message = JSON.stringify({ action: "resize", height: window.document.body.scrollHeight });
         // Broadcast resize action to everyone.
         window.parent.postMessage(message, "*");
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("message", this.propagateEventChange);
+        window.removeEventListener("hashchange", this.propagateHashChange);
+    }
+
+    propagateHashChange() {
+        // get the hash
+        const hash = window.location.hash;
+        // strip out the # character
+        const hashValue = hash.replace("#", "");
+        // parse as query format
+        const parsedHash = new URLSearchParams(hashValue);
+
+        const dark = parsedHash.get("dark") || this.state.dark;
+        const accent = parsedHash.get("accent") || this.state.accent;
+        const lang = parsedHash.get("lang") || this.state.lang;
+
+        // apply changes
+        const isDark = mapBoolean(dark);
+        if (isDark) {
+            window.document.documentElement.classList.add("dark");
+        } else {
+            window.document.documentElement.classList.remove("dark");
+        }
+
+        // only update relevant state
+        const updateState: Partial<EmbedUtangState> = {};
+        if (dark !== this.state.dark) {
+            updateState.dark = dark;
+        }
+        if (accent !== this.state.accent) {
+            updateState.accent = accent as typeof ValidAccent[number];
+        }
+        if (lang !== this.state.lang) {
+            updateState.lang = lang as keyof typeof LocaleMap & string;
+        }
+        if (Object.keys(updateState).length > 0) {
+            this.setState(updateState as EmbedUtangState);
+        }
     }
 
     propagateEventChange(event: MessageEvent<any>) {
@@ -94,7 +174,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
         try {
             data = JSON.parse(event.data);
         } catch (e) {
-            console.error("embed.propagateEventChange: No data received");
+            // console.error("embed.propagateEventChange: No data received");
             return;
         }
         const root = window.document.documentElement;

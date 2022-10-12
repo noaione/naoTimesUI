@@ -18,16 +18,29 @@ interface EmbedGenState {
 
 function generateEmbedUrl(base: string, id: string, accent: string, lang: string, dark: boolean) {
     let finalURL = base + `/embed?id=${id}`;
+    let hashAdded = false;
     if (accent !== "green") {
+        if (!hashAdded) {
+            finalURL += "#";
+            hashAdded = true;
+        }
         finalURL += `&accent=${accent}`;
     }
     if (lang !== "id") {
+        if (!hashAdded) {
+            finalURL += "#";
+            hashAdded = true;
+        }
         finalURL += `&lang=${lang}`;
     }
     if (dark) {
+        if (!hashAdded) {
+            finalURL += "#";
+            hashAdded = true;
+        }
         finalURL += "&dark=true";
     }
-    return finalURL;
+    return finalURL.replace("#&", "#");
 }
 
 class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
