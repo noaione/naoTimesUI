@@ -92,7 +92,7 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{pageTitle} :: naoTimesUI</title>
+                    <title>{`${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={pageTitle} urlPath="/admin" />
                 </Head>
                 <AdminLayout user={user}>

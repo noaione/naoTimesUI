@@ -52,7 +52,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>Pengaturan - {pageTitle} :: naoTimesUI</title>
+                    <title>{`Pengaturan - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={"Pengaturan - " + pageTitle} urlPath="/admin/atur" />
                 </Head>
                 <AdminLayout user={user} title="Pengaturan" active="settings">

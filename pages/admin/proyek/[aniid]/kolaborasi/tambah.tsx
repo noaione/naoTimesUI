@@ -179,9 +179,7 @@ class ProyekPageCollabAddition extends React.Component<ProyekCollabPageProps, Pr
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>
-                        Kolaborasi - {title} - {pageTitle} :: naoTimesUI
-                    </title>
+                    <title>{`Kolaborasi - ${title} - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={"Kolaborasi - " + title + " - " + pageTitle}
                         urlPath={"/admin/proyek/" + animeData.id + "/kolaborasi"}

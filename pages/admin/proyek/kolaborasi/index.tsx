@@ -256,7 +256,7 @@ class KolaborasiHomepage extends React.Component<KolaborasiHomepageProps> {
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>Kolaborasi - {pageTitle} :: naoTimesUI</title>
+                    <title>{`Kolaborasi - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={"Kolaborasi - " + pageTitle} urlPath="/admin/proyek" />
                 </Head>
                 <AdminLayout user={user} title="Kolaborasi" active="projectpage">

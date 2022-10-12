@@ -33,7 +33,7 @@ class FansubrssIndex extends React.Component<FansubrssIndexProps> {
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>FansubRSS - {pageTitle} :: naoTimesUI</title>
+                    <title>{`FansubRSS - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={"FansubRSS - " + pageTitle} urlPath="/admin/fansubrss" />
                 </Head>
                 <AdminLayout user={user} title="FansubRSS" active="fsrss">

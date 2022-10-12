@@ -74,9 +74,7 @@ class ProyekCollabConfirmationPage extends React.Component<
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>
-                        {title} - {pageTitle} :: naoTimesUI
-                    </title>
+                    <title>{`${title} - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={title + " - " + pageTitle}
                         urlPath={"/admin/proyek/" + animeData.id}

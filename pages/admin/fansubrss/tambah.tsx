@@ -59,7 +59,7 @@ class FansubrssIndex extends React.Component<FansubRSSTambahProps, FansubRSSTamb
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>Tambah - FansubRSS - {pageTitle} :: naoTimesUI</title>
+                    <title>{`Tambah - FansubRSS - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={"Tambah - FansubRSS - " + pageTitle}
                         urlPath="/admin/fansubrss"

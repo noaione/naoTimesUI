@@ -139,7 +139,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>Proyek - {pageTitle} :: naoTimesUI</title>
+                    <title>{`Proyek - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={"Proyek - " + pageTitle} urlPath="/admin/proyek" />
                 </Head>
                 <AdminLayout user={user} title="Proyek" active="project">

@@ -156,7 +156,7 @@ class FansubRSSPage extends React.Component<FansubRSSPageProps, FansubRSSPageSta
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>Info - FansubRSS - {pageTitle} :: naoTimesUI</title>
+                    <title>{`Info - FansubRSS - ${pageTitle} :: naoTimesUI`}</title>
                     <MetadataHead.SEO title={"Info - FansubRSS - " + pageTitle} urlPath="/admin/fansubrss" />
                 </Head>
                 <AdminLayout user={user} title="Edit RSS" active="fsrsspage">
