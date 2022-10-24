@@ -48,6 +48,12 @@ const BannerSets: BannerData[] = [
         shortMessage: "Pembaharuan Kebijakan Privasi",
         link: "https://naoti.me/privasi",
     },
+    {
+        id: "20221024-1700",
+        message: "Login ke WebUI sekarang lebih mudah dengan Discord OAuth2!",
+        shortMessage: "Login dengan Discord!",
+        link: "https://panel.naoti.me/admin/tentang#versi-1-4-0",
+    },
 ];
 
 export default BannerSets;
