@@ -150,7 +150,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
 
                     <div className="absolute items-end justify-start bottom-0 left-0 ml-4 mb-4 z-10">
                         {semver && (
-                            <div className="dark:text-gray-200 font-semibold flex flex-row mb-2 text-lg items-center">
+                            <div className="text-gray-900 dark:text-gray-200 font-semibold flex flex-row mb-2 text-lg items-center">
                                 <a
                                     className="text-gray-900 dark:text-gray-100 hover:opacity-70 transition-opacity duration-200"
                                     href="https://github.com/noaione/naoTimesUI"
@@ -163,7 +163,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                             </div>
                         )}
                         {commit && (
-                            <div className="dark:text-gray-200 font-semibold">
+                            <div className="text-gray-900 dark:text-gray-200 font-semibold">
                                 Commit:{" "}
                                 <a
                                     className="text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity duration-200"
@@ -175,7 +175,7 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                                 </a>
                             </div>
                         )}
-                        <div className="dark:text-gray-200">© {romanizedCC} - naoTimesDev</div>
+                        <div className="text-gray-900 dark:text-gray-200">© {romanizedCC} - naoTimesDev</div>
                     </div>
                 </div>
             </>
