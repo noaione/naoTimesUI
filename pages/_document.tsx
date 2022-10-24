@@ -90,7 +90,7 @@ class NaoTimesAppDocument extends Document<ExtraProps> {
                         rel="stylesheet"
                     />
                 </Head>
-                <body className={isNonSplashRoute ? "" : `bg-gray-900 text-white`}>
+                <body className={isNonSplashRoute ? "" : "bg-gray-900 text-white"}>
                     <Main />
                     <NextScript />
                 </body>
