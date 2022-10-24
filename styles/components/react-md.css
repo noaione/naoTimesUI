@@ -43,4 +43,9 @@
     & a {
         @apply text-yellow-600 hover:opacity-70 duration-200;
     }
+
+    & ul li ul,
+    & ul li ol {
+        @apply mt-0 ml-4;
+    }
 }
