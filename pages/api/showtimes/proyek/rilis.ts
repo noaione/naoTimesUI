@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { findIndex } from "lodash";
 
 import withSession, { getServerUser } from "@/lib/session";
-import { emitSocket } from "@/lib/socket";
+import { updateShowtimesData } from "@/lib/socket";
 import { isNone, mapBoolean, verifyExist } from "@/lib/utils";
 
 function verifyContents(data: any) {
@@ -93,7 +93,7 @@ export default withSession(async (req, res) => {
                             },
                         },
                     });
-                    emitSocket("pull data", userData.id);
+                    await updateShowtimesData(userData.id);
                     res.json({ success: true, message: "Berhasil mengubah status episode", code: 200 });
                 }
             }

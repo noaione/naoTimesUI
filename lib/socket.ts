@@ -147,3 +147,9 @@ export async function emitSocketAndWait<T = any, D = any>(
     }
     return JSONified.message;
 }
+
+export async function updateShowtimesData(serverId: string, mode: "admin" | "data" = "data") {
+    try {
+        await emitSocketAndWait(`pull ${mode}`, serverId);
+    } catch (e) {} // noop
+}

@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import withSession, { getServerUser } from "@/lib/session";
-import { emitSocket } from "@/lib/socket";
+import { updateShowtimesData } from "@/lib/socket";
 import { isNone, Nullable, verifyExist } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 import { ProjectEpisodeStatus } from "@prisma/client";
@@ -134,7 +134,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                 },
             },
         });
-        emitSocket("pull data", serverId);
+        await updateShowtimesData(serverId);
         return [episodeNewData, 200];
     } else if (event === "remove") {
         const status = anime[animeIdxLoc].status;
@@ -181,7 +181,7 @@ async function doEpisodeChanges(event: EpisodeUpdateEvent, serverId: string, cha
                     },
                 },
             });
-            emitSocket("pull data", serverId);
+            await updateShowtimesData(serverId);
             const removedEpisode = [];
             status.forEach((pp, idx) => {
                 const indexed = newStatus.findIndex((x) => x.episode === pp.episode);

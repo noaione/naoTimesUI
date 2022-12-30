@@ -1,7 +1,7 @@
 import { findIndex } from "lodash";
 
 import withSession, { getServerUser, removeServerUser } from "@/lib/session";
-import { emitSocket } from "@/lib/socket";
+import { emitSocket, updateShowtimesData } from "@/lib/socket";
 import prisma from "@/lib/prisma";
 import { Project } from "@prisma/client";
 import { isNone } from "@/lib/utils";
@@ -46,7 +46,7 @@ async function deleteAndUnlinkEverything(serverId: string) {
                 servers: { set: srvList.servers },
             },
         });
-        emitSocket("pull admin", adminId);
+        await updateShowtimesData(adminId, "admin");
     }
 
     const unlinkKolaborasi = [];

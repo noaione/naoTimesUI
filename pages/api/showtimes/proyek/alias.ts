@@ -1,7 +1,7 @@
 import { findIndex } from "lodash";
 
 import withSession, { getServerUser } from "@/lib/session";
-import { emitSocket } from "@/lib/socket";
+import { updateShowtimesData } from "@/lib/socket";
 import { isNone, verifyExist } from "@/lib/utils";
 import { Project } from "@prisma/client";
 import prisma from "@/lib/prisma";
@@ -51,7 +51,7 @@ async function tryToAdjustAliasesData(serverId: string, animeId: string, aliases
     } catch (e) {
         return [aliases, "Gagal memperbarui database, mohon coba lagi nanti", false];
     }
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     return [verifiedList, "sukses", true];
 }
 

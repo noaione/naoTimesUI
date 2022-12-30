@@ -4,7 +4,7 @@ import { findIndex } from "lodash";
 import { DateTime } from "luxon";
 
 import withSession, { getServerUser } from "@/lib/session";
-import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { emitSocketAndWait, updateShowtimesData } from "@/lib/socket";
 import { isNone, Nullable, RoleProject, verifyExist } from "@/lib/utils";
 
 type AnimeChangeEvent = "staff" | "status";
@@ -215,7 +215,7 @@ export default withSession(async (req, res) => {
                     res.json({ success: false });
                 } else {
                     const modifedData = await doAnimeChanges(eventType, serverData, changes);
-                    emitSocket("pull data", serverId);
+                    await updateShowtimesData(serverId);
                     if (eventType === "staff") {
                         if (isNone(modifedData)) {
                             res.status(500).json({ success: false });
@@ -240,7 +240,7 @@ export default withSession(async (req, res) => {
                 },
             });
             const modifedData = await doAnimeChanges(eventType, serverData, changes);
-            emitSocket("pull data", userData.id);
+            await updateShowtimesData(userData.id);
             if (eventType === "staff") {
                 if (isNone(modifedData)) {
                     res.status(500).json({ success: false });

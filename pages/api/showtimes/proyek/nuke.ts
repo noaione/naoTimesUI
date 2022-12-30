@@ -2,7 +2,7 @@ import { has } from "lodash";
 
 import withSession, { getServerUser } from "@/lib/session";
 import { isNone, Nullable } from "@/lib/utils";
-import { emitSocket } from "@/lib/socket";
+import { emitSocket, updateShowtimesData } from "@/lib/socket";
 import prisma from "@/lib/prisma";
 
 async function checkAndRemoveCollabID(target_server: string, source_srv: string, anime_id: string) {
@@ -80,18 +80,14 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
     }
     const removeRoles = [matched.role_id];
     if (matched.kolaborasi.length > 0) {
-        const deletionRequest = matched.kolaborasi.map((osrv_id) =>
-            checkAndRemoveCollabID(osrv_id, server_id, matched.id)
-                .then((_res) => {
-                    emitSocket("pull data", osrv_id);
-                    return true;
-                })
-                .catch((err) => {
-                    emitSocket("pull data", osrv_id);
-                    console.error(err);
-                    return false;
-                })
-        );
+        const deletionRequest = matched.kolaborasi.map(async (osrv_id) => {
+            try {
+                await checkAndRemoveCollabID(osrv_id, server_id, matched.id);
+            } catch (e) {
+                console.error("Failed to remove collab id", e);
+            }
+            await updateShowtimesData(osrv_id);
+        });
         await Promise.all(deletionRequest);
     }
     try {
@@ -124,7 +120,7 @@ async function deleteAnimeId(anime_id: string, server_id: string) {
             anime: { id: matched.id, title: matched.title },
         });
     }
-    emitSocket("pull data", server_id);
+    await updateShowtimesData(server_id);
     if (removeRoles.length > 0) {
         emitSocket("delete roles", { id: server_id, roles: removeRoles });
     }

@@ -1,4 +1,4 @@
-import { emitSocket } from "@/lib/socket";
+import { updateShowtimesData } from "@/lib/socket";
 import { isNone } from "@/lib/utils";
 import withSession, { getServerUser } from "@/lib/session";
 import prisma from "@/lib/prisma";
@@ -62,7 +62,7 @@ async function tryToAdjustAdminData(serverId: string, newAdminIds: string[]): Pr
     } catch (e) {
         return ["Gagal memperbarui database, mohon coba lagi nanti", false];
     }
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     return ["sukses", true];
 }
 

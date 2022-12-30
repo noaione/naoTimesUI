@@ -1,4 +1,4 @@
-import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { emitSocketAndWait, updateShowtimesData } from "@/lib/socket";
 import withSession, { getServerUser } from "@/lib/session";
 import prisma from "@/lib/prisma";
 import { isNone } from "@/lib/utils";
@@ -43,7 +43,7 @@ async function changeChannelId(serverId: string, channelId: string): Promise<[bo
     } catch (e) {
         return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi", 4500];
     }
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     let channelName = channelInfo.name || channelId;
     if (channelName !== channelId) {
         channelName = `#${channelName}`;
@@ -57,7 +57,7 @@ async function removeChannelAnnouncer(serverId: string): Promise<[boolean, strin
     } catch (e) {
         return [false, "Tidak dapat memperbarui informasi server, mohon coba sesaat lagi", 4500];
     }
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     return [true, "Terhapus", 200];
 }
 

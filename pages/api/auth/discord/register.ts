@@ -3,7 +3,7 @@ import { toString } from "lodash";
 import withSession from "@/lib/session";
 import { isNone } from "@/lib/utils";
 import prisma from "@/lib/prisma";
-import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { emitSocketAndWait, updateShowtimesData } from "@/lib/socket";
 
 function checkStringValid(data: any): boolean {
     if (typeof data !== "string") return false;
@@ -37,7 +37,7 @@ async function tryServerAdminAdd(adminId: string, serverId: string) {
             },
         });
     }
-    emitSocket("pull admin", adminId);
+    await updateShowtimesData(adminId, "admin");
 }
 
 function generateRandomString(length: number) {
@@ -78,7 +78,7 @@ async function registerNewServerWithUIAccount(server: any, admin: any) {
         },
     });
     await tryServerAdminAdd(toString(adminId), toString(serverId));
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     await generateNewAccountInformation(serverId, serverName);
 }
 

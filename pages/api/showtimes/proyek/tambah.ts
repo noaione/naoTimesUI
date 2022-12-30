@@ -2,7 +2,7 @@ import axios from "axios";
 import { get, has } from "lodash";
 
 import withSession, { getServerUser } from "@/lib/session";
-import { emitSocket, emitSocketAndWait } from "@/lib/socket";
+import { emitSocketAndWait, updateShowtimesData } from "@/lib/socket";
 import { isNone, Nullable, parseAnilistAPIResult, verifyExist } from "@/lib/utils";
 import prisma from "@/lib/prisma";
 
@@ -208,7 +208,7 @@ async function addNewProject(dataToAdd: any) {
         console.error(err);
         return { success: false, message: "Gagal memperbaharui database, mohon coba lagi nanti", code: 4500 };
     }
-    emitSocket("pull data", serverId);
+    await updateShowtimesData(serverId);
     return { success: true, message: "success", code: 200 };
 }
 
