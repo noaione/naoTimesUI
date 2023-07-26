@@ -2,9 +2,8 @@ import React from "react";
 // eslint-disable-next-line @next/next/no-document-import-in-page
 import Document, { DocumentContext, Head, Html, Main, NextScript } from "next/document";
 
-import { InlineJs } from "@kachkaev/react-inline-js";
-
 import { isNone } from "../lib/utils";
+import Script from "next/script";
 
 const THEME_CHECKER_JS = `
 // Helper
@@ -73,10 +72,10 @@ class NaoTimesAppDocument extends Document<ExtraProps> {
         const isAdminRoute = this.props.pathname.startsWith("/admin");
         const isEmbedRoute = this.props.pathname.startsWith("/embed");
         const isNonSplashRoute = isAdminRoute || isEmbedRoute;
+        console.log(`isNonSplashRoute: ${isNonSplashRoute}`);
         return (
-            <Html prefix="og: https://ogp.me/ns#">
+            <Html className={isNonSplashRoute ? "" : "dark"} prefix="og: https://ogp.me/ns#">
                 <Head>
-                    <InlineJs code={THEME_CHECKER_JS} />
                     {addTracking && (
                         <script
                             async
@@ -89,6 +88,7 @@ class NaoTimesAppDocument extends Document<ExtraProps> {
                         href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap"
                         rel="stylesheet"
                     />
+                    <Script id="theme-check">{THEME_CHECKER_JS}</Script>
                 </Head>
                 <body className={isNonSplashRoute ? "" : "bg-gray-900 text-white"}>
                     <Main />

@@ -8,10 +8,13 @@ import MotionInView from "@/components/MotionInView";
 
 import { romanizeNumber } from "@/lib/utils";
 import { getAboutContent, getChangelogContent } from "@/lib/postshelper";
-import { IUserAuth, withSessionSsr } from "@/lib/session";
+import { AuthContext } from "@/components/AuthSuspense";
+import { UserSessFragment } from "@/lib/graphql/auth.generated";
+import { UserType } from "@/lib/graphql/types.generated";
+import { InferGetStaticPropsType } from "next";
 
 interface AdminAboutProps {
-    user?: IUserAuth & { loggedIn: boolean };
+    user: UserSessFragment;
     aboutPage: string;
     changelogPage: string;
 }
@@ -23,7 +26,7 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
 
     render() {
         const { user, aboutPage, changelogPage } = this.props;
-        const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+        const pageTitle = user.privilege === UserType.Admin ? "Panel Admin" : "Panel Peladen";
 
         const currentYear = new Date().getFullYear();
         const genMarkdownURL = `[${romanizeNumber(
@@ -68,35 +71,30 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
     }
 }
 
-export const getServerSideProps = withSessionSsr(async function ({ req }) {
-    let user = req.session.user;
+export default function WrappedAdminAboutPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+    return (
+        <AuthContext.Consumer>
+            {(sess) =>
+                sess && (
+                    <AdminAboutPage
+                        user={sess}
+                        aboutPage={props.aboutPage}
+                        changelogPage={props.changelogPage}
+                    />
+                )
+            }
+        </AuthContext.Consumer>
+    );
+}
 
-    if (!user) {
-        return {
-            redirect: {
-                destination: "/?cb=/admin/tentang",
-                permanent: false,
-            },
-        };
-    }
-
-    if (user.authType === "discord") {
-        // override with server info
-        user = req.session.userServer;
-        if (!user) {
-            return {
-                redirect: {
-                    destination: "/discord",
-                    permanent: false,
-                },
-            };
-        }
-    }
-
-    const changelogPage = getChangelogContent();
+export function getStaticProps() {
     const aboutPage = getAboutContent();
+    const changelogPage = getChangelogContent();
 
-    return { props: { user: { loggedIn: true, ...user }, aboutPage, changelogPage } };
-});
-
-export default AdminAboutPage;
+    return {
+        props: {
+            aboutPage,
+            changelogPage,
+        },
+    };
+}

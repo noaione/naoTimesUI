@@ -9,6 +9,8 @@ import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { isDifferent, verifyExist } from "@/lib/utils";
+import client from "@/lib/graphql/client";
+import { MutateProjectAliasesDocument } from "@/lib/graphql/projects.generated";
 
 interface AliasProps extends SettingsProps {
     aniId: string;
@@ -61,31 +63,32 @@ class AliasComponent extends React.Component<AliasProps, AliasState> {
 
         this.setState({ isSubmit: true });
 
-        const bodyBag = {
-            animeId: this.props.aniId,
-            aliases: this.state.aliases,
-        };
-
-        const apiRes = await fetch("/api/showtimes/proyek/alias", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: MutateProjectAliasesDocument,
+            variables: {
+                id: this.props.aniId,
+                aliases: this.state.aliases,
             },
-            body: JSON.stringify(bodyBag),
         });
 
-        const jsonRes = await apiRes.json();
-        if (jsonRes.code === 200) {
-            this.setState({
-                oldAlias: cloneDeep(jsonRes.data),
-                aliases: cloneDeep(jsonRes.data),
-                isEdit: false,
-                isSubmit: false,
-            });
-        } else {
-            this.setState({ isEdit: false, isSubmit: false });
-            this.props.onErrorModal(jsonRes.message);
+        if (errors) {
+            console.error(errors);
+            this.setState({ isSubmit: false });
+            return;
         }
+
+        if (data.updateProject.__typename === "Result") {
+            console.log(data.updateProject.message);
+            this.setState({ isEdit: false, isSubmit: false });
+            return;
+        }
+
+        this.setState({
+            isSubmit: false,
+            isEdit: false,
+            aliases: data.updateProject.aliases,
+            oldAlias: data.updateProject.aliases,
+        });
     }
 
     render() {

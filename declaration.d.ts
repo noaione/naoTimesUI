@@ -31,6 +31,11 @@ declare global {
             PLAUSIBLE_DOMAIN_TRACK?: string;
             DISCORD_CLIENT_ID?: string;
             DISCORD_CLIENT_SECRET?: string;
+            NEXT_PUBLIC_API_V2_ENDPOINT?: string;
+            NEXT_PUBLIC_MEILI_API?: string;
+            NEXT_PUBLIC_MEILI_KEY?: string;
+            MEILI_API?: string;
+            MEILI_KEY?: string;
         }
     }
 }

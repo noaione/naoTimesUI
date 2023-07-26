@@ -1,6 +1,5 @@
 import React from "react";
 import Head from "next/head";
-import Image from "next/image";
 
 import MetadataHead from "../components/MetadataHead";
 
@@ -16,10 +15,9 @@ class ServerErrorPage extends React.Component {
                 </Head>
                 <div className="bg-gray-900 text-white h-screen w-screen grid grid-cols-1 lg:grid-cols-2 lg:items-center">
                     <div className="p-4 lg:p-10">
-                        <Image
+                        <img
                             className="rounded-lg"
                             src="/assets/img/bocchi_aaaaaa.gif"
-                            layout="responsive"
                             width={786}
                             height={491}
                             alt="Your friendly bocchi crying image"

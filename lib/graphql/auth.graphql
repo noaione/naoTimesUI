@@ -1,0 +1,58 @@
+mutation Login($username:String!,$password:String!) {
+  login(username:$username, password:$password) {
+    ... on UserSession {
+      id
+      username
+      privilege
+      token
+    }
+    ... on Result {
+      ...ResultFrag
+    }
+  }
+}
+
+mutation Logout {
+  logout {
+    ...ResultFrag
+  }
+}
+
+mutation Register($username:String!,$password:String!) {
+  register(username:$username, password:$password) {
+    ... on UserTemporary {
+      id
+      username
+      approvalCode
+    }
+    ... on Result {
+      ...ResultFrag
+    }
+  }
+}
+
+query Session {
+  session {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on UserSession {
+      ...UserSess
+    }
+  }
+}
+
+fragment UserSess on UserSession {
+  id
+  username
+  privilege
+  token
+  active {
+    id
+    name
+    avatar {
+      path
+      type
+    }
+  }
+}

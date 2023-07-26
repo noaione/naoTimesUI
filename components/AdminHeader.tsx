@@ -8,13 +8,16 @@ import MenuIcon from "mdi-react/MenuIcon";
 import LightModeIcon from "mdi-react/LightbulbOnIcon";
 import DarkModeIcon from "mdi-react/LightbulbOutlineIcon";
 import { motion } from "framer-motion";
+import { UserType } from "@/lib/graphql/types.generated";
+import client from "@/lib/graphql/client";
+import { SetServerDocument } from "@/lib/graphql/servers.generated";
+import { LogoutDocument } from "@/lib/graphql/auth.generated";
 
 interface HeaderProps {
     id: string;
     name?: string;
-    privilige: "owner" | "server";
+    privilige: UserType;
     title: string;
-    isDiscord?: boolean;
     onOpen: () => void;
 }
 
@@ -127,11 +130,11 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     render() {
-        const { id, name, privilige, title, isDiscord } = this.props;
+        const { id, name, privilige, title } = this.props;
         const { isDarkMode } = this.state;
 
         const username = name || id;
-        const isAdmin = privilige === "owner";
+        const isAdmin = privilige === UserType.Admin;
         const opacity = this.state.dropdownOpen ? "opacity-100" : "opacity-0";
         return (
             <>
@@ -189,24 +192,34 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                         opacity
                                     }
                                 >
-                                    {isDiscord && (
-                                        <button
-                                            onClick={async (ev) => {
-                                                ev.preventDefault();
-                                                await fetch("/api/auth/discord/revoke");
-                                                Router.push("/discord");
-                                            }}
-                                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
-                                        >
-                                            Ganti Server
-                                        </button>
-                                    )}
+                                    <button
+                                        onClick={async (ev) => {
+                                            ev.preventDefault();
+                                            const { data } = await client.mutate({
+                                                mutation: SetServerDocument,
+                                                variables: {
+                                                    id: null,
+                                                },
+                                            });
+                                            if (data.selectServer.success) {
+                                                Router.replace("/servers");
+                                            }
+                                        }}
+                                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
+                                    >
+                                        Ganti Server
+                                    </button>
 
                                     <button
                                         onClick={async (ev) => {
                                             ev.preventDefault();
-                                            await fetch("/api/auth/logout");
-                                            Router.push("/");
+                                            const { data } = await client.mutate({
+                                                mutation: LogoutDocument,
+                                            });
+                                            if (data.logout.success) {
+                                                localStorage.removeItem("sessionToken");
+                                                Router.replace("/");
+                                            }
                                         }}
                                         className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
                                     >

@@ -5,6 +5,9 @@ import { AnimatePresence } from "framer-motion";
 
 import "../styles/global.css";
 import type { AppProps } from "next/app";
+import client from "@/lib/graphql/client";
+import { ApolloProvider } from "@apollo/client";
+import AuthSuspense from "@/components/AuthSuspense";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -53,12 +56,17 @@ function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
     if (router.asPath.includes("/embed")) {
         showDevBanner = false;
     }
+
     return (
         <>
             {showDevBanner && <DevModeBanner />}
-            <AnimatePresence key={router.route}>
-                <Component {...pageProps} />
-            </AnimatePresence>
+            <ApolloProvider client={client}>
+                <AnimatePresence key={router.route}>
+                    <AuthSuspense path={router.asPath}>
+                        <Component {...pageProps} />
+                    </AuthSuspense>
+                </AnimatePresence>
+            </ApolloProvider>
         </>
     );
 }

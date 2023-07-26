@@ -8,10 +8,10 @@ import { RoleColorFallback, RoleColorPalette } from "../ColorMap";
 import MotionInView from "../MotionInView";
 import { SettingsProps } from "../SettingsPage/base";
 
-import { expandRoleLocalized, getAssigneeName, Nullable, RoleProject } from "@/lib/utils";
+import { expandRoleLocalized, getAssigneeName, Nullable } from "@/lib/utils";
 
 interface StaffProps extends SettingsProps {
-    id: RoleProject;
+    id: string;
     animeId: string;
     userId?: Nullable<string | number>;
     animateDelay?: number;
@@ -54,36 +54,8 @@ class StaffComponent extends React.Component<StaffProps, StaffState> {
         }
 
         this.setState({ isSubmitting: true });
-        const sendData = {
-            event: "staff",
-            changes: {
-                role: this.props.id,
-                anime_id: this.props.animeId,
-                user_id: toString(this.state.userId),
-            },
-        };
 
-        const apiRes = await fetch("/api/showtimes/proyek/ubah", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(sendData),
-        });
-
-        const jsonRes = await apiRes.json();
-        if (jsonRes.success) {
-            this.setState({
-                userId: jsonRes.id,
-                oldId: jsonRes.id,
-                name: jsonRes.name,
-                isEdit: false,
-                isSubmitting: false,
-            });
-        } else {
-            this.setState({ isEdit: false, isSubmitting: false });
-            this.props.onErrorModal(jsonRes.message);
-        }
+        this.props.onErrorModal("Belum dimplementatsikan");
     }
 
     render() {

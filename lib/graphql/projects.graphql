@@ -1,0 +1,191 @@
+query GetLatestProjectInfo($cursor:String,$includeLast:Boolean = false) {
+  latests(cursor:$cursor,limit:10,includeLast:$includeLast) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on ProjectConnection {
+      pageInfo {
+        hasNextPage
+        nextCursor
+      }
+      nodes {
+        ...LatestProject
+      }
+    }
+  }
+}
+
+query GetEmbedProjects($cursor:String,$ids:[UUID!]) {
+  projects(cursor:$cursor,ids:$ids,limit:100) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on ProjectConnection {
+      pageInfo {
+        hasNextPage
+        nextCursor
+      }
+      nodes {
+        ...EmbedProject
+      }
+    }
+  }
+}
+
+query GetProject($id:UUID!) {
+  project(id:$id) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Project {
+      ...ProjectQueryInfo
+    }
+  }
+}
+
+mutation MutateNewProject($data:ProjectInput!) {
+  addProject(data:$data) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Project {
+      ...ProjectAddResult
+    }
+  }
+}
+
+
+mutation MutateProjectEpisodeStatus($id:UUID!,$episode:ProjectEpisodeInput!) {
+  updateProjectEpisode(id:$id,episodes:[$episode]) {
+    ...ResultFrag
+  }
+}
+
+mutation MutateProjectAliases($id:UUID!,$aliases:[String!]) {
+  updateProject(id:$id,data:{aliases:$aliases}) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Project {
+      aliases
+    }
+  }
+}
+
+mutation MutateProjectStaff($id:UUID!,$assignee:ProjectInputAssignee!) {
+  updateProject(id:$id,data:{assignees:[$assignee]}) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Project {
+      assignments {
+        key
+        assignee {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+mutation MutateProjectNuke($id:UUID!) {
+  deleteProject(id:$id) {
+    ...ResultFrag
+  }
+}
+
+fragment ProjectAddResult on Project {
+  id
+  title
+}
+
+fragment EmbedProject on Project {
+  id
+  title
+  poster {
+    image {
+      path
+    }
+  }
+  statuses {
+    roles {
+      key
+      done
+      name
+    }
+    airingAt
+    isReleased
+    episode
+    delayReason
+  }
+  updatedAt
+  collaborations {
+    servers
+  }
+  external {
+    ...on ProjectExternal {
+      startTime
+    }
+  }
+}
+
+fragment ProjectQueryInfo on Project {
+  id
+  title
+  poster {
+    image {
+      path
+    }
+  }
+
+  aliases
+  assignments {
+    key
+    assignee {
+      id
+      name
+    }
+  }
+  statuses {
+    episode
+    isReleased
+    airingAt
+    delayReason
+    roles {
+      key
+      name
+      done
+    }
+  }
+  prediction {
+    nextEpisode
+    overall
+  }
+}
+
+fragment LatestProject on Project {
+  id
+  title
+  poster {
+    image {
+      path
+    }
+  }
+  statuses {
+    episode
+    isReleased
+    roles {
+      key
+      name
+      done
+    }
+  }
+  assignments {
+    key
+    assignee {
+      id
+      name
+    }
+  }
+}

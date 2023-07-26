@@ -9,6 +9,8 @@ import LoadingCircle from "../LoadingCircle";
 import { SettingsProps } from "../SettingsPage/base";
 
 import { generateWordSets } from "@/lib/words";
+import client from "@/lib/graphql/client";
+import { MutateProjectNukeDocument } from "@/lib/graphql/projects.generated";
 
 interface ExtendedNukeProps extends SettingsProps {
     id: string;
@@ -50,19 +52,24 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
         this.handleHide();
         this.setState(resetState(true));
 
-        const results = await fetch("/api/showtimes/proyek/nuke", {
-            method: "POST",
-            body: JSON.stringify({ animeId: this.props.id }),
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: MutateProjectNukeDocument,
+            variables: {
+                id: this.props.id,
             },
         });
-        const jsonRes = await results.json();
-        if (jsonRes.success) {
+
+        if (errors) {
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            this.setState(resetState());
+            return;
+        }
+
+        if (data.deleteProject.success) {
             Router.push("/admin/proyek");
         } else {
-            this.props.onErrorModal(jsonRes.message);
-            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(data.deleteProject.message);
+            this.setState(resetState());
         }
     }
 

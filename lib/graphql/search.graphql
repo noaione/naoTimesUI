@@ -1,0 +1,40 @@
+query AnilistSearch($search: String!) {
+  search {
+    shows: anilist(query:$search,titleSort:ROMANIZED,type:SHOWS) {
+      ... on SearchResults {
+        ...ExternalResults
+      }
+      ... on Result {
+        ...ResultFrag
+      }
+    }
+    books: anilist(query:$search,titleSort:ROMANIZED,type:BOOKS) {
+      ...on SearchResults {
+        ...ExternalResults
+      }
+      ...on Result {
+        ...ResultFrag
+      }
+    }
+  }
+}
+
+fragment ExternalResults on SearchResults {
+  results {
+    ...ExternalResult
+  }
+  count
+}
+
+fragment ExternalResult on SearchResult {
+  id
+  title
+  titles {
+    native
+    romanized
+  }
+  format
+  coverUrl
+  count
+  year
+}

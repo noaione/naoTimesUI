@@ -7,10 +7,10 @@ import AdminHeader from "./AdminHeader";
 import AdminSidenav, { SidenavActiveState } from "./AdminSidenav";
 
 import packageJSON from "../package.json";
-import { IUserAuth } from "@/lib/session";
+import { UserSessFragment } from "@/lib/graphql/auth.generated";
 
 interface AdminLayoutProps {
-    user: IUserAuth;
+    user: UserSessFragment;
     active?: SidenavActiveState;
     title?: string;
     overflowX?: boolean;
@@ -56,7 +56,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                 <div className="flex h-screen bg-gray-100 dark:bg-gray-800 font-inter transition-colors duration-300">
                     <AdminSidenav
                         id={user.id}
-                        name={user.name}
+                        name={user.username}
                         privilige={user.privilege}
                         show={this.state.sidebarOpen}
                         active={active}
@@ -67,11 +67,10 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         <AdminBanner />
                         <AdminHeader
                             id={user.id}
-                            name={user.name}
+                            name={user.username}
                             privilige={user.privilege}
                             title={realTitle}
                             onOpen={this.openSidebar}
-                            isDiscord={user.authType === "discord"}
                         />
                         <motion.main
                             id="root"

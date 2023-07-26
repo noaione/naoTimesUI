@@ -3,89 +3,96 @@ import Head from "next/head";
 
 import AdminLayout from "@/components/AdminLayout";
 import MetadataHead from "@/components/MetadataHead";
-import IkhtisarAnime, { ProjectOverview } from "@/components/IkhtisarAnime";
+import IkhtisarAnime from "@/components/IkhtisarAnime";
 import SkeletonLoader from "@/components/Skeleton";
 import StatsCard, { IStatsType } from "@/components/StatsCard";
 
-import { IUserAuth, withSessionSsr } from "@/lib/session";
+import { UserSessFragment } from "@/lib/graphql/auth.generated";
+import { useQuery } from "@apollo/client";
+import { GetServerStatsDocument } from "@/lib/graphql/servers.generated";
+import { GetLatestProjectInfoDocument } from "@/lib/graphql/projects.generated";
+import { UserType } from "@/lib/graphql/types.generated";
+import { AuthContext } from "@/components/AuthSuspense";
 
-interface StatsData {
-    key: IStatsType;
-    data: number;
+function ErrorText(props: { message: string }) {
+    return (
+        <div className="font-light dark:text-gray-200 mb-2">
+            <span className="font-bold">Error:</span> {props.message}
+        </div>
+    );
 }
 
-interface AdminHomepageState {
-    isLoading: boolean;
+function LatestProjectComponent() {
+    const { loading, error, data } = useQuery(GetLatestProjectInfoDocument);
+    if (loading) {
+        return <SkeletonLoader.AdminOverview />;
+    }
+    if (error) {
+        return <ErrorText message={error.message} />;
+    }
 
-    animeData?: { [key: string]: any }[];
-    statsData?: StatsData[];
+    if (data.latests.__typename === "Result") {
+        return <ErrorText message={data.latests.message} />;
+    }
+
+    const projectData = data.latests.nodes.filter((res) => res.statuses.length > 0);
+    if (projectData.length === 0) {
+        return <div className="text-lg font-light mt-2 dark:text-white">Sudah selesai semua!</div>;
+    }
+    return (
+        <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
+            {projectData.map((res) => {
+                return <IkhtisarAnime key={`latest-project-${res.id}`} data={res} />;
+            })}
+        </div>
+    );
 }
 
-interface AdminAnimeProps {
-    data?: { [key: string]: any }[];
+function StatsComponent() {
+    const { loading, error, data } = useQuery(GetServerStatsDocument);
+    if (loading) {
+        return (
+            <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                <SkeletonLoader.StatsCard />
+            </div>
+        );
+    }
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    if (data.stats.__typename === "Result") {
+        return <div>Error: {data.stats.message}</div>;
+    }
+
+    const statsData = data.stats.nodes;
+    return (
+        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+            {statsData.map((res) => {
+                return (
+                    <StatsCard
+                        key={`stats-card-${res.key}`}
+                        type={res.key as IStatsType}
+                        amount={res.value}
+                    />
+                );
+            })}
+        </div>
+    );
 }
 
 interface AdminHomepageProps {
-    user?: IUserAuth & { loggedIn: boolean };
+    user: UserSessFragment;
 }
 
-class AdminAnimeSets extends React.Component<AdminAnimeProps> {
-    constructor(props: AdminAnimeProps) {
-        super(props);
-    }
-
-    render() {
-        const { data } = this.props;
-
-        return (
-            <>
-                {data.length > 0 ? (
-                    <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3">
-                        {data.map((res) => {
-                            return (
-                                <IkhtisarAnime key={`anime-card-${res.id}`} data={res as ProjectOverview} />
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div className="text-lg font-light mt-2 dark:text-white">Sudah selesai semua!</div>
-                )}
-            </>
-        );
-    }
-}
-
-class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageState> {
+class AdminHomepage extends React.Component<AdminHomepageProps> {
     constructor(props: AdminHomepageProps) {
         super(props);
-        this.state = {
-            isLoading: true,
-        };
-    }
-
-    async componentDidMount() {
-        const userObj = await fetch("/api/showtimes/stats");
-        const jsonResp = await userObj.json();
-        const success = [];
-        if (jsonResp.code === 200) {
-            this.setState({ statsData: jsonResp.data });
-            success.push(1);
-        }
-        const animeObj = await fetch("/api/showtimes/latestanime");
-        const animeResp = await animeObj.json();
-        if (animeResp.code === 200) {
-            this.setState({ animeData: animeResp.data });
-            success.push(2);
-        }
-        if (success.length === 2) {
-            this.setState({ isLoading: false });
-        }
     }
 
     render() {
         const { user } = this.props;
-        const { isLoading, animeData, statsData } = this.state;
-        const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+        const pageTitle = user.privilege === UserType.Admin ? "Panel Admin" : "Panel Peladen";
 
         return (
             <>
@@ -98,25 +105,11 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
                 <AdminLayout user={user}>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Statistik</h2>
-                        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-                            {isLoading ? (
-                                <SkeletonLoader.StatsCard />
-                            ) : (
-                                statsData.map((res) => {
-                                    return (
-                                        <StatsCard
-                                            key={`stats-card-${res.key}`}
-                                            type={res.key as IStatsType}
-                                            amount={res.data}
-                                        />
-                                    );
-                                })
-                            )}
-                        </div>
+                        <StatsComponent />
                     </div>
                     <div className="container mx-auto px-6 py-8">
                         <h2 className="font-light dark:text-gray-200 pb-4">Sedang digarap</h2>
-                        {isLoading ? <SkeletonLoader.AdminOverview /> : <AdminAnimeSets data={animeData} />}
+                        <LatestProjectComponent />
                     </div>
                 </AdminLayout>
             </>
@@ -124,32 +117,6 @@ class AdminHomepage extends React.Component<AdminHomepageProps, AdminHomepageSta
     }
 }
 
-export const getServerSideProps = withSessionSsr(async function ({ req }) {
-    let user = req.session.user;
-
-    if (!user) {
-        return {
-            redirect: {
-                destination: "/?cb=/admin",
-                permanent: false,
-            },
-        };
-    }
-
-    if (user.authType === "discord") {
-        // override with server info
-        user = req.session.userServer;
-        if (!user) {
-            return {
-                redirect: {
-                    destination: "/discord",
-                    permanent: false,
-                },
-            };
-        }
-    }
-
-    return { props: { user: { loggedIn: true, ...user } } };
-});
-
-export default AdminHomepage;
+export default function WrappedAdminHomepage() {
+    return <AuthContext.Consumer>{(sess) => sess && <AdminHomepage user={sess} />}</AuthContext.Consumer>;
+}

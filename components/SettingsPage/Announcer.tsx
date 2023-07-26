@@ -8,6 +8,10 @@ import { ActionMeta } from "react-select";
 import { SettingsProps } from "./base";
 
 import LoadingCircle from "../LoadingCircle";
+import client from "@/lib/graphql/client";
+import { MutateServerDocument } from "@/lib/graphql/servers.generated";
+import { DISCORD_CHANNEL, PREFIX_ANNOUNCEMENT } from "@/lib/graphql/integration-type";
+import { IntegrationInputAction } from "@/lib/graphql/types.generated";
 
 interface AnnouncerProps extends SettingsProps {
     announcerId?: string;
@@ -89,51 +93,79 @@ class AnnouncerSettings extends React.Component<AnnouncerProps, AnnouncerState> 
         this.setState({ isSubmitting: true });
         const stringfied = toString(this.state.announcerId);
 
-        const bodyBag = {
-            channelid: stringfied,
-        };
-        const apiRes = await fetch("/api/showtimes/settings/announcer", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: MutateServerDocument,
+            variables: {
+                data: {
+                    integrations: [
+                        {
+                            id: stringfied,
+                            type: `${PREFIX_ANNOUNCEMENT}${DISCORD_CHANNEL}`,
+                            action: IntegrationInputAction.Upsert,
+                        },
+                    ],
+                },
             },
-            body: JSON.stringify(bodyBag),
         });
 
-        const jsonRes = await apiRes.json();
-        if (jsonRes.code === 200) {
-            this.setState({ oldAnnouncer: stringfied, announcerId: stringfied, isSubmitting: false });
-        } else {
+        if (errors) {
             this.setState({ isSubmitting: false });
-            this.props.onErrorModal(jsonRes.message as string);
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            return;
         }
+
+        if (data.updateServer.__typename === "Result") {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(data.updateServer.message);
+            return;
+        }
+
+        const announcerId = data.updateServer.integrations.filter(
+            (e) => e.type === `${PREFIX_ANNOUNCEMENT}${DISCORD_CHANNEL}`
+        );
+        this.setState({
+            isSubmitting: false,
+            oldAnnouncer: announcerId[0]?.id,
+            announcerId: announcerId[0]?.id,
+        });
     }
 
     async removeAnnouncer() {
         if (this.state.isSubmitting) {
             return;
         }
+        if (!this.state.oldAnnouncer) {
+            return;
+        }
         this.setState({ isSubmitting: true });
 
-        const bodyBag = {
-            channelid: "",
-            toRemove: true,
-        };
-        const apiRes = await fetch("/api/showtimes/settings/announcer", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: MutateServerDocument,
+            variables: {
+                data: {
+                    integrations: [
+                        {
+                            id: this.state.oldAnnouncer,
+                            type: `${PREFIX_ANNOUNCEMENT}${DISCORD_CHANNEL}`,
+                            action: IntegrationInputAction.Delete,
+                        },
+                    ],
+                },
             },
-            body: JSON.stringify(bodyBag),
         });
-
-        const jsonRes = await apiRes.json();
-        if (jsonRes.code === 200) {
-            this.setState({ oldAnnouncer: null, announcerId: null, isSubmitting: false });
-        } else {
+        if (errors) {
             this.setState({ isSubmitting: false });
-            this.props.onErrorModal(jsonRes.message as string);
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            return;
         }
+
+        if (data.updateServer.__typename === "Result") {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(data.updateServer.message);
+            return;
+        }
+
+        this.setState({ isSubmitting: false, oldAnnouncer: null, announcerId: null });
     }
 
     render() {

@@ -1,0 +1,119 @@
+mutation SetServer($id:UUID) {
+  selectServer(id:$id) {
+    ...ResultFrag
+  }
+}
+
+query GetCurrentServer {
+  server {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Server {
+      ...ServerInfo
+    }
+  }
+}
+
+query GetRegisteredServer($cursor:String) {
+  servers(limit:25,cursor:$cursor) {
+    ...on Result {
+      code
+      message
+      success
+    }
+    ...on ServerConnection {
+      _total
+      pageInfo {
+        nextCursor
+        hasNextPage
+        perPage
+        totalResults
+      }
+      nodes {
+        ...ServerInfo
+      }
+    }
+  }
+}
+
+query GetServerStats {
+  stats {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on IntKeyValueNodeResult {
+      nodes {
+        key
+        value
+      }
+    }
+  }
+}
+
+query GetServerNames($ids:[UUID!],$cursor:String) {
+  servers(ids: $ids,limit:100,cursor:$cursor) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on ServerConnection {
+      nodes {
+        id
+        name
+      }
+      pageInfo {
+        nextCursor
+      }
+    }
+  }
+}
+
+mutation MutateServerOwner($owners:[UUID!]!) {
+  updateServerOwners(owners:$owners) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Server {
+      owners {
+        ...on User {
+          id
+          username
+        }
+        ...on UserTemporary {
+          id
+          username
+        }
+      }
+    }
+  }
+}
+
+mutation MutateServer($data:ServerInput!) {
+  updateServer(data:$data) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Server {
+      ...ServerInfo
+    }
+  }
+}
+
+mutation NukeServer($id:UUID!) {
+  deleteServer(id:$id) {
+    ...on Result {
+      ...ResultFrag
+    }
+  }
+}
+
+mutation AddServer($data:ServerInput!) {
+  addServer(data:$data) {
+    ...on Result {
+      ...ResultFrag
+    }
+    ...on Server {
+      ...ServerInfo
+    }
+  }
+}

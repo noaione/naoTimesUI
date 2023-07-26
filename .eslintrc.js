@@ -87,7 +87,7 @@ module.exports = {
         camelcase: "off",
         "consistent-return": "off",
         "no-continue": "off",
-        "no-underscore-dangle": ["warn", { allowFunctionParams: true }],
+        "no-underscore-dangle": ["warn", { allowFunctionParams: true, allow: ["__typename"] }],
         "dot-notation": ["warn", { allowPattern: "^[a-z]+(_[a-z]+)+$" }],
         "react/react-in-jsx-scope": 0,
         "react/display-name": 0,

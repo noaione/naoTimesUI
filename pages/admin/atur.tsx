@@ -7,23 +7,22 @@ import MetadataHead from "@/components/MetadataHead";
 // Import all Settings Component
 import SettingsComponent from "@/components/SettingsPage";
 
-import prisma from "@/lib/prisma";
-import type { showtimesdatas } from "@prisma/client";
-import { IUserAuth, withSessionSsr } from "@/lib/session";
-
 import ErrorModal from "@/components/ErrorModal";
 import { CallbackModal } from "@/components/Modal";
+import { AuthContext } from "@/components/AuthSuspense";
+import { UserSessFragment } from "@/lib/graphql/auth.generated";
+import { ServerInfoFragment } from "@/lib/graphql/common.generated";
+import client from "@/lib/graphql/client";
+import { GetCurrentServerDocument } from "@/lib/graphql/servers.generated";
+import { DISCORD_CHANNEL, PREFIX_ANNOUNCEMENT } from "@/lib/graphql/integration-type";
 
 interface SettingsHomepageState {
     errText: string;
-    serverData?: { [key: string]: any };
+    serverInfo?: ServerInfoFragment;
 }
 
-type ServerPropsFromDB = Pick<showtimesdatas, "serverowner" | "announce_channel">;
-
 interface SettingsHomepageProps {
-    serverProps?: ServerPropsFromDB;
-    user?: IUserAuth & { loggedIn: boolean };
+    user: UserSessFragment;
 }
 
 class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHomepageState> {
@@ -34,7 +33,26 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
         this.showErrorCallback = this.showErrorCallback.bind(this);
         this.state = {
             errText: "",
+            serverInfo: undefined,
         };
+    }
+
+    async componentDidMount(): Promise<void> {
+        const { data, error } = await client.query({
+            query: GetCurrentServerDocument,
+        });
+
+        if (error) {
+            this.setState({ errText: error.message });
+            return;
+        }
+
+        if (data.server.__typename === "Result") {
+            this.setState({ errText: data.server.message });
+            return;
+        }
+
+        this.setState({ serverInfo: data.server });
     }
 
     showErrorCallback(errText: string) {
@@ -44,39 +62,47 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
     render() {
         const { user } = this.props;
-        const serverProps = this.props.serverProps || ({} as ServerPropsFromDB);
-        const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
+        const { serverInfo } = this.state;
 
         return (
             <>
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{`Pengaturan - ${pageTitle} :: naoTimesUI`}</title>
-                    <MetadataHead.SEO title={"Pengaturan - " + pageTitle} urlPath="/admin/atur" />
+                    <title>{`Pengaturan Peladen :: naoTimesUI`}</title>
+                    <MetadataHead.SEO title="Pengaturan Peladen" urlPath="/admin/atur" />
                 </Head>
                 <AdminLayout user={user} title="Pengaturan" active="settings">
                     <div className="container mx-auto px-6 py-8">
                         <div className="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
                             <div className="p-3 bg-white dark:bg-gray-700 rounded shadow-md">
-                                <SettingsComponent.Announcer
-                                    announcerId={serverProps.announce_channel}
-                                    onErrorModal={this.showErrorCallback}
-                                />
-                                <SettingsComponent.Admin
-                                    serverOwner={serverProps.serverowner}
-                                    onErrorModal={this.showErrorCallback}
-                                />
-                                <SettingsComponent.ResetPass onErrorModal={this.showErrorCallback} />
-                                <SettingsComponent.NameChange onErrorModal={this.showErrorCallback} />
-                                <SettingsComponent.EmbedGen
-                                    id={user.id}
-                                    onErrorModal={this.showErrorCallback}
-                                />
-                                <SettingsComponent.DeleteServer
-                                    id={user.id}
-                                    onErrorModal={this.showErrorCallback}
-                                />
+                                {serverInfo && (
+                                    <>
+                                        <SettingsComponent.Announcer
+                                            announcerId={
+                                                serverInfo.integrations.filter(
+                                                    (type) =>
+                                                        type.type ===
+                                                        `${PREFIX_ANNOUNCEMENT}${DISCORD_CHANNEL}`
+                                                )[0]?.id
+                                            }
+                                            onErrorModal={this.showErrorCallback}
+                                        />
+                                        <SettingsComponent.Admin
+                                            serverOwner={serverInfo.owners}
+                                            onErrorModal={this.showErrorCallback}
+                                        />
+                                        <SettingsComponent.NameChange onErrorModal={this.showErrorCallback} />
+                                        <SettingsComponent.EmbedGen
+                                            id={serverInfo.id}
+                                            onErrorModal={this.showErrorCallback}
+                                        />
+                                        <SettingsComponent.DeleteServer
+                                            id={serverInfo.id}
+                                            onErrorModal={this.showErrorCallback}
+                                        />
+                                    </>
+                                )}
                             </div>
                         </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.errText}</ErrorModal>
@@ -87,45 +113,6 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
     }
 }
 
-export const getServerSideProps = withSessionSsr(async ({ req }) => {
-    let user = req.session.user;
-
-    if (!user) {
-        return {
-            redirect: {
-                destination: "/?cb=/admin/atur",
-                permanent: false,
-            },
-        };
-    }
-
-    if (user.authType === "discord") {
-        // override with server info
-        user = req.session.userServer;
-        if (!user) {
-            return {
-                redirect: {
-                    destination: "/discord",
-                    permanent: false,
-                },
-            };
-        }
-    }
-
-    if (user.privilege === "server") {
-        const serverInfo = await prisma.showtimesdatas.findFirst({
-            where: {
-                id: user.id,
-            },
-            select: {
-                serverowner: true,
-                announce_channel: true,
-                mongo_id: false,
-            },
-        });
-        return { props: { user: { loggedIn: true, ...user }, serverProps: serverInfo } };
-    }
-    return { props: { user: { loggedIn: true, ...user }, serverProps: undefined } };
-});
-
-export default SettingsHomepage;
+export default function WrappedSettingsHomepage() {
+    return <AuthContext.Consumer>{(sess) => sess && <SettingsHomepage user={sess} />}</AuthContext.Consumer>;
+}

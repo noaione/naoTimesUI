@@ -4,27 +4,36 @@ import Link from "next/link";
 import Router from "next/router";
 
 import PlusIcon from "mdi-react/PlusIcon";
-import CollabIcon from "mdi-react/AccountArrowRightOutlineIcon";
 
 import AdminLayout from "@/components/AdminLayout";
 import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
 import RolePopup from "@/components/RolePopup";
 
-import { IUserAuth, withSessionSsr } from "@/lib/session";
-import { expandRoleLocalized, expandRoleName, getAssigneeName, RoleProject } from "@/lib/utils";
-import type { ProjectAssignment, ProjectAssignmentPerson } from "@prisma/client";
-
-interface AnimeProyekData {
-    id: string;
-    title: string;
-    assignments: ProjectAssignment;
-    poster: string;
-    is_finished: boolean;
-}
+import { expandRoleLocalized, expandRoleName, Nullable } from "@/lib/utils";
+import { GetLatestProjectInfoDocument, LatestProjectFragment } from "@/lib/graphql/projects.generated";
+import client from "@/lib/graphql/client";
+import { UserSessFragment } from "@/lib/graphql/auth.generated";
+import { AuthContext } from "@/components/AuthSuspense";
+import { SERVER_UNSELECT } from "@/lib/graphql/error-code";
+import ErrorModal from "@/components/ErrorModal";
+import { CallbackModal } from "@/components/Modal";
+import { buildImageUrl } from "@/components/ImageMetadata";
+import { ProjectAssigneeInfo } from "@/lib/graphql/types.generated";
+import { InView } from "react-intersection-observer";
 
 interface ProyekCardProps {
-    anime: AnimeProyekData;
+    proyek: LatestProjectFragment;
+}
+
+function getAssigneeNameV2(info?: Omit<ProjectAssigneeInfo, "integrations">) {
+    if (!info) {
+        return "Tidak diketahui";
+    }
+    if (!info.name) {
+        return "Tidak diketahui";
+    }
+    return info.name;
 }
 
 class ProyekSimpleCard extends React.Component<ProyekCardProps> {
@@ -33,34 +42,11 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
     }
 
     render() {
-        const { anime } = this.props;
-        const {
-            id,
-            title,
-            assignments: { custom: customAssignee, ...assignments },
-            poster,
-            is_finished,
-        } = anime;
+        const { proyek } = this.props;
+        const { id, title, assignments, poster, statuses } = proyek;
 
-        function generateStatusText() {
-            if (is_finished) {
-                return <div className="text-base font-semibold text-green-500">Tamat</div>;
-            }
-            return <div className="text-base font-semibold text-red-500">Proses</div>;
-        }
-
-        const remappedAssignees: { [key: string]: ProjectAssignmentPerson } = {};
-        for (const [role, assignee] of Object.entries(assignments)) {
-            if (role === "QC") {
-                continue;
-            }
-            remappedAssignees[role] = assignee;
-        }
-        const customTextMapping: { [key: string]: string } = {};
-        customAssignee.forEach((cAss) => {
-            customTextMapping[cAss.key] = cAss.name;
-            remappedAssignees[cAss.key] = cAss.person;
-        });
+        const lastStatus = statuses[0];
+        console.log(lastStatus);
 
         return (
             <>
@@ -68,30 +54,35 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
                     <div
                         onClick={() => Router.push("/admin/proyek/" + id)}
                         className="h-48 lg:h-auto lg:w-28 flex-none bg-cover rounded-t-lg lg:rounded-t-none lg:rounded-l-lg text-center overflow-hidden cursor-pointer"
-                        style={{ backgroundImage: `url(${poster})` }}
+                        style={{ backgroundImage: `url(${buildImageUrl(poster.image, "poster")})` }}
                         title={title}
                     />
                     <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
-                            <Link href={"/admin/proyek/" + id} passHref>
-                                <a className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer">
-                                    {title}
-                                </a>
+                            <Link
+                                href={`/admin/proyek/${id}`}
+                                className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
+                            >
+                                {title}
                             </Link>
-                            {generateStatusText()}
+                            {lastStatus.isReleased ? (
+                                <div className="text-base font-semibold text-green-500">Tamat</div>
+                            ) : (
+                                <div className="text-base font-semibold text-red-500">Proses</div>
+                            )}
                             <div className="flex flex-row flex-wrap gap-1 pt-2 text-center">
-                                {Object.keys(remappedAssignees).map((roleName) => {
-                                    const assigneeValues = remappedAssignees[roleName];
-                                    const expandRole = expandRoleName(roleName);
-                                    const titleRole =
-                                        customTextMapping[roleName] || expandRoleLocalized(roleName);
-                                    const name = getAssigneeName(assigneeValues);
+                                {lastStatus.roles.map((role) => {
+                                    const assignee = assignments.find((a) => a.key === role.key);
+                                    const name = getAssigneeNameV2(assignee?.assignee);
+                                    const override = expandRoleName(role.key);
+                                    const expandedRole = expandRoleLocalized(role.key, role.name);
+                                    const popuptext = `${expandedRole}: ${name}`;
                                     return (
                                         <RolePopup
-                                            key={`${roleName}-anime-${id}`}
-                                            title={roleName as RoleProject}
-                                            popupText={titleRole}
-                                            overrideTitle={`${expandRole}: ${name}`}
+                                            key={`${role.key}-project-${proyek.id}`}
+                                            title={role.key}
+                                            popupText={popuptext}
+                                            overrideTitle={override}
                                         />
                                     );
                                 })}
@@ -106,80 +97,170 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
 
 interface ProyekHomepageState {
     isLoading: boolean;
-    animeData?: AnimeProyekData[];
+    projects: LatestProjectFragment[];
+    cursor: Nullable<string>;
+    error?: string;
+    firstFetch: boolean;
+    canLoadMore: boolean;
 }
 
 interface ProyekHomepageProps {
-    user?: IUserAuth & { loggedIn: boolean };
+    user: UserSessFragment;
 }
 
 class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepageState> {
+    modalCb?: CallbackModal;
+
     constructor(props: ProyekHomepageProps) {
         super(props);
+        this.showErrorCallback = this.showErrorCallback.bind(this);
+        this.loadMore = this.loadMore.bind(this);
         this.state = {
             isLoading: true,
+            cursor: null,
+            projects: [],
+            firstFetch: true,
+            canLoadMore: true,
         };
     }
 
-    async componentDidMount() {
-        const userObj = await fetch("/api/showtimes/proyek");
-        const jsonResp = await userObj.json();
-        if (jsonResp.code === 200) {
-            this.setState({ animeData: jsonResp.data, isLoading: false });
+    showErrorCallback(error: string) {
+        this.setState({ error });
+        if (this.modalCb) {
+            this.modalCb.showModal();
         }
     }
 
+    async componentDidMount() {
+        const { data, error } = await client.query({
+            query: GetLatestProjectInfoDocument,
+            variables: {
+                includeLast: true,
+            },
+        });
+        if (error) {
+            this.showErrorCallback(error.message);
+            this.setState({ isLoading: false, firstFetch: false, canLoadMore: false });
+        }
+
+        if (data.latests.__typename === "Result") {
+            if (data.latests.code === SERVER_UNSELECT) {
+                Router.push("/servers");
+            } else {
+                this.showErrorCallback(data.latests.message);
+                this.setState({
+                    isLoading: false,
+                    firstFetch: false,
+                    canLoadMore: false,
+                });
+            }
+            return;
+        }
+
+        this.setState({
+            isLoading: false,
+            error: undefined,
+            projects: data.latests.nodes,
+            firstFetch: false,
+            canLoadMore: typeof data.latests.pageInfo.nextCursor === "string",
+            cursor: data.latests.pageInfo.nextCursor,
+        });
+    }
+
+    async loadMore() {
+        const { cursor, canLoadMore, isLoading } = this.state;
+        if (isLoading) {
+            return;
+        }
+        if (!canLoadMore) {
+            return;
+        }
+        this.setState({ isLoading: true });
+
+        const { data, error } = await client.query({
+            query: GetLatestProjectInfoDocument,
+            variables: {
+                cursor: cursor,
+                includeLast: true,
+            },
+        });
+        if (error) {
+            this.showErrorCallback(error.message);
+            this.setState({ isLoading: false, canLoadMore: false, cursor: null });
+        }
+
+        if (data.latests.__typename === "Result") {
+            if (data.latests.code === SERVER_UNSELECT) {
+                Router.push("/servers");
+            } else {
+                this.showErrorCallback(data.latests.message);
+                this.setState({
+                    isLoading: false,
+                    canLoadMore: false,
+                });
+            }
+            return;
+        }
+
+        this.setState({
+            isLoading: false,
+            error: undefined,
+            projects: [...this.state.projects, ...data.latests.nodes],
+            canLoadMore: typeof data.latests.pageInfo.nextCursor === "string",
+            cursor: data.latests.pageInfo.nextCursor,
+        });
+    }
+
     render() {
-        const { isLoading, animeData } = this.state;
+        const { isLoading, projects } = this.state;
         const { user } = this.props;
-        const pageTitle = user.privilege === "owner" ? "Panel Admin" : "Panel Peladen";
 
         return (
             <>
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{`Proyek - ${pageTitle} :: naoTimesUI`}</title>
-                    <MetadataHead.SEO title={"Proyek - " + pageTitle} urlPath="/admin/proyek" />
+                    <title>Proyek :: naoTimesUI</title>
+                    <MetadataHead.SEO title="Proyek" urlPath="/admin/proyek" />
                 </Head>
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
                         <div className="flex flex-row gap-2">
-                            <Link href="/admin/proyek/tambah" passHref>
-                                <a className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center">
-                                    <PlusIcon className="font-bold mr-1" />
-                                    <span className="font-semibold mt-0.5">Tambah</span>
-                                </a>
-                            </Link>
-                            <Link href="/admin/proyek/kolaborasi" passHref>
-                                <a className="flex flex-row px-3 py-2 rounded-lg bg-yellow-500 text-white transition hover:bg-yellow-700 duration-200 ease-in-out items-center">
-                                    <CollabIcon className="font-bold mr-1" />
-                                    <span className="font-semibold mt-0.5">Kolaborasi</span>
-                                </a>
+                            <Link
+                                href="/admin/proyek/tambah"
+                                className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center"
+                            >
+                                <PlusIcon className="font-bold mr-1" />
+                                <span className="font-semibold mt-0.5">Tambah</span>
                             </Link>
                         </div>
-                        {isLoading ? (
-                            <SkeletonLoader.ProjectOverview />
-                        ) : (
-                            <>
-                                <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
-                                    {animeData.length > 0 ? (
-                                        animeData.map((anime) => {
-                                            return (
-                                                <ProyekSimpleCard
-                                                    anime={anime}
-                                                    key={`anime-proyek-${anime.id}`}
-                                                />
-                                            );
-                                        })
-                                    ) : (
+                        <InView
+                            as="div"
+                            className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4"
+                            onChange={(inview, _) => {
+                                if (inview) {
+                                    this.loadMore();
+                                }
+                            }}
+                        >
+                            {projects.length > 0 ? (
+                                projects.map((project) => {
+                                    return (
+                                        <ProyekSimpleCard proyek={project} key={`project-${project.id}`} />
+                                    );
+                                })
+                            ) : (
+                                <>
+                                    {!this.state.firstFetch && (
                                         <span className="font-bold dark:text-gray-200 text-xl">
                                             Tidak ada proyek yang terdaftar
                                         </span>
                                     )}
-                                </div>
-                            </>
-                        )}
+                                </>
+                            )}
+                        </InView>
+                        {isLoading && <SkeletonLoader.ProjectOverview />}
+                        <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.error}</ErrorModal>
                     </div>
                 </AdminLayout>
             </>
@@ -187,37 +268,6 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
     }
 }
 
-export const getServerSideProps = withSessionSsr(async function ({ req }) {
-    let user = req.session.user;
-
-    if (!user) {
-        return {
-            redirect: {
-                destination: "/?cb=/admin/proyek",
-                permanent: false,
-            },
-        };
-    }
-
-    if (user.authType === "discord") {
-        // override with server info
-        user = req.session.userServer;
-        if (!user) {
-            return {
-                redirect: {
-                    destination: "/discord",
-                    permanent: false,
-                },
-            };
-        }
-    }
-    if (user.privilege === "owner") {
-        return {
-            notFound: true,
-        };
-    }
-
-    return { props: { user: { loggedIn: true, ...user } } };
-});
-
-export default ProyekHomepage;
+export default function WrappedProyekHomepage() {
+    return <AuthContext.Consumer>{(sess) => sess && <ProyekHomepage user={sess} />}</AuthContext.Consumer>;
+}

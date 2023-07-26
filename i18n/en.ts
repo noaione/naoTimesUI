@@ -35,7 +35,8 @@ const Locale = {
         RETRACT: "Close...",
     },
     LAST_UPDATE: "Updated {0}",
-    EPISODE_NEEDS: "needs",
+    EPISODE: "Episode {0}",
+    EPISODE_NEEDS: "Episode {0} needs",
     WAITING_RELEASE: "Waiting for release...",
     COLLAB_WITH: "Joint with {0}",
 };

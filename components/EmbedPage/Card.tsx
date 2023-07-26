@@ -12,7 +12,8 @@ import { ValidAccent } from "../ColorMap";
 import ReactTimeAgoLocale from "../TimeAgo";
 
 import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
-import { Project } from "@prisma/client";
+import { EmbedProjectFragment } from "@/lib/graphql/projects.generated";
+import ImageMetadataComponent from "../ImageMetadata";
 
 function getSeason(month: number, year: number, locale: Locale): string {
     const yearS = year.toString();
@@ -38,7 +39,7 @@ const borderTop = {
 };
 
 interface EmbedPageCardProps extends IEmbedParams {
-    animeData: Project;
+    animeData: EmbedProjectFragment;
     serverInfo: { [srvId: string]: string | null };
 }
 
@@ -79,10 +80,16 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
             realLang = lang;
         }
 
-        const { id, title, poster_data, status, last_update, start_time } = animeData;
-        const { url: poster_url } = poster_data;
+        const {
+            id,
+            title,
+            poster: { image },
+            statuses,
+            updatedAt,
+            external: { startTime },
+        } = animeData;
 
-        const unfinishedEpisode = status.filter((episode) => !episode.is_done);
+        const unfinishedEpisode = statuses.filter((s) => !s.isReleased);
         if (unfinishedEpisode.length < 1) {
             return null;
         }
@@ -97,7 +104,8 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
             : "text-blue-500 hover:text-blue-400 dark:text-blue-300";
 
         const lastUpdated = translate("LAST_UPDATE", realLang) as string;
-        const startTime = DateTime.fromSeconds(start_time, { zone: "UTC" });
+        const startTimeDt = DateTime.fromSeconds(startTime, { zone: "UTC" });
+        const lastUpdateUnix = DateTime.fromISO(updatedAt, { zone: "UTC" }).toSeconds();
 
         const extraHiddenThing = dropdownOpen ? "" : "hidden ";
         const jointWith = Object.values(serverInfo).filter((r) => typeof r === "string");
@@ -112,10 +120,12 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                     style={realAccent === "nonde" ? {} : borderTop}
                 >
                     <div className="hidden sm:block w-24 mt-3 ml-3 mb-8 relative flex-none">
-                        <img
+                        <ImageMetadataComponent
+                            image={image}
+                            alt={`Poster Proyek ${title}`}
                             className="z-0 rounded-md"
-                            src={poster_url}
-                            alt={"Poster untuk Proyek " + title}
+                            width={230}
+                            height={325}
                         />
                     </div>
                     <div className="text-xs h-full flex-grow px-3 pt-2 py-8 max-w-full flex flex-col">
@@ -129,10 +139,10 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                             <EpisodeCard
                                 key={`episode-card-${id}-${firstEpisode.episode}`}
                                 episode={firstEpisode.episode}
-                                airingAt={firstEpisode.airtime}
-                                progress={firstEpisode.progress}
+                                airingAt={firstEpisode.airingAt}
+                                progress={firstEpisode.roles}
                                 lang={realLang}
-                                delayReason={firstEpisode.delay_reason}
+                                delayReason={firstEpisode.delayReason}
                             />
                         </div>
                         {next3Episode.length > 0 ? (
@@ -143,8 +153,8 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                             <EpisodeCard
                                                 key={`episode-card-${id}-${ep.episode}`}
                                                 episode={ep.episode}
-                                                airingAt={ep.airtime}
-                                                progress={ep.progress}
+                                                airingAt={ep.airingAt}
+                                                progress={ep.roles}
                                                 lang={realLang}
                                             />
                                         );
@@ -182,7 +192,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                     <div>
                         <div className="absolute bottom-2 left-3 text-xs text-gray-400 dark:text-gray-300">
                             <div className="flex flex-row gap-1 text-left">
-                                {firstEpisode.delay_reason && (
+                                {firstEpisode.delayReason && (
                                     <span className="z-10 inline-block h-4 w-4 relative text-blue-400 group">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +206,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                             />
                                         </svg>
                                         <span className="pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity shadow rounded rounded-bl-none absolute bottom-5 w-60 border bg-blue-100 text-blue-800 border-blue-400 px-2 py-2">
-                                            {firstEpisode.delay_reason}
+                                            {firstEpisode.delayReason}
                                         </span>
                                     </span>
                                 )}
@@ -204,8 +214,8 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                     {reactStringReplace(lastUpdated, "{0}", () => {
                                         return (
                                             <ReactTimeAgoLocale
-                                                key={`utang-${id}-ts-${last_update}`}
-                                                unix={last_update}
+                                                key={`utang-${id}-ts-${lastUpdateUnix}`}
+                                                unix={lastUpdateUnix}
                                                 locale={realLang}
                                             />
                                         );
@@ -215,7 +225,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         </div>
                         <div className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-300">
                             <div className="flex flex-row text-right">
-                                <span>{getSeason(startTime.month, startTime.year, realLang)}</span>
+                                <span>{getSeason(startTimeDt.month, startTimeDt.year, realLang)}</span>
                             </div>
                         </div>
                     </div>

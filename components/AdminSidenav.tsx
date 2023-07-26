@@ -4,13 +4,12 @@ import Link from "next/link";
 import CogIcon from "mdi-react/CogIcon";
 import HomeIcon from "mdi-react/HomeIcon";
 import InformationIcon from "mdi-react/InformationIcon";
-import NewspaperVariantIcon from "mdi-react/NewspaperVariantIcon";
-import ServerIcon from "mdi-react/ServerIcon";
 import YoutubeTvIcon from "mdi-react/YoutubeTvIcon";
 
 import GitHubIcon from "./Icons/GitHub";
 
 import { romanizeNumber } from "../lib/utils";
+import { UserType } from "@/lib/graphql/types.generated";
 
 export type SidenavActiveState =
     | "home"
@@ -24,7 +23,7 @@ export type SidenavActiveState =
 interface SidenavProps {
     id: string;
     name?: string;
-    privilige: "owner" | "server";
+    privilige: UserType;
     show: boolean;
     active?: SidenavActiveState;
     appInfo?: {
@@ -50,21 +49,13 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
     }
 
     render() {
-        const { privilige, active, show } = this.props;
+        const { active, show } = this.props;
         const appInfo = this.props.appInfo || {};
         const { semver, commit } = appInfo;
-        const isAdmin = privilige === "owner";
         const curActive = active ?? "home";
 
         const blackLucent = show ? "block" : "hidden";
         const sidebarTransition = show ? "translate-x-0 ease-out" : "-translate-x-full ease-in";
-
-        const adminPageUrl = isAdmin ? "/admin/peladen" : "/admin/proyek";
-        const adminPageIcon = isAdmin ? (
-            <ServerIcon className="text-sm" />
-        ) : (
-            <YoutubeTvIcon className="text-sm" />
-        );
 
         const currentCopyright = new Date().getUTCFullYear();
         const romanizedCC = romanizeNumber(currentCopyright);
@@ -98,53 +89,37 @@ class AdminSidenav extends React.Component<SidenavProps, {}> {
                     </div>
 
                     <nav className="flex flex-col mt-10 px-4">
-                        <Link href={curActive === "home" ? "#" : "/admin"} passHref>
-                            <a className={curActive === "home" ? SelClass : NormanClass}>
-                                <HomeIcon className="text-sm" />
-                                <span className="ml-1">Ikhtisar</span>
-                            </a>
+                        <Link
+                            href={curActive === "home" ? "#" : "/admin"}
+                            className={curActive === "home" ? SelClass : NormanClass}
+                        >
+                            <HomeIcon className="text-sm" />
+                            <span className="ml-1">Ikhtisar</span>
                         </Link>
-                        <Link href={curActive === "project" ? "#" : adminPageUrl} passHref>
-                            <a
-                                className={
-                                    ["project", "projectpage"].includes(curActive)
-                                        ? SelClass + " mt-3"
-                                        : NormanClass + " mt-3"
-                                }
-                            >
-                                {adminPageIcon}
-                                <span className="ml-1">{isAdmin ? "Peladen" : "Proyek"}</span>
-                            </a>
+                        <Link
+                            href={curActive === "project" ? "#" : "/admin/proyek"}
+                            className={
+                                ["project", "projectpage"].includes(curActive)
+                                    ? SelClass + " mt-3"
+                                    : NormanClass + " mt-3"
+                            }
+                        >
+                            <YoutubeTvIcon className="text-sm" />
+                            <span className="ml-1">Proyek</span>
                         </Link>
-                        {!isAdmin && (
-                            <Link href={curActive === "fsrss" ? "#" : "/admin/fansubrss"} passHref>
-                                <a
-                                    className={
-                                        ["fsrss", "fsrsspage"].includes(curActive)
-                                            ? SelClass + " mt-3"
-                                            : NormanClass + " mt-3"
-                                    }
-                                >
-                                    <NewspaperVariantIcon className="text-sm" />
-                                    <span className="ml-1">FansubRSS</span>
-                                </a>
-                            </Link>
-                        )}
-                        <Link href={curActive === "settings" ? "#" : "/admin/atur"} passHref>
-                            <a
-                                className={
-                                    curActive === "settings" ? SelClass + " mt-3" : NormanClass + " mt-3"
-                                }
-                            >
-                                <CogIcon className="text-sm" />
-                                <span className="ml-1">Pengaturan</span>
-                            </a>
+                        <Link
+                            href={curActive === "settings" ? "#" : "/admin/atur"}
+                            className={curActive === "settings" ? SelClass + " mt-3" : NormanClass + " mt-3"}
+                        >
+                            <CogIcon className="text-sm" />
+                            <span className="ml-1">Pengaturan</span>
                         </Link>
-                        <Link href={curActive === "about" ? "#" : "/admin/tentang"} passHref>
-                            <a className={curActive === "about" ? SelClass + " mt-3" : NormanClass + " mt-3"}>
-                                <InformationIcon className="text-sm" />
-                                <span className="ml-1">Tentang</span>
-                            </a>
+                        <Link
+                            href={curActive === "about" ? "#" : "/admin/tentang"}
+                            className={curActive === "about" ? SelClass + " mt-3" : NormanClass + " mt-3"}
+                        >
+                            <InformationIcon className="text-sm" />
+                            <span className="ml-1">Tentang</span>
                         </Link>
                     </nav>
 

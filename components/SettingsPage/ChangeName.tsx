@@ -1,10 +1,11 @@
 import { toString } from "lodash";
 import React from "react";
-import Router from "next/router";
 
 import { SettingsProps } from "./base";
 
 import LoadingCircle from "../LoadingCircle";
+import { MutateServerDocument } from "@/lib/graphql/servers.generated";
+import client from "@/lib/graphql/client";
 
 interface NamingState {
     newValue: string;
@@ -30,24 +31,28 @@ class ChangeNameComponent extends React.Component<SettingsProps, NamingState> {
             return;
         }
         this.setState({ isSubmitting: true });
-        const bodyBag = {
-            newname: newValue,
-        };
-        const apiRes = await fetch("/api/showtimes/settings/name", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: MutateServerDocument,
+            variables: {
+                data: {
+                    name: newValue,
+                },
             },
-            body: JSON.stringify(bodyBag),
         });
-        const res = await apiRes.json();
-        if (res.code === 200) {
-            // Refresh
-            Router.reload();
-        } else {
-            this.setState({ isSubmitting: false, newValue: "" });
-            this.props.onErrorModal((res.message as string) ?? "Terjadi kesalahan internal!");
+
+        if (errors) {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            return;
         }
+
+        if (data.updateServer.__typename === "Result") {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(data.updateServer.message);
+            return;
+        }
+
+        this.setState({ isSubmitting: false, newValue: data.updateServer.name });
     }
 
     render() {

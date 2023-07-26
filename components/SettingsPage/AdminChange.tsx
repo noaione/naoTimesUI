@@ -1,94 +1,64 @@
-import { cloneDeep, toString, uniqueId } from "lodash";
 import React from "react";
 
 import { SettingsProps } from "./base";
+import SelectAsync from "react-select/async";
+import { ActionMeta } from "react-select";
+import { MeiliSearch } from "meilisearch";
 
 import LoadingCircle from "../LoadingCircle";
 
-import { isDifferent, Nullable } from "@/lib/utils";
+import client from "@/lib/graphql/client";
+import { MutateServerOwnerDocument } from "@/lib/graphql/servers.generated";
+import { SearchUser } from "@/lib/meili.data";
 
-interface AdminTextBoxProps {
-    index: number;
-    currentVal: Nullable<string>;
-    onAdjust(data: string, idx: number): void;
-    onRemoval(idx: number): void;
+interface SimpleIDName {
+    id: string;
+    username: string;
 }
 
-interface AdminTextBoxState {
-    value: Nullable<string>;
-}
-
-class AdminChangeTextBox extends React.Component<AdminTextBoxProps, AdminTextBoxState> {
-    constructor(props: AdminTextBoxProps) {
-        super(props);
-        this.internalOnChange = this.internalOnChange.bind(this);
-        this.state = {
-            value: this.props.currentVal,
-        };
-    }
-
-    internalOnChange(value: string) {
-        this.setState({ value: toString(value) });
-        this.props.onAdjust(toString(value), this.props.index);
-    }
-
-    render() {
-        return (
-            <>
-                <div className="w-full px-3 mb-1 flex flex-row">
-                    <input
-                        type="text"
-                        className="form-darkable w-full py-1"
-                        value={this.state.value}
-                        onChange={(ev) => this.internalOnChange(ev.target.value)}
-                        placeholder="xxxxxxxxxxxxxx"
-                    />
-                    <button
-                        className="mx-2 px-2 py-1 bg-red-500 hover:bg-red-600 transition-colors duration-150 rounded font-medium text-white focus:outline-none"
-                        onClick={() => this.props.onRemoval(this.props.index)}
-                    >
-                        Hapus
-                    </button>
-                </div>
-            </>
-        );
-    }
-}
+const Meili = new MeiliSearch({
+    host: process.env.NEXT_PUBLIC_MEILI_API,
+    apiKey: process.env.NEXT_PUBLIC_MEILI_KEY,
+});
 
 interface AdminChangeProps extends SettingsProps {
-    serverOwner: string[];
-}
-
-interface AdminData {
-    id: string;
-    value: Nullable<string>;
+    serverOwner: SimpleIDName[];
 }
 
 interface AdminChangeState {
-    serverOwner: AdminData[];
-    oldServerOwner: AdminData[];
+    serverOwner: SimpleIDName[];
     isSubmitting: boolean;
-    isEdit: boolean;
+}
+
+function filterIdUsernameOnly(data: SearchUser[]) {
+    return data.map((e) => ({ id: e.id, username: e.username }));
+}
+
+const loadUsersData = (inputValue: string, callback: Function) => {
+    Meili.index("users")
+        .search(inputValue, { limit: 10 })
+        .then((results) => {
+            callback(filterIdUsernameOnly(results.hits as SearchUser[]));
+        })
+        .catch((err) => {
+            console.error(err);
+            callback([]);
+        });
+};
+
+function labelValues(data: SimpleIDName) {
+    const { id, username } = data;
+    return `${username} (${id})`;
 }
 
 class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeState> {
     constructor(props: AdminChangeProps) {
         super(props);
         this.submitNew = this.submitNew.bind(this);
-        this.addNew = this.addNew.bind(this);
-        this.remove = this.remove.bind(this);
-        this.onAdjusting = this.onAdjusting.bind(this);
-        const newFormatting: AdminData[] = this.props.serverOwner.map((results) => {
-            return {
-                id: uniqueId("adm"),
-                value: results,
-            };
-        });
+        this.onAdminChange = this.onAdminChange.bind(this);
         this.state = {
-            serverOwner: newFormatting,
-            oldServerOwner: cloneDeep(newFormatting),
             isSubmitting: false,
-            isEdit: false,
+            serverOwner: this.props.serverOwner.map((e) => ({ id: e.id, username: e.username })),
         };
     }
 
@@ -96,139 +66,90 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
         if (this.state.isSubmitting) {
             return;
         }
+        this.setState({ isSubmitting: true });
         const serverOwner = this.state.serverOwner
-            .map((res) => res.value)
+            .map((res) => res.id)
             .filter((e) => typeof e === "string" && e.length > 0);
-        const oldServerOwner = this.state.oldServerOwner.map((res) => res.value);
-        if (!isDifferent(serverOwner, oldServerOwner)) {
-            this.setState((prevState) => ({ isEdit: false, serverOwner: prevState.serverOwner }));
+
+        const { data, errors } = await client.mutate({
+            mutation: MutateServerOwnerDocument,
+            variables: {
+                owners: serverOwner,
+            },
+        });
+
+        if (errors) {
+            this.setState({ isSubmitting: false });
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
             return;
         }
-        const actualNewServerOwner = this.state.serverOwner.filter(
-            (e) => typeof e.value === "string" && e.value.length > 0
-        );
-        const justTheAdminIdsString = actualNewServerOwner.map((r) => r.value);
-        this.setState({ isSubmitting: true });
-        const bodyBag = {
-            adminIds: justTheAdminIdsString,
-        };
-        const apiRes = await fetch("/api/showtimes/settings/admin", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(bodyBag),
-        });
-        const jsonRes = await apiRes.json();
-        if (jsonRes.code === 200) {
-            this.setState({
-                isEdit: false,
-                isSubmitting: false,
-                oldServerOwner: actualNewServerOwner,
-                serverOwner: actualNewServerOwner,
-            });
-        } else {
+
+        if (data.updateServerOwners.__typename === "Result") {
             this.setState({ isSubmitting: false });
-            this.props.onErrorModal(jsonRes.message as string);
+            this.props.onErrorModal(data.updateServerOwners.message);
+            return;
         }
+
+        this.setState({
+            isSubmitting: false,
+            serverOwner: data.updateServerOwners.owners.map((e) => ({ id: e.id, username: e.username })),
+        });
     }
 
-    addNew() {
-        const { serverOwner } = this.state;
-        serverOwner.push({ id: uniqueId("adm"), value: "" });
-        this.setState({ serverOwner });
-    }
-
-    remove(idx: number) {
-        let { serverOwner } = this.state;
-        serverOwner = serverOwner.filter((_v, idxIn) => idx !== idxIn);
-        this.setState({ serverOwner });
-    }
-
-    onAdjusting(data: string, idx: number) {
-        const { serverOwner } = this.state;
-        const { id } = serverOwner[idx];
-        serverOwner[idx] = { id, value: data };
-        this.setState({ serverOwner });
+    onAdminChange(data: any, action: ActionMeta<any>) {
+        if (action.action === "select-option") {
+            this.setState({ serverOwner: data });
+        } else if (action.action === "clear") {
+            this.setState({ serverOwner: [] });
+        } else if (["remove-value", "deselect-option"].includes(action.action)) {
+            this.setState({ serverOwner: data });
+        }
     }
 
     render() {
-        const { oldServerOwner, serverOwner, isSubmitting, isEdit } = this.state;
+        const { isSubmitting } = this.state;
 
-        if (!isEdit) {
-            return (
-                <>
-                    <div className="flex flex-col py-1">
-                        <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Admin</h3>
-                        <div className="flex flex-col">
-                            {oldServerOwner.map((res) => {
-                                return (
-                                    <div key={`view${res.id}`} className="dark:text-white">
-                                        - {res.value}
-                                    </div>
-                                );
-                            })}
+        return (
+            <div className="flex flex-col py-1">
+                <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Admin</h3>
+                <div className="flex flex-row pb-2">
+                    <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
+                        <div className="w-full mt-2 mb-1">
+                            <SelectAsync
+                                isMulti
+                                className="w-full mt-1 rounded-lg"
+                                cacheOptions
+                                loadOptions={loadUsersData}
+                                defaultOptions
+                                value={this.state.serverOwner}
+                                getOptionLabel={labelValues}
+                                getOptionValue={labelValues}
+                                filterOption={() => true}
+                                placeholder="Ubah pemilik..."
+                                inputId="owner-selector-rselect"
+                                classNamePrefix="rselect"
+                                onChange={this.onAdminChange}
+                                isClearable
+                            />
                         </div>
-                        <div className="flex mt-2 pb-2">
+                        <div className="flex flex-row gap-2 mt-2">
                             <button
-                                onClick={() => this.setState({ isEdit: true })}
-                                className={`rounded text-white px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-colors duration-200 flex flex-row items-center focus:outline-none`}
+                                onClick={this.submitNew}
+                                className={`rounded text-white px-4 py-2 ${
+                                    isSubmitting
+                                        ? "bg-blue-500 cursor-not-allowed opacity-60"
+                                        : "bg-blue-600 hover:bg-blue-700 opacity-100"
+                                } transition duration-200 flex flex-row items-center focus:outline-none`}
                             >
-                                <span className="font-semibold">Ubah</span>
+                                {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
+                                <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>
+                                    Ubah
+                                </span>
                             </button>
                         </div>
                     </div>
-                </>
-            );
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
-
-        return (
-            <>
-                <div className="flex flex-col py-1">
-                    <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Admin</h3>
-                    <div className={`flex flex-col gap-1 ${serverOwner.length > 0 && "-mx-3"}`}>
-                        {serverOwner.length > 0 ? (
-                            serverOwner.map((admin, idx) => {
-                                return (
-                                    <AdminChangeTextBox
-                                        key={`edit${admin.id}`}
-                                        index={idx}
-                                        currentVal={admin.value}
-                                        onAdjust={outerThis.onAdjusting}
-                                        onRemoval={outerThis.remove}
-                                    />
-                                );
-                            })
-                        ) : (
-                            <span className="dark:text-gray-200">Tidak ada admin</span>
-                        )}
-                    </div>
-                    <div className="flex flex-row gap-2 mt-2 pb-2">
-                        <button
-                            onClick={this.addNew}
-                            className={`rounded text-white px-4 py-2 bg-green-600 hover:bg-green-700 transition-colors duration-200 flex flex-row items-center focus:outline-none`}
-                        >
-                            <span className="font-semibold">Tambah</span>
-                        </button>
-                        <button
-                            onClick={this.submitNew}
-                            className={`rounded text-white px-4 py-2 ${
-                                isSubmitting
-                                    ? "bg-blue-500 cursor-not-allowed opacity-60"
-                                    : "bg-blue-600 hover:bg-blue-700 opacity-100"
-                            } transition duration-200 flex flex-row items-center focus:outline-none`}
-                        >
-                            {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
-                            <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>
-                                Ubah
-                            </span>
-                        </button>
-                    </div>
                 </div>
-            </>
+            </div>
         );
     }
 }

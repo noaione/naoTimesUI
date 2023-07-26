@@ -11,6 +11,7 @@
 import { ExtendedLocale } from "./_types";
 
 const TimeAgoLocale: ExtendedLocale = {
+    // @ts-ignore
     locale: "su",
     long: {
         year: {
@@ -100,7 +101,8 @@ const Locale = {
         RETRACT: "Tutup...",
     },
     LAST_UPDATE: "Diropéa {0}",
-    EPISODE_NEEDS: "peryogi",
+    EPISODE: "Episode {0}",
+    EPISODE_NEEDS: "Episode {0} peryogi",
     WAITING_RELEASE: "Ngantosan dirilis...",
     COLLAB_WITH: "Babarengan jeung {0}",
 };

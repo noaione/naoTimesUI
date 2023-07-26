@@ -7,6 +7,8 @@ import Modal, { CallbackModal } from "../Modal";
 import LoadingCircle from "../LoadingCircle";
 
 import { generateWordSets } from "@/lib/words";
+import client from "@/lib/graphql/client";
+import { NukeServerDocument } from "@/lib/graphql/servers.generated";
 
 interface ExtendedDeleteProps extends SettingsProps {
     id: string;
@@ -31,7 +33,7 @@ function resetState(submit: boolean = false): DeleteState {
 class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteState> {
     modalCb: CallbackModal;
 
-    constructor(props) {
+    constructor(props: ExtendedDeleteProps) {
         super(props);
         this.handleHide = this.handleHide.bind(this);
         this.handleShow = this.handleShow.bind(this);
@@ -49,15 +51,27 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
         this.handleHide();
         this.setState(resetState(true));
 
-        const results = await fetch("/api/showtimes/nuke", {
-            method: "POST",
+        const { data, errors } = await client.mutate({
+            mutation: NukeServerDocument,
+            variables: {
+                id: this.props.id,
+            },
         });
-        const jsonRes = await results.json();
-        if (jsonRes.success) {
-            Router.push("/");
+
+        if (errors) {
+            this.setState(resetState());
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            return;
+        }
+
+        if (data.deleteServer.success) {
+            setTimeout(() => {
+                Router.push("/servers");
+            }, 1500);
         } else {
-            this.props.onErrorModal(jsonRes.message);
-            this.setState({ isSubmitting: false });
+            this.setState(resetState());
+            this.props.onErrorModal(data.deleteServer.message);
+            return;
         }
     }
 

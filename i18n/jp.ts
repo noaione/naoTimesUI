@@ -38,7 +38,8 @@ const Locale = {
         RETRACT: "閉める。。。",
     },
     LAST_UPDATE: "最終更新{0}",
-    EPISODE_NEEDS: "要する",
+    EPISODE: "第{0}話",
+    EPISODE_NEEDS: "第{0}話の必要",
     WAITING_RELEASE: "発売を待つ。。。",
     COLLAB_WITH: "{0}と共同",
 };

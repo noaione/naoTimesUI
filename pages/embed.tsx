@@ -2,7 +2,8 @@ import React from "react";
 import Head from "next/head";
 import Router from "next/router";
 import { cloneDeep, has as loHas, sortBy } from "lodash";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import MeiliSearch from "meilisearch";
 
 import { ValidAccent } from "@/components/ColorMap";
 import MetadataHead from "@/components/MetadataHead";
@@ -10,43 +11,39 @@ import { IEmbedParams } from "@/components/EmbedPage/Interface";
 import EmbedPageCard from "@/components/EmbedPage/Card";
 
 import { LocaleMap } from "../i18n";
-import prisma from "@/lib/prisma";
 import { isNone, mapBoolean, Nullable } from "@/lib/utils";
-import { Project } from "@prisma/client";
-
-interface EmbedUtangProps extends IEmbedParams {
-    name?: string;
-    projectList: Project[];
-    serverInfo: { [srvId: string]: string | null };
-}
+import { SearchServer } from "@/lib/meili.data";
+import client from "@/lib/graphql/client";
+import { EmbedProjectFragment, GetEmbedProjectsDocument } from "@/lib/graphql/projects.generated";
+import { GetServerNamesDocument } from "@/lib/graphql/servers.generated";
+import { ProjectStatus } from "@/lib/graphql/types.generated";
 
 interface EmbedUtangState {
     dark: string;
-    accent?: typeof ValidAccent[number];
+    accent?: (typeof ValidAccent)[number];
     lang?: keyof typeof LocaleMap & string;
 }
 
-function selectTime(statusSets: any[]) {
+function selectTime(statusSets: ProjectStatus[]) {
     let selected: Nullable<number> = null;
     statusSets.forEach((sets) => {
-        if (typeof sets.airtime === "number") {
-            selected = sets.airtime;
+        if (typeof sets.airingAt === "number") {
+            selected = sets.airingAt;
         }
     });
     return selected;
 }
 
-function filterAnimeData(animeData: Project[]): Project[] {
-    const newAnimeSets = [];
-    animeData.forEach((res) => {
-        const deepCopy = cloneDeep(res);
-        if (isNone(deepCopy.start_time)) {
-            deepCopy.start_time = selectTime(res.status);
+function filterAnimeData(projects: EmbedProjectFragment[]): EmbedProjectFragment[] {
+    const newAnimeSets: EmbedProjectFragment[] = [];
+    for (const project of projects) {
+        const deepCopy = cloneDeep(project);
+        if (isNone(deepCopy.external.startTime)) {
+            deepCopy.external.startTime = selectTime(project.statuses);
         }
         let allDone = true;
-        for (let i = 0; i < deepCopy.status.length; i++) {
-            const stElem = deepCopy.status[i];
-            if (!stElem.is_done) {
+        for (const status of deepCopy.statuses) {
+            if (!status.isReleased) {
                 allDone = false;
                 break;
             }
@@ -54,7 +51,7 @@ function filterAnimeData(animeData: Project[]): Project[] {
         if (!allDone) {
             newAnimeSets.push(deepCopy);
         }
-    });
+    }
     return newAnimeSets;
 }
 
@@ -66,8 +63,8 @@ function hasParamAndNotDefault(data: EmbedUtangState) {
     );
 }
 
-class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
-    constructor(props: EmbedUtangProps) {
+class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
+    constructor(props: EmbedServerSide) {
         super(props);
         this.propagateEventChange = this.propagateEventChange.bind(this);
         this.propagateHashChange = this.propagateHashChange.bind(this);
@@ -156,7 +153,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
             updateState.dark = dark;
         }
         if (accent !== this.state.accent) {
-            updateState.accent = accent as typeof ValidAccent[number];
+            updateState.accent = accent as (typeof ValidAccent)[number];
         }
         if (lang !== this.state.lang) {
             updateState.lang = lang as keyof typeof LocaleMap & string;
@@ -197,15 +194,15 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
     }
 
     render() {
-        const { id, name, projectList, serverInfo } = this.props;
+        const { id, server, otherServers, projects } = this.props;
         const { dark, lang, accent } = this.state;
-        const realName = name || id;
+        const realName = server.name || id;
 
-        const prefixName = name ? "nama" : "ID";
+        const prefixName = server.name ? "nama" : "ID";
 
         const encodedName = encodeURIComponent(realName);
 
-        const animeData = filterAnimeData(projectList);
+        const animeData = filterAnimeData(projects);
         if (animeData.length < 1) {
             return (
                 <>
@@ -227,7 +224,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
             );
         }
 
-        const projectData = sortBy(animeData, (o) => o.start_time).reverse();
+        const projectData = sortBy(animeData, (o) => o.external.startTime).reverse();
 
         return (
             <>
@@ -246,10 +243,14 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
                         {projectData.map((res) => {
                             const selectInfo = {};
-                            res.kolaborasi.forEach((elem) => {
-                                const srvName = serverInfo[elem];
+                            res.collaborations?.servers.forEach((elem) => {
+                                if (elem === server.id) {
+                                    return;
+                                }
+                                const srvName = otherServers[elem];
                                 selectInfo[elem] = srvName || null;
                             });
+
                             return (
                                 <EmbedPageCard
                                     key={"utang-ani-" + res.id}
@@ -266,6 +267,70 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
             </>
         );
     }
+}
+
+async function paginatedEmbedQuery(projectIds: string[]): Promise<{
+    projects: EmbedProjectFragment[];
+    message: string | null;
+}> {
+    let mergedProjects = [];
+    let failureMessage = null;
+    let cursor = null;
+    while (true) {
+        const { data } = await client.query({
+            query: GetEmbedProjectsDocument,
+            variables: {
+                cursor: cursor,
+                ids: projectIds,
+            },
+        });
+        if (data.projects.__typename === "Result") {
+            failureMessage = data.projects.message;
+            break;
+        }
+        const projects = data.projects.nodes;
+        mergedProjects = mergedProjects.concat(projects);
+        if (!data.projects.pageInfo.nextCursor) {
+            break;
+        }
+        cursor = data.projects.pageInfo.nextCursor;
+    }
+    return { projects: mergedProjects, message: failureMessage };
+}
+
+async function paginatedEmbedQueryServerName(serverIds: string[]): Promise<{
+    servers: { id: string; name: string }[];
+    message: string | null;
+}> {
+    let mergedServers = [];
+    let failureMessage = null;
+    let cursor = null;
+    while (true) {
+        const { data } = await client.query({
+            query: GetServerNamesDocument,
+            variables: {
+                cursor: cursor,
+                ids: serverIds,
+            },
+        });
+        if (data.servers.__typename === "Result") {
+            failureMessage = data.servers.message;
+            break;
+        }
+        const servers = data.servers.nodes;
+        mergedServers = mergedServers.concat(servers);
+        if (!data.servers.pageInfo.nextCursor) {
+            break;
+        }
+        cursor = data.servers.pageInfo.nextCursor;
+    }
+    return { servers: mergedServers, message: failureMessage };
+}
+
+function isUUIDFormatted(uuid: string): boolean {
+    const regexExp =
+        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+    return regexExp.test(uuid);
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -287,59 +352,74 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         };
     }
 
-    const serverRes = await prisma.showtimesdatas.findFirst({
-        where: { id: newParamsSets.id },
-        select: {
-            name: true,
-            anime: {
-                select: {
-                    id: true,
-                    title: true,
-                    poster_data: {
-                        select: {
-                            url: true,
-                        },
-                    },
-                    start_time: true,
-                    last_update: true,
-                    status: true,
-                    kolaborasi: true,
-                },
-            },
-        },
+    const searcher = new MeiliSearch({
+        host: process.env.MEILI_API,
+        apiKey: process.env.MEILI_KEY,
     });
 
-    const serverCollabName = {};
-    const fetchServerName = [];
-    if (serverRes.anime.length > 0) {
-        serverRes.anime.forEach((res) => {
-            if (res.kolaborasi.length > 0) {
-                res.kolaborasi.forEach((collab) => {
-                    if (collab !== newParamsSets.id && !fetchServerName.includes(collab)) {
-                        fetchServerName.push(collab);
-                    }
-                });
-            }
-        });
+    const index = searcher.index("servers");
+
+    const queryParams = isUUIDFormatted(newParamsSets.id)
+        ? `id = ${newParamsSets.id}`
+        : `integrations.id = ${newParamsSets.id} AND integrations.type = DISCORD_GUILD`;
+
+    const results = await index.search("", {
+        filter: [queryParams],
+    });
+
+    if (!results.hits) {
+        return {
+            notFound: true,
+        };
     }
 
-    console.info("Fetching collaboration server name:", fetchServerName);
-    const serverCollabInfo = await prisma.showtimesdatas.findMany({
-        where: { id: { in: fetchServerName } },
-        select: { id: true, name: true },
-    });
-    serverCollabInfo.forEach((res) => {
-        serverCollabName[res.id] = res.name;
-    });
+    const firstHits = results.hits[0] as SearchServer;
+    const projects = firstHits.projects;
+    console.log(projects);
+
+    const allProjects = await paginatedEmbedQuery(projects);
+    if (allProjects.message) {
+        console.error(allProjects.message);
+        return {
+            notFound: true,
+        };
+    }
+
+    const serverHits = [];
+    for (const project of allProjects.projects) {
+        if (project.collaborations?.servers) {
+            for (const collab of project.collaborations.servers) {
+                if (collab === firstHits.id) {
+                    continue;
+                }
+                if (!serverHits.includes(collab)) {
+                    serverHits.push(collab);
+                }
+            }
+        }
+    }
+
+    const serverNameMapping: { [key: string]: string } = {};
+    serverNameMapping[firstHits.id] = firstHits.name;
+    if (serverHits.length) {
+        const mappedServer = await paginatedEmbedQueryServerName(serverHits);
+        if (mappedServer.servers) {
+            for (const server of mappedServer.servers) {
+                serverNameMapping[server.id] = server.name;
+            }
+        }
+    }
 
     return {
         props: {
-            projectList: serverRes.anime,
-            name: serverRes.name || null,
-            serverInfo: serverCollabName,
+            server: firstHits,
+            projects: allProjects.projects,
+            otherServers: serverNameMapping,
             ...newParamsSets,
         },
     };
 }
+
+type EmbedServerSide = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export default EmbedUtang;

@@ -1,0 +1,30 @@
+fragment ResultFrag on Result {
+  success
+  code
+  message
+}
+
+fragment ServerInfo on Server {
+  id
+  name
+  avatar {
+    path
+    type
+  }
+  integrations {
+    id
+    type
+  }
+  owners {
+    ... on User {
+      id
+      username
+      privilege
+    }
+    ... on UserTemporary {
+      id
+      username
+      type
+    }
+  }
+}

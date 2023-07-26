@@ -4,12 +4,12 @@ import { DateTime } from "luxon";
 import RolePopup from "../RolePopup";
 
 import { Locale, timeAgoLocale, translate, ValidLocale } from "../../i18n";
-import type { ProjectEpisodeProgress } from "@prisma/client";
+import { ProjectStatusRole } from "@/lib/graphql/types.generated";
 
 interface IEpisodeProps {
     airingAt?: number;
     episode: number;
-    progress: ProjectEpisodeProgress;
+    progress: ProjectStatusRole[];
     lang: Locale;
     delayReason?: string;
 }
@@ -20,31 +20,12 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
     }
 
     render() {
-        const {
-            progress: { custom: customProgress, ...progress },
-            episode,
-            airingAt,
-            lang,
-        } = this.props;
-        const unfinishedStatus: string[] = [];
-        const customTextMapping: { [key: string]: string } = {};
-        customProgress.forEach((custom) => {
-            if (!custom.done) {
-                customTextMapping[custom.key] = custom.name;
+        const { progress, episode, airingAt, lang } = this.props;
+        const unfinishedProgress: ProjectStatusRole[] = [];
+        for (const role of progress) {
+            if (!role.done) {
+                unfinishedProgress.push(role);
             }
-        });
-        for (const [roleName, roleStat] of Object.entries(progress)) {
-            if (!roleStat) {
-                unfinishedStatus.push(roleName);
-            }
-        }
-        const qcDex = unfinishedStatus.indexOf("QC");
-        if (qcDex !== -1) {
-            // insert custom text before QC
-            unfinishedStatus.splice(qcDex, 0, ...Object.keys(customTextMapping));
-        } else {
-            // append custom text to the end
-            unfinishedStatus.push(...Object.keys(customTextMapping));
         }
         const currentTime = DateTime.utc().toSeconds();
         let aired = true;
@@ -55,34 +36,26 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
         if (lang && ValidLocale.includes(lang)) {
             realLang = lang;
         }
-        const anyProgress = unfinishedStatus.length !== 7;
-        const wrapMode = unfinishedStatus.length > 5 ? "flex-col" : "flex-row";
-        const extraClass = unfinishedStatus.length > 4 ? "col-start-1 col-end-3" : "";
+
+        const anyProgress = unfinishedProgress.length !== progress.length;
+        const wrapMode = unfinishedProgress.length > 5 ? "flex-col" : "flex-row";
+        const extraClass = unfinishedProgress.length > 4 ? "col-start-1 col-end-3" : "";
 
         let content: React.ReactNode;
         let shouldRenderPill = false;
         if (aired) {
             if (anyProgress) {
-                if (unfinishedStatus.length > 0) {
+                if (unfinishedProgress.length > 0) {
                     content = (
                         <>
                             <div slot="2" className="flex flex-wrap gap-1 mt-1">
-                                {unfinishedStatus.map((role) => {
-                                    const customText = customTextMapping[role];
-                                    if (customText) {
-                                        return (
-                                            <RolePopup
-                                                key={`ep-${episode}-custom-${role}`}
-                                                title={role}
-                                                popupText={customText}
-                                            />
-                                        );
-                                    }
+                                {unfinishedProgress.map((role) => {
+                                    const localized = translate(`ROLES.${role.key}`, realLang) || role.name;
                                     return (
                                         <RolePopup
-                                            key={`ep-${episode}-${role}`}
-                                            title={role}
-                                            popupText={translate(`ROLES.${role}`, realLang)}
+                                            key={`ep-${episode}-${role.key}`}
+                                            title={role.key}
+                                            popupText={localized}
                                         />
                                     );
                                 })}
@@ -147,8 +120,9 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                     }
                 >
                     <div>
-                        Episode <span slot="0">{episode.toString()}</span>{" "}
-                        {shouldRenderPill ? translate("EPISODE_NEEDS", realLang) : ""}
+                        {shouldRenderPill
+                            ? translate("EPISODE_NEEDS", realLang, [episode.toString()])
+                            : translate("EPISODE", realLang, [episode.toString()])}
                         {content}
                     </div>
                 </div>

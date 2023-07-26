@@ -6,12 +6,12 @@ import breaks from "remark-breaks";
 import gemoji from "remark-gemoji";
 import gfm from "remark-gfm";
 
-function MarkdownLinkFormatting({ href, ...rest }: React.HTMLProps<HTMLAnchorElement>) {
+function MarkdownLinkFormatting({ href, children, ...rest }: React.HTMLProps<HTMLAnchorElement>) {
     const internalLink = href && href.startsWith("/");
     if (internalLink) {
         return (
-            <Link href={href} passHref>
-                <a {...rest} />
+            <Link href={href} {...rest}>
+                {children}
             </Link>
         );
     }

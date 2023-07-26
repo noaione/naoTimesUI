@@ -13,6 +13,7 @@
 import { ExtendedLocale } from "./_types";
 
 const TimeAgoLocale: ExtendedLocale = {
+    // @ts-ignore
     locale: "jv",
     long: {
         year: {
@@ -77,7 +78,7 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "nembe mawon",
         },
     },
-    quantify: (_n) => "other",
+    quantify: (_n: any) => "other",
 };
 
 /**
@@ -115,7 +116,8 @@ const Locale = {
         RETRACT: "Tutup...",
     },
     LAST_UPDATE: "Dianyari {0}",
-    EPISODE_NEEDS: "betah",
+    EPISODE: "Episode {0}",
+    EPISODE_NEEDS: "Episode {0} betah",
     WAITING_RELEASE: "Ngenteni dirilis...",
     COLLAB_WITH: "Bebarengan karo {0}",
 };
