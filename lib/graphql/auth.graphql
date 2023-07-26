@@ -18,7 +18,7 @@ mutation Logout {
   }
 }
 
-mutation Register($username:String!,$password:String!) {
+mutation RegisterUser($username:String!,$password:String!) {
   register(username:$username, password:$password) {
     ... on UserTemporary {
       id
@@ -26,6 +26,19 @@ mutation Register($username:String!,$password:String!) {
       approvalCode
     }
     ... on Result {
+      ...ResultFrag
+    }
+  }
+}
+
+mutation MigrateUser($username:String!,$password:String!) {
+  migrate(username:$username,password:$password) {
+    ...on UserTemporary {
+      id
+      username
+      approvalCode
+    }
+    ...on Result {
       ...ResultFrag
     }
   }

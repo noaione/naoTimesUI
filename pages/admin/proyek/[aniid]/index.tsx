@@ -16,6 +16,9 @@ import { AuthContext } from "@/components/AuthSuspense";
 import { InferGetStaticPropsType } from "next";
 import SkeletonLoader from "@/components/Skeleton";
 import { buildImageUrl } from "@/components/ImageMetadata";
+import { ProjectPrediction } from "@/lib/graphql/types.generated";
+import { isNone } from "@/lib/utils";
+import CountUp from "react-countup";
 
 interface ProyekPageProps {
     id: string;
@@ -27,6 +30,32 @@ interface ProyekPageState {
     isSubmitting: boolean;
     loading: boolean;
     project?: ProjectQueryInfoFragment;
+}
+
+function adaPrediksi(prediksi?: ProjectPrediction) {
+    if (isNone(prediksi)) return false;
+
+    if (typeof prediksi.nextEpisode === "number") return true;
+    if (typeof prediksi.overall === "number") return true;
+    return false;
+}
+
+function PredictionCard(props: { days: number; name: string }) {
+    const { days, name } = props;
+
+    return (
+        <div className="flex flex-col gap-1 bg-gray-200 dark:bg-gray-600 px-2 py-2 rounded-md">
+            <p className="text-black dark:text-gray-200">{name}</p>
+            <CountUp
+                className="font-bold text-black dark:text-gray-200"
+                duration={2}
+                useEasing
+                start={0}
+                formattingFn={(val) => `dalam ${val.toLocaleString()}`}
+                end={days}
+            />
+        </div>
+    );
 }
 
 class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
@@ -146,6 +175,45 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                     );
                                                 })}
                                             </div>
+                                            {adaPrediksi(project?.prediction) && (
+                                                <>
+                                                    <motion.div
+                                                        className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
+                                                        initial={{ x: -30, opacity: 0 }}
+                                                        animate={{ x: 0, opacity: 1 }}
+                                                        transition={{ delay: 0.3 }}
+                                                    >
+                                                        Prediksi
+                                                    </motion.div>
+                                                    <div className="flex flex-row gap-2 mt-2">
+                                                        {project?.prediction?.nextEpisode && (
+                                                            <PredictionCard
+                                                                name="Episode Selanjutnya"
+                                                                days={project?.prediction?.nextEpisode}
+                                                            />
+                                                        )}
+                                                        {project?.prediction?.overall && (
+                                                            <PredictionCard
+                                                                name="Keseluruhan"
+                                                                days={project?.prediction?.overall}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                            <motion.div
+                                                className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
+                                                initial={{ x: -30, opacity: 0 }}
+                                                animate={{ x: 0, opacity: 1 }}
+                                                transition={{ delay: 0.3 }}
+                                            >
+                                                Prediksi
+                                            </motion.div>
+                                            <div className="flex flex-row gap-2 mt-2">
+                                                <PredictionCard name="Episode Selanjutnya" days={2} />
+                                                <PredictionCard name="Keseluruhan" days={40} />
+                                            </div>
+
                                             <div className="flex row mt-4 gap-3">
                                                 <ProjectPageComponent.Deletion
                                                     onErrorModal={this.showErrorCallback}

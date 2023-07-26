@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import Link from "next/link";
-import Router from "next/router";
 
 import EyeIcon from "mdi-react/EyeIcon";
 import EyeOffIcon from "mdi-react/EyeOffIcon";
@@ -11,80 +10,56 @@ import ServerIcon from "mdi-react/ServerIcon";
 import MetadataHead from "../components/MetadataHead";
 import LoginLayout from "../components/LoginLayout";
 import LoadingCircle from "../components/LoadingCircle";
-
-import DiscordIcon from "@/components/Icons/Discord";
-import { isNone } from "@/lib/utils";
-import { LoginDocument } from "@/lib/graphql/auth.generated";
 import client from "@/lib/graphql/client";
-import { AuthContext } from "@/components/AuthSuspense";
-import { SESSION_EXIST } from "@/lib/graphql/error-code";
+import { MigrateUserDocument } from "@/lib/graphql/auth.generated";
 
-interface LoginState {
+interface MigrasiState {
     errorMsg: string;
-    submitting: boolean;
     peekPass: boolean;
-    webBaseUrl: string;
+    submitting: boolean;
+    approvalCode?: string;
 }
 
-function generateDiscordLogin(baseUrl: string) {
-    let processEnv = process.env.NEXT_PUBLIC_API_V2_ENDPOINT;
-    if (typeof processEnv !== "string") {
-        return undefined;
-    }
-
-    if (processEnv.endsWith("/")) {
-        processEnv = processEnv.substring(0, processEnv.length - 1);
-    }
-
-    const targetUrl = `${processEnv}/oauth2/discord/authorize`;
-    const redirectUrlBack = `${baseUrl}/servers`;
-    // Custom OAuth2 URL that support clickjacking prevention
-    return `${targetUrl}?base_url=${processEnv}&redirect_url=${redirectUrlBack}`;
-}
-
-class LoginPage extends React.Component<{}, LoginState> {
-    constructor(props: {}) {
+class MigrasiPage extends React.Component<{}, MigrasiState> {
+    constructor(props: any) {
         super(props);
-        this.onSubmit = this.onSubmit.bind(this);
         this.toggleGooglyEye = this.toggleGooglyEye.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
         this.state = {
             errorMsg: "",
             submitting: false,
             peekPass: false,
-            webBaseUrl: "",
         };
-    }
-
-    componentDidMount(): void {
-        const currentUrl = window.location.href;
-        const baseUrl = currentUrl.substring(0, currentUrl.indexOf("/", currentUrl.indexOf("//") + 2));
-        this.setState({ webBaseUrl: baseUrl });
     }
 
     async onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        this.setState({ submitting: true });
+        if (this.state.submitting) {
+            return;
+        }
+        this.setState({ submitting: true, errorMsg: "" });
 
         const username = e.currentTarget.username.value;
         const password = e.currentTarget.password.value;
 
-        const { data } = await client.mutate({
-            mutation: LoginDocument,
+        const { data, errors } = await client.mutate({
+            mutation: MigrateUserDocument,
             variables: {
                 username,
                 password,
             },
         });
 
-        if (data.login.__typename === "Result") {
-            if (data.login.code === SESSION_EXIST) {
-                Router.push("/servers");
-                return;
-            }
-            this.setState({ errorMsg: data.login.message, submitting: false });
+        if (errors) {
+            console.error(errors);
+            this.setState({ errorMsg: "Terjadi kesalahan pada server", submitting: false });
+            return;
+        }
+
+        if (data.migrate.__typename === "Result") {
+            this.setState({ errorMsg: data.migrate.message, submitting: false });
         } else {
-            localStorage.setItem("sessionToken", data.login.token);
-            Router.push("/servers");
+            this.setState({ errorMsg: "", submitting: false, approvalCode: data.migrate.approvalCode });
         }
     }
 
@@ -93,24 +68,28 @@ class LoginPage extends React.Component<{}, LoginState> {
     }
 
     render() {
-        const { errorMsg, submitting, webBaseUrl } = this.state;
-
-        let discordUrl = null;
-        if (webBaseUrl) {
-            discordUrl = generateDiscordLogin(webBaseUrl);
-        }
+        const { errorMsg, submitting, approvalCode } = this.state;
         return (
             <>
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>naoTimesUI</title>
-                    <MetadataHead.SEO />
+                    <title>Registrasi :: naoTimesUI</title>
+                    <MetadataHead.SEO title="Registrasi" urlPath="/admin" />
                 </Head>
                 <LoginLayout>
                     <div className="text-center mb-5">
-                        <h1 className="font-bold text-3xl text-gray-900">Masuk</h1>
+                        <h1 className="font-bold text-3xl text-gray-900">Reset dan Migrasi</h1>
                         {errorMsg && <p className="text-sm text-red-400 mt-2">Error: {errorMsg}</p>}
+                        {approvalCode && (
+                            <>
+                                <p className="text-sm text-green-600 mt-2">Sukses!</p>
+                                <p>Mohon gunakan Bot untuk konfirmasi migrasi dengan:</p>
+                                <p>
+                                    <code>!ntui migrasi [username] [kode] [password]</code>
+                                </p>
+                            </>
+                        )}
                     </div>
                     <div>
                         <form onSubmit={this.onSubmit}>
@@ -125,7 +104,7 @@ class LoginPage extends React.Component<{}, LoginState> {
                                             required
                                             type="text"
                                             name="username"
-                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duraion-400 ease-in-out border-gray-200 focus:border-yellow-600 focus:outline-none"
+                                            className="w-full -ml-10 pl-10 pr-3 py-2 rounded-lg border-2 transition-colors duration-400 ease-in-out border-gray-200 focus:outline-none focus:border-yellow-600"
                                             placeholder="xxxxxxxxxxxxxxxxxx"
                                         />
                                     </div>
@@ -162,8 +141,8 @@ class LoginPage extends React.Component<{}, LoginState> {
                                 <div className="w-full px-3 mb-5 text-center">
                                     <button
                                         type="submit"
-                                        id="sign-in-btn"
-                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition duraion-200 ease-in-out ${
+                                        id="register-btn"
+                                        className={`inline-flex items-center w-full max-w-xs mx-auto transition duration-200 ease-in-out ${
                                             submitting
                                                 ? "bg-yellow-500"
                                                 : "bg-yellow-600 hover:bg-yellow-800 focus:bg-yellow-700"
@@ -173,72 +152,36 @@ class LoginPage extends React.Component<{}, LoginState> {
                                         disabled={submitting}
                                     >
                                         {submitting && <LoadingCircle className="mt-0" />}
-                                        Masuk
+                                        Migrasi
                                     </button>
+                                    <Link
+                                        href="/"
+                                        className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100"
+                                    >
+                                        Sudah Terdaftar?
+                                    </Link>
                                     <Link
                                         href="/registrasi"
                                         className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100"
                                     >
-                                        Registrasi
+                                        Daftarkan diri
                                     </Link>
-                                    <Link
-                                        href="/migrasi"
-                                        className="block mt-2 text-sm text-center text-gray-500 hover:text-gray-400 transition-colors duration-100"
+                                    <a
+                                        href="https://naoti.me/invite"
+                                        className="block md:hidden mt-2 text-sm text-center text-blue-500 hover:text-blue-400 transition-colors duration-100"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
                                     >
-                                        Reset/Migrasi
-                                    </Link>
-                                    <div className="flex flex-row justify-center gap-2">
-                                        <a
-                                            href="https://naoti.me/invite"
-                                            target="_blank"
-                                            rel="noreferrer noopener"
-                                            className="block md:hidden mt-2 text-sm text-center text-blue-500 hover:text-blue-400 transition-colors duration-100"
-                                        >
-                                            Invite Bot
-                                        </a>
-                                        <span className="mt-1 font-light text-gray-400 block md:hidden">
-                                            |
-                                        </span>
-                                        <Link
-                                            href="/tentang"
-                                            className="block md:hidden mt-2 text-sm text-center text-indigo-500 hover:text-indigo-400 transition-colors duration-100"
-                                        >
-                                            Tentang
-                                        </Link>
-                                    </div>
+                                        Invite Bot
+                                    </a>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    {!isNone(discordUrl) && (
-                        <div className="flex flex-row justify-center -my-1">
-                            <Link
-                                id="discord-sign-in-btn"
-                                href={discordUrl}
-                                className={`inline-flex items-center w-full max-w-xs mx-auto transition duraion-200 ease-in-out ${
-                                    submitting
-                                        ? "bg-[#121315]"
-                                        : "bg-[#2c2f33] hover:bg-[#18191c] focus:bg-[#121315]"
-                                } text-white rounded-lg px-3 py-3 font-semibold justify-center ${
-                                    submitting ? "cursor-not-allowed opacity-60" : "opacity-100"
-                                }`}
-                                onClick={(ev) => {
-                                    if (submitting) {
-                                        ev.preventDefault();
-                                    }
-                                }}
-                            >
-                                <DiscordIcon />
-                                <p className="ml-1">Masuk dengan Discord</p>
-                            </Link>
-                        </div>
-                    )}
                 </LoginLayout>
             </>
         );
     }
 }
 
-export default function WrappedLoginPage() {
-    return <AuthContext.Consumer>{(_) => <LoginPage />}</AuthContext.Consumer>;
-}
+export default MigrasiPage;
