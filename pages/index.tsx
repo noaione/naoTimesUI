@@ -17,7 +17,13 @@ import { isNone } from "@/lib/utils";
 import { LoginDocument } from "@/lib/graphql/auth.generated";
 import client from "@/lib/graphql/client";
 import { AuthContext } from "@/components/AuthSuspense";
-import { SESSION_EXIST } from "@/lib/graphql/error-code";
+import {
+    SESSION_EXIST,
+    USER_DISCORD_MIGRATE,
+    USER_INVALID_PASSWORD,
+    USER_NEED_MIGRATE,
+    USER_NOT_FOUND,
+} from "@/lib/graphql/error-code";
 
 interface LoginState {
     errorMsg: string;
@@ -40,6 +46,22 @@ function generateDiscordLogin(baseUrl: string) {
     const redirectUrlBack = `${baseUrl}/servers`;
     // Custom OAuth2 URL that support clickjacking prevention
     return `${targetUrl}?base_url=${processEnv}&redirect_url=${redirectUrlBack}`;
+}
+
+function translateError(error: string, errorCode?: string) {
+    if (isNone(errorCode)) return error;
+    switch (errorCode) {
+        case USER_NEED_MIGRATE:
+            return "Akun anda perlu migrasi ke versi baru. Silahkan hubungi admin untuk bantuan.";
+        case USER_DISCORD_MIGRATE:
+            return "Gunakan Discord untuk masuk atau reset password.";
+        case USER_NOT_FOUND:
+            return "Username tidak ditemukan.";
+        case USER_INVALID_PASSWORD:
+            return "Password salah.";
+        default:
+            return error;
+    }
 }
 
 class LoginPage extends React.Component<{}, LoginState> {
@@ -81,7 +103,10 @@ class LoginPage extends React.Component<{}, LoginState> {
                 Router.push("/servers");
                 return;
             }
-            this.setState({ errorMsg: data.login.message, submitting: false });
+            this.setState({
+                errorMsg: translateError(data.login.message, data.login.code),
+                submitting: false,
+            });
         } else {
             localStorage.setItem("sessionToken", data.login.token);
             Router.push("/servers");
