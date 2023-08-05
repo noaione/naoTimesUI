@@ -8,10 +8,9 @@
  * MIT License
  */
 
-import { ExtendedLocale } from "./_types";
+import { LocaleData } from "javascript-time-ago";
 
-const TimeAgoLocale: ExtendedLocale = {
-    // @ts-ignore
+const TimeAgoLocale: LocaleData = {
     locale: "su",
     long: {
         year: {
@@ -65,6 +64,110 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "tina {0} detik",
         },
     },
+    short: {
+        year: {
+            previous: "taun kapungkur",
+            current: "taun ayeuna",
+            next: "taun payun",
+            past: "{0} taun nu kapungkur",
+            future: "tina {0} taun",
+        },
+        quarter: {
+            previous: "spprt taun kapungkur",
+            current: "spprt taun ayeuna",
+            next: "spprt taun deui",
+            past: "{0} spprt taun kapungkur",
+            future: "tina {0} spprt taun",
+        },
+        month: {
+            previous: "sasih kapungkur",
+            current: "sasih ayeuna",
+            next: "sasih payun",
+            past: "{0} sasih nu kapungkur",
+            future: "tina {0} sasih",
+        },
+        week: {
+            previous: "mgg kapungkur",
+            current: "mgg ayeuna",
+            next: "mgg payun",
+            past: "{0} mgg nu kapungkur",
+            future: "tina {0} mgg",
+        },
+        day: {
+            previous: "poe kapungkur",
+            current: "poe ayeuna",
+            next: "poe payun",
+            past: "{0} poe nu kapungkur",
+            future: "tina {0} poe",
+        },
+        hour: {
+            current: "sejam deui",
+            past: "{0} jam nu kapungkur",
+            future: "tina {0} jam",
+        },
+        minute: {
+            current: "semenit deui",
+            past: "{0} mnt nu kapungkur",
+            future: "tina {0} mnt",
+        },
+        second: {
+            current: "sababaraha dtk deui",
+            past: "{0} dtk nu kapungkur",
+            future: "tina {0} dtk",
+        },
+    },
+    narrow: {
+        year: {
+            previous: "taun kapungkur",
+            current: "taun ayeuna",
+            next: "taun payun",
+            past: "{0} taun nu kapungkur",
+            future: "tina {0} taun",
+        },
+        quarter: {
+            previous: "spprt taun kapungkur",
+            current: "spprt taun ayeuna",
+            next: "spprt taun deui",
+            past: "{0} spprt taun kapungkur",
+            future: "tina {0} spprt taun",
+        },
+        month: {
+            previous: "sasih kapungkur",
+            current: "sasih ayeuna",
+            next: "sasih payun",
+            past: "{0} sasih nu kapungkur",
+            future: "tina {0} sasih",
+        },
+        week: {
+            previous: "mgg kapungkur",
+            current: "mgg ayeuna",
+            next: "mgg payun",
+            past: "{0} mgg nu kapungkur",
+            future: "tina {0} mgg",
+        },
+        day: {
+            previous: "poe kapungkur",
+            current: "poe ayeuna",
+            next: "poe payun",
+            past: "{0} poe nu kapungkur",
+            future: "tina {0} poe",
+        },
+        hour: {
+            current: "sejam deui",
+            past: "{0} jam nu kapungkur",
+            future: "tina {0} jam",
+        },
+        minute: {
+            current: "semenit deui",
+            past: "{0} mnt nu kapungkur",
+            future: "tina {0} mnt",
+        },
+        second: {
+            current: "sababaraha dtk deui",
+            past: "{0} dtk nu kapungkur",
+            future: "tina {0} dtk",
+        },
+    },
     now: {
         now: {
             current: "ayeuna",
@@ -72,7 +175,6 @@ const TimeAgoLocale: ExtendedLocale = {
             past: "nembe",
         },
     },
-    quantify: (_n) => "other",
 };
 
 const Locale = {

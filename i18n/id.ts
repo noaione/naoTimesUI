@@ -9,10 +9,9 @@
  * MIT License
  */
 
-import { ExtendedLocale } from "./_types";
+import { LocaleData } from "javascript-time-ago";
 
-const TimeAgoLocale: ExtendedLocale = {
-    // @ts-ignore
+const TimeAgoLocale: LocaleData = {
     locale: "id",
     long: {
         year: {
@@ -44,19 +43,20 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "dalam {0} minggu",
         },
         day: {
-            previous: {
+            past: {
                 one: "kemarin",
                 two: "kemarin dulu",
-                other: "kemarin",
+                few: "beberapa {0} hari yang lalu",
+                many: "{0} hari yang lalu",
+                other: "{0} hari yang lalu",
             },
-            current: "hari ini",
-            next: {
+            future: {
                 one: "besok",
                 two: "lusa",
-                other: "besok",
+                few: "dalam beberapa hari",
+                many: "dalam {0} hari",
+                other: "dalam {0} hari",
             },
-            past: "{0} hari yang lalu",
-            future: "dalam {0} hari",
         },
         hour: {
             current: "sejam lagi",
@@ -76,47 +76,48 @@ const TimeAgoLocale: ExtendedLocale = {
     },
     short: {
         year: {
-            previous: "tahun lalu",
-            current: "tahun ini",
-            next: "tahun depan",
+            previous: "thn lalu",
+            current: "thn ini",
+            next: "thn depan",
             past: "{0} thn lalu",
             future: "dlm {0} thn",
         },
         quarter: {
-            previous: "Kuartal lalu",
-            current: "kuartal ini",
-            next: "kuartal berikutnya",
+            previous: "krt lalu",
+            current: "krt ini",
+            next: "krt berikutnya",
             past: "{0} krtl. lalu",
             future: "dlm {0} krtl.",
         },
         month: {
-            previous: "bulan lalu",
-            current: "bulan ini",
-            next: "bulan berikutnya",
+            previous: "bln lalu",
+            current: "bln ini",
+            next: "bln berikutnya",
             past: "{0} bln lalu",
             future: "dlm {0} bln",
         },
         week: {
-            previous: "minggu lalu",
-            current: "minggu ini",
-            next: "minggu depan",
+            previous: "mgg lalu",
+            current: "mgg ini",
+            next: "mgg depan",
             past: "{0} mgg lalu",
             future: "dlm {0} mgg",
         },
         day: {
-            previous: {
-                one: "kemarin",
-                two: "kemarin dulu",
-                other: "kemarin",
+            past: {
+                one: "kmrn",
+                two: "kmrn dulu",
+                few: "bbrp {0} h yg lalu",
+                many: "{0} h yg lalu",
+                other: "{0} h yg lalu",
             },
-            current: "hari ini",
-            next: {
-                one: "besok",
+            future: {
+                one: "esok",
                 two: "lusa",
-                other: "besok",
+                few: "dlm bbrp h",
+                many: "dlm {0} h",
+                other: "dlm {0} h",
             },
-            past: "{0} h lalu",
-            future: "dalam {0} h",
         },
         hour: {
             current: "sejam lg",
@@ -201,28 +202,7 @@ const TimeAgoLocale: ExtendedLocale = {
         hour: "{0}jam",
         minute: "{0}mnt",
         second: "{0}dtk",
-        now: "sekarang",
     },
-    "short-time": {
-        year: "{0} thn.",
-        month: "{0} bln.",
-        week: "{0} mg.",
-        day: "{0} hr.",
-        hour: "{0} jam.",
-        minute: "{0} mnt.",
-        second: "{0} dtk.",
-    },
-    "long-time": {
-        year: "{0} tahun",
-        month: "{0} bulan",
-        week: "{0} minggu",
-        day: "{0} hari",
-        hour: "{0} jam",
-        minute: "{0} menit",
-        second: "{0} detik",
-    },
-    // Default quantify from the module.
-    quantify: (_n) => "other",
 };
 
 const Locale = {

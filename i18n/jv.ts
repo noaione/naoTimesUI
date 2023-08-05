@@ -10,10 +10,9 @@
  * MIT License
  */
 
-import { ExtendedLocale } from "./_types";
+import { LocaleData } from "javascript-time-ago";
 
-const TimeAgoLocale: ExtendedLocale = {
-    // @ts-ignore
+const TimeAgoLocale: LocaleData = {
     locale: "jv",
     long: {
         year: {
@@ -45,15 +44,20 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "lebet {0} minggu",
         },
         day: {
-            previous: "kala wingi",
-            current: "dinten puniki",
-            next: {
-                one: "benjing",
-                two: "mben",
-                other: "benjing",
+            past: {
+                one: "kemarin",
+                two: "kemarin dulu",
+                few: "{0} dinten kala wingi",
+                many: "{0} dinten kala wingi",
+                other: "{0} dinten kala wingi",
             },
-            past: "{0} dinten kala wingi",
-            future: "lebet {0} dinten",
+            future: {
+                one: "besok",
+                two: "lusa",
+                few: "lebet beberapa dinten",
+                many: "lebet {0} dinten",
+                other: "lebet {0} dinten",
+            },
         },
         hour: {
             current: "setunggal tabuh malih",
@@ -71,6 +75,128 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "lebet {0} detik",
         },
     },
+    short: {
+        year: {
+            previous: "warsa kala wingi",
+            current: "warsa puniki",
+            next: "warsa ngajeng",
+            past: "{0} warsa ingkang rumiyin",
+            future: "lebet {0} warsa",
+        },
+        quarter: {
+            previous: "trwln rumiyin/kala wingi",
+            current: "trwln puniki",
+            next: "trwln saklajengipun",
+            past: "{0} trwln ingkang rumiyin",
+            future: "lebet {0} trwln",
+        },
+        month: {
+            previous: "sasi kala wingi",
+            current: "sasi puniki",
+            next: "sasi ngajeng",
+            past: "{0} sasi ingkang rumiyin",
+            future: "lebet {0} sasi",
+        },
+        week: {
+            previous: "mgg kala wingi",
+            current: "mgg puniki",
+            next: "mgg ngajeng",
+            past: "{0} mgg kala wingi",
+            future: "lebet {0} mgg",
+        },
+        day: {
+            past: {
+                one: "kmrn",
+                two: "kmrn dulu",
+                few: "{0} dntn kala wingi",
+                many: "{0} dntn kala wingi",
+                other: "{0} dntn kala wingi",
+            },
+            future: {
+                one: "esok",
+                two: "lusa",
+                few: "lebet beberapa dntn",
+                many: "lebet {0} dntn",
+                other: "lebet {0} dntn",
+            },
+        },
+        hour: {
+            current: "setunggal tabuh malih",
+            past: "{0} tabuh ingkang rumiyin",
+            future: "lebet {0} tbg",
+        },
+        minute: {
+            current: "setunggal menit malih",
+            past: "{0} menit lajeng",
+            future: "lebet {0} mnt",
+        },
+        second: {
+            current: "sekedap dtk malih",
+            past: "{0} dtk ingkang rumiyin",
+            future: "lebet {0} dtk",
+        },
+    },
+    narrow: {
+        year: {
+            previous: "warsa kala wingi",
+            current: "warsa puniki",
+            next: "warsa ngajeng",
+            past: "{0} warsa ingkang rumiyin",
+            future: "lebet {0} warsa",
+        },
+        quarter: {
+            previous: "trwln rumiyin/kala wingi",
+            current: "trwln puniki",
+            next: "trwln saklajengipun",
+            past: "{0} trwln ingkang rumiyin",
+            future: "lebet {0} trwln",
+        },
+        month: {
+            previous: "sasi kala wingi",
+            current: "sasi puniki",
+            next: "sasi ngajeng",
+            past: "{0} sasi ingkang rumiyin",
+            future: "lebet {0} sasi",
+        },
+        week: {
+            previous: "mgg kala wingi",
+            current: "mgg puniki",
+            next: "mgg ngajeng",
+            past: "{0} mgg kala wingi",
+            future: "lebet {0} mgg",
+        },
+        day: {
+            past: {
+                one: "kmrn",
+                two: "kmrn dulu",
+                few: "{0} dntn kala wingi",
+                many: "{0} dntn kala wingi",
+                other: "{0} dntn kala wingi",
+            },
+            future: {
+                one: "esok",
+                two: "lusa",
+                few: "lebet beberapa dntn",
+                many: "lebet {0} dntn",
+                other: "lebet {0} dntn",
+            },
+        },
+        hour: {
+            current: "setunggal tabuh malih",
+            past: "{0} tabuh ingkang rumiyin",
+            future: "lebet {0} tbg",
+        },
+        minute: {
+            current: "setunggal menit malih",
+            past: "{0} menit lajeng",
+            future: "lebet {0} mnt",
+        },
+        second: {
+            current: "sekedap dtk malih",
+            past: "{0} dtk ingkang rumiyin",
+            future: "lebet {0} dtk",
+        },
+    },
     now: {
         now: {
             current: "sapunika ugi",
@@ -78,7 +204,15 @@ const TimeAgoLocale: ExtendedLocale = {
             future: "nembe mawon",
         },
     },
-    quantify: (_n: any) => "other",
+    mini: {
+        year: "{0}wrs",
+        month: "{0}sasi",
+        week: "{0}mg",
+        day: "{0}dnt",
+        hour: "{0}tbh",
+        minute: "{0}mnt",
+        second: "{0}dtk",
+    },
 };
 
 /**

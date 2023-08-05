@@ -7,11 +7,7 @@ import { DateTime } from "luxon";
 import { parseAllowLinks, parseEmbedTitle } from "./markdown";
 import { extractRGB } from "./color";
 
-interface LinkElem extends Partial<Omit<HTMLLinkElement, "children">> {
-    children: React.ReactNode;
-}
-
-class Link extends React.PureComponent<LinkElem> {
+class Link extends React.PureComponent<React.AnchorHTMLAttributes<HTMLAnchorElement>> {
     constructor(props) {
         super(props);
     }
@@ -19,7 +15,6 @@ class Link extends React.PureComponent<LinkElem> {
     render() {
         const { children, ...props } = this.props;
         return (
-            // @ts-ignore
             <a target="_blank" rel="noreferrer noopener" {...props}>
                 {children}
             </a>
@@ -94,7 +89,6 @@ class EmbedDescription extends React.Component<IEmbedDescription> {
             return null;
         }
 
-        // @ts-ignore
         return <div className="embed-description markup">{parseAllowLinks(content)}</div>;
     }
 }
@@ -156,10 +150,8 @@ class EmbedField extends React.Component<IEmbedField> {
 
         const classExtra = "embed-field" + (inline ? " embed-field-inline" : "");
 
-        // @ts-ignore
         const fieldName = name ? <div className="embed-field-name">{parseEmbedTitle(name)}</div> : null;
         const fieldValue = value ? (
-            // @ts-ignore
             <div className="embed-field-value markup">{parseAllowLinks(name)}</div>
         ) : null;
 
