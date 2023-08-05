@@ -186,13 +186,14 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                         Prediksi
                                                     </motion.div>
                                                     <div className="flex flex-row gap-2 mt-2">
-                                                        {project?.prediction?.nextEpisode && (
+                                                        {typeof project?.prediction?.nextEpisode ===
+                                                            "number" && (
                                                             <PredictionCard
                                                                 name="Episode Selanjutnya"
                                                                 days={project?.prediction?.nextEpisode}
                                                             />
                                                         )}
-                                                        {project?.prediction?.overall && (
+                                                        {typeof project?.prediction?.overall === "number" && (
                                                             <PredictionCard
                                                                 name="Keseluruhan"
                                                                 days={project?.prediction?.overall}
@@ -201,18 +202,6 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                                                     </div>
                                                 </>
                                             )}
-                                            <motion.div
-                                                className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
-                                                initial={{ x: -30, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                transition={{ delay: 0.3 }}
-                                            >
-                                                Prediksi
-                                            </motion.div>
-                                            <div className="flex flex-row gap-2 mt-2">
-                                                <PredictionCard name="Episode Selanjutnya" days={2} />
-                                                <PredictionCard name="Keseluruhan" days={40} />
-                                            </div>
 
                                             <div className="flex row mt-4 gap-3">
                                                 <ProjectPageComponent.Deletion
