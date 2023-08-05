@@ -14,7 +14,6 @@ import { UserSessFragment } from "@/lib/graphql/auth.generated";
 import { ServerInfoFragment } from "@/lib/graphql/common.generated";
 import client from "@/lib/graphql/client";
 import { GetCurrentServerDocument } from "@/lib/graphql/servers.generated";
-import { DISCORD_CHANNEL, PREFIX_ANNOUNCEMENT } from "@/lib/graphql/integration-type";
 
 interface SettingsHomepageState {
     errText: string;
@@ -57,7 +56,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
 
     showErrorCallback(errText: string) {
         this.setState({ errText });
-        this.modalCb.showModal();
+        this.modalCb?.showModal();
     }
 
     render() {
@@ -79,13 +78,7 @@ class SettingsHomepage extends React.Component<SettingsHomepageProps, SettingsHo
                                 {serverInfo && (
                                     <>
                                         <SettingsComponent.Announcer
-                                            announcerId={
-                                                serverInfo.integrations.filter(
-                                                    (type) =>
-                                                        type.type ===
-                                                        `${PREFIX_ANNOUNCEMENT}${DISCORD_CHANNEL}`
-                                                )[0]?.id
-                                            }
+                                            integrations={serverInfo.integrations}
                                             onErrorModal={this.showErrorCallback}
                                         />
                                         <SettingsComponent.Admin
