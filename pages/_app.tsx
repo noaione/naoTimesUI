@@ -4,6 +4,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { AnimatePresence } from "framer-motion";
 
 import "../styles/global.css";
+import "react-loading-skeleton/dist/skeleton.css";
 import type { AppProps } from "next/app";
 import client from "@/lib/graphql/client";
 import { ApolloProvider } from "@apollo/client";

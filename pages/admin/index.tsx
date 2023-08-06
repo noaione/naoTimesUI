@@ -51,11 +51,7 @@ function LatestProjectComponent() {
 function StatsComponent() {
     const { loading, error, data } = useQuery(GetServerStatsDocument);
     if (loading) {
-        return (
-            <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-                <SkeletonLoader.StatsCard />
-            </div>
-        );
+        return <SkeletonLoader.StatsCard />;
     }
     if (error) {
         return <div>Error: {error.message}</div>;

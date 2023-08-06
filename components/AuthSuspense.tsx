@@ -53,6 +53,7 @@ export default function AuthSuspense(props: PropsWithChildren<AuthSuspenseProps>
     console.log(data);
 
     if (data.session.__typename === "Result") {
+        // If null, we're not logged in. Try to nuke localStorage data.
         console.error(data.session.message);
         if (shouldRefetchOrRedirect(path) && (path.startsWith("/admin") || path.startsWith("/servers"))) {
             router.push("/");

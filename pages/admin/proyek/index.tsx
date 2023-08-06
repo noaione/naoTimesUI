@@ -20,7 +20,6 @@ import ErrorModal from "@/components/ErrorModal";
 import { CallbackModal } from "@/components/Modal";
 import { buildImageUrl } from "@/components/ImageMetadata";
 import { ProjectAssigneeInfo } from "@/lib/graphql/types.generated";
-import { InView } from "react-intersection-observer";
 
 interface ProyekCardProps {
     proyek: LatestProjectFragment;
@@ -46,7 +45,6 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
         const { id, title, assignments, poster, statuses } = proyek;
 
         const lastStatus = statuses[0];
-        console.log(lastStatus);
 
         return (
             <>
@@ -165,6 +163,11 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
             canLoadMore: typeof data.latests.pageInfo.nextCursor === "string",
             cursor: data.latests.pageInfo.nextCursor,
         });
+        setTimeout(() => {
+            this.loadMore()
+                .then(() => {})
+                .catch(() => {});
+        }, 1000);
     }
 
     async loadMore() {
@@ -209,11 +212,17 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
             canLoadMore: typeof data.latests.pageInfo.nextCursor === "string",
             cursor: data.latests.pageInfo.nextCursor,
         });
+        setTimeout(() => {
+            this.loadMore()
+                .then(() => {})
+                .catch(() => {});
+        }, 1000);
     }
 
     render() {
         const { isLoading, projects } = this.state;
         const { user } = this.props;
+        console.log(isLoading, this.state.canLoadMore, this.state.cursor);
 
         return (
             <>
@@ -234,15 +243,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                                 <span className="font-semibold mt-0.5">Tambah</span>
                             </Link>
                         </div>
-                        <InView
-                            as="div"
-                            className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4"
-                            onChange={(inview, _) => {
-                                if (inview) {
-                                    this.loadMore();
-                                }
-                            }}
-                        >
+                        <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-3 mt-4">
                             {projects.length > 0 ? (
                                 projects.map((project) => {
                                     return (
@@ -258,8 +259,15 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                                     )}
                                 </>
                             )}
-                        </InView>
-                        {isLoading && <SkeletonLoader.ProjectOverview />}
+                            {isLoading && (
+                                // repeat 5 times
+                                <>
+                                    {[...Array(5)].map((_, i) => (
+                                        <SkeletonLoader.ProjectSingle key={`extra-loading-${i}`} />
+                                    ))}
+                                </>
+                            )}
+                        </div>
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{this.state.error}</ErrorModal>
                     </div>
                 </AdminLayout>

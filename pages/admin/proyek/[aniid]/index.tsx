@@ -84,17 +84,14 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                 id: this.props.id,
             },
         });
-
         if (error) {
             this.showErrorCallback(error.message);
             return;
         }
-
         if (data.project.__typename === "Result") {
             this.showErrorCallback(data.project.message);
             return;
         }
-
         this.setState({
             project: data.project,
             loading: false,
@@ -116,7 +113,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                 </Head>
                 <AdminLayout user={user} title={title} active="projectpage">
                     {loading ? (
-                        <SkeletonLoader.AdminOverview />
+                        <SkeletonLoader.ProjectDetail />
                     ) : (
                         <div className="container mx-auto px-6 py-8">
                             <div id="project-data" className="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
@@ -216,7 +213,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                         </div>
                     )}
                     {loading ? (
-                        <SkeletonLoader.StatsCard />
+                        <SkeletonLoader.ProjectEpisode />
                     ) : (
                         <div className="container mx-auto px-6 py-4">
                             <motion.h2

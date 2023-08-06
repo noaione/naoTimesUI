@@ -2,6 +2,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const endpoint = process.env.NEXT_PUBLIC_API_V2_ENDPOINT;
+export const STORAGE_TOKEN = "sessionToken";
 if (typeof endpoint !== "string") {
     throw new Error("NEXT_PUBLIC_API_V2_ENDPOINT is not defined");
 }
@@ -14,7 +15,7 @@ const authLink = setContext((_, { headers }) => {
     // get the authentication token from local storage if it exists
     let token;
     try {
-        token = window && window.localStorage && window.localStorage.getItem("sessionToken");
+        token = window && window.localStorage && window.localStorage.getItem(STORAGE_TOKEN);
     } catch {}
     const masterKey = process.env.API_V2_KEY; // should be none on client side
     if (masterKey) {
