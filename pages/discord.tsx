@@ -33,7 +33,10 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
     }
 
     async componentDidMount() {
-        if (!this.props.token) {
+        // get window location query
+        const query = new URLSearchParams(window.location.search);
+        const token = query.get("token");
+        if (!token) {
             this.setState({
                 info: "Gagal",
                 detail: "Tidak ada token yang diberikan.",
@@ -42,7 +45,7 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
             return;
         }
 
-        localStorage.setItem("sessionToken", this.props.token);
+        localStorage.setItem("sessionToken", token);
 
         const { data, error } = await client.query({
             query: SessionDocument,
@@ -67,6 +70,10 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
         }
 
         // Login success
+        this.setState({
+            info: "Sukses",
+            detail: "Anda akan diarahkan ke laman peladen...",
+        });
         setTimeout(() => {
             Router.push("/servers");
         }, 1000);
@@ -96,23 +103,6 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
             </>
         );
     }
-}
-
-export function getStaticProps({ params }) {
-    const { token } = params;
-
-    return {
-        props: {
-            token,
-        },
-    };
-}
-
-export function getStaticPaths() {
-    return {
-        paths: [],
-        fallback: true,
-    };
 }
 
 export default function WrappedDiscordCallbackPage(props: DiscordCallbackPageProps) {
