@@ -28,12 +28,12 @@ function AnnouncerSettings(props: AnnouncerSettingsProps) {
     const [integrations, setIntegrations] = React.useState<IntegrationState[]>(initialSettings);
 
     return (
-        <div className="flex flex-col mx-4 mt-2">
+        <div className="flex flex-col mt-2">
             <div className="w-full mt-2 mb-1 flex flex-col">
-                <div className="flex flex-row w-full items-center mb-2">
+                <div className="flex flex-row w-full items-center mb-1">
                     <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Kanal #announcer</h3>
                     <button
-                        className="flex flex-row ml-1 px-2 py-0.5 text-sm rounded-lg bg-blue-600 text-white transition hover:bg-blue-700 disabled:bg-blue-700 disabled:cursor-not-allowed duration-200 ease-in-out items-center hover:shadow-lg focus:outline-none"
+                        className="flex flex-row ml-1 -mt-1 px-2 py-0.5 text-sm rounded-lg bg-blue-600 text-white transition hover:bg-blue-700 disabled:bg-blue-700 disabled:cursor-not-allowed duration-200 ease-in-out items-center hover:shadow-lg focus:outline-none"
                         disabled={loading}
                         onClick={() => {
                             setIntegrations([
@@ -67,7 +67,7 @@ function AnnouncerSettings(props: AnnouncerSettingsProps) {
                                 </div>
                                 <div className="flex flex-col w-1/2 ml-2">
                                     <select
-                                        className="form-darkable w-full py-2"
+                                        className="form-select-darkable w-full py-2"
                                         defaultValue={integration.type}
                                         disabled={loading}
                                     >
@@ -95,7 +95,7 @@ function AnnouncerSettings(props: AnnouncerSettingsProps) {
                         );
                     })}
                 <button
-                    className="px-2 py-2 text-center mt-4 font-bold rounded-lg bg-green-600 text-white transition hover:bg-green-700 disabled:bg-green-700 disabled:animate-pulse disabled:cursor-not-allowed duration-200 ease-in-out hover:shadow-lg focus:outline-none"
+                    className="px-2 py-2 text-center mt-2 font-bold rounded-lg bg-green-600 text-white transition hover:bg-green-700 disabled:bg-green-700 disabled:animate-pulse disabled:cursor-not-allowed duration-200 ease-in-out hover:shadow-lg focus:outline-none"
                     disabled={loading}
                     onClick={() => {
                         addServer({

@@ -80,7 +80,7 @@ function ServerAddComponents() {
                                 </div>
                                 <div className="flex flex-col w-1/2 ml-2">
                                     <select
-                                        className="form-darkable w-full py-2"
+                                        className="form-select-darkable w-full py-2"
                                         defaultValue={integration.type}
                                         disabled={loading}
                                     >

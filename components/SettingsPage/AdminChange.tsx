@@ -111,10 +111,10 @@ class AdminChangeSettings extends React.Component<AdminChangeProps, AdminChangeS
 
         return (
             <div className="flex flex-col py-1">
-                <h3 className="font-semibold dark:text-white mb-2 text-lg">Ubah Admin</h3>
+                <h3 className="font-semibold dark:text-white mb-2 mt-4 text-lg">Ubah Admin</h3>
                 <div className="flex flex-row pb-2">
-                    <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
-                        <div className="w-full mt-2 mb-1">
+                    <div className="flex flex-col w-full">
+                        <div className="w-full mb-1">
                             <SelectAsync
                                 isMulti
                                 className="w-full mt-1 rounded-lg"
