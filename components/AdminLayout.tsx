@@ -67,7 +67,7 @@ class AdminLayout extends React.Component<AdminLayoutProps, AdminLayoutState> {
                         <AdminBanner />
                         <AdminHeader
                             id={user.id}
-                            name={user.username}
+                            name={user.active?.name ?? user.username}
                             privilige={user.privilege}
                             title={realTitle}
                             onOpen={this.openSidebar}
