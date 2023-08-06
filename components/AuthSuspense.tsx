@@ -10,7 +10,7 @@ interface AuthSuspenseProps {
 export const AuthContext = createContext<UserSessFragment | null>(null);
 
 const DO_NOT_REDIRECT = ["/500", "/404"];
-const PREFIX_INVALID = ["/tentang", "/embed", "/assets"];
+const PREFIX_INVALID = ["/tentang", "/embed", "/assets", "/discord"];
 
 function shouldRefetchOrRedirect(path: string) {
     if (DO_NOT_REDIRECT.includes(path)) {

@@ -43,7 +43,7 @@ function generateDiscordLogin(baseUrl: string) {
     }
 
     const targetUrl = `${processEnv}/oauth2/discord/authorize`;
-    const redirectUrlBack = `${baseUrl}/servers`;
+    const redirectUrlBack = `${baseUrl}/discord`;
     // Custom OAuth2 URL that support clickjacking prevention
     return `${targetUrl}?base_url=${processEnv}&redirect_url=${redirectUrlBack}`;
 }
