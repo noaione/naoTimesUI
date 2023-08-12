@@ -72,7 +72,7 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
         // Login success
         this.setState({
             info: "Sukses",
-            detail: "Anda akan diarahkan ke laman peladen...",
+            detail: "Sedang mengalihkan...",
         });
         setTimeout(() => {
             Router.push("/admin");

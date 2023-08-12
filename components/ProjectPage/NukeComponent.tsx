@@ -66,7 +66,7 @@ class NukeProjectComponent extends React.Component<ExtendedNukeProps, DeleteStat
         }
 
         if (data.deleteProject.success) {
-            Router.push("/admin/proyek");
+            Router.push("/admin/peladen/proyek");
         } else {
             this.props.onErrorModal(data.deleteProject.message);
             this.setState(resetState());

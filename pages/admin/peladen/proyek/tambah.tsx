@@ -322,7 +322,7 @@ class ServerProjectAdditionComponents extends React.Component<ProjectNewProps, P
             return;
         }
 
-        Router.push(`/admin/proyek/${data.addProject.id}`);
+        Router.push(`/admin/peladen/proyek/${data.addProject.id}`);
     }
 
     onAnimeSelection(data: ExternalResultFragment, action: ActionMeta<any>) {
