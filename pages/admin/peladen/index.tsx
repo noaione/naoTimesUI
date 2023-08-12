@@ -23,7 +23,9 @@ function ErrorText(props: { message: string }) {
 }
 
 function LatestProjectComponent() {
-    const { loading, error, data } = useQuery(GetLatestProjectInfoDocument);
+    const { loading, error, data } = useQuery(GetLatestProjectInfoDocument, {
+        fetchPolicy: "network-only",
+    });
     if (loading) {
         return <SkeletonLoader.AdminOverview />;
     }
@@ -49,7 +51,9 @@ function LatestProjectComponent() {
 }
 
 function StatsComponent() {
-    const { loading, error, data } = useQuery(GetServerStatsDocument);
+    const { loading, error, data } = useQuery(GetServerStatsDocument, {
+        fetchPolicy: "network-only",
+    });
     if (loading) {
         return <SkeletonLoader.StatsCard />;
     }
