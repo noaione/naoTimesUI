@@ -6,7 +6,7 @@ import AsyncSelect from "react-select/async";
 import { ActionMeta } from "react-select";
 import PlusIcon from "mdi-react/PlusIcon";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/Admin";
 import MetadataHead from "@/components/MetadataHead";
 import LoadingCircle from "@/components/LoadingCircle";
 import { CallbackModal } from "@/components/Modal";

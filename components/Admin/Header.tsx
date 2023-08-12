@@ -11,12 +11,10 @@ import { motion } from "framer-motion";
 import { UserType } from "@/lib/graphql/types.generated";
 import client from "@/lib/graphql/client";
 import { SetServerDocument } from "@/lib/graphql/servers.generated";
-import { LogoutDocument } from "@/lib/graphql/auth.generated";
+import { LogoutDocument, UserSessFragment } from "@/lib/graphql/auth.generated";
 
 interface HeaderProps {
-    id: string;
-    name?: string;
-    privilige: UserType;
+    user: UserSessFragment;
     title: string;
     onOpen: () => void;
 }
@@ -130,11 +128,11 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
     }
 
     render() {
-        const { id, name, privilige, title } = this.props;
+        const { user, title } = this.props;
         const { isDarkMode } = this.state;
 
-        const username = name || id;
-        const isAdmin = privilige === UserType.Admin;
+        const username = user.active?.name ?? user.username ?? user.id;
+        const isAdmin = user.privilege === UserType.Admin;
         const opacity = this.state.dropdownOpen ? "opacity-100" : "opacity-0";
         return (
             <>
@@ -192,24 +190,25 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                         opacity
                                     }
                                 >
-                                    <button
-                                        onClick={async (ev) => {
-                                            ev.preventDefault();
-                                            const { data } = await client.mutate({
-                                                mutation: SetServerDocument,
-                                                variables: {
-                                                    id: null,
-                                                },
-                                            });
-                                            if (data.selectServer.success) {
-                                                Router.replace("/servers");
-                                            }
-                                        }}
-                                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
-                                    >
-                                        Ganti Server
-                                    </button>
-
+                                    {user.active?.id && (
+                                        <button
+                                            onClick={async (ev) => {
+                                                ev.preventDefault();
+                                                const { data } = await client.mutate({
+                                                    mutation: SetServerDocument,
+                                                    variables: {
+                                                        id: null,
+                                                    },
+                                                });
+                                                if (data.selectServer.success) {
+                                                    Router.replace("/servers");
+                                                }
+                                            }}
+                                            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"
+                                        >
+                                            Ganti Server
+                                        </button>
+                                    )}
                                     <button
                                         onClick={async (ev) => {
                                             ev.preventDefault();

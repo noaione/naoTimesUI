@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React from "react";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/Admin";
 import MetadataHead from "@/components/MetadataHead";
 import Markdown from "@/components/Markdown";
 import MotionInView from "@/components/MotionInView";

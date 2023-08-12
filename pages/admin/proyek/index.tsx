@@ -5,7 +5,7 @@ import Router from "next/router";
 
 import PlusIcon from "mdi-react/PlusIcon";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/Admin";
 import MetadataHead from "@/components/MetadataHead";
 import SkeletonLoader from "@/components/Skeleton";
 import RolePopup from "@/components/RolePopup";

@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import { motion } from "framer-motion";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/Admin";
 import ErrorModal from "@/components/ErrorModal";
 import MetadataHead from "@/components/MetadataHead";
 import ProjectPageComponent from "@/components/ProjectPage";

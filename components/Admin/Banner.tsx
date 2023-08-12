@@ -4,7 +4,7 @@ import { uniq } from "lodash";
 
 import BullhornOutlineIcon from "mdi-react/BullhornOutlineIcon";
 
-import Banner, { BannerData } from "../lib/banner";
+import Banner, { BannerData } from "@/lib/banner";
 
 interface BannerHeaderState {
     show: boolean;

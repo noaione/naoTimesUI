@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 
-import AdminLayout from "@/components/AdminLayout";
+import AdminLayout from "@/components/Admin";
 import MetadataHead from "@/components/MetadataHead";
 
 // Import all Settings Component
