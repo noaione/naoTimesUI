@@ -34,13 +34,13 @@ const BannerSets: BannerData[] = [
         id: "20210701-1200",
         message: "Tambah atau hapus episode untuk proyek anda lewat naoTimesUI",
         shortMessage: "Ubah total episode via naoTimesUI",
-        link: "/admin/proyek",
+        link: "/admin/peladen/proyek",
     },
     {
         id: "20210806-1500",
         message: "Inisiasi, batalkan, dan putuskan kolaborasi sebuah proyek melalui naoTimesUI",
         shortMessage: "Kolaborasi via naoTimesUI",
-        link: "/admin/proyek/kolaborasi",
+        link: "/admin/peladen/proyek/kolaborasi",
     },
     {
         id: "20211123-1100",

@@ -51,7 +51,7 @@ function PredictionCard(props: { days: number; name: string }) {
                 duration={2}
                 useEasing
                 start={0}
-                formattingFn={(val) => `dalam ${val.toLocaleString()}`}
+                formattingFn={(val) => `dalam ${val.toLocaleString()} hari`}
                 end={days}
             />
         </div>
@@ -175,7 +175,7 @@ class ServerProyekDetailedPage extends React.Component<ProyekPageProps, ProyekPa
                                             {adaPrediksi(project?.prediction) && (
                                                 <>
                                                     <motion.div
-                                                        className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-1"
+                                                        className="text-lg font-semibold text-gray-900 dark:text-gray-200 mt-2"
                                                         initial={{ x: -30, opacity: 0 }}
                                                         animate={{ x: 0, opacity: 1 }}
                                                         transition={{ delay: 0.3 }}

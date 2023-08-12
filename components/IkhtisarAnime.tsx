@@ -53,7 +53,7 @@ class IkhtisarAnime extends React.Component<IAnimeOverview> {
                         <div className="mb-8">
                             <div className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-1">
                                 <Link
-                                    href={"/admin/proyek/" + data.id}
+                                    href={"/admin/peladen/proyek/" + data.id}
                                     className="no-underline hover:underline cursor-pointer"
                                 >
                                     {data.title}

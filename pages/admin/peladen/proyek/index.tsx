@@ -58,7 +58,7 @@ class ProyekSimpleCard extends React.Component<ProyekCardProps> {
                     <div className="p-4 flex flex-col justify-between leading-normal rounded-b-lg lg:rounded-b-none lg:rounded-r-lg">
                         <div className="flex flex-col py-1">
                             <Link
-                                href={`/admin/proyek/${id}`}
+                                href={`/admin/peladen/proyek/${id}`}
                                 className="text-xl font-bold align-top text-gray-900 dark:text-gray-200 no-underline hover:underline cursor-pointer"
                             >
                                 {title}

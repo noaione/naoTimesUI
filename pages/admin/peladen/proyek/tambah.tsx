@@ -47,6 +47,7 @@ interface ProjectNewProps {
 interface SimpleIDName {
     id: string;
     username: string;
+    name: string | null;
     integrations: Integration[];
 }
 
@@ -63,7 +64,12 @@ interface AssigneeRoleProps {
 }
 
 function filterIdUsernameOnly(data: SearchUser[]) {
-    return data.map((e) => ({ id: e.id, username: e.username, integrations: e.integrations }));
+    return data.map((e) => ({
+        id: e.id,
+        username: e.username,
+        integrations: e.integrations,
+        name: e.name,
+    }));
 }
 
 const loadUsersData = (inputValue: string, callback: Function) => {
@@ -78,17 +84,17 @@ const loadUsersData = (inputValue: string, callback: Function) => {
         });
 };
 
-const loadUsersDataDebounced = debounce(loadUsersData, 300);
-
 function labelValuesUser(data: SimpleIDName) {
-    const { id, username } = data;
-    return `${username} (${id})`;
+    const { id, username, name } = data;
+    return `${name ?? username} (${id})`;
 }
 
 function AssigneeRole(props: AssigneeRoleProps) {
     const { role, onSelect, onRemove } = props;
     const keyId = `rselect-staff-${role.key}`;
     const roleName = expandRoleLocalized(role.key, role.name);
+    const loadEachDataDebounced = debounce(loadUsersData, 300);
+
     return (
         <div className="flex -mx-3">
             <div className="w-full px-3 mb-1">
@@ -101,7 +107,7 @@ function AssigneeRole(props: AssigneeRoleProps) {
                     className="w-full rounded-lg"
                     cacheOptions
                     defaultOptions={true}
-                    loadOptions={loadUsersDataDebounced}
+                    loadOptions={loadEachDataDebounced}
                     onChange={(value, meta) => {
                         if (meta.action === "clear") {
                             onSelect(undefined);
@@ -121,7 +127,7 @@ function AssigneeRole(props: AssigneeRoleProps) {
                                         action: IntegrationInputAction.Upsert,
                                     },
                                 ],
-                                name: value.username,
+                                name: value.name ?? value.username,
                             });
                         }
                     }}
