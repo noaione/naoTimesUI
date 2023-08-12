@@ -14,25 +14,50 @@ import ReactTimeAgoLocale from "../TimeAgo";
 import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
 import { EmbedProjectFragment } from "@/lib/graphql/projects.generated";
 import ImageMetadataComponent from "../ImageMetadata";
+import { Noto_Color_Emoji } from "next/font/google";
 
-function getSeason(month: number, year: number, locale: Locale): string {
-    const yearS = year.toString();
+function getSeasonIcon(month: number) {
     if (month >= 0 && month <= 2) {
-        return `❄ ${translate("SEASON.WINTER", locale, [yearS])}`;
+        return "❄️";
     }
     if (month >= 3 && month <= 5) {
-        return `🌸 ${translate("SEASON.SPRING", locale, [yearS])}`;
+        return "🌸";
     }
     if (month >= 6 && month <= 8) {
-        return `☀ ${translate("SEASON.SUMMER", locale, [yearS])}`;
+        return "☀️";
     }
     if (month >= 9 && month <= 11) {
-        return `🍂 ${translate("SEASON.FALL", locale, [yearS])}`;
+        return "🍂";
     }
     if (month >= 12) {
-        return `❄ ${translate("SEASON.WINTER", locale, [yearS])}`;
+        return "❄️";
     }
 }
+
+function getSeasonName(month: number, year: number, locale: Locale): string {
+    const yearS = year.toString();
+    if (month >= 0 && month <= 2) {
+        return translate("SEASON.WINTER", locale, [yearS]);
+    }
+    if (month >= 3 && month <= 5) {
+        return translate("SEASON.SPRING", locale, [yearS]);
+    }
+    if (month >= 6 && month <= 8) {
+        return translate("SEASON.SUMMER", locale, [yearS]);
+    }
+    if (month >= 9 && month <= 11) {
+        return translate("SEASON.FALL", locale, [yearS]);
+    }
+    if (month >= 12) {
+        return translate("SEASON.WINTER", locale, [yearS]);
+    }
+}
+
+const notoEmoji = Noto_Color_Emoji({
+    weight: "400",
+    display: "swap",
+    style: "normal",
+});
 
 const borderTop = {
     borderTopWidth: "3px",
@@ -117,7 +142,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         "shadow-md rounded-md overflow-hidden flex flex-row items-start relative bg-white dark:bg-gray-800 " +
                         bordering
                     }
-                    style={realAccent === "nonde" ? {} : borderTop}
+                    style={realAccent === "none" ? {} : borderTop}
                 >
                     <div className="hidden sm:block w-24 mt-3 ml-3 mb-8 relative flex-none">
                         <ImageMetadataComponent
@@ -129,7 +154,9 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         />
                     </div>
                     <div className="text-xs h-full flex-grow px-3 pt-2 py-8 max-w-full flex flex-col">
-                        <h1 className="font-medium text-base text-gray-800 dark:text-gray-100">{title}</h1>
+                        <h1 className="font-semibold text-base text-gray-800 dark:text-gray-100 mt-0.5">
+                            {title}
+                        </h1>
                         {jointWith.length > 0 && (
                             <p className="text-sm italic text-gray-700 dark:text-gray-300 mt-2">
                                 {translate("COLLAB_WITH", realLang, [jointWith.join(", ")])}
@@ -225,7 +252,12 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         </div>
                         <div className="absolute bottom-2 right-3 text-xs text-gray-400 dark:text-gray-300">
                             <div className="flex flex-row text-right">
-                                <span>{getSeason(startTimeDt.month, startTimeDt.year, realLang)}</span>
+                                <span className={notoEmoji.className + " font-normal not-italic"}>
+                                    {getSeasonIcon(startTimeDt.month)}
+                                </span>
+                                <span className="ml-0.5">
+                                    {getSeasonName(startTimeDt.month, startTimeDt.year, realLang)}
+                                </span>
                             </div>
                         </div>
                     </div>

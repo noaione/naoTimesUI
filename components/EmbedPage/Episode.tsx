@@ -120,9 +120,11 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                     }
                 >
                     <div>
-                        {shouldRenderPill
-                            ? translate("EPISODE_NEEDS", realLang, [episode.toString()])
-                            : translate("EPISODE", realLang, [episode.toString()])}
+                        <span className="font-medium">
+                            {shouldRenderPill
+                                ? translate("EPISODE_NEEDS", realLang, [episode.toString()])
+                                : translate("EPISODE", realLang, [episode.toString()])}
+                        </span>
                         {content}
                     </div>
                 </div>

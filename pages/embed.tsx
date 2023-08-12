@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import Router from "next/router";
+import { Rubik } from "next/font/google";
 import { cloneDeep, has as loHas, sortBy } from "lodash";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import MeiliSearch from "meilisearch";
@@ -18,11 +19,25 @@ import { EmbedProjectFragment, GetEmbedProjectsDocument } from "@/lib/graphql/pr
 import { GetServerNamesDocument } from "@/lib/graphql/servers.generated";
 import { ProjectStatus } from "@/lib/graphql/types.generated";
 
+type AccentType = (typeof ValidAccent)[number];
+type LangType = keyof typeof LocaleMap & string;
+
 interface EmbedUtangState {
     dark: string;
-    accent?: (typeof ValidAccent)[number];
-    lang?: keyof typeof LocaleMap & string;
+    accent?: AccentType;
+    lang?: LangType;
+    projects?: EmbedProjectFragment[];
+    otherServers?: { [key: string]: string };
+    errorMessage?: string;
+    loading: boolean;
 }
+
+const fontStyle = Rubik({
+    weight: ["300", "400", "500", "600", "700"],
+    subsets: ["latin", "latin-ext"],
+    display: "swap",
+    style: ["normal", "italic"],
+});
 
 function selectTime(statusSets: ProjectStatus[]) {
     let selected: Nullable<number> = null;
@@ -34,7 +49,8 @@ function selectTime(statusSets: ProjectStatus[]) {
     return selected;
 }
 
-function filterAnimeData(projects: EmbedProjectFragment[]): EmbedProjectFragment[] {
+function filterAnimeData(projects?: EmbedProjectFragment[]): EmbedProjectFragment[] {
+    if (isNone(projects)) return [];
     const newAnimeSets: EmbedProjectFragment[] = [];
     for (const project of projects) {
         const deepCopy = cloneDeep(project);
@@ -55,11 +71,88 @@ function filterAnimeData(projects: EmbedProjectFragment[]): EmbedProjectFragment
     return newAnimeSets;
 }
 
-function hasParamAndNotDefault(data: EmbedUtangState) {
+function hasParamAndNotDefault(data: Pick<EmbedUtangState, "accent" | "dark" | "lang">) {
     return (
         (loHas(data, "accent") && data.accent !== "green") ||
         (loHas(data, "lang") && data.lang !== "id") ||
         (loHas(data, "dark") && data.dark !== "false")
+    );
+}
+
+async function paginatedEmbedQuery(projectIds: string[]): Promise<{
+    projects: EmbedProjectFragment[];
+    message: string | null;
+}> {
+    let mergedProjects = [];
+    let failureMessage = null;
+    let cursor = null;
+    while (true) {
+        const { data } = await client.query({
+            query: GetEmbedProjectsDocument,
+            variables: {
+                cursor: cursor,
+                ids: projectIds,
+            },
+        });
+        if (data.projects.__typename === "Result") {
+            failureMessage = data.projects.message;
+            break;
+        }
+        const projects = data.projects.nodes;
+        mergedProjects = mergedProjects.concat(projects);
+        if (!data.projects.pageInfo.nextCursor) {
+            break;
+        }
+        cursor = data.projects.pageInfo.nextCursor;
+    }
+    return { projects: mergedProjects, message: failureMessage };
+}
+
+async function paginatedEmbedQueryServerName(serverIds: string[]): Promise<{
+    servers: { id: string; name: string }[];
+    message: string | null;
+}> {
+    let mergedServers = [];
+    let failureMessage = null;
+    let cursor = null;
+    while (true) {
+        const { data } = await client.query({
+            query: GetServerNamesDocument,
+            variables: {
+                cursor: cursor,
+                ids: serverIds,
+            },
+        });
+        if (data.servers.__typename === "Result") {
+            failureMessage = data.servers.message;
+            break;
+        }
+        const servers = data.servers.nodes;
+        mergedServers = mergedServers.concat(servers);
+        if (!data.servers.pageInfo.nextCursor) {
+            break;
+        }
+        cursor = data.servers.pageInfo.nextCursor;
+    }
+    return { servers: mergedServers, message: failureMessage };
+}
+
+function ErrorCard({ message }: { message: string }) {
+    return (
+        <div
+            className={
+                "shadow-md rounded-md overflow-hidden flex flex-row items-start relative bg-gray-100 dark:bg-gray-800 rounded-t-none border-t-4 role-accent-red"
+            }
+            style={{
+                borderTopWidth: "3px",
+            }}
+        >
+            <div className="h-full flex-grow px-3 pt-2 py-6 max-w-full flex flex-col text-center">
+                <h1 className="font-light break-all text-xl mt-2 text-gray-800 dark:text-gray-100">
+                    {message}
+                </h1>
+            </div>
+        </div>
     );
 }
 
@@ -72,10 +165,11 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
             dark: this.props.dark,
             accent: this.props.accent || "green",
             lang: this.props.lang || "id",
+            loading: true,
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.propagateHashChange();
         const isDark = mapBoolean(this.state.dark);
         if (isDark) {
@@ -91,7 +185,11 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
 
         // Use router replace to move the configuration from URL query to the hash
         if (
-            hasParamAndNotDefault({ dark: this.props.dark, accent: this.props.accent, lang: this.props.lang })
+            hasParamAndNotDefault({
+                dark: this.props.dark,
+                accent: this.props.accent as AccentType,
+                lang: this.props.lang as LangType,
+            })
         ) {
             Router.replace(
                 {
@@ -114,6 +212,44 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
                 return;
             });
         }
+
+        const { projectIds, server } = this.props;
+
+        const allProjects = await paginatedEmbedQuery(projectIds);
+        if (allProjects.message) {
+            this.setState({ loading: false, errorMessage: allProjects.message });
+        }
+
+        const serverHits = [];
+        for (const project of allProjects.projects) {
+            if (project.collaborations?.servers) {
+                for (const collab of project.collaborations.servers) {
+                    if (collab === server.id) {
+                        continue;
+                    }
+                    if (!serverHits.includes(collab)) {
+                        serverHits.push(collab);
+                    }
+                }
+            }
+        }
+
+        const serverNameMapping: { [key: string]: string } = {};
+        serverNameMapping[server.id] = server.name;
+        if (serverHits.length) {
+            const mappedServer = await paginatedEmbedQueryServerName(serverHits);
+            if (mappedServer.servers) {
+                for (const server of mappedServer.servers) {
+                    serverNameMapping[server.id] = server.name;
+                }
+            }
+        }
+
+        this.setState({
+            projects: allProjects.projects,
+            otherServers: serverNameMapping,
+            loading: false,
+        });
     }
 
     componentDidUpdate() {
@@ -194,36 +330,14 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
     }
 
     render() {
-        const { id, server, otherServers, projects } = this.props;
-        const { dark, lang, accent } = this.state;
+        const { id, server, projectIds } = this.props;
+        const { dark, lang, accent, projects, otherServers, loading, errorMessage } = this.state;
+
         const realName = server.name || id;
-
         const prefixName = server.name ? "nama" : "ID";
-
         const encodedName = encodeURIComponent(realName);
 
         const animeData = filterAnimeData(projects);
-        if (animeData.length < 1) {
-            return (
-                <>
-                    <Head>
-                        <MetadataHead.Base />
-                        <MetadataHead.Prefetch />
-                        <title>{`Utang - ${realName} :: naoTimesUI`}</title>
-                        <MetadataHead.SEO
-                            title={`Utang - ${realName}`}
-                            description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, tidak ada utang!`}
-                            image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=0`}
-                            urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
-                        />
-                    </Head>
-                    <div id="root">
-                        <div className="text-center text-2xl font-light mt-4">Tidak ada utang garapan!</div>
-                    </div>
-                </>
-            );
-        }
-
         const projectData = sortBy(animeData, (o) => o.external.startTime).reverse();
 
         return (
@@ -234,97 +348,53 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
                     <title>{`Utang - ${realName} :: naoTimesUI`}</title>
                     <MetadataHead.SEO
                         title={`Utang - ${realName}`}
-                        description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                        image={`https://naotimes-og.glitch.me/large?name=${encodedName}&utang=${projectData.length}`}
-                        urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
+                        description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectIds.length} proyek!`}
+                        image={`https://naotimes-og.glitch.me/large?name=${encodedName}&count=${projectIds.length}`}
+                        urlPath={`/embed?id=${id}#lang=${lang}&accent=${accent}&dark=${dark}`}
                     />
                 </Head>
-                <div id="root">
+                <div id="root" className={fontStyle.className}>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
-                        {projectData.map((res) => {
-                            const selectInfo = {};
-                            res.collaborations?.servers.forEach((elem) => {
-                                if (elem === server.id) {
-                                    return;
-                                }
-                                const srvName = otherServers[elem];
-                                selectInfo[elem] = srvName || null;
-                            });
+                        {!loading && (
+                            <>
+                                {errorMessage ? (
+                                    <ErrorCard message={errorMessage} />
+                                ) : (
+                                    <>
+                                        {projectData.length < 1 ? (
+                                            <ErrorCard message="Tidak ada utang garapan!" />
+                                        ) : (
+                                            projectData.map((res) => {
+                                                const selectInfo = {};
+                                                res.collaborations?.servers.forEach((elem) => {
+                                                    if (elem === server.id) {
+                                                        return;
+                                                    }
+                                                    const srvName = otherServers[elem];
+                                                    selectInfo[elem] = srvName || null;
+                                                });
 
-                            return (
-                                <EmbedPageCard
-                                    key={"utang-ani-" + res.id}
-                                    animeData={res}
-                                    lang={lang}
-                                    dark={dark}
-                                    accent={accent}
-                                    serverInfo={selectInfo}
-                                />
-                            );
-                        })}
+                                                return (
+                                                    <EmbedPageCard
+                                                        key={"utang-ani-" + res.id}
+                                                        animeData={res}
+                                                        lang={lang}
+                                                        dark={dark}
+                                                        accent={accent}
+                                                        serverInfo={selectInfo}
+                                                    />
+                                                );
+                                            })
+                                        )}
+                                    </>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
             </>
         );
     }
-}
-
-async function paginatedEmbedQuery(projectIds: string[]): Promise<{
-    projects: EmbedProjectFragment[];
-    message: string | null;
-}> {
-    let mergedProjects = [];
-    let failureMessage = null;
-    let cursor = null;
-    while (true) {
-        const { data } = await client.query({
-            query: GetEmbedProjectsDocument,
-            variables: {
-                cursor: cursor,
-                ids: projectIds,
-            },
-        });
-        if (data.projects.__typename === "Result") {
-            failureMessage = data.projects.message;
-            break;
-        }
-        const projects = data.projects.nodes;
-        mergedProjects = mergedProjects.concat(projects);
-        if (!data.projects.pageInfo.nextCursor) {
-            break;
-        }
-        cursor = data.projects.pageInfo.nextCursor;
-    }
-    return { projects: mergedProjects, message: failureMessage };
-}
-
-async function paginatedEmbedQueryServerName(serverIds: string[]): Promise<{
-    servers: { id: string; name: string }[];
-    message: string | null;
-}> {
-    let mergedServers = [];
-    let failureMessage = null;
-    let cursor = null;
-    while (true) {
-        const { data } = await client.query({
-            query: GetServerNamesDocument,
-            variables: {
-                cursor: cursor,
-                ids: serverIds,
-            },
-        });
-        if (data.servers.__typename === "Result") {
-            failureMessage = data.servers.message;
-            break;
-        }
-        const servers = data.servers.nodes;
-        mergedServers = mergedServers.concat(servers);
-        if (!data.servers.pageInfo.nextCursor) {
-            break;
-        }
-        cursor = data.servers.pageInfo.nextCursor;
-    }
-    return { servers: mergedServers, message: failureMessage };
 }
 
 function isUUIDFormatted(uuid: string): boolean {
@@ -377,44 +447,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const projects = firstHits.projects;
     console.log(projects);
 
-    const allProjects = await paginatedEmbedQuery(projects);
-    if (allProjects.message) {
-        console.error(allProjects.message);
-        return {
-            notFound: true,
-        };
-    }
-
-    const serverHits = [];
-    for (const project of allProjects.projects) {
-        if (project.collaborations?.servers) {
-            for (const collab of project.collaborations.servers) {
-                if (collab === firstHits.id) {
-                    continue;
-                }
-                if (!serverHits.includes(collab)) {
-                    serverHits.push(collab);
-                }
-            }
-        }
-    }
-
-    const serverNameMapping: { [key: string]: string } = {};
-    serverNameMapping[firstHits.id] = firstHits.name;
-    if (serverHits.length) {
-        const mappedServer = await paginatedEmbedQueryServerName(serverHits);
-        if (mappedServer.servers) {
-            for (const server of mappedServer.servers) {
-                serverNameMapping[server.id] = server.name;
-            }
-        }
-    }
-
     return {
         props: {
             server: firstHits,
-            projects: allProjects.projects,
-            otherServers: serverNameMapping,
+            projectIds: projects,
             ...newParamsSets,
         },
     };
