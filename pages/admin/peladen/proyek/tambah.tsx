@@ -5,6 +5,7 @@ import Router from "next/router";
 import AsyncSelect from "react-select/async";
 import { ActionMeta } from "react-select";
 import PlusIcon from "mdi-react/PlusIcon";
+import { debounce } from "lodash";
 
 import AdminLayout from "@/components/Admin";
 import MetadataHead from "@/components/MetadataHead";
@@ -77,6 +78,8 @@ const loadUsersData = (inputValue: string, callback: Function) => {
         });
 };
 
+const loadUsersDataDebounced = debounce(loadUsersData, 300);
+
 function labelValuesUser(data: SimpleIDName) {
     const { id, username } = data;
     return `${username} (${id})`;
@@ -98,7 +101,7 @@ function AssigneeRole(props: AssigneeRoleProps) {
                     className="w-full rounded-lg"
                     cacheOptions
                     defaultOptions={true}
-                    loadOptions={loadUsersData}
+                    loadOptions={loadUsersDataDebounced}
                     onChange={(value, meta) => {
                         if (meta.action === "clear") {
                             onSelect(undefined);
@@ -164,6 +167,9 @@ const searchAnime = (inputValue: string, callback: Function) => {
             callback(mergedResults);
         });
 };
+
+// Debounce search to Anilist because it's costly
+const searchAnimeDebounced = debounce(searchAnime, 500);
 
 function optionValueAnime(data: ExternalResultFragment) {
     const { id, title, year } = data;
@@ -383,7 +389,7 @@ class ServerProjectAdditionComponents extends React.Component<ProjectNewProps, P
                                                     className="w-full rounded-lg"
                                                     cacheOptions
                                                     defaultOptions={false}
-                                                    loadOptions={searchAnime}
+                                                    loadOptions={searchAnimeDebounced}
                                                     onChange={this.onAnimeSelection}
                                                     getOptionLabel={optionValueAnime}
                                                     filterOption={() => true}

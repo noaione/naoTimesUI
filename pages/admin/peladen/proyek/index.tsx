@@ -236,7 +236,7 @@ class ServerProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHo
                     <div className="container mx-auto px-6 py-8">
                         <div className="flex flex-row gap-2">
                             <Link
-                                href="/admin/proyek/tambah"
+                                href="/admin/peladen/proyek/tambah"
                                 className="flex flex-row px-3 py-2 rounded-lg bg-green-500 text-white transition hover:bg-green-700 duration-200 ease-in-out items-center"
                             >
                                 <PlusIcon className="font-bold mr-1" />
