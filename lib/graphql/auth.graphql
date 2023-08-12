@@ -20,10 +20,9 @@ mutation Logout {
 
 mutation RegisterUser($username:String!,$password:String!) {
   register(username:$username, password:$password) {
-    ... on UserTemporary {
+    ... on User {
       id
       username
-      approvalCode
     }
     ... on Result {
       ...ResultFrag
@@ -39,6 +38,18 @@ mutation MigrateUser($username:String!,$password:String!) {
       approvalCode
     }
     ...on Result {
+      ...ResultFrag
+    }
+  }
+}
+
+mutation ResetPassword($oldPass:String!,$newPass:String!) {
+  resetPassword(oldPassword:$oldPass,newPassword:$newPass) {
+    ... on User {
+      id
+      username
+    }
+    ... on Result {
       ...ResultFrag
     }
   }

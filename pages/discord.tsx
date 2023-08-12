@@ -75,7 +75,7 @@ class DiscordCallbackPage extends React.Component<DiscordCallbackPageProps, Disc
             detail: "Anda akan diarahkan ke laman peladen...",
         });
         setTimeout(() => {
-            Router.push("/servers");
+            Router.push("/admin");
         }, 1000);
     }
 

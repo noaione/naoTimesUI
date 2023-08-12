@@ -55,20 +55,21 @@ export default function AuthSuspense(props: PropsWithChildren<AuthSuspenseProps>
     if (data.session.__typename === "Result") {
         // If null, we're not logged in. Try to nuke localStorage data.
         console.error(data.session.message);
-        if (shouldRefetchOrRedirect(path) && (path.startsWith("/admin") || path.startsWith("/servers"))) {
+        if (shouldRefetchOrRedirect(path) && path.startsWith("/admin")) {
             router.push("/");
         }
         return <AuthContext.Provider value={null}>{props.children}</AuthContext.Provider>;
     }
 
-    if (shouldRefetchOrRedirect(path) && data.session.active?.id && !path.startsWith("/admin")) {
-        console.log("Redirecting to admin");
-        router.push("/admin");
-    }
+    const isPeladen = path.startsWith("/admin/peladen");
+    const isNotAdminOrIsPeladen = isPeladen || !path.startsWith("/admin");
 
-    if (shouldRefetchOrRedirect(path) && !data.session.active?.id && !path.startsWith("/servers")) {
-        console.log("Redirecting to servers selection");
-        router.push("/servers");
+    if (shouldRefetchOrRedirect(path) && data.session.active?.id && !isPeladen) {
+        console.log("Redirecting to server admin page");
+        router.push("/admin/peladen");
+    } else if (shouldRefetchOrRedirect(path) && !data.session.active?.id && isNotAdminOrIsPeladen) {
+        console.log("Redirecting to user admin page");
+        router.push("/admin");
     }
 
     return <AuthContext.Provider value={data.session}>{props.children}</AuthContext.Provider>;

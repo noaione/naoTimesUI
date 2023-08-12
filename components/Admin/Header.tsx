@@ -201,7 +201,7 @@ class AdminHeader extends React.Component<HeaderProps, HeaderState> {
                                                     },
                                                 });
                                                 if (data.selectServer.success) {
-                                                    Router.replace("/servers");
+                                                    Router.replace("/admin");
                                                 }
                                             }}
                                             className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-purple-600 hover:text-white cursor-pointer w-full text-left"

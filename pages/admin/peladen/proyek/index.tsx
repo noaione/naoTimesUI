@@ -106,7 +106,7 @@ interface ProyekHomepageProps {
     user: UserSessFragment;
 }
 
-class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepageState> {
+class ServerProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepageState> {
     modalCb?: CallbackModal;
 
     constructor(props: ProyekHomepageProps) {
@@ -143,7 +143,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
 
         if (data.latests.__typename === "Result") {
             if (data.latests.code === SERVER_UNSELECT) {
-                Router.push("/servers");
+                Router.push("/admin");
             } else {
                 this.showErrorCallback(data.latests.message);
                 this.setState({
@@ -194,7 +194,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
 
         if (data.latests.__typename === "Result") {
             if (data.latests.code === SERVER_UNSELECT) {
-                Router.push("/servers");
+                Router.push("/admin");
             } else {
                 this.showErrorCallback(data.latests.message);
                 this.setState({
@@ -230,7 +230,7 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
                     <title>Proyek :: naoTimesUI</title>
-                    <MetadataHead.SEO title="Proyek" urlPath="/admin/proyek" />
+                    <MetadataHead.SEO title="Proyek" urlPath="/admin/peladen/proyek" />
                 </Head>
                 <AdminLayout user={user} title="Proyek" active="project">
                     <div className="container mx-auto px-6 py-8">
@@ -276,6 +276,8 @@ class ProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHomepage
     }
 }
 
-export default function WrappedProyekHomepage() {
-    return <AuthContext.Consumer>{(sess) => sess && <ProyekHomepage user={sess} />}</AuthContext.Consumer>;
+export default function WrappedServerProyekHomepage() {
+    return (
+        <AuthContext.Consumer>{(sess) => sess && <ServerProyekHomepage user={sess} />}</AuthContext.Consumer>
+    );
 }

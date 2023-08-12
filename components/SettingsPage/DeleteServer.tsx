@@ -66,7 +66,7 @@ class DeleteServerComponent extends React.Component<ExtendedDeleteProps, DeleteS
 
         if (data.deleteServer.success) {
             setTimeout(() => {
-                Router.push("/servers");
+                Router.push("/admin");
             }, 1500);
         } else {
             this.setState(resetState());

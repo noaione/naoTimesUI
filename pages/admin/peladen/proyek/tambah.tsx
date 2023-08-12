@@ -253,7 +253,7 @@ function generateRoleStatusAndAssigneeDefault(info: ExternalResultFragment) {
     }
 }
 
-class ProjectAdditionComponents extends React.Component<ProjectNewProps, ProjectNewState> {
+class ServerProjectAdditionComponents extends React.Component<ProjectNewProps, ProjectNewState> {
     modalCb?: CallbackModal;
 
     constructor(props: ProjectNewProps) {
@@ -353,7 +353,7 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
                     <title>Tambah Proyek :: naoTimesUI</title>
-                    <MetadataHead.SEO title="Tambah Proyek" urlPath="/admin/proyek/tambah" />
+                    <MetadataHead.SEO title="Tambah Proyek" urlPath="/admin/peladen/proyek/tambah" />
                 </Head>
                 <AdminLayout user={user} title="Tambah Proyek" active="projectpage">
                     <div className="container mx-auto px-6 pt-8 pb-4">
@@ -515,10 +515,10 @@ class ProjectAdditionComponents extends React.Component<ProjectNewProps, Project
     }
 }
 
-export default function WrappedProjectAdditionComponents() {
+export default function WrappedServerProjectAdditionComponents() {
     return (
         <AuthContext.Consumer>
-            {(sess) => sess && <ProjectAdditionComponents user={sess} />}
+            {(sess) => sess && <ServerProjectAdditionComponents user={sess} />}
         </AuthContext.Consumer>
     );
 }

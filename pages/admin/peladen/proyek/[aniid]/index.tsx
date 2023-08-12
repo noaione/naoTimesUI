@@ -58,7 +58,7 @@ function PredictionCard(props: { days: number; name: string }) {
     );
 }
 
-class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
+class ServerProyekDetailedPage extends React.Component<ProyekPageProps, ProyekPageState> {
     modalCb?: CallbackModal;
 
     constructor(props: ProyekPageProps) {
@@ -109,7 +109,7 @@ class ProyekMainPage extends React.Component<ProyekPageProps, ProyekPageState> {
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
                     <title>{`${title} - Proyek :: naoTimesUI`}</title>
-                    <MetadataHead.SEO title={`${title} - Proyek`} urlPath={`/admin/proyek/${id}`} />
+                    <MetadataHead.SEO title={`${title} - Proyek`} urlPath={`/admin/peladen/proyek/${id}`} />
                 </Head>
                 <AdminLayout user={user} title={title} active="projectpage">
                     {loading ? (
@@ -271,10 +271,12 @@ export function getStaticPaths() {
     };
 }
 
-export default function WrappedProyekMainPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function WrappedServerProyekDetailedPage(
+    props: InferGetStaticPropsType<typeof getStaticProps>
+) {
     return (
         <AuthContext.Consumer>
-            {(sess) => sess && <ProyekMainPage id={props.aniid} user={sess} />}
+            {(sess) => sess && <ServerProyekDetailedPage id={props.aniid} user={sess} />}
         </AuthContext.Consumer>
     );
 }

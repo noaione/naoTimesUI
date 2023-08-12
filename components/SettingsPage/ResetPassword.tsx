@@ -1,10 +1,20 @@
 import { toString } from "lodash";
 import React from "react";
-import Router from "next/router";
 
 import { SettingsProps } from "./base";
 
 import LoadingCircle from "../LoadingCircle";
+import client from "@/lib/graphql/client";
+import { ResetPasswordDocument } from "@/lib/graphql/auth.generated";
+import { isNone } from "@/lib/utils";
+import {
+    USER_INVALID_OLD_PASSWORD,
+    USER_NEED_MIGRATE,
+    USER_NOT_FOUND,
+    USER_REPEAT_OLD_PASSWORD,
+    USER_REQUIREMENT_PASSWORD,
+} from "@/lib/graphql/error-code";
+import Router from "next/router";
 
 interface RPassState {
     oldValue: string;
@@ -12,6 +22,7 @@ interface RPassState {
     isSubmitting: boolean;
     isValid: boolean;
     validityCheck: string[];
+    submitSuccess: boolean;
 }
 
 function verifyPasswordStrength(password: string): string[] {
@@ -25,8 +36,26 @@ function verifyPasswordStrength(password: string): string[] {
     return failureCheck;
 }
 
+function translateError(error: string, errorCode?: string) {
+    if (isNone(errorCode)) return error;
+    switch (errorCode) {
+        case USER_NEED_MIGRATE:
+            return "Akun anda perlu migrasi ke versi baru. Silahkan hubungi admin untuk bantuan.";
+        case USER_REPEAT_OLD_PASSWORD:
+            return "Password baru tidak boleh sama dengan password lama.";
+        case USER_REQUIREMENT_PASSWORD:
+            return "Password baru harus melebihi 8 karakter!";
+        case USER_INVALID_OLD_PASSWORD:
+            return "Password lama salah.";
+        case USER_NOT_FOUND:
+            return "Akun tidak ditemukan.";
+        default:
+            return error;
+    }
+}
+
 class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> {
-    constructor(props) {
+    constructor(props: SettingsProps) {
         super(props);
 
         this.submitPassword = this.submitPassword.bind(this);
@@ -38,6 +67,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
             isSubmitting: false,
             isValid: false,
             validityCheck: verifyPasswordStrength(""),
+            submitSuccess: false,
         };
     }
 
@@ -49,27 +79,46 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
             this.props.onErrorModal("Mohon masukan password lama terlebih dahulu!");
             return;
         }
+        if (this.state.validityCheck.length > 0) {
+            return;
+        }
+
         this.setState({ isSubmitting: true });
 
-        const bodyBag = {
-            new: this.state.newValue,
-            old: this.state.oldValue,
-        };
-
-        const apiRes = await fetch("/api/auth/reset", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const { data, errors } = await client.mutate({
+            mutation: ResetPasswordDocument,
+            variables: {
+                oldPass: this.state.oldValue,
+                newPass: this.state.newValue,
             },
-            body: JSON.stringify(bodyBag),
         });
-        const res = await apiRes.json();
-        if (res.code === 200) {
-            // Refresh
-            Router.reload();
+
+        if (errors) {
+            this.props.onErrorModal(errors.map((e) => e.message).join("\n"));
+            this.setState({ isSubmitting: false });
+            return;
+        }
+
+        if (data.resetPassword.__typename === "Result") {
+            if (data.resetPassword.code === USER_NOT_FOUND || data.resetPassword.code === USER_NEED_MIGRATE) {
+                localStorage.removeItem("sessionToken");
+                Router.push("/");
+                return;
+            }
+
+            this.props.onErrorModal(translateError(data.resetPassword.message, data.resetPassword.code));
+            this.setState({
+                isSubmitting: false,
+            });
         } else {
-            this.setState({ isSubmitting: false, oldValue: "" });
-            this.props.onErrorModal((res.message as string) ?? "Terjadi kesalahan internal!");
+            // success
+            this.setState({ isSubmitting: false, submitSuccess: true });
+            setTimeout(() => {
+                this.setState({ submitSuccess: false });
+                setTimeout(() => {
+                    Router.push("/");
+                });
+            }, 2000);
         }
     }
 
@@ -84,7 +133,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
     }
 
     render() {
-        const { isSubmitting, isValid, validityCheck } = this.state;
+        const { isSubmitting, isValid, validityCheck, submitSuccess } = this.state;
         let disableButton = false;
         if (!isValid) {
             disableButton = true;
@@ -92,8 +141,6 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
         if (isSubmitting) {
             disableButton = true;
         }
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
         return (
             <>
                 <div className="flex flex-col py-1">
@@ -109,9 +156,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                     type="password"
                                     className="form-darkable w-full py-1"
                                     placeholder="************"
-                                    onChange={(ev) =>
-                                        outerThis.setState({ oldValue: toString(ev.target.value) })
-                                    }
+                                    onChange={(ev) => this.setState({ oldValue: toString(ev.target.value) })}
                                 />
                             </div>
                             <div className="w-full mt-2 mb-1 flex flex-col">
@@ -123,7 +168,7 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                     value={this.state.newValue}
                                     className="form-darkable w-full py-1"
                                     placeholder="************"
-                                    onChange={(ev) => outerThis.passwordVerify(toString(ev.target.value))}
+                                    onChange={(ev) => this.passwordVerify(toString(ev.target.value))}
                                 />
                                 {!isValid &&
                                     validityCheck.map((res) => {
@@ -139,13 +184,18 @@ class ResetPasswordComponent extends React.Component<SettingsProps, RPassState> 
                                     onClick={this.submitPassword}
                                     className={`rounded text-white px-4 py-2 ${
                                         disableButton
-                                            ? "bg-blue-500 cursor-not-allowed opacity-60"
-                                            : "bg-blue-600 hover:bg-blue-700 opacity-100"
+                                            ? "cursor-not-allowed opacity-60 " +
+                                              (submitSuccess ? "bg-green-500" : "bg-blue-500")
+                                            : "opacity-100 " +
+                                              (submitSuccess
+                                                  ? "bg-green-600 hover:bg-green-700"
+                                                  : "bg-blue-600 hover:bg-blue-700")
                                     } transition duration-200 flex flex-row items-center focus:outline-none`}
+                                    disabled={disableButton || isSubmitting || submitSuccess}
                                 >
                                     {isSubmitting && <LoadingCircle className="ml-0 mt-0" />}
                                     <span className={isSubmitting ? "mt-0.5 font-semibold" : "font-semibold"}>
-                                        Ubah
+                                        {submitSuccess ? "Sukses" : "Ubah"}
                                     </span>
                                 </button>
                             </div>

@@ -100,7 +100,7 @@ class LoginPage extends React.Component<{}, LoginState> {
 
         if (data.login.__typename === "Result") {
             if (data.login.code === SESSION_EXIST) {
-                Router.push("/servers");
+                Router.push("/admin");
                 return;
             }
             this.setState({
@@ -109,7 +109,7 @@ class LoginPage extends React.Component<{}, LoginState> {
             });
         } else {
             localStorage.setItem("sessionToken", data.login.token);
-            Router.push("/servers");
+            Router.push("/admin");
         }
     }
 

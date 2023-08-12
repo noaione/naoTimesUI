@@ -10,7 +10,6 @@ import { romanizeNumber } from "@/lib/utils";
 import { getAboutContent, getChangelogContent } from "@/lib/postshelper";
 import { AuthContext } from "@/components/AuthSuspense";
 import { UserSessFragment } from "@/lib/graphql/auth.generated";
-import { UserType } from "@/lib/graphql/types.generated";
 import { InferGetStaticPropsType } from "next";
 
 interface AdminAboutProps {
@@ -26,7 +25,6 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
 
     render() {
         const { user, aboutPage, changelogPage } = this.props;
-        const pageTitle = user.privilege === UserType.Admin ? "Panel Admin" : "Panel Peladen";
 
         const currentYear = new Date().getFullYear();
         const genMarkdownURL = `[${romanizeNumber(
@@ -39,8 +37,8 @@ class AdminAboutPage extends React.Component<AdminAboutProps> {
                 <Head>
                     <MetadataHead.Base />
                     <MetadataHead.Prefetch />
-                    <title>{`Tentang - ${pageTitle} :: naoTimesUI`}</title>
-                    <MetadataHead.SEO title={"Tentang - " + pageTitle} urlPath="/admin/tentang" />
+                    <title>Tentang :: naoTimesUI</title>
+                    <MetadataHead.SEO title="Tentang" urlPath="/admin/tentang" />
                 </Head>
                 <AdminLayout user={user} active="about" title="Tentang">
                     <div className="container mx-auto px-6 py-8">

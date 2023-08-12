@@ -6,6 +6,9 @@ import GitHubIcon from "../Icons/GitHub";
 import HomeIcon from "mdi-react/HomeIcon";
 import YoutubeTvIcon from "mdi-react/YoutubeTvIcon";
 import PlusIcon from "mdi-react/PlusIcon";
+import CogIcon from "mdi-react/CogIcon";
+import ServerIcon from "mdi-react/ServerIcon";
+import InformationIcon from "mdi-react/InformationIcon";
 
 export type SidenavActiveState =
     | "home"
@@ -146,7 +149,7 @@ export function AdminServerSidenav(props: ChildAdminSidenavProps) {
                     name="Ikhtisar"
                     icon={<HomeIcon className="text-sm" />}
                     active={curActive === "home"}
-                    href="/admin"
+                    href="/admin/peladen"
                 />,
                 <SideNavigation
                     key="admin-sidenav-serverprojects"
@@ -154,15 +157,15 @@ export function AdminServerSidenav(props: ChildAdminSidenavProps) {
                     icon={<YoutubeTvIcon className="text-sm" />}
                     active={curActive === "project"}
                     highlightLink={["project", "projectpage"].includes(curActive)}
-                    href="/admin/proyek"
+                    href="/admin/peladen/proyek"
                     className="mt-3"
                 />,
                 <SideNavigation
                     key="admin-sidenav-serversettings"
-                    name="Ikhtisar"
-                    icon={<HomeIcon className="text-sm" />}
+                    name="Pengaturan"
+                    icon={<CogIcon className="text-sm" />}
                     active={curActive === "settings"}
-                    href="/admin/atur"
+                    href="/admin/peladen/atur"
                     className="mt-3"
                 />,
             ]}
@@ -184,24 +187,32 @@ export function AdminUserSidenav(props: ChildAdminSidenavProps) {
                     name="Tambah"
                     icon={<PlusIcon className="text-sm" />}
                     active={curActive === "serversadd"}
-                    href="/servers/tambah"
+                    href="/admin/tambah"
                 />,
                 <SideNavigation
                     key="admin-sidenav-userhome"
                     name="Peladen"
-                    icon={<YoutubeTvIcon className="text-sm" />}
+                    icon={<ServerIcon className="text-sm" />}
                     active={curActive === "servers"}
-                    href="/servers"
+                    href="/admin"
                     className="mt-3"
                 />,
-                // <SideNavigation
-                //     key="admin-sidenav-usersettings"
-                //     name="Ikhtisar"
-                //     icon={<HomeIcon className="text-sm" />}
-                //     active={curActive === "usersettings"}
-                //     href="/admin/atur"
-                //     className="mt-3"
-                // />,
+                <SideNavigation
+                    key="admin-sidenav-usersettings"
+                    name="Pengaturan"
+                    icon={<CogIcon className="text-sm" />}
+                    active={curActive === "usersettings"}
+                    href="/admin/atur"
+                    className="mt-3"
+                />,
+                <SideNavigation
+                    key="admin-sidenav-usersettings"
+                    name="Tentang"
+                    icon={<InformationIcon className="text-sm" />}
+                    active={curActive === "about"}
+                    href="/admin/tentang"
+                    className="mt-3"
+                />,
             ]}
         />
     );

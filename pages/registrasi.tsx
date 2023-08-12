@@ -17,7 +17,7 @@ interface RegistrationState {
     errorMsg: string;
     peekPass: boolean;
     submitting: boolean;
-    approvalCode?: string;
+    successMsg: string;
 }
 
 class RegistrationPage extends React.Component<{}, RegistrationState> {
@@ -29,6 +29,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
             errorMsg: "",
             submitting: false,
             peekPass: false,
+            successMsg: "",
         };
     }
 
@@ -59,7 +60,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
         if (data.register.__typename === "Result") {
             this.setState({ errorMsg: data.register.message, submitting: false });
         } else {
-            this.setState({ errorMsg: "", submitting: false, approvalCode: data.register.approvalCode });
+            this.setState({ errorMsg: "", submitting: false, successMsg: "Sukses, silakan login" });
         }
     }
 
@@ -68,7 +69,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
     }
 
     render() {
-        const { errorMsg, submitting, approvalCode } = this.state;
+        const { errorMsg, successMsg, submitting } = this.state;
         return (
             <>
                 <Head>
@@ -81,15 +82,7 @@ class RegistrationPage extends React.Component<{}, RegistrationState> {
                     <div className="text-center mb-5">
                         <h1 className="font-bold text-3xl text-gray-900">Registrasi</h1>
                         {errorMsg && <p className="text-sm text-red-400 mt-2">Error: {errorMsg}</p>}
-                        {approvalCode && (
-                            <>
-                                <p className="text-sm text-green-600 mt-2">Sukses!</p>
-                                <p>Mohon gunakan Bot untuk konfirmasi registrasi dengan:</p>
-                                <p>
-                                    <code>!ntui daftar [username] [kode] [password]</code>
-                                </p>
-                            </>
-                        )}
+                        {successMsg && <p className="text-sm text-green-400 mt-2">{successMsg}</p>}
                     </div>
                     <div>
                         <form onSubmit={this.onSubmit}>

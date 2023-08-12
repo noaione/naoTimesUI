@@ -3,7 +3,7 @@ import AnnouncerSettings from "./Announcer";
 import ChangeNameComponent from "./ChangeName";
 import DeleteServerComponent from "./DeleteServer";
 import EmbedGenSettings from "./EmbedGen";
-// import ResetPasswordComponent from "./ResetPassword";
+import ResetPasswordComponent from "./ResetPassword";
 
 const SettingsComponent = {
     Announcer: AnnouncerSettings,
@@ -11,7 +11,7 @@ const SettingsComponent = {
     DeleteServer: DeleteServerComponent,
     EmbedGen: EmbedGenSettings,
     NameChange: ChangeNameComponent,
-    // ResetPass: ResetPasswordComponent,
+    ResetPass: ResetPasswordComponent,
 };
 
 export default SettingsComponent;
