@@ -213,6 +213,22 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
             });
         }
 
+        // Replace the legacy Discord ID with the new UUID
+        if (this.props.id !== this.props.server.id) {
+            Router.replace(
+                {
+                    pathname: "/embed",
+                    query: {
+                        id: this.props.server.id,
+                    },
+                    hash: window.location.hash,
+                },
+                undefined,
+                // shallow mode, so it doesn't rerender the page
+                { shallow: true }
+            ).catch((_) => {});
+        }
+
         const { projectIds, server } = this.props;
 
         const allProjects = await paginatedEmbedQuery(projectIds);
