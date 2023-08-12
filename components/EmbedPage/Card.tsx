@@ -57,6 +57,7 @@ const notoEmoji = Noto_Color_Emoji({
     weight: "400",
     display: "swap",
     style: "normal",
+    subsets: ["emoji"],
 });
 
 const borderTop = {
