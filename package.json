@@ -19,7 +19,7 @@
     "lint": "eslint --ext ts --ext tsx --ext js pages/ lib/ components/",
     "lintfix": "eslint --ext ts --ext tsx --ext js pages/ lib/ components/ --fix",
     "testall": "npm-run-all lint type-check",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts && prettier --write lib/graphql/*.ts"
   },
   "repository": {
     "type": "git",
