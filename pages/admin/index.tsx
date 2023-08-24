@@ -164,25 +164,33 @@ class ServerListingPage extends React.Component<ServerProps, ServerListingPagePr
                         {isLoading ? (
                             <SkeletonLoader.StatsCard />
                         ) : (
-                            <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-                                {servers.map((server) => {
-                                    const selected = this.state.selectedServer?.id === server.id;
-                                    const loadingTopMost = this.state.loadingSelect;
-                                    return (
-                                        <ServerInfoCard
-                                            key={server.id}
-                                            server={server}
-                                            selected={selected}
-                                            disabled={loadingTopMost}
-                                            onClick={(server) => {
-                                                this.selectServer(server)
-                                                    .then(() => {})
-                                                    .catch((e) => console.error(e));
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </div>
+                            <>
+                                {servers.length ? (
+                                    <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                                        {servers.map((server) => {
+                                            const selected = this.state.selectedServer?.id === server.id;
+                                            const loadingTopMost = this.state.loadingSelect;
+                                            return (
+                                                <ServerInfoCard
+                                                    key={server.id}
+                                                    server={server}
+                                                    selected={selected}
+                                                    disabled={loadingTopMost}
+                                                    onClick={(server) => {
+                                                        this.selectServer(server)
+                                                            .then(() => {})
+                                                            .catch((e) => console.error(e));
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="text-xl font-light text-center mt-4">
+                                        Tidak ada yang terdaftar!
+                                    </div>
+                                )}
+                            </>
                         )}
                         <ErrorModal onMounted={(cb) => (this.modalCb = cb)}>{error}</ErrorModal>
                     </div>
