@@ -135,6 +135,7 @@ class ServerProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHo
             variables: {
                 includeLast: true,
             },
+            fetchPolicy: "network-only",
         });
         if (error) {
             this.showErrorCallback(error.message);
@@ -186,6 +187,7 @@ class ServerProyekHomepage extends React.Component<ProyekHomepageProps, ProyekHo
                 cursor: cursor,
                 includeLast: true,
             },
+            fetchPolicy: "network-only",
         });
         if (error) {
             this.showErrorCallback(error.message);

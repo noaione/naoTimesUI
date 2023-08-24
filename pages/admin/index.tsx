@@ -95,6 +95,7 @@ class ServerListingPage extends React.Component<ServerProps, ServerListingPagePr
                 variables: {
                     cursor,
                 },
+                fetchPolicy: "network-only",
             });
             // eslint-disable-next-line no-underscore-dangle
             if (data.servers.__typename === "Result") {

@@ -1,7 +1,7 @@
-import { useQuery } from "@apollo/client";
+import { ApolloError, useLazyQuery } from "@apollo/client";
 import { SessionDocument, UserSessFragment } from "@/lib/graphql/auth.generated";
 import { useRouter } from "next/router";
-import { createContext, PropsWithChildren, useEffect } from "react";
+import { createContext, PropsWithChildren, useCallback, useEffect, useState } from "react";
 
 interface AuthSuspenseProps {
     path: string;
@@ -24,17 +24,69 @@ function shouldRefetchOrRedirect(path: string) {
     return true;
 }
 
+interface SessionContext {
+    session: UserSessFragment | null;
+    error: ApolloError | string | null;
+    loading: boolean;
+}
+
 export default function AuthSuspense(props: PropsWithChildren<AuthSuspenseProps>) {
     const { path } = props;
+    const [{ session, error, loading }, setSession] = useState<SessionContext>({
+        session: null,
+        error: null,
+        loading: true,
+    });
     const router = useRouter();
-    const { data, loading, error, refetch } = useQuery(SessionDocument);
+    const getSession = useLazyQuery(SessionDocument)[0];
+
+    const sessionFetch = useCallback(async () => {
+        setSession({
+            session: null,
+            error: null,
+            loading: true,
+        });
+        const { data, error } = await getSession();
+
+        if (error) {
+            console.error(error);
+            setSession({
+                session: null,
+                error,
+                loading: false,
+            });
+            return;
+        }
+
+        if (data.session.__typename === "Result") {
+            console.error(data.session.message);
+            setSession({
+                session: null,
+                error: data.session.message,
+                loading: false,
+            });
+            return;
+        }
+
+        setSession({
+            session: data.session,
+            error: null,
+            loading: false,
+        });
+    }, [getSession]);
+
+    useEffect(() => {
+        console.log("Initial session fetch");
+        sessionFetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (shouldRefetchOrRedirect(path)) {
             console.log("Route validation change start, refetching session");
-            refetch();
+            sessionFetch();
         }
-    }, [path, refetch]);
+    }, [path, sessionFetch]);
 
     if (loading) {
         return <AuthContext.Provider value={null}>{props.children}</AuthContext.Provider>;
@@ -50,27 +102,16 @@ export default function AuthSuspense(props: PropsWithChildren<AuthSuspenseProps>
         return <AuthContext.Provider value={null}>{props.children}</AuthContext.Provider>;
     }
 
-    console.log(data);
-
-    if (data.session.__typename === "Result") {
-        // If null, we're not logged in. Try to nuke localStorage data.
-        console.error(data.session.message);
-        if (shouldRefetchOrRedirect(path) && path.startsWith("/admin")) {
-            router.push("/");
-        }
-        return <AuthContext.Provider value={null}>{props.children}</AuthContext.Provider>;
-    }
-
     const isPeladen = path.startsWith("/admin/peladen");
     const isNotAdminOrIsPeladen = isPeladen || !path.startsWith("/admin");
 
-    if (shouldRefetchOrRedirect(path) && data.session.active?.id && !isPeladen) {
+    if (shouldRefetchOrRedirect(path) && session.active?.id && !isPeladen) {
         console.log("Redirecting to server admin page");
         router.push("/admin/peladen");
-    } else if (shouldRefetchOrRedirect(path) && !data.session.active?.id && isNotAdminOrIsPeladen) {
+    } else if (shouldRefetchOrRedirect(path) && !session.active?.id && isNotAdminOrIsPeladen) {
         console.log("Redirecting to user admin page");
         router.push("/admin");
     }
 
-    return <AuthContext.Provider value={data.session}>{props.children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={session}>{props.children}</AuthContext.Provider>;
 }
