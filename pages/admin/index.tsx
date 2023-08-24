@@ -186,7 +186,7 @@ class ServerListingPage extends React.Component<ServerProps, ServerListingPagePr
                                         })}
                                     </div>
                                 ) : (
-                                    <div className="text-xl font-light text-center mt-4">
+                                    <div className="text-xl dark:text-gray-100 font-light text-center mt-4">
                                         Tidak ada yang terdaftar!
                                     </div>
                                 )}
