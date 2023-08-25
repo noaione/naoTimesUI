@@ -1,8 +1,8 @@
 {
-    "noproject": "登録プロジェクトなし",
+    "noproject": "Tidak ada utang garapan",
     "dropdown": {
-        "expand_one": "次の{{count}}つのエピソードを参照。。。",
-        "expand_other": "次の{{count}}つのエピソードを参照。。。",
-        "collapse": "閉める。。。"
+        "expand_one": "Lihat {{count}} episode selanjutnya...",
+        "expand_other": "Lihat {{count}} episode selanjutnya...",
+        "collapse": "Tutup..."
     }
 }
