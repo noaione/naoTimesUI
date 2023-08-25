@@ -1,0 +1,8 @@
+{
+    "noproject": "登録プロジェクトなし",
+    "dropdown": {
+        "expand_one": "次の{{count}}つのエピソードを参照。。。",
+        "expand_other": "次の{{count}}つのエピソードを参照。。。",
+        "collapse": "閉める。。。"
+    }
+}

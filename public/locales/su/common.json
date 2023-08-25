@@ -1,0 +1,32 @@
+{
+    "server_one": "Peladen",
+    "server_other": "Peladen",
+    "project_one": "Proyek",
+    "project_other": "Proyek",
+    "assignee": {
+        "tl": "Penerjemah",
+        "tlc": "Pemeriksa Terjemahan",
+        "enc": "Peramu Video",
+        "ed": "Penyunting Skrip",
+        "ts": "Penata Rias",
+        "tm": "Penyesuai Waktu",
+        "cl": "Pembersih Gambar",
+        "rd": "Penggambar Ulang",
+        "pr": "Korektor",
+        "qc": "Pemeriksa Akhir"
+    },
+    "roles": {
+        "tl": "Terjemahan",
+        "tlc": "Cek Terjemahan",
+        "enc": "Olahan Video",
+        "ed": "Suntingan Skrip",
+        "ts": "Tata Rias",
+        "tm": "Selaras Waktu",
+        "cl": "Bersih Gambar",
+        "rd": "Gambar Ulang",
+        "pr": "Koreksi Skrip",
+        "qc": "Tinjauan Akhir"
+    },
+    "about": "Tentang",
+    "invite_bot": "Undang Bot"
+}

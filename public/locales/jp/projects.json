@@ -1,0 +1,22 @@
+{
+    "no_progress": "進展なし",
+    "airing_on": "{{timeago}}に放映された",
+    "airing_at": "{{timeago}}に放映",
+    "season": {
+        "winter": "年冬",
+        "spring": "年春",
+        "summer": "年夏",
+        "fall": "年秋"
+    },
+    "season_year": {
+        "winter": "{{year}}年冬",
+        "spring": "{{year}}年春",
+        "summer": "{{year}}年夏",
+        "fall": "{{year}}年秋"
+    },
+    "last_update": "最終更新{{timeago}}",
+    "episode": "第{{episode}}話",
+    "episode_needs": "第{{episode}}話の必要",
+    "waiting_release": "発売を待つ。。。",
+    "collab": "{{groups}}と共同"
+}

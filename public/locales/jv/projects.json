@@ -1,0 +1,22 @@
+{
+    "no_progress": "Durung ana kemajuan",
+    "airing_on": "Siaran {{timeago}}",
+    "airing_at": "Siaran {{timeago}}",
+    "season": {
+        "winter": "Mangsa Adhem",
+        "spring": "Mangsa Semi",
+        "summer": "Mangsa Panas",
+        "fall": "Mangsa Gugur"
+    },
+    "season_year": {
+        "winter": "Mangsa Adhem {{year}}",
+        "spring": "Mangsa Semi {{year}}",
+        "summer": "Mangsa Panas {{year}}",
+        "fall": "Mangsa Gugur {{year}}"
+    },
+    "last_update": "Dianyari {{timeago}}",
+    "episode": "Episode {{episode}}",
+    "episode_needs": "Episode {{episode}} betah",
+    "waiting_release": "Ngenteni dirilis...",
+    "collab": "Bebarengan karo {{groups}}"
+}

@@ -1,0 +1,32 @@
+{
+    "server_one": "Server",
+    "server_other": "Servers",
+    "project_one": "Project",
+    "project_other": "Projects",
+    "assignee": {
+        "tl": "Translator",
+        "tlc": "Translation Checker",
+        "enc": "Encoder",
+        "ed": "Editor",
+        "ts": "Typesetter",
+        "tm": "Timer",
+        "cl": "Cleaner",
+        "rd": "Redrawer",
+        "pr": "Proofreader",
+        "qc": "Quality Checker"
+    },
+    "roles": {
+        "tl": "Translation",
+        "tlc": "Translation Check",
+        "enc": "Encode",
+        "ed": "Edit",
+        "ts": "Typesetting",
+        "tm": "Timing",
+        "cl": "Cleaning",
+        "rd": "Redrawing",
+        "pr": "Proofreading",
+        "qc": "Quality Check"
+    },
+    "about": "About",
+    "invite_bot": "Invite Bot"
+}

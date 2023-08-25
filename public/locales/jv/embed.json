@@ -1,0 +1,8 @@
+{
+    "noproject": "Tidak ada utang garapan",
+    "dropdown": {
+        "expand_one": "Deleng {{count}} episode sabanjure...",
+        "expand_other": "Deleng {{count}} episode sabanjure...",
+        "collapse": "Tutup..."
+    }
+}

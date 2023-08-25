@@ -9,6 +9,8 @@ import type { AppProps } from "next/app";
 import client from "@/lib/graphql/client";
 import { ApolloProvider } from "@apollo/client";
 import AuthSuspense from "@/components/AuthSuspense";
+import { appWithI18Next, useSyncLanguage } from "ni18n";
+import { ni18nConfig } from "../ni18n.config";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -58,6 +60,10 @@ function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
         showDevBanner = false;
     }
 
+    const locale = typeof window !== "undefined" && window.localStorage.getItem("ntui.locale");
+
+    useSyncLanguage(locale);
+
     return (
         <>
             {showDevBanner && <DevModeBanner />}
@@ -72,4 +78,4 @@ function NaoTimesUIApp({ Component, pageProps, router }: AppProps) {
     );
 }
 
-export default NaoTimesUIApp;
+export default appWithI18Next(NaoTimesUIApp, ni18nConfig);

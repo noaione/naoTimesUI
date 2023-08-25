@@ -1,0 +1,32 @@
+{
+    "server_one": "サーバー",
+    "server_other": "サーバー",
+    "project_one": "計画",
+    "project_other": "計画",
+    "assignee": {
+        "tl": "Penerjemah",
+        "tlc": "Pemeriksa Terjemahan",
+        "enc": "Peramu Video",
+        "ed": "Penyunting Skrip",
+        "ts": "Penata Rias",
+        "tm": "Penyesuai Waktu",
+        "cl": "Pembersih Gambar",
+        "rd": "Penggambar Ulang",
+        "pr": "Korektor",
+        "qc": "Pemeriksa Akhir"
+    },
+    "roles": {
+        "tl": "翻訳",
+        "tlc": "翻訳チェック",
+        "enc": "符号づけ",
+        "ed": "編集",
+        "ts": "組版",
+        "tm": "タイミング",
+        "cl": "清掃",
+        "rd": "複写",
+        "pr": "校正",
+        "qc": "品証"
+    },
+    "about": "凡そ",
+    "invite_bot": "招待ボット"
+}

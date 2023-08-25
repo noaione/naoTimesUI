@@ -1,0 +1,8 @@
+{
+    "noproject": "No project registered",
+    "dropdown": {
+        "expand_one": "See next {{count}} episode...",
+        "expand_other": "See next {{count}} episodes...",
+        "collapse": "Close..."
+    }
+}

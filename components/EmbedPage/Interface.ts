@@ -1,11 +1,10 @@
 import { ValidAccent } from "../ColorMap";
-
-import { LocaleMap } from "../../i18n";
+import { AvailableLocale } from "@/lib/timeago";
 
 interface IEmbedParams {
     id?: string;
-    accent?: typeof ValidAccent[number];
-    lang?: keyof typeof LocaleMap & string;
+    accent?: (typeof ValidAccent)[number];
+    lang?: AvailableLocale & string;
     dark?: string;
 }
 

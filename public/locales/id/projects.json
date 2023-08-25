@@ -1,0 +1,22 @@
+{
+    "no_progress": "Tak ada progress",
+    "airing_on": "Tayang {{timeago}}",
+    "airing_at": "Tayang {{timeago}}",
+    "season": {
+        "winter": "Musim Dingin",
+        "spring": "Musim Semi",
+        "summer": "Musim Panas",
+        "fall": "Musim Gugur"
+    },
+    "season_year": {
+        "winter": "Musim Dingin {{year}}",
+        "spring": "Musim Semi {{year}}",
+        "summer": "Musim Panas {{year}}",
+        "fall": "Musim Gugur {{year}}"
+    },
+    "last_update": "Diperbarui {{timeago}}",
+    "episode": "Episode {{episode}}",
+    "episode_needs": "Episode {{episode}} butuh",
+    "waiting_release": "Menunggu dirilis...",
+    "collab": "Bersama {{groups}}"
+}

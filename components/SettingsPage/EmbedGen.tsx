@@ -2,7 +2,7 @@ import React, { RefObject } from "react";
 
 import { SettingsProps } from "./base";
 import { ValidAccent } from "../ColorMap";
-import { LocaleMap } from "../../i18n";
+import { AvailableLocale } from "@/lib/i18n";
 
 interface EmbedGenProps extends SettingsProps {
     id: string;
@@ -11,8 +11,8 @@ interface EmbedGenProps extends SettingsProps {
 interface EmbedGenState {
     genUrl: string;
     textGeneratedUrl: string;
-    accent: typeof ValidAccent[number];
-    lang?: keyof typeof LocaleMap & string;
+    accent: (typeof ValidAccent)[number];
+    lang?: AvailableLocale & string;
     isDark: boolean;
 }
 
@@ -90,7 +90,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
             this.state.lang,
             this.state.isDark
         );
-        this.setState({ accent: aksen as typeof ValidAccent[number], textGeneratedUrl });
+        this.setState({ accent: aksen as (typeof ValidAccent)[number], textGeneratedUrl });
         this.sendMessage({ action: "setAccent", target: aksen });
     }
 
@@ -103,7 +103,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
             lang,
             this.state.isDark
         );
-        this.setState({ lang: lang as keyof typeof LocaleMap, textGeneratedUrl });
+        this.setState({ lang: lang as AvailableLocale, textGeneratedUrl });
         this.sendMessage({ action: "setLanguage", target: lang });
     }
 

@@ -11,16 +11,17 @@ import MetadataHead from "@/components/MetadataHead";
 import { IEmbedParams } from "@/components/EmbedPage/Interface";
 import EmbedPageCard from "@/components/EmbedPage/Card";
 
-import { LocaleMap } from "../i18n";
 import { isNone, mapBoolean, Nullable } from "@/lib/utils";
 import { SearchServer } from "@/lib/meili.data";
 import client from "@/lib/graphql/client";
+import { AvailableLocale, loadTranslations } from "@/lib/i18n";
 import { EmbedProjectFragment, GetEmbedProjectsDocument } from "@/lib/graphql/projects.generated";
 import { GetServerNamesDocument } from "@/lib/graphql/servers.generated";
 import { ProjectStatus } from "@/lib/graphql/types.generated";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 type AccentType = (typeof ValidAccent)[number];
-type LangType = keyof typeof LocaleMap & string;
+type LangType = AvailableLocale & string;
 
 interface EmbedUtangState {
     dark: string;
@@ -94,8 +95,8 @@ function ErrorCard({ message }: { message: string }) {
     );
 }
 
-class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
-    constructor(props: EmbedServerSide) {
+class EmbedUtang extends React.Component<EmbedServerSide & WithTranslation, EmbedUtangState> {
+    constructor(props: EmbedServerSide & WithTranslation) {
         super(props);
         this.propagateEventChange = this.propagateEventChange.bind(this);
         this.propagateHashChange = this.propagateHashChange.bind(this);
@@ -203,7 +204,7 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
             updateState.accent = accent as (typeof ValidAccent)[number];
         }
         if (lang !== this.state.lang) {
-            updateState.lang = lang as keyof typeof LocaleMap & string;
+            updateState.lang = lang as AvailableLocale & string;
         }
         if (Object.keys(updateState).length > 0) {
             this.setState(updateState as EmbedUtangState);
@@ -241,7 +242,7 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
     }
 
     render() {
-        const { id, server, otherServers, projects } = this.props;
+        const { id, server, otherServers, projects, i18n } = this.props;
         const { dark, lang, accent } = this.state;
         const realName = server.name || id;
 
@@ -268,7 +269,7 @@ class EmbedUtang extends React.Component<EmbedServerSide, EmbedUtangState> {
                 <div id="root" className={fontStyle.className}>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 px-1 pb-2 sm:px-2 sm:py-2 bg-transparent relative">
                         {projectData.length < 1 ? (
-                            <ErrorCard message="Tidak ada utang garapan!" />
+                            <ErrorCard message={i18n.t("noproject", { lng: lang })} />
                         ) : (
                             projectData.map((res) => {
                                 const selectInfo = {};
@@ -446,10 +447,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             projects: allProjects.projects,
             otherServers: serverNameMapping,
             ...newParamsSets,
+            ...(await loadTranslations(context.locale)),
         },
     };
 }
 
 type EmbedServerSide = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-export default EmbedUtang;
+export default withTranslation()(EmbedUtang);

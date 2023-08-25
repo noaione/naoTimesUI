@@ -1,0 +1,22 @@
+{
+    "no_progress": "No progress",
+    "airing_on": "Aired {{timeago}}",
+    "airing_at": "Airing {{timeago}}",
+    "season": {
+        "winter": "Winter",
+        "spring": "Spring",
+        "summer": "Summer",
+        "fall": "Fall"
+    },
+    "season_year": {
+        "winter": "Winter {{year}}",
+        "spring": "Spring {{year}}",
+        "summer": "Summer {{year}}",
+        "fall": "Fall {{year}}"
+    },
+    "last_update": "Updated {{timeago}}",
+    "episode": "Episode {{episode}}",
+    "episode_needs": "Episode {{episode}} needs",
+    "waiting_release": "Waiting for release...",
+    "collab": "Joint with {{groups}}"
+}

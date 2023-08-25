@@ -3,24 +3,25 @@ import { DateTime } from "luxon";
 
 import RolePopup from "../RolePopup";
 
-import { Locale, timeAgoLocale, translate, ValidLocale } from "../../i18n";
+import { AvailableLocale, timeAgoLocale, ValidLocale } from "@/lib/i18n";
 import { ProjectStatusRole } from "@/lib/graphql/types.generated";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 interface IEpisodeProps {
     airingAt?: number;
     episode: number;
     progress: ProjectStatusRole[];
-    lang: Locale;
+    lang: AvailableLocale;
     delayReason?: string;
 }
 
-class EpisodeCard extends React.Component<IEpisodeProps> {
-    constructor(props: IEpisodeProps) {
+class EpisodeCard extends React.Component<IEpisodeProps & WithTranslation> {
+    constructor(props: IEpisodeProps & WithTranslation) {
         super(props);
     }
 
     render() {
-        const { progress, episode, airingAt, lang } = this.props;
+        const { progress, episode, airingAt, lang, i18n } = this.props;
         const unfinishedProgress: ProjectStatusRole[] = [];
         for (const role of progress) {
             if (!role.done) {
@@ -32,7 +33,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
         if (airingAt && airingAt > currentTime) {
             aired = false;
         }
-        let realLang: Locale = "id";
+        let realLang: AvailableLocale = "id";
         if (lang && ValidLocale.includes(lang)) {
             realLang = lang;
         }
@@ -50,7 +51,9 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         <>
                             <div slot="2" className="flex flex-wrap gap-1 mt-1">
                                 {unfinishedProgress.map((role) => {
-                                    const localized = translate(`ROLES.${role.key}`, realLang) || role.name;
+                                    const roleKey = `roles.${role.key.toLowerCase()}`;
+                                    let localized = i18n.t(roleKey, { lng: realLang }) || role.name;
+                                    localized = localized === roleKey ? role.name : localized;
                                     return (
                                         <RolePopup
                                             key={`ep-${episode}-${role.key}`}
@@ -68,7 +71,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         <>
                             <div slot="2" className="flex gap-1 mt-1">
                                 <span className="text-lg font-light">
-                                    {translate("WAITING_RELEASE", realLang)}
+                                    {i18n.t("waiting_release", { lng: realLang })}
                                 </span>
                             </div>
                         </>
@@ -81,11 +84,14 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                         <>
                             <div>
                                 <time slot="1" dateTime={isoDate}>
-                                    {translate("AIRED", realLang, [timeAgoLocale(airingAt, realLang)])}
+                                    {i18n.t("airing_on", {
+                                        lng: realLang,
+                                        timeago: timeAgoLocale(airingAt, realLang),
+                                    })}
                                 </time>
                             </div>
                             <div>
-                                <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
+                                <span slot="0">{i18n.t("no_progress", { lng: realLang })}</span>
                             </div>
                         </>
                     );
@@ -93,7 +99,7 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                     content = (
                         <>
                             <div>
-                                <span slot="0">{translate("NO_PROGRESS", realLang)}</span>
+                                <span slot="0">{i18n.t("no_progress", { lng: realLang })}</span>
                             </div>
                         </>
                     );
@@ -105,7 +111,10 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                 <>
                     <div>
                         <time slot="1" dateTime={isoDate}>
-                            {translate("AIRED", realLang, [timeAgoLocale(airingAt, realLang)])}
+                            {i18n.t("airing_at", {
+                                lng: realLang,
+                                timeago: timeAgoLocale(airingAt, realLang),
+                            })}
                         </time>
                     </div>
                 </>
@@ -122,8 +131,8 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
                     <div>
                         <span className="font-medium">
                             {shouldRenderPill
-                                ? translate("EPISODE_NEEDS", realLang, [episode.toString()])
-                                : translate("EPISODE", realLang, [episode.toString()])}
+                                ? i18n.t("episode_needs", { lng: realLang, episode })
+                                : i18n.t("episode", { lng: realLang, episode })}
                         </span>
                         {content}
                     </div>
@@ -133,4 +142,4 @@ class EpisodeCard extends React.Component<IEpisodeProps> {
     }
 }
 
-export default EpisodeCard;
+export default withTranslation()(EpisodeCard);

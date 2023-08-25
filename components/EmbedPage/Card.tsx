@@ -11,10 +11,12 @@ import EpisodeCard from "./Episode";
 import { ValidAccent } from "../ColorMap";
 import ReactTimeAgoLocale from "../TimeAgo";
 
-import { Locale, LocaleMap, translate, ValidLocale } from "../../i18n";
+import { AvailableLocale, ValidLocale } from "@/lib/timeago";
 import { EmbedProjectFragment } from "@/lib/graphql/projects.generated";
+import { withTranslation, WithTranslation } from "react-i18next";
 import ImageMetadataComponent from "../ImageMetadata";
 import { Noto_Color_Emoji } from "next/font/google";
+import { i18n } from "i18next";
 
 function getSeasonIcon(month: number) {
     if (month >= 0 && month <= 2) {
@@ -34,22 +36,21 @@ function getSeasonIcon(month: number) {
     }
 }
 
-function getSeasonName(month: number, year: number, locale: Locale): string {
-    const yearS = year.toString();
+function getSeasonName(month: number, year: number, locale: AvailableLocale, i18n: i18n): string {
     if (month >= 0 && month <= 2) {
-        return translate("SEASON.WINTER", locale, [yearS]);
+        return i18n.t("season_year.winter", { lng: locale, year });
     }
     if (month >= 3 && month <= 5) {
-        return translate("SEASON.SPRING", locale, [yearS]);
+        return i18n.t("season_year.spring", { lng: locale, year });
     }
     if (month >= 6 && month <= 8) {
-        return translate("SEASON.SUMMER", locale, [yearS]);
+        return i18n.t("season_year.summer", { lng: locale, year });
     }
     if (month >= 9 && month <= 11) {
-        return translate("SEASON.FALL", locale, [yearS]);
+        return i18n.t("season_year.fall", { lng: locale, year });
     }
     if (month >= 12) {
-        return translate("SEASON.WINTER", locale, [yearS]);
+        return i18n.t("season_year.winter", { lng: locale, year });
     }
 }
 
@@ -73,8 +74,8 @@ interface EmbedPageCardState {
     dropdownOpen: boolean;
 }
 
-class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardState> {
-    constructor(props: EmbedPageCardProps) {
+class EmbedPageCard extends React.Component<EmbedPageCardProps & WithTranslation, EmbedPageCardState> {
+    constructor(props: EmbedPageCardProps & WithTranslation) {
         super(props);
         this.toggleDrop = this.toggleDrop.bind(this);
         this.state = {
@@ -94,14 +95,14 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
     }
 
     render() {
-        const { animeData, accent, lang, serverInfo } = this.props;
+        const { animeData, accent, lang, serverInfo, i18n } = this.props;
         const { dropdownOpen } = this.state;
 
         let realAccent = "green";
         if (ValidAccent.includes(accent)) {
             realAccent = accent;
         }
-        let realLang: keyof typeof LocaleMap = "id";
+        let realLang: AvailableLocale = "id";
         if (ValidLocale.includes(lang)) {
             realLang = lang;
         }
@@ -129,7 +130,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
             ? "text-gray-500 hover:text-gray-400 dark:text-gray-300"
             : "text-blue-500 hover:text-blue-400 dark:text-blue-300";
 
-        const lastUpdated = translate("LAST_UPDATE", realLang) as string;
+        const lastUpdated = i18n.t("last_update", { lng: realLang });
         const startTimeDt = DateTime.fromSeconds(startTime, { zone: "UTC" });
         const lastUpdateUnix = DateTime.fromISO(updatedAt, { zone: "UTC" }).toSeconds();
 
@@ -160,7 +161,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                         </h1>
                         {jointWith.length > 0 && (
                             <p className="text-sm italic text-gray-700 dark:text-gray-300 mt-2">
-                                {translate("COLLAB_WITH", realLang, [jointWith.join(", ")])}
+                                {i18n.t("collab", { lng: realLang, groups: jointWith.join(", ") })}
                             </p>
                         )}
                         <div>
@@ -204,13 +205,14 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                     </div>
                                     {dropdownOpen ? (
                                         <div className="mt-1 text-left">
-                                            {translate("DROPDOWN.RETRACT", realLang)}
+                                            {i18n.t("dropdown.collapse", { lng: realLang })}
                                         </div>
                                     ) : (
                                         <div className="mt-1 text-left">
-                                            {translate("DROPDOWN.EXPAND", realLang, [
-                                                next3Episode.length.toString(),
-                                            ])}
+                                            {i18n.t("dropdown.expand", {
+                                                lng: realLang,
+                                                count: next3Episode.length,
+                                            })}
                                         </div>
                                     )}
                                 </button>
@@ -239,7 +241,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                     </span>
                                 )}
                                 <span>
-                                    {reactStringReplace(lastUpdated, "{0}", () => {
+                                    {reactStringReplace(lastUpdated, "{{timeago}}", () => {
                                         return (
                                             <ReactTimeAgoLocale
                                                 key={`utang-${id}-ts-${lastUpdateUnix}`}
@@ -257,7 +259,7 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
                                     {getSeasonIcon(startTimeDt.month)}
                                 </span>
                                 <span className="ml-0.5">
-                                    {getSeasonName(startTimeDt.month, startTimeDt.year, realLang)}
+                                    {getSeasonName(startTimeDt.month, startTimeDt.year, realLang, i18n)}
                                 </span>
                             </div>
                         </div>
@@ -268,4 +270,4 @@ class EmbedPageCard extends React.Component<EmbedPageCardProps, EmbedPageCardSta
     }
 }
 
-export default EmbedPageCard;
+export default withTranslation()(EmbedPageCard);
