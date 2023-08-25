@@ -1,22 +1,22 @@
 {
-    "no_progress": "No progress",
-    "airing_on": "Aired {{timeago}}",
-    "airing_at": "Airing {{timeago}}",
+    "no_progress": "Tak ada progress",
+    "airing_on": "Tayang {{timeago}}",
+    "airing_at": "Tayang {{timeago}}",
     "season": {
-        "winter": "Winter",
-        "spring": "Spring",
-        "summer": "Summer",
-        "fall": "Fall"
+        "winter": "Musim Dingin",
+        "spring": "Musim Semi",
+        "summer": "Musim Panas",
+        "fall": "Musim Gugur"
     },
     "season_year": {
-        "winter": "Winter {{year}}",
-        "spring": "Spring {{year}}",
-        "summer": "Summer {{year}}",
-        "fall": "Fall {{year}}"
+        "winter": "Musim Dingin {{year}}",
+        "spring": "Musim Semi {{year}}",
+        "summer": "Musim Panas {{year}}",
+        "fall": "Musim Gugur {{year}}"
     },
-    "last_update": "Updated {{timeago}}",
+    "last_update": "Diperbarui {{timeago}}",
     "episode": "Episode {{episode}}",
-    "episode_needs": "Episode {{episode}} needs",
-    "waiting_release": "Waiting for release...",
-    "collab": "Joint with {{groups}}"
+    "episode_needs": "Episode {{episode}} butuh",
+    "waiting_release": "Menunggu dirilis...",
+    "collab": "Bersama {{groups}}"
 }
