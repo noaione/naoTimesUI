@@ -1,22 +1,22 @@
 {
-    "no_progress": "進展なし",
-    "airing_on": "{{timeago}}に放映された",
-    "airing_at": "{{timeago}}に放映",
+    "no_progress": "Tak ada progress",
+    "airing_on": "Tayang {{timeago}}",
+    "airing_at": "Tayang {{timeago}}",
     "season": {
-        "winter": "年冬",
-        "spring": "年春",
-        "summer": "年夏",
-        "fall": "年秋"
+        "winter": "Musim Dingin",
+        "spring": "Musim Semi",
+        "summer": "Musim Panas",
+        "fall": "Musim Gugur"
     },
     "season_year": {
-        "winter": "{{year}}年冬",
-        "spring": "{{year}}年春",
-        "summer": "{{year}}年夏",
-        "fall": "{{year}}年秋"
+        "winter": "Musim Dingin {{year}}",
+        "spring": "Musim Semi {{year}}",
+        "summer": "Musim Panas {{year}}",
+        "fall": "Musim Gugur {{year}}"
     },
-    "last_update": "最終更新{{timeago}}",
-    "episode": "第{{episode}}話",
-    "episode_needs": "第{{episode}}話の必要",
-    "waiting_release": "発売を待つ。。。",
-    "collab": "{{groups}}と共同"
+    "last_update": "Diperbarui {{timeago}}",
+    "episode": "Episode {{episode}}",
+    "episode_needs": "Episode {{episode}} butuh",
+    "waiting_release": "Menunggu dirilis...",
+    "collab": "Bersama {{groups}}"
 }
