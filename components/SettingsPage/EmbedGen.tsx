@@ -137,7 +137,7 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
             en: "English",
             su: "Sunda",
             jv: "Jawa",
-            jp: "日本語",
+            ja: "日本語",
         };
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias

@@ -95,6 +95,13 @@ function ErrorCard({ message }: { message: string }) {
     );
 }
 
+function mapLanguage(lang?: string): AvailableLocale {
+    if (lang && lang.toLowerCase() === "jp") {
+        return "ja";
+    }
+    return (lang as AvailableLocale) || "id";
+}
+
 class EmbedUtang extends React.Component<EmbedServerSide & WithTranslation, EmbedUtangState> {
     constructor(props: EmbedServerSide & WithTranslation) {
         super(props);
@@ -103,7 +110,7 @@ class EmbedUtang extends React.Component<EmbedServerSide & WithTranslation, Embe
         this.state = {
             dark: this.props.dark,
             accent: this.props.accent || "green",
-            lang: this.props.lang || "id",
+            lang: mapLanguage(this.props.lang),
         };
     }
 
@@ -204,7 +211,7 @@ class EmbedUtang extends React.Component<EmbedServerSide & WithTranslation, Embe
             updateState.accent = accent as (typeof ValidAccent)[number];
         }
         if (lang !== this.state.lang) {
-            updateState.lang = lang as AvailableLocale & string;
+            updateState.lang = mapLanguage(lang);
         }
         if (Object.keys(updateState).length > 0) {
             this.setState(updateState as EmbedUtangState);
@@ -237,7 +244,7 @@ class EmbedUtang extends React.Component<EmbedServerSide & WithTranslation, Embe
         } else if (data.action === "setAccent") {
             this.setState({ accent: data.target });
         } else if (data.action === "setLanguage") {
-            this.setState({ lang: data.target });
+            this.setState({ lang: mapLanguage(data.target) });
         }
     }
 
