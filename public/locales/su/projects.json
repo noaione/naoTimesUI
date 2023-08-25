@@ -1,22 +1,22 @@
 {
-    "no_progress": "Tacan aya kemajuan",
+    "no_progress": "Tak ada progress",
     "airing_on": "Tayang {{timeago}}",
     "airing_at": "Tayang {{timeago}}",
     "season": {
-        "winter": "Usum Tiris",
-        "spring": "Cinyusu",
-        "summer": "Usum Panas",
-        "fall": "Usum Gugur"
+        "winter": "Musim Dingin",
+        "spring": "Musim Semi",
+        "summer": "Musim Panas",
+        "fall": "Musim Gugur"
     },
     "season_year": {
-        "winter": "Usum Tiris {{year}}",
-        "spring": "Cinyusu {{year}}",
-        "summer": "Usum Panas {{year}}",
-        "fall": "Usum Muguran {{year}}"
+        "winter": "Musim Dingin {{year}}",
+        "spring": "Musim Semi {{year}}",
+        "summer": "Musim Panas {{year}}",
+        "fall": "Musim Gugur {{year}}"
     },
-    "last_update": "Diropéa {{timeago}}",
+    "last_update": "Diperbarui {{timeago}}",
     "episode": "Episode {{episode}}",
-    "episode_needs": "Episode {{episode}} peryogi",
-    "waiting_release": "Ngantosan dirilis...",
-    "collab": "Babarengan jeung {{groups}}"
+    "episode_needs": "Episode {{episode}} butuh",
+    "waiting_release": "Menunggu dirilis...",
+    "collab": "Bersama {{groups}}"
 }
