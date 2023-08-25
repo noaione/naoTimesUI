@@ -206,7 +206,7 @@ export function AdminUserSidenav(props: ChildAdminSidenavProps) {
                     className="mt-3"
                 />,
                 <SideNavigation
-                    key="admin-sidenav-usersettings"
+                    key="admin-sidenav-userabout"
                     name="Tentang"
                     icon={<InformationIcon className="text-sm" />}
                     active={curActive === "about"}
