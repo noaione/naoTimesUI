@@ -1,8 +1,8 @@
 {
-    "server_one": "サーバー",
-    "server_other": "サーバー",
-    "project_one": "計画",
-    "project_other": "計画",
+    "server_one": "Peladen",
+    "server_other": "Peladen",
+    "project_one": "Proyek",
+    "project_other": "Proyek",
     "assignee": {
         "tl": "Penerjemah",
         "tlc": "Pemeriksa Terjemahan",
@@ -16,17 +16,17 @@
         "qc": "Pemeriksa Akhir"
     },
     "roles": {
-        "tl": "翻訳",
-        "tlc": "翻訳チェック",
-        "enc": "符号づけ",
-        "ed": "編集",
-        "ts": "組版",
-        "tm": "タイミング",
-        "cl": "清掃",
-        "rd": "複写",
-        "pr": "校正",
-        "qc": "品証"
+        "tl": "Terjemahan",
+        "tlc": "Cek Terjemahan",
+        "enc": "Olahan Video",
+        "ed": "Suntingan Skrip",
+        "ts": "Tata Rias",
+        "tm": "Selaras Waktu",
+        "cl": "Bersih Gambar",
+        "rd": "Gambar Ulang",
+        "pr": "Koreksi Skrip",
+        "qc": "Tinjauan Akhir"
     },
-    "about": "凡そ",
-    "invite_bot": "招待ボット"
+    "about": "Tentang",
+    "invite_bot": "Undang Bot"
 }
