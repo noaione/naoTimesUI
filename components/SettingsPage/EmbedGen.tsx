@@ -138,6 +138,8 @@ class EmbedGenSettings extends React.Component<EmbedGenProps, EmbedGenState> {
             su: "Sunda",
             jv: "Jawa",
             jp: "日本語",
+            ms: "Bahasa Melayu",
+            ms_Arab: "بهاس ملايو",
         };
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
