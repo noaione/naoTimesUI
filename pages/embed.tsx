@@ -238,7 +238,7 @@ class EmbedUtang extends React.Component<EmbedUtangProps, EmbedUtangState> {
                     <MetadataHead.SEO
                         title={`Utang - ${realName}`}
                         description={`Sebuah daftar utang untuk Fansub dengan ${prefixName} ${realName}, terdapat ${projectData.length} utang!`}
-                        image={`https://og-api.naoti.me/large?name=${encodedName}&utang=${projectData.length}`}
+                        image={`https://og-api.naoti.me/large?name=${encodedName}&count=${projectData.length}&total=${animeData.length}`}
                         urlPath={`/embed?id=${id}&lang=${lang}&accent=${accent}&dark=${dark}`}
                     />
                 </Head>
