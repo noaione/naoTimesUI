@@ -40,7 +40,7 @@ TimeAgo.setDefaultLocale("id");
 
 export type Locale = keyof typeof LocaleMap;
 // Add new TimeAgo language code here.
-export type TimeAgoLocale = "id" | "en" | "jv" | "su" | "ja" | "jp" | "ms" | "ms_Arab";
+export type TimeAgoLocale = "id" | "en" | "jv" | "su" | "ja" | "jp" | "ms" | "ms_Arab" | "ms-Arab";
 
 function walkKey(data: any, notations: string) {
     const splitNots = notations.split(".");
@@ -71,6 +71,8 @@ export function timeAgoLocale(unix: number, lang: TimeAgoLocale): string {
     let realLang = lang;
     if (lang === "jp") {
         realLang = "ja";
+    } else if (lang === "ms_Arab") {
+        realLang = "ms-Arab";
     }
     // Create a new TimeAgo class.
     const timeAgo = new TimeAgo(realLang);

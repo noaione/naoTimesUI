@@ -12,7 +12,7 @@
 import { ExtendedLocale } from "./_types";
 
 const TimeAgoLocale: ExtendedLocale = {
-    locale: "ms_Arab",
+    locale: "ms-Arab",
     long: {
         year: {
             previous: "تاهون لڤس",
