@@ -6,6 +6,8 @@ import { Locale as LocaleEN, TimeAgoLocale as TimeAgoLocaleEN } from "./en";
 import { Locale as LocaleSU, TimeAgoLocale as TimeAgoLocaleSU } from "./su";
 import { Locale as LocaleJV, TimeAgoLocale as TimeAgoLocaleJV } from "./jv";
 import { Locale as LocaleJP, TimeAgoLocale as TimeAgoLocaleJP } from "./jp";
+import { Locale as LocaleMS, TimeAgoLocale as TimeAgoLocaleMS } from "./ms";
+import { Locale as LocaleMSArab, TimeAgoLocale as TimeAgoLocaleMSArab } from "./ms_Arab";
 import { isNone } from "../lib/utils";
 
 export const LocaleMap = {
@@ -14,6 +16,8 @@ export const LocaleMap = {
     su: LocaleSU,
     jv: LocaleJV,
     jp: LocaleJP,
+    ms: LocaleMS,
+    ms_Arab: LocaleMSArab,
 };
 
 export const ValidLocale = Object.keys(LocaleMap);
@@ -24,6 +28,8 @@ const TimeAgoLocaleExtra = [
     TimeAgoLocaleJP,
     TimeAgoLocaleJV,
     TimeAgoLocaleSU,
+    TimeAgoLocaleMS,
+    TimeAgoLocaleMSArab,
 ];
 TimeAgoLocaleExtra.forEach((locale) => {
     // @ts-ignore
@@ -34,7 +40,7 @@ TimeAgo.setDefaultLocale("id");
 
 export type Locale = keyof typeof LocaleMap;
 // Add new TimeAgo language code here.
-export type TimeAgoLocale = "id" | "en" | "jv" | "su" | "ja" | "jp";
+export type TimeAgoLocale = "id" | "en" | "jv" | "su" | "ja" | "jp" | "ms" | "ms_Arab";
 
 function walkKey(data: any, notations: string) {
     const splitNots = notations.split(".");
