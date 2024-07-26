@@ -6,8 +6,8 @@ import { Locale as LocaleEN, TimeAgoLocale as TimeAgoLocaleEN } from "./en";
 import { Locale as LocaleSU, TimeAgoLocale as TimeAgoLocaleSU } from "./su";
 import { Locale as LocaleJV, TimeAgoLocale as TimeAgoLocaleJV } from "./jv";
 import { Locale as LocaleJP, TimeAgoLocale as TimeAgoLocaleJP } from "./jp";
-import { Locale as LocaleJP, TimeAgoLocale as TimeAgoLocaleJP } from "./ms";
-import { Locale as LocaleJP, TimeAgoLocale as TimeAgoLocaleJP } from "./ms_Arab";
+import { Locale as LocaleMS, TimeAgoLocale as TimeAgoLocaleMS } from "./ms";
+import { Locale as LocaleMSArab, TimeAgoLocale as TimeAgoLocaleMSArab } from "./ms_Arab";
 import { isNone } from "../lib/utils";
 
 export const LocaleMap = {
