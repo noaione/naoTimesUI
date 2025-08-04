@@ -84,10 +84,10 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@badrap/bar-of-progress@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@badrap/bar-of-progress/-/bar-of-progress-0.2.1.tgz#68200c7547ecd7f3a3450597c596810a5a06c02c"
-  integrity sha512-+vqWaMkHnCcoKDo0dRhMpY40Lt2+Li2/vo0IArrbYWKTLeHatEGLJRX23iUl6quxwxVqrflJPCr8F0Sak+hujg==
+"@badrap/bar-of-progress@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@badrap/bar-of-progress/-/bar-of-progress-0.3.0.tgz#21b9d7e8fa4e07dfc75e4d0de4004dc08eafcf28"
+  integrity sha512-GI/jkqtGO7Gv4YGXxGF8NgNOP9we+RhmPhe3fswKmzYB1+T2H1+04dZl33vgQjIuAzgiJuXZ+dPlP8HAX8dpFA==
 
 "@csstools/postcss-cascade-layers@^1.1.0":
   version "1.1.1"
